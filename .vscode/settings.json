@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "files.eol": "\n",
+  "dotnet.defaultSolution": "Akrho.sln",
+  "mssql.connections": [
+    {
+      "server": "localhost,1433",
+      "database": "Akrho",
+      "authenticationType": "SqlLogin",
+      "user": "sa",
+      "trustServerCertificate": true,
+      "profileName": "Akrho (local)"
+    }
+  ],
+  "search.exclude": { "**/node_modules": true, "**/bin": true, "**/obj": true, "**/dist": true },
+  "[sql]": { "editor.defaultFormatter": "ms-mssql.mssql" }
+}

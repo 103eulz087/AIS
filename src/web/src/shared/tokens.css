@@ -1,0 +1,26 @@
+/* Design tokens. Use these; never hard-code a colour.
+   Brass is the accent and it carries meaning — use it sparingly. */
+:root {
+  --ink: #0E1116;   --deep: #171D28;  --slate: #39424F; --mute: #78828F;
+  --brass: #C39A3E; --brass-dk: #8E6D22; --brass-soft: #F0E5CB;
+  --bond: #EFEEEA;  --paper: #FFFFFF; --line: #DCDAD3;
+  --in: #2E6B52;    --out: #A6392E;   --warn: #B4801E;  --info: #2C5C8A;
+
+  --f-disp: "Barlow Condensed", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-num:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --r: 10px;
+  --tap: 44px;   /* minimum tap target — this is used one-handed on a phone */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--f-body); background: var(--bond); color: var(--ink);
+       -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer;
+         min-height: var(--tap); }
+
+/* Money and member numbers are ALWAYS monospace. */
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+.in  { color: var(--in); }
+.out { color: var(--out); }

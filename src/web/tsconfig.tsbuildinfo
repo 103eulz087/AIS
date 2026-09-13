@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/routes.tsx","./src/smoke.test.tsx","./src/test-setup.ts","./src/ais/screens/Ledger.tsx","./src/ais/screens/MemberDirectory.tsx","./src/shared/AppShell.tsx","./src/shared/api.ts","./src/shared/format.test.ts","./src/shared/format.ts","./src/shared/states.tsx","./src/shared/types.ts"],"version":"5.9.3"}

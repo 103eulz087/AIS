@@ -1,0 +1,12 @@
+bin/
+obj/
+node_modules/
+dist/
+.vs/
+*.user
+appsettings.*.local.json
+appsettings.Production.json
+.env
+*.pfx
+uploads/
+TestResults/

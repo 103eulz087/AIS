@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AKRHO Central Portal — Renewal Module · Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1116;--deep:#171D28;--slate:#39424F;--mute:#78828F;
+  --brass:#C39A3E;--brass-dk:#8E6D22;--brass-soft:#F0E5CB;
+  --bond:#EFEEEA;--paper:#FFFFFF;--line:#DCDAD3;
+  --in:#2E6B52;--out:#A6392E;--warn:#B4801E;--info:#2C5C8A;
+  --f-disp:"Barlow Condensed",sans-serif;--f-body:"IBM Plex Sans",sans-serif;--f-num:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f-body);background:var(--ink);color:#DAD8D1;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font:inherit}
+
+.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.rail{background:var(--deep);border-right:1px solid #232B38;padding:18px 0 40px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 18px 16px;border-bottom:1px solid #232B38;margin-bottom:12px}
+.brand .seal{width:34px;height:34px;border-radius:50%;border:2px solid var(--brass);display:grid;place-items:center;
+  font-family:var(--f-disp);font-weight:700;color:var(--brass);font-size:13px;margin-bottom:9px}
+.brand h1{font-family:var(--f-disp);font-size:21px;letter-spacing:.09em;color:#fff;line-height:1.05}
+.brand p{font-size:10.5px;color:var(--mute);margin-top:4px;letter-spacing:.03em}
+.rl{font-family:var(--f-disp);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);padding:14px 18px 6px}
+.rail a{display:block;padding:7px 18px;font-size:13px;color:#98A2B0;text-decoration:none;cursor:pointer;border-left:2px solid transparent}
+.rail a:hover{color:#fff;background:#1D2532}
+.rail a.on{color:#fff;background:#1D2532;border-left-color:var(--brass)}
+.rs{padding:12px 18px 4px}
+.rs .l{font-size:10.5px;color:var(--mute);margin-bottom:6px}
+.rs button{display:block;width:100%;text-align:left;font-size:12px;padding:6px 9px;border:1px solid #2E3846;
+  border-radius:6px;color:#98A2B0;margin-bottom:4px}
+.rs button.on{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:600}
+
+.stage{padding:26px 26px 60px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.head{width:100%;max-width:1180px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.head h2{font-family:var(--f-disp);font-size:27px;letter-spacing:.03em;color:#fff}
+.head p{font-size:12.5px;color:var(--mute);max-width:640px;margin-top:3px;line-height:1.55}
+.stamp{font-family:var(--f-disp);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);
+  border:1px solid var(--brass-dk);padding:4px 10px;border-radius:4px;white-space:nowrap}
+
+.browser{width:100%;max-width:1180px;background:var(--bond);border-radius:12px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);color:var(--ink)}
+.bbar{display:flex;align-items:center;gap:9px;padding:9px 14px;background:#DDDBD4;border-bottom:1px solid var(--line)}
+.bbar .d{width:11px;height:11px;border-radius:50%;background:#C5C2B9}
+.bbar .url{flex:1;background:#fff;border-radius:14px;padding:5px 12px;font-family:var(--f-num);font-size:11px;color:var(--slate)}
+.page{min-height:640px}
+
+/* portal chrome */
+.topbar{background:var(--deep);color:#fff;padding:13px 22px;display:flex;align-items:center;gap:14px}
+.topbar .seal{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--brass);display:grid;place-items:center;
+  font-family:var(--f-disp);font-size:12px;color:var(--brass);font-weight:700;flex:none}
+.topbar h3{font-family:var(--f-disp);font-size:18px;letter-spacing:.1em;flex:1}
+.topbar .who{text-align:right;font-size:11.5px;line-height:1.4}
+.topbar .who b{display:block;font-size:12.5px;color:var(--brass)}
+.crumb{background:var(--paper);border-bottom:1px solid var(--line);padding:9px 22px;font-size:11.5px;color:var(--mute)}
+.crumb b{color:var(--slate)}
+.body{padding:22px}
+
+.h1{font-family:var(--f-disp);font-size:26px;letter-spacing:.02em;margin-bottom:4px}
+.sub{font-size:12.5px;color:var(--mute);margin-bottom:18px;line-height:1.55}
+.sl{font-family:var(--f-disp);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);
+  margin:22px 0 9px;display:flex;justify-content:space-between;align-items:center}
+.sl:first-child{margin-top:0}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.cp{padding:16px}
+.grid{display:grid;gap:12px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:1fr 1fr}
+.g21{grid-template-columns:1.6fr 1fr}
+
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px}
+.tile .k{font-family:var(--f-disp);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--mute)}
+.tile .v{font-family:var(--f-num);font-size:23px;font-weight:600;margin-top:5px}
+.tile .d{font-size:11px;color:var(--mute);margin-top:4px;line-height:1.4}
+.tile.dark{background:var(--deep);border-color:var(--deep);color:#DAD8D1}
+.tile.dark .k{color:var(--brass)}.tile.dark .v{color:#fff;font-size:28px}.tile.dark .d{color:#8B95A3}
+
+table{width:100%;border-collapse:collapse;background:var(--paper);font-size:12.5px}
+th{font-family:var(--f-disp);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);
+  text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:#F7F6F3;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.click{cursor:pointer}
+tr.click:hover td{background:#F7F6F3}
+td.num{font-family:var(--f-num);text-align:right;white-space:nowrap}
+th.num{text-align:right}
+
+.pill{display:inline-block;font-family:var(--f-num);font-size:10px;letter-spacing:.04em;padding:2px 7px;border-radius:4px;border:1px solid;white-space:nowrap}
+.p-ok{color:var(--in);border-color:#C3DBD0;background:#EEF6F2}
+.p-warn{color:#8A6410;border-color:#E8D6AC;background:#FBF5E7}
+.p-bad{color:var(--out);border-color:#E4C4C0;background:#FBF0EF}
+.p-info{color:var(--info);border-color:#C3D4E4;background:#EFF4F9}
+.p-mute{color:var(--mute);border-color:var(--line);background:#F4F2EC}
+
+.btn{display:inline-block;padding:9px 18px;border-radius:7px;font-family:var(--f-disp);font-size:14px;
+  letter-spacing:.11em;text-transform:uppercase;font-weight:600;background:var(--deep);color:#fff}
+.btn.brass{background:var(--brass);color:var(--ink)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--slate)}
+.btn.danger{background:var(--out);color:#fff}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+
+.note{padding:12px 14px;border-radius:8px;font-size:12px;line-height:1.55;background:#FBF5E7;border:1px solid #E8D6AC;color:#6B4E12}
+.note.info{background:#EFF4F9;border-color:#C3D4E4;color:#1F4568}
+.note.bad{background:#FBF0EF;border-color:#E4C4C0;color:#7A2A22}
+.note b{font-weight:600}
+
+.cbx{width:19px;height:19px;border-radius:4px;border:1.5px solid var(--line);display:inline-grid;place-items:center;
+  font-size:11px;color:transparent;background:#fff;cursor:pointer;vertical-align:middle}
+.cbx.on{background:var(--deep);border-color:var(--deep);color:var(--brass)}
+
+.av{width:30px;height:30px;border-radius:6px;background:var(--deep);color:var(--brass-soft);display:inline-grid;
+  place-items:center;font-family:var(--f-disp);font-size:12px;vertical-align:middle;margin-right:8px}
+
+/* organization tree */
+.tree{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tnode{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.tnode:last-child{border-bottom:none}
+.tnode:hover{background:#F7F6F3}
+.tnode .rail{display:flex;align-items:center;flex:none}
+.tnode .tick{width:10px;height:10px;border-radius:50%;background:var(--brass)}
+.tnode .stub{width:18px;height:2px;background:var(--line)}
+.tnode .nm{font-size:13px;font-weight:600}
+.tnode .sub{font-size:11px;color:var(--mute);margin-top:2px}
+.tnode .lvl{font-family:var(--f-disp);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mute)}
+.chmark{width:30px;height:30px;border-radius:7px;flex:none;display:grid;place-items:center;
+  font-family:var(--f-disp);font-size:12px;font-weight:600;color:#fff}
+.prereq{display:flex;gap:0;align-items:stretch;margin-bottom:14px}
+.prereq .p{flex:1;padding:11px 13px;border:1px solid var(--line);background:var(--paper)}
+.prereq .p:first-child{border-radius:9px 0 0 9px}
+.prereq .p:last-child{border-radius:0 9px 9px 0}
+.prereq .p + .p{border-left:none}
+.prereq .p.ok{background:#EEF6F2;border-color:#C3DBD0}
+.prereq .p.now{background:var(--deep);border-color:var(--deep)}
+.prereq .p.blocked{background:#F4F2EC}
+.prereq .lv{font-family:var(--f-disp);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mute)}
+.prereq .p.now .lv{color:var(--brass)}
+.prereq .st{font-size:12.5px;font-weight:600;margin-top:4px}
+.prereq .p.now .st{color:#fff}
+
+/* escalation ladder */
+.ladder{display:flex;align-items:stretch;gap:0}
+.step{flex:1;padding:13px;border:1px solid var(--line);background:var(--paper);position:relative}
+.step:first-child{border-radius:9px 0 0 9px}
+.step:last-child{border-radius:0 9px 9px 0}
+.step+.step{border-left:none}
+.step .lv{font-family:var(--f-disp);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--mute)}
+.step .st{font-size:12.5px;font-weight:600;margin-top:5px;line-height:1.35}
+.step .dt{font-family:var(--f-num);font-size:10.5px;color:var(--mute);margin-top:5px}
+.step.done{background:#EEF6F2;border-color:#C3DBD0}
+.step.now{background:var(--deep);border-color:var(--deep)}
+.step.now .lv{color:var(--brass)}.step.now .st{color:#fff}.step.now .dt{color:#8B95A3}
+.step.arm{background:#FBF5E7;border-color:#E8D6AC}
+
+/* BADGE SYSTEM */
+.seals{display:flex;gap:11px;flex-wrap:wrap}
+.seal{width:78px;text-align:center}
+.seal .disc{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:radial-gradient(120% 120% at 30% 20%,#E8CE8E 0%,#C39A3E 45%,#8E6D22 100%);
+  border:2px solid #E8CE8E;box-shadow:0 3px 9px rgba(0,0,0,.2)}
+.seal .disc span{font-family:var(--f-disp);font-size:23px;font-weight:700;color:#3A2C0A;letter-spacing:.02em}
+.seal .disc:after{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(58,44,10,.35)}
+.seal.gap .disc{background:#EDEBE5;border:2px dashed var(--line);box-shadow:none}
+.seal.gap .disc span{color:#B8B4AA}
+.seal .cap{font-size:10px;color:var(--mute);margin-top:5px}
+.seal.silver .disc{background:radial-gradient(120% 120% at 30% 20%,#F2F3F5 0%,#B9BEC6 45%,#7C838D 100%);border-color:#F2F3F5}
+.seal.silver .disc span{color:#2F343B;font-size:17px}
+
+.idcard{width:330px;aspect-ratio:1.586/1;border-radius:12px;position:relative;overflow:hidden;color:#DAD8D1;
+  background:radial-gradient(120% 150% at 82% -10%,#28303E 0%,#141A24 55%,#0C1017 100%);border:1px solid #333C4A}
+.idcard .gl{position:absolute;inset:0;opacity:.09;
+  background:repeating-linear-gradient(115deg,var(--brass) 0 1px,transparent 1px 7px),
+             repeating-linear-gradient(-115deg,var(--brass) 0 1px,transparent 1px 9px)}
+.idcard .in{position:relative;padding:11px 13px}
+.idcard .org{font-family:var(--f-disp);font-size:11px;letter-spacing:.2em;color:var(--brass)}
+.idcard .gift{font-family:var(--f-disp);font-size:25px;letter-spacing:.04em;color:#fff;margin-top:6px;line-height:1}
+.idcard .nm{font-size:10.5px;color:#98A2B0;margin-top:2px}
+.idcard .yr{position:absolute;right:12px;top:36px;width:62px;height:62px;border-radius:50%;
+  background:radial-gradient(120% 120% at 30% 20%,#E8CE8E 0%,#C39A3E 45%,#8E6D22 100%);
+  display:grid;place-items:center;border:2px solid #E8CE8E}
+.idcard .yr b{font-family:var(--f-disp);font-size:20px;color:#3A2C0A}
+.idcard .yr i{position:absolute;bottom:7px;font-family:var(--f-disp);font-size:7.5px;letter-spacing:.1em;color:#3A2C0A;font-style:normal}
+.idcard .strip{position:absolute;left:0;right:0;bottom:0;padding:5px 13px;background:rgba(195,154,62,.14);
+  border-top:1px solid rgba(195,154,62,.3);display:flex;justify-content:space-between;
+  font-family:var(--f-num);font-size:8.5px;letter-spacing:.05em;color:var(--brass)}
+.idcard.lapsed{filter:grayscale(1) brightness(.72)}
+.idcard.lapsed .yr{background:#6E6E6E;border-color:#9A9A9A}
+
+.legend{display:flex;gap:7px;align-items:center;font-size:11.5px;color:var(--slate);margin-top:8px}
+.bar{height:9px;border-radius:5px;background:#E5E3DC;overflow:hidden;min-width:90px;flex:1}
+.bar i{display:block;height:100%;background:var(--in)}
+.caption{max-width:1180px;font-size:12px;line-height:1.6;color:var(--mute);text-align:center}
+.caption b{color:var(--brass);font-weight:500}
+@media (max-width:980px){.shell{grid-template-columns:1fr}.rail{position:static;height:auto}.g4,.g3,.g2,.g21{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="rail">
+    <div class="brand">
+      <div class="seal">ΑΚΡ</div>
+      <h1>CENTRAL PORTAL</h1>
+      <p>Councils · Registration &amp; Renewal</p>
+    </div>
+    <div class="rs">
+      <div class="l">Session</div>
+      <div id="roles"></div>
+    </div>
+    <div id="nav"></div>
+  </nav>
+  <main class="stage">
+    <div class="head">
+      <div><h2 id="t"></h2><p id="d"></p></div>
+      <div class="stamp" id="s"></div>
+    </div>
+    <div class="browser">
+      <div class="bbar"><span class="d"></span><span class="d"></span><span class="d"></span>
+        <div class="url">https://portal.akrho.ph/renewal/2027</div></div>
+      <div class="page" id="page"></div>
+    </div>
+    <p class="caption" id="cap"></p>
+  </main>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const YEAR = 2027, FEE = 50;
+
+const MEMBERS = [
+  {id:1,g:"TANGLAW",n:"Ramon C. Delgado",no:"AKR-04-0117-001",yr:"2011",last:2026,st:"Active"},
+  {id:2,g:"BAGWIS",n:"Joel R. Mariano",no:"AKR-04-0117-002",yr:"2013",last:2026,st:"Active"},
+  {id:3,g:"LAKANDULA",n:"Arnel S. Bautista",no:"AKR-04-0117-003",yr:"2009",last:2026,st:"Active"},
+  {id:4,g:"HIMAGSIK",n:"Dennis L. Portugal",no:"AKR-04-0117-004",yr:"2016",last:2026,st:"Active"},
+  {id:5,g:"SIGWA",n:"Michael A. Rosales",no:"AKR-04-0117-005",yr:"2018",last:2024,st:"Inactive"},
+  {id:6,g:"AGOS",n:"Rey O. Fabian",no:"AKR-04-0117-006",yr:"2019",last:2026,st:"Active"},
+  {id:7,g:"TALIM",n:"Kevin B. Salvador",no:"AKR-04-0117-007",yr:"2024",last:2026,st:"Active"},
+  {id:8,g:"PANDAY",n:"Noel V. Aguinaldo",no:"AKR-04-0117-008",yr:"2025",last:2026,st:"Active"},
+  {id:9,g:"BANTAY",n:"Ariel P. Quijano",no:"AKR-04-0117-009",yr:"2012",last:2025,st:"Active"},
+  {id:10,g:"ULIRAN",n:"Marlon T. Espino",no:"AKR-04-0117-010",yr:"2007",last:2026,st:"Active"},
+];
+
+/* Council offices. Same shape as a chapter's, minus the master initiators —
+   those are a chapter rite, not a council function. */
+const COUNCIL_OFFICES = [
+  ["President","Presides. Approves the bodies one level below.","admin"],
+  ["Vice President","Deputises for the president.","officer"],
+  ["Secretary","Receives and processes applications from below.","officer"],
+  ["Treasurer","Posts fees received and remits upward.","officer"],
+  ["Auditor","Reads everything the council can see; changes nothing.","read"],
+  ["Public Information Officer","Memos and announcements down the chain.","officer"],
+];
+
+/* Real-world seat sources. In the field an officer often has no registered chapter —
+   his chapter went dormant, or it has simply never been registered. */
+/* Officers are SELECTED, never encoded. Two sources only, and both are members
+   the system already has — because members are created by chapters and nothing else. */
+const SEAT_SOURCES = [
+  ["in","In jurisdiction","A member of a chapter under this council. The normal case.","p-ok"],
+  ["out","Outside jurisdiction","Permitted, but permanently recorded with the name of whoever seated him.","p-warn"],
+];
+
+/* What usp_Council_EligibleOfficers returns: members of chapters inside this
+   council's own subtree. This list IS the dropdown — there is no text field. */
+const ELIGIBLE = [
+  {id:101,gift:"LAKANDIWA", name:"Ferdie C. Nuñez",    no:"AKR-04-0119-003", ch:"Brgy. Mamatid Chapter",  cty:"Cabuyao City", cur:true},
+  {id:102,gift:"LAKANBINI", name:"Jerome A. Padilla",  no:"AKR-04-0121-007", ch:"Brgy. Pulo Chapter",     cty:"Cabuyao City", cur:true},
+  {id:103,gift:"MANDIRIGMA",name:"Elmer B. Sarmiento", no:"AKR-04-0121-011", ch:"Brgy. Pulo Chapter",     cty:"Cabuyao City", cur:true},
+  {id:104,gift:"MATATAG",   name:"Nestor D. Ramirez",  no:"AKR-04-0119-008", ch:"Brgy. Mamatid Chapter",  cty:"Cabuyao City", cur:true},
+  {id:105,gift:"DAKILA",    name:"Rogelio P. Ilagan",  no:"AKR-04-0122-002", ch:"Brgy. Marinig Chapter",  cty:"Cabuyao City", cur:true},
+  {id:106,gift:"PANDAYAN",  name:"Victor S. Malabanan",no:"AKR-04-0122-009", ch:"Brgy. Marinig Chapter",  cty:"Cabuyao City", cur:false},
+  {id:107,gift:"TALAHIB",   name:"Danilo R. Cruz",     no:"AKR-04-0123-004", ch:"Brgy. Banlic Chapter",   cty:"Cabuyao City", cur:true},
+];
+/* Outside the jurisdiction. Selectable, but never silently. */
+const OUTSIDE = [
+  {id:201,gift:"BANTAY",  name:"Ariel P. Quijano", no:"AKR-04-0117-009", ch:"Brgy. San Isidro Chapter", cty:"Sta. Rosa City", cur:true},
+  {id:202,gift:"ULIRAN",  name:"Marlon T. Espino", no:"AKR-04-0117-010", ch:"Brgy. San Isidro Chapter", cty:"Sta. Rosa City", cur:true},
+];
+
+const COUNCIL_SEATS = [
+  ["President","Ferdie C. Nuñez","LAKANDIWA","AKR-04-0119-003","Brgy. Balibago Chapter"],
+  ["Vice President","Jerome A. Padilla","LAKANBINI","AKR-04-0121-007","Brgy. Malitlit Chapter"],
+  ["Secretary","Ramon C. Delgado","TANGLAW","AKR-04-0117-001","Brgy. San Isidro Chapter"],
+  ["Treasurer","Marlon T. Espino","ULIRAN","AKR-04-0117-010","Brgy. San Isidro Chapter"],
+  ["Auditor","Ronnie M. Espino","LAKAN GAT","AKR-04-0124-002","Brgy. Tagapo Chapter"],
+  ["Public Information Officer","Ariel P. Quijano","BANTAY","AKR-04-0117-009","Brgy. San Isidro Chapter"],
+];
+/* How each seat above is actually being filled. */
+const SEAT_ORIGIN = ["in","in","in","in","in","out"];
+const SEAT_REASON = ["","","","","",
+                     "Only two chapters in Cabuyao; no sixth officer available locally"];
+
+const OFFICES = [
+  ["President","Signs the application. Receives the chapter's first portal account.","admin"],
+  ["Vice President","Deputises for the president.","officer"],
+  ["Secretary","Meetings, attendance, announcements, memos.","officer"],
+  ["Treasurer","Ledger, expenses, donations, receipts.","officer"],
+  ["Auditor","Reads everything; changes nothing.","read"],
+  ["Master Initiator I","Recorded office. No system permission.","none"],
+  ["Master Initiator II","Recorded office. No system permission.","none"],
+  ["Master Initiator III","Recorded office. No system permission.","none"],
+];
+
+const ROSTER = [
+  ["President","Ramon C. Delgado","TANGLAW","2011-03-19","0917 ••• 4412"],
+  ["Vice President","Joel R. Mariano","BAGWIS","2013-08-02","0918 ••• 7730"],
+  ["Secretary","Dennis L. Portugal","HIMAGSIK","2016-05-21","0906 ••• 3355"],
+  ["Treasurer","Arnel S. Bautista","LAKANDULA","2009-12-06","0995 ••• 1189"],
+  ["Auditor","Rey O. Fabian","AGOS","2019-10-05","0932 ••• 2201"],
+  ["Master Initiator I","Marlon T. Espino","ULIRAN","2007-06-14","0917 ••• 5520"],
+  ["Master Initiator II","Ariel P. Quijano","BANTAY","2012-02-11","0927 ••• 8841"],
+  ["Master Initiator III","Noel V. Aguinaldo","PANDAY","2015-09-28","0906 ••• 4417"],
+];
+
+const QUEUE = [
+  {id:"RNW-2027-0041",ch:"Brgy. San Isidro Chapter",city:"Sta. Rosa City",m:8,amt:400,sub:"12 May",age:3,st:"For city approval",pay:"Posted"},
+  {id:"RNW-2027-0038",ch:"Brgy. Malitlit Chapter",city:"Sta. Rosa City",m:14,amt:700,sub:"09 May",age:6,st:"For city approval",pay:"Posted"},
+  {id:"RNW-2027-0033",ch:"Brgy. Balibago Chapter",city:"Sta. Rosa City",m:11,amt:550,sub:"04 May",age:11,st:"Overdue — province may act",pay:"Posted"},
+  {id:"RNW-2027-0029",ch:"Brgy. Tagapo Chapter",city:"Sta. Rosa City",m:9,amt:450,sub:"02 May",age:13,st:"Overdue — province may act",pay:"Unposted"},
+  {id:"RNW-2027-0021",ch:"Brgy. Dita Chapter",city:"Sta. Rosa City",m:17,amt:850,sub:"28 Apr",age:18,st:"Approved on override",pay:"Posted"},
+  {id:"RNW-2027-0016",ch:"Brgy. Pulong Sta. Cruz",city:"Sta. Rosa City",m:12,amt:600,sub:"22 Apr",age:24,st:"Approved",pay:"Posted"},
+];
+
+const PROVINCE = [
+  ["Sta. Rosa City",14,12,86],["Biñan City",11,11,100],["Cabuyao City",13,9,69],
+  ["Calamba City",18,15,83],["San Pedro City",10,4,40],["Los Baños",7,6,86],
+];
+
+/* ================= STATE ================= */
+let S={r:"login",role:null,checks:{},verified:{},page:0,councilMode:"constitute",seats:{}};
+MEMBERS.forEach(m=>S.checks[m.id]= m.st==="Active");
+
+const $=s=>document.querySelector(s);
+const peso=n=>"₱"+n.toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const go=r=>{S.r=r;render();window.scrollTo({top:0,behavior:"smooth"})};
+const signIn=k=>{S.role=k;S.r={chapter:"chSubmit",city:"queue",province:"province",national:"national"}[k];render();};
+const signOut=()=>{S.role=null;S.r="login";render();};
+const pickSeat=(i,v)=>{S.seats={...(S.seats||{})}; if(v) S.seats[i]=v; else delete S.seats[i]; render();};
+
+/* Reachable without an account. A chapter applying to be registered cannot log in
+   to apply, so these must render for a signed-out visitor. */
+const PUBLIC=["login","applyChapter","applySubmitted","petitionCouncil"];
+
+const ROLES={
+  chapter:["Bro. TANGLAW","Chapter President · Brgy. San Isidro"],
+  city:["Bro. MANDIRIGMA","Secretary · Sta. Rosa City Council"],
+  province:["Bro. DAKILA","Auditor · Laguna Provincial Council"],
+  national:["Bro. HARAYA","National Secretariat"],
+};
+
+const NAV_BY_ROLE={
+  chapter:[["Registration",[["applyChapter","Chapter registration form"],["applySubmitted","After submitting"],["officerUpdate","Annual officer update"]]],
+            ["My chapter",[["chSubmit","Submit annual renewal"],["chStatus","Track my application"],
+            ["receipt","Acknowledgement receipt"],["chBadge","What my members receive"]]]],
+  city:[["Registry",[["registry","Organization registry"],["newChapter","Verify a chapter registration"]]],
+        ["Renewal review",[["queue","Renewal queue"],["appDetail","Verify an application"],
+          ["receipt","Acknowledgement receipt"],["payment","Fee posting &amp; remittance"]]]],
+  province:[["Registry",[["registry","Organization registry"],["newCouncil","Register a council"],["verifyCouncil","Verify a council registration"],["attached","Approval routing"],["newChapter","Verify a chapter registration"]]],
+            ["Oversight",[["province","Province monitor"],["queue","Applications in province"],
+             ["escalate","Escalation &amp; override"]]]],
+  national:[["National",[["national","National dashboard"],["registry","Organization registry"],["newCouncil","Register a council"],["verifyCouncil","Verify a council registration"],["attached","Approval routing"],["newChapter","Verify a chapter registration"],["period","Renewal period setup"],
+             ["province","Drill into a province"],["escalate","Escalation &amp; override"]]]],
+};
+const DESIGN=["Design input",[["badge","Badge system — proposal"]]];
+
+const META={
+  applyChapter:["Chapter registration form","The paper form your chapters already use, made public — because a chapter applying to be registered cannot log in to apply.","Registry · Phase 2"],
+  applySubmitted:["After submitting","A reference number, a visible clock, and a plain statement of what will and will not be sent to them.","Registry · Phase 2"],
+  officerUpdate:["Annual officer update","The same form again every August. Officers rotate; the roster is not a one-time record.","Registry · Phase 2"],
+  attached:["Approval routing","One rule — nearest existing ancestor with seated officers — covers bootstrap, expansion, dormancy and delay. No provisional accounts anywhere.","Registry · Phase 1"],
+  verifyCouncil:["Verify a council registration","The parent council checks every seat — including whether each officer is himself renewed. A council officer who has lapsed cannot approve other people's renewals.","Registry · Phase 2"],
+  petitionCouncil:["Petition for a council","Public. Chapters in an unserved city have AIS accounts but no council account to file from, so this form needs no login.","Registry · Phase 2"],
+  newCouncil:["Register a council","A council is an organ of the level above it. Constituted from above, petitioned from below, or reconstituted when dormant — approved by the parent either way.","Registry · Phase 2"],
+  registry:["Organization registry","The hierarchy as the system actually stores it. Read it downward — that is the order it had to be built in, and the order any rollout must follow.","Registry · Phase 1"],
+  newChapter:["Verify a chapter registration","The council checks the officer roster line by line, then charters the chapter and sends the president an enrolment link — never a password.","Registry · Phase 2"],
+  login:["Portal sign-in","Councils and chapter presidents sign in here. What appears afterwards depends entirely on the office you hold.","Renewal · Phase 1"],
+  receipt:["Acknowledgement receipt","Generated by the council the moment it approves. One receipt per application, never one per member.","Renewal · Phase 1"],
+  chSubmit:["Submit annual renewal","The chapter president ticks who is renewing. The roster comes straight from AIS — nothing is re-typed.","Renewal · Phase 1"],
+  chStatus:["Track my application","The chapter sees exactly where its application sits and how long each council has held it.","Renewal · Phase 1"],
+  chBadge:["What the member receives","Approval writes back to AIS: the card gains a year seal, and the brother is notified.","Renewal · Phase 2"],
+  queue:["Renewal queue","The city council's inbox. Sorted by how long it has been waiting, not by when it arrived.","Renewal · Phase 1"],
+  appDetail:["Verify an application","The council confirms the roster line by line, records the payment, then approves. The receipt is issued by the same action.","Renewal · Phase 1"],
+  escalate:["Escalation and override","An override is a recorded act with a named reason — never a quiet backdoor.","Renewal · Phase 1"],
+  payment:["Fee posting and remittance","₱50 per member, split by level. Recording first; online payment later.","Renewal · Phase 2"],
+  province:["Province monitor","Which councils are moving and which are sitting on applications. Visibility fixes most delays before override is needed.","Renewal · Phase 3"],
+  national:["National dashboard","The renewal season at a glance — members, chapters, collections, and the councils holding things up.","Renewal · Phase 3"],
+  period:["Renewal period setup","The National Secretariat opens the season, sets the fee and sets the clock that arms escalation.","Renewal · Phase 1"],
+  badge:["Badge system — proposal","My recommendation on what a renewed member should actually receive, and why one badge is not enough.","For your decision"],
+};
+
+/* ================= COMPONENTS ================= */
+const portalTop=()=>{
+  /* The public forms render with no session, so this must survive S.role === null. */
+  const who = S.role ? ROLES[S.role] : null;
+  return `
+  <div class="topbar"><div class="seal">ΑΚΡ</div>
+    <h3>AKRHO CENTRAL PORTAL</h3>
+    ${who
+      ? `<div class="who"><b>${who[0]}</b>${who[1]}</div>`
+      : `<div class="who" style="color:#8B95A3">Not signed in<br>
+           <span style="font-size:11px">Chapter registration is open to everyone</span></div>`}
+  </div>`;};
+const crumb=t=>`<div class="crumb">Renewal Season <b>${YEAR}</b> · open until 08 August · ${t}</div>`;
+const checked=()=>MEMBERS.filter(m=>S.checks[m.id]);
+
+/* ================= SCREENS ================= */
+const V={};
+
+V.login=()=>`
+  <div style="min-height:640px;display:grid;grid-template-columns:1.05fr 1fr">
+    <div style="background:var(--deep);padding:54px 46px;color:#DAD8D1;display:flex;flex-direction:column;justify-content:center">
+      <div style="width:54px;height:54px;border-radius:50%;border:2px solid var(--brass);display:grid;place-items:center;
+        font-family:var(--f-disp);font-size:19px;color:var(--brass);font-weight:700;margin-bottom:22px">ΑΚΡ</div>
+      <div style="font-family:var(--f-disp);font-size:40px;letter-spacing:.09em;color:#fff;line-height:1">CENTRAL PORTAL</div>
+      <div style="font-size:13px;color:var(--brass);margin-top:8px">Alpha Kappa Rho · Philippines</div>
+      <div style="font-size:13px;color:#8B95A3;margin-top:20px;line-height:1.75;max-width:360px">
+        Chapter registration, council registration, and the annual renewal of chapters and members.
+        <br><br>This portal is for seated officers. Members use AIS.</div>
+      <div style="margin-top:30px;font-family:var(--f-num);font-size:11px;color:#5F6875">
+        RENEWAL SEASON ${YEAR} · OPEN UNTIL 08 AUGUST</div>
+    </div>
+    <div style="padding:54px 46px;display:flex;flex-direction:column;justify-content:center">
+      <div class="h1" style="font-size:23px">Sign in</div>
+      <div class="sub" style="margin-bottom:20px">Use the account issued to your office, not your personal member number.</div>
+      <div style="font-size:12px;color:var(--slate);margin-bottom:5px">Officer account</div>
+      <input value="tanglaw.sanisidro" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;margin-bottom:13px">
+      <div style="font-size:12px;color:var(--slate);margin-bottom:5px">Password</div>
+      <input type="password" value="••••••••••" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;margin-bottom:18px">
+      <div class="note info" style="margin-bottom:18px">This is a mockup — pick the office you want to preview and the portal will open the way it does for that officer.</div>
+      <div style="border-top:1px solid var(--line);margin:6px 0 16px;padding-top:16px">
+        <div style="font-size:12.5px;color:var(--slate);margin-bottom:8px">
+          Registering a new chapter, and have no account yet?</div>
+        <button class="btn ghost" style="width:100%" onclick="go('applyChapter')">Chapter registration form</button>
+      </div>
+      ${Object.entries(ROLES).map(([k,[n,r]])=>`
+        <button style="display:block;width:100%;text-align:left;padding:11px 14px;border:1px solid var(--line);
+          border-radius:8px;background:#fff;margin-bottom:8px" onclick="signIn('${k}')">
+          <b style="font-size:13px">${n}</b>
+          <div style="font-size:11.5px;color:var(--mute);margin-top:2px">${r}</div></button>`).join("")}
+    </div>
+  </div>`;
+
+V.chSubmit=()=>{
+  const c=checked();
+  return portalTop()+crumb("Brgy. San Isidro Chapter")+`<div class="body">
+  <div class="h1">Annual Renewal — ${YEAR}</div>
+  <div class="sub">Tick every brother renewing his membership for ${YEAR}. The roster below is your live AIS masterlist — you never re-encode it here.</div>
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="tile dark"><div class="k">Members ticked</div><div class="v">${c.length}</div><div class="d">of ${MEMBERS.length} on the masterlist</div></div>
+    <div class="tile"><div class="k">Fee per member</div><div class="v">${peso(FEE)}</div><div class="d">set nationally for ${YEAR}</div></div>
+    <div class="tile"><div class="k">Total to remit</div><div class="v" style="color:var(--in)">${peso(c.length*FEE)}</div><div class="d">payable to the City Council</div></div>
+    <div class="tile"><div class="k">Deadline</div><div class="v" style="font-size:18px">08 Aug ${YEAR}</div><div class="d">19 days remaining</div></div>
+  </div>
+  <div class="note info" style="margin-bottom:14px"><b>A brother you do not tick is not expelled.</b> He is recorded as <i>lapsed for ${YEAR}</i> — he keeps his record, his history and his member number, and he can renew in any later year. Only his card stops showing a current year seal.</div>
+  <div class="sl">Chapter masterlist
+    <span class="btnrow">
+      <button class="btn ghost sm" onclick="MEMBERS.forEach(m=>S.checks[m.id]=true);render()">Tick all</button>
+      <button class="btn ghost sm" onclick="MEMBERS.forEach(m=>S.checks[m.id]=false);render()">Clear</button></span></div>
+  <div class="card"><table>
+    <tr><th style="width:44px"></th><th>Member</th><th>Member no.</th><th>Survived</th><th>Last renewed</th><th>AIS status</th><th class="num">Fee</th></tr>
+    ${MEMBERS.map(m=>{const on=!!S.checks[m.id];const lapsed=m.last<YEAR-1;return `
+      <tr class="click" onclick="S.checks[${m.id}]=${!on};render()" style="${on?'':'opacity:.5'}">
+        <td><span class="cbx ${on?'on':''}">✓</span></td>
+        <td><span class="av">${m.g.slice(0,2)}</span><b>${m.g}</b><div style="font-size:11px;color:var(--mute);margin-left:38px">${m.n}</div></td>
+        <td class="num" style="text-align:left">${m.no}</td>
+        <td class="num" style="text-align:left">${m.yr}</td>
+        <td class="num" style="text-align:left">${m.last}${lapsed?' <span class="pill p-warn">gap</span>':''}</td>
+        <td><span class="pill ${m.st==="Active"?"p-ok":"p-mute"}">${m.st}</span></td>
+        <td class="num">${on?peso(FEE):"—"}</td></tr>`}).join("")}
+    <tr><td colspan="6" style="text-align:right;font-weight:600">Total for ${c.length} members</td>
+      <td class="num" style="font-weight:600;color:var(--in)">${peso(c.length*FEE)}</td></tr>
+  </table></div>
+  <div class="note" style="margin-top:14px"><b>Before you submit:</b> the total above is also posted to your chapter's AIS ledger as a single Cash Out entry. Your own books stay whole — members can see the remittance leave, and see it acknowledged when the council posts the official receipt.</div>
+  <div class="btnrow" style="margin-top:16px">
+    <button class="btn brass" onclick="go('chStatus')">Submit to Sta. Rosa City Council</button>
+    <button class="btn ghost" onclick="alert('Saved as draft. Nothing is sent until you submit.')">Save draft</button>
+  </div></div>`;
+};
+
+V.chStatus=()=>portalTop()+crumb("Application RNW-2027-0041")+`<div class="body">
+  <div class="h1">RNW-2027-0041 — Brgy. San Isidro Chapter</div>
+  <div class="sub">Submitted 12 May ${YEAR} · 8 members · ${peso(400)} · official receipt OR-2027-00218 posted</div>
+  <div class="sl">Where it stands</div>
+  <div class="ladder">
+    <div class="step done"><div class="lv">Chapter</div><div class="st">Submitted</div><div class="dt">12 May · Bro. TANGLAW</div></div>
+    <div class="step done"><div class="lv">Payment</div><div class="st">Fee posted</div><div class="dt">12 May · OR-2027-00218</div></div>
+    <div class="step now"><div class="lv">City Council</div><div class="st">Waiting — day 3 of 10</div><div class="dt">7 working days remaining</div></div>
+    <div class="step"><div class="lv">Province</div><div class="st">May act after day 10</div><div class="dt">not yet armed</div></div>
+    <div class="step"><div class="lv">Region</div><div class="st">May act after day 20</div><div class="dt">not yet armed</div></div>
+  </div>
+  <div class="note info" style="margin-top:16px"><b>The clock is public.</b> Your city council can see the same countdown you can, and so can the province. In practice this is what moves applications — the override below it is rarely needed.</div>
+  <div class="grid g21" style="margin-top:20px">
+    <div class="card"><div class="cp"><div class="sl" style="margin-top:0">Members in this application</div>
+      <table>${MEMBERS.filter(m=>S.checks[m.id]).slice(0,8).map(m=>`
+        <tr><td><span class="av">${m.g.slice(0,2)}</span><b>${m.g}</b></td>
+        <td style="color:var(--mute)">${m.n}</td>
+        <td><span class="pill p-warn">Pending</span></td></tr>`).join("")}</table></div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">What happens on approval</div>
+      <div style="font-size:12.5px;line-height:1.75;color:var(--slate)">
+        1. Each brother is notified inside AIS.<br>
+        2. His digital ID gains the ${YEAR} seal.<br>
+        3. His public verification page reads <i>current for ${YEAR}</i>.<br>
+        4. The seal is added to his year row.<br>
+        5. The chapter's renewal rate updates on the council dashboards.</div>
+      <div class="note" style="margin-top:14px">Nothing above happens on submission — only on approval. A paid but unapproved application confers no status.</div>
+    </div></div>
+  </div></div>`;
+
+const WORDS=n=>{const o=["","one","two","three","four","five","six","seven","eight","nine"];
+  const h=Math.floor(n/100),t=n%100;let w=h?o[h]+" hundred":"";
+  if(t){const ty=["","ten","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+    const te=["ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+    const p=t<20&&t>=10?te[t-10]:(ty[Math.floor(t/10)]+(t%10?"-"+o[t%10]:""));
+    w=w?w+" "+p:p;}
+  return (w||"zero").replace(/^./,c=>c.toUpperCase());};
+
+V.receipt=()=>{const n=8,amt=n*FEE;const mine=S.role==="chapter";return portalTop()+crumb("AR-2027-00218")+`<div class="body">
+  <div class="h1">Acknowledgement receipt</div>
+  <div class="sub">${mine?"Issued to your chapter by the Sta. Rosa City Council when it approved your renewal. Keep it — it is your proof of remittance.":"Generated automatically the moment you approved RNW-2027-0041. One receipt per application, never one per member."}</div>
+  <div class="grid g21">
+    <div class="card"><div class="cp" style="padding:26px 30px;background:#FCFCFB">
+      <div style="display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--deep);padding-bottom:14px">
+        <div style="width:42px;height:42px;border-radius:50%;border:2px solid var(--brass-dk);display:grid;place-items:center;
+          font-family:var(--f-disp);font-size:15px;color:var(--brass-dk);font-weight:700">ΑΚΡ</div>
+        <div style="flex:1">
+          <div style="font-family:var(--f-disp);font-size:19px;letter-spacing:.16em">ALPHA KAPPA RHO</div>
+          <div style="font-size:11px;color:var(--mute)">Sta. Rosa City Council · Province of Laguna · Region IV-A</div></div>
+        <div style="text-align:right">
+          <div style="font-family:var(--f-disp);font-size:12px;letter-spacing:.16em;color:var(--mute)">NO.</div>
+          <div style="font-family:var(--f-num);font-size:16px;color:var(--out);font-weight:600">AR-2027-00218</div></div>
+      </div>
+      <div style="text-align:center;font-family:var(--f-disp);font-size:22px;letter-spacing:.22em;margin:20px 0 18px">
+        ACKNOWLEDGEMENT RECEIPT</div>
+      <table style="font-size:13px;background:transparent">
+        <tr><td style="width:150px;color:var(--mute);border:none;padding:7px 0">Received from</td>
+            <td style="border:none;padding:7px 0"><b>Brgy. San Isidro Chapter</b><br>
+            <span style="font-size:11.5px;color:var(--mute)">through Bro. TANGLAW · Chapter President</span></td></tr>
+        <tr><td style="color:var(--mute);border:none;padding:7px 0">Date</td>
+            <td style="border:none;padding:7px 0" class="num">18 May ${YEAR}</td></tr>
+        <tr><td style="color:var(--mute);border:none;padding:7px 0">The sum of</td>
+            <td style="border:none;padding:7px 0"><b style="font-family:var(--f-num);font-size:16px">${peso(amt)}</b><br>
+            <span style="font-size:11.5px;font-style:italic;color:var(--slate)">${WORDS(amt)} pesos only</span></td></tr>
+        <tr><td style="color:var(--mute);border:none;padding:7px 0;vertical-align:top">In payment of</td>
+            <td style="border:none;padding:7px 0">Annual membership renewal, ${YEAR}<br>
+            <span style="font-size:11.5px;color:var(--mute)">${n} members × ${peso(FEE)} · application RNW-2027-0041</span></td></tr>
+        <tr><td style="color:var(--mute);border:none;padding:7px 0">Mode of payment</td>
+            <td style="border:none;padding:7px 0">Cash · OR-2027-00218</td></tr>
+      </table>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px;gap:20px">
+        <div style="flex:1">
+          <div style="border-top:1px solid var(--ink);padding-top:6px;font-size:11.5px">
+            <b>Bro. MANDIRIGMA</b><br><span style="color:var(--mute)">Secretary · Sta. Rosa City Council</span></div></div>
+        <div style="width:96px;height:96px;border-radius:50%;border:2px dashed var(--brass-dk);display:grid;
+          place-items:center;text-align:center;font-family:var(--f-disp);font-size:9px;letter-spacing:.12em;
+          color:var(--brass-dk);line-height:1.5;opacity:.75">COUNCIL<br>DRY SEAL</div>
+      </div>
+      <div style="margin-top:22px;padding-top:12px;border-top:1px dashed var(--line);font-size:10.5px;color:var(--mute);line-height:1.6">
+        This receipt is system-generated and carries a verification code. It is valid without a manual signature.
+        <span style="font-family:var(--f-num)">Verify at portal.akrho.ph/ar/00218 · code 7QF2-B4KD</span></div>
+    </div></div>
+    <div>
+      <div class="sl" style="margin-top:0">Where this money goes</div>
+      <div class="card"><table style="font-size:12.5px">
+        <tr><th>Level</th><th class="num">Share</th></tr>
+        <tr><td>National Council</td><td class="num">${peso(160)}</td></tr>
+        <tr><td>Regional Council</td><td class="num">${peso(120)}</td></tr>
+        <tr><td>Provincial Council</td><td class="num">${peso(80)}</td></tr>
+        <tr><td>Sta. Rosa City Council</td><td class="num">${peso(40)}</td></tr>
+      </table></div>
+      <div class="note info" style="margin-top:12px">The split is printed on the receipt copy the chapter keeps. A brother who asks where his ₱50 went can be shown the answer in one page.</div>
+      <div class="sl">Automatically on issue</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.8;color:var(--slate)">
+        · Emailed to the chapter president<br>
+        · Posted to the chapter's AIS ledger as an acknowledged remittance<br>
+        · 8 members marked <b>Renewed through 08 Aug ${YEAR+1}</b><br>
+        · ${YEAR} seals issued and members notified in AIS</div></div>
+      <div class="btnrow" style="margin-top:16px">
+        <button class="btn brass" onclick="alert('Opens the print dialog. The chapter copy and the council copy are identical.')">Print</button>
+        <button class="btn ghost" onclick="alert('PDF downloaded.')">Download PDF</button>
+        ${mine?"":'<button class="btn ghost" onclick="alert(\'Voiding requires a reason and a countersignature. The number is retired, never reused, and the void is permanent in the record.\')">Void…</button>'}
+      </div>
+      <div class="note bad" style="margin-top:12px"><b>Receipt numbers are never reused.</b> A mistake is voided with a reason and a countersignature; the number is retired and a fresh receipt is issued. Deleting a receipt is not possible for any role.</div>
+    </div>
+  </div></div>`;};
+
+V.applyChapter=()=>portalTop()+`<div class="crumb">Public form · no account needed</div><div class="body">
+  <div class="h1">Chapter registration</div>
+  <div class="sub">The form your chapter already fills up on paper, submitted straight to your
+    designated council. You do not need an account — you cannot have one yet. That is the point of
+    this form.</div>
+
+  <div class="note info" style="margin-bottom:16px"><b>How this ends.</b> Your council verifies the
+    officers below. On approval the chapter is created and your <b>President receives a one-time
+    enrolment link</b> to set his own password. He then invites the other officers from inside the
+    app.</div>
+
+  <div class="grid g21">
+    <div>
+      <div class="sl" style="margin-top:0">1 · The chapter</div>
+      <div class="card"><div class="cp">
+        <div class="grid g2">
+          <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Chapter name</div>
+            <input value="Brgy. Pooc Chapter" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px"></div>
+          <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Barangay</div>
+            <input value="Pooc" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px"></div>
+        </div>
+        <div style="height:12px"></div>
+        <div style="font-size:12px;color:var(--slate);margin-bottom:5px">Designated council</div>
+        <div class="grid g4">
+          <select style="padding:9px 11px;border:1px solid var(--line);border-radius:7px"><option>Region IV-A</option></select>
+          <select style="padding:9px 11px;border:1px solid var(--line);border-radius:7px"><option>Laguna</option></select>
+          <select style="padding:9px 11px;border:1px solid var(--line);border-radius:7px"><option>Sta. Rosa City</option></select>
+          <input placeholder="Total members" value="14" style="padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-family:var(--f-num)">
+        </div>
+        <div class="note" style="margin-top:12px">If your city council is not in that list it has not
+          been registered yet, and no chapter under it can be either. The chain is built downward.
+          <br><br>
+          <a onclick="go('petitionCouncil')" style="color:var(--brass-dk);cursor:pointer;font-weight:600">
+          Petition to constitute a council for your city →</a></div>
+      </div></div>
+
+      <div class="sl">2 · Officers <span class="pill p-info">the heart of the form</span></div>
+      <div class="card"><table>
+        <tr><th style="width:150px">Office</th><th>Full name</th><th>Gift name</th><th>Date survive</th><th>Mobile</th></tr>
+        ${ROSTER.map(([off,nm,gift,ds,mob])=>`
+          <tr><td><b>${off}</b></td>
+            <td><input value="${nm}" style="width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:5px;font-size:12px"></td>
+            <td><input value="${gift}" style="width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:5px;font-size:12px"></td>
+            <td><input value="${ds}" style="width:110px;padding:6px 8px;border:1px solid var(--line);border-radius:5px;font-family:var(--f-num);font-size:11.5px"></td>
+            <td class="num" style="font-size:11.5px">${mob}</td></tr>`).join("")}
+      </table></div>
+      <div class="note" style="margin-top:12px"><b>A mobile number is required for every officer.</b>
+        It is how the enrolment link reaches him, and how his account is recovered later. An officer
+        with no number cannot be given access.</div>
+
+      <div class="sl">3 · Term and sponsor</div>
+      <div class="card"><div class="cp"><div class="grid g3">
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Term begins</div>
+          <input value="2027-08-09" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-family:var(--f-num)"></div>
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Term ends</div>
+          <input value="2028-08-08" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-family:var(--f-num)"></div>
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Sponsoring chapter</div>
+          <select style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px"><option>Brgy. San Isidro Chapter</option></select></div>
+      </div>
+      <div class="note info" style="margin-top:12px">Terms are dated because officers rotate. When
+        the term lapses the permissions drop by themselves — nobody has to remember to remove a
+        secretary who stood down two years ago.</div>
+      </div></div>
+    </div>
+
+    <div>
+      <div class="sl" style="margin-top:0">What each office can do</div>
+      <div class="card"><table>
+        ${OFFICES.map(([o,d,lvl])=>`
+          <tr><td style="width:120px"><b style="font-size:12px">${o}</b>
+              <div style="font-size:10.5px;color:var(--mute);margin-top:2px">${d}</div></td>
+            <td style="text-align:right;vertical-align:top">
+              <span class="pill ${lvl==="admin"?"p-ok":lvl==="officer"?"p-info":lvl==="read"?"p-warn":"p-mute"}">
+                ${lvl==="admin"?"Full admin":lvl==="officer"?"Officer":lvl==="read"?"Read only":"No login"}</span></td></tr>`).join("")}
+      </table></div>
+      <div class="note" style="margin-top:12px"><b>The three Master Initiators are recorded, not
+        given accounts.</b> The office is organizational, not administrative — recording it preserves
+        the chapter's history without handing three more people the ability to edit records. If your
+        chapter wants one of them to also hold a system role, name him in that role as well.</div>
+
+      <div class="sl">Attachments</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.9;color:var(--slate)">
+        📎 Signed petition of the founding brothers<br>
+        📎 Endorsement of the sponsoring chapter<br>
+        📎 Minutes of the organizational meeting</div></div>
+
+      <button class="btn brass" style="width:100%;margin-top:16px" onclick="go('applySubmitted')">Submit to Sta. Rosa City Council</button>
+      <div class="note" style="margin-top:12px">You will be given a reference number. Keep it — it is
+        how you check progress without an account.</div>
+    </div>
+  </div>
+</div>`;
+
+V.applySubmitted=()=>portalTop()+`<div class="crumb">Public form · submitted</div><div class="body">
+  <div style="max-width:640px;margin:40px auto;text-align:center">
+    <div style="width:64px;height:64px;border-radius:50%;border:2px solid var(--brass);margin:0 auto 20px;
+      display:grid;place-items:center;font-size:26px;color:var(--brass)">✓</div>
+    <div class="h1">Submitted to Sta. Rosa City Council</div>
+    <div class="sub" style="margin-bottom:22px">Your application was received on 12 May 2027 with
+      8 officers and 14 founding brothers.</div>
+
+    <div class="card" style="text-align:left"><div class="cp">
+      <div style="font-size:12px;color:var(--mute);letter-spacing:2px">REFERENCE NUMBER</div>
+      <div class="num" style="font-size:26px;font-weight:600;color:var(--brass-dk);margin-top:6px">CHR-2027-0044</div>
+      <div style="font-size:12.5px;color:var(--slate);margin-top:10px;line-height:1.6">
+        Write this down. Anyone with this number and the president's mobile can check progress —
+        no account required.</div>
+    </div></div>
+
+    <div class="ladder" style="margin-top:20px">
+      <div class="step done"><div class="lv">Chapter</div><div class="st">Submitted</div><div class="dt">12 May</div></div>
+      <div class="step now"><div class="lv">City Council</div><div class="st">Verifying officers</div><div class="dt">day 1 of 10</div></div>
+      <div class="step"><div class="lv">Chartered</div><div class="st">Chapter created</div><div class="dt">—</div></div>
+      <div class="step"><div class="lv">Access</div><div class="st">President enrolled</div><div class="dt">—</div></div>
+    </div>
+
+    <div class="note info" style="margin-top:20px;text-align:left"><b>What arrives, and what does
+      not.</b> On approval your president receives an SMS with a one-time enrolment link that expires
+      in 72 hours. He sets his own password and turns on two-factor.
+      <br><br>
+      <b>No password is ever sent to you.</b> Not by SMS, not by email, not by the council. Anyone
+      who offers to send you one is not the system.</div>
+
+    <button class="btn ghost" style="margin-top:20px" onclick="go('login')">Back to sign in</button>
+  </div>
+</div>`;
+
+V.officerUpdate=()=>portalTop()+crumb("Brgy. San Isidro Chapter · officers")+`<div class="body">
+  <div class="h1">Annual officer update — ${YEAR}</div>
+  <div class="sub">The same roster, filed again each August when officers change. This is not a
+    separate process; it is the chapter registration form after the chapter already exists.</div>
+
+  <div class="note info" style="margin-bottom:16px"><b>Why this matters more than it looks.</b>
+    Officer terms are dated, so permissions lapse on their own. If this form is never filed, a
+    chapter enters the new year with last year's secretary still able to edit meetings and last
+    year's treasurer still able to post to the ledger.</div>
+
+  <div class="sl" style="margin-top:0">Roster for ${YEAR}–${String(YEAR+1).slice(2)}</div>
+  <div class="card"><table>
+    <tr><th>Office</th><th>Outgoing</th><th>Incoming</th><th>Change</th><th class="num">Access</th></tr>
+    ${[["President","TANGLAW","TANGLAW","re-elected"],
+       ["Vice President","BAGWIS","HIMAGSIK","new"],
+       ["Secretary","HIMAGSIK","PANDAY","new"],
+       ["Treasurer","LAKANDULA","LAKANDULA","re-elected"],
+       ["Auditor","AGOS","BANTAY","new"],
+       ["Master Initiator I","ULIRAN","ULIRAN","unchanged"],
+       ["Master Initiator II","BANTAY","AGOS","new"],
+       ["Master Initiator III","PANDAY","BAGWIS","new"]].map(([off,out,inn,ch],i)=>{
+      const lvl=OFFICES[i][2];
+      return `<tr><td><b>${off}</b></td>
+        <td style="color:var(--mute)">${out}</td>
+        <td><b>${inn}</b></td>
+        <td><span class="pill ${ch==="new"?"p-info":ch==="unchanged"?"p-mute":"p-ok"}">${ch}</span></td>
+        <td style="text-align:right"><span class="pill ${lvl==="admin"?"p-ok":lvl==="officer"?"p-info":lvl==="read"?"p-warn":"p-mute"}">
+          ${lvl==="none"?"recorded only":lvl==="read"?"read only":lvl==="admin"?"full admin":"officer"}</span></td></tr>`;}).join("")}
+  </table></div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">On approval</div>
+      <div style="font-size:12.5px;line-height:1.85;color:var(--slate)">
+        · Outgoing officers keep their member records and their history. Only the office ends.<br>
+        · Their term is closed with yesterday's date; permissions drop that night.<br>
+        · Incoming officers are sent enrolment links, not passwords.<br>
+        · Every meeting, receipt and ledger entry stays attributed to whoever actually filed it.</div>
+    </div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">What does not happen</div>
+      <div class="note bad" style="margin-bottom:0"><b>An account is never handed over.</b> The
+        outgoing secretary's login is not passed to the incoming one. Shared or inherited accounts
+        destroy the audit trail — and the audit trail is the only reason a member believes the
+        balance on his phone.</div>
+    </div></div>
+  </div>
+
+  <div class="btnrow" style="margin-top:18px">
+    <button class="btn brass" onclick="alert('Submitted to Sta. Rosa City Council for verification.')">Submit to council</button>
+    <button class="btn ghost" onclick="alert('Saved as draft.')">Save draft</button>
+  </div>
+</div>`;
+
+V.attached=()=>portalTop()+crumb("Approval routing")+`<div class="body">
+  <div class="h1">Who is approving what</div>
+  <div class="sub">One rule covers bootstrap, expansion, dormancy and delay:
+    <b>an application is approved by the nearest existing ancestor with seated officers.</b></div>
+
+  <div class="card" style="background:var(--deep);border-color:var(--deep);margin-bottom:18px">
+    <div class="cp">
+      <div style="font-family:var(--f-disp);font-size:12px;letter-spacing:.2em;color:var(--brass)">THE RULE</div>
+      <div style="font-family:var(--f-disp);font-size:24px;color:#fff;margin-top:6px;line-height:1.3">
+        Walk up the tree until you find a council that exists and has somebody seated.</div>
+      <div style="font-size:13px;color:#9AA5B3;margin-top:10px">
+        There is no separate bootstrap mechanism, and no account anywhere in this system belongs to
+        someone who is not in the register.</div>
+    </div>
+  </div>
+
+  <div class="sl" style="margin-top:0">Currently routing elsewhere</div>
+  <div class="card"><table>
+    <tr><th>Subject</th><th>Should report to</th><th>Actually approved by</th><th>Why</th><th class="num">Waiting</th></tr>
+    ${[["4 chapters in Cabuyao City","Cabuyao City Council","Laguna Provincial Council","Council does not exist yet","p-info"],
+       ["10 chapters in San Pedro","San Pedro City Council","Laguna Provincial Council","No officers seated since Aug 2026","p-bad"],
+       ["Brgy. Pooc Chapter","Sta. Rosa City Council","Sta. Rosa City Council","Parent — normal","p-ok"]]
+      .map(([sub,should,act,why,k])=>`
+      <tr><td><b>${sub}</b></td>
+        <td style="color:var(--mute)">${should}</td>
+        <td><b>${act}</b></td>
+        <td><span class="pill ${k}">${why}</span></td>
+        <td class="num">${k==="p-ok"?"3 days":k==="p-bad"?"—":"—"}</td></tr>`).join("")}
+  </table></div>
+
+  <div class="note info" style="margin-top:14px"><b>Cabuyao and San Pedro look the same from below and
+    are not the same problem.</b> Cabuyao has no council because it has only just grown chapters —
+    the province creates one as soon as there are members to seat. San Pedro has a council that
+    nobody is running, and the fix there is to seat officers, not to create anything.</div>
+
+  <div class="sl">Jurisdictions carrying chapters without their own council</div>
+  <div class="card"><table>
+    <tr><th>Council carrying them</th><th>Unserved jurisdiction</th><th class="num">Chapters</th><th>Members available to seat</th><th></th></tr>
+    ${[["Laguna Provincial","Cabuyao City",4,"31 — enough to seat six",1],
+       ["Laguna Provincial","San Pedro City",10,"council exists, nobody seated",0],
+       ["Region IV-A","Quezon Province",6,"48 — enough to seat six",1],
+       ["Laguna Provincial","Alaminos",1,"7 — one chapter only",1]]
+      .map(([carry,juris,n,avail,ready])=>`
+      <tr><td>${carry}</td><td><b>${juris}</b></td><td class="num">${n}</td>
+        <td style="font-size:12px;color:${ready?"var(--in)":"var(--out)"}">${avail}</td>
+        <td style="text-align:right">${ready?`<button class="btn brass sm" onclick="go('newCouncil')">Create council</button>`
+          :`<button class="btn ghost sm" onclick="go('newCouncil')">Seat officers</button>`}</td></tr>`).join("")}
+  </table></div>
+  <div class="note" style="margin-top:14px"><b>This is information, not a deadline.</b> A council can
+    be created the moment there are members to seat, and never before. Nothing expires and nothing is
+    forced. But a province quietly carrying twenty chapters that should have had their own council is
+    a workload and legitimacy problem that stays invisible until renewal season — so it is surfaced
+    at three chapters, and left to the National Council to act on.</div>
+
+  <div class="note bad" style="margin-top:14px"><b>Alaminos shows the limit of the jurisdiction rule.</b>
+    One chapter, seven members, and six offices to fill. Officers may be seated from outside the
+    jurisdiction — there is no waiver and no approval step, only a permanent record of who did it and
+    why. Every such seat appears in the register below.</div>
+
+  <div class="sl">Officers seated from outside their jurisdiction</div>
+  <div class="card"><table>
+    <tr><th>Council</th><th>Office</th><th>Brother</th><th>His chapter</th><th>Seated by</th><th>Reason</th></tr>
+    ${[["Cabuyao City","PIO","BANTAY","Brgy. San Isidro · Sta. Rosa","Bro. DAKILA · Laguna","Only two chapters in Cabuyao"],
+       ["Alaminos","Treasurer","ULIRAN","Brgy. San Isidro · Sta. Rosa","Bro. DAKILA · Laguna","One chapter cannot fill six offices"]]
+      .map(([c,o,b,ch,by,why])=>`
+      <tr><td>${c}</td><td><b>${o}</b></td><td><b>${b}</b></td>
+        <td style="font-size:12px;color:var(--mute)">${ch}</td>
+        <td style="font-size:12px">${by}</td>
+        <td style="font-size:12px;color:var(--slate)">${why}</td></tr>`).join("")}
+  </table></div>
+
+  <div class="sl">Detached members</div>
+  <div class="card"><table>
+    <tr><th>Brother</th><th>Member no.</th><th>Chapter of record</th><th>Why</th><th>Renewal</th><th></th></tr>
+    ${[["BAGWIS","Joel R. Mariano","AKR-04-0118-004","Brgy. Pulo Chapter","Chapter dormant since 2023","renewed"],
+       ["SIGWA","Michael A. Rosales","AKR-04-0126-002","Brgy. Sto. Domingo","Chapter dissolved 2022","lapsed 2026"]]
+      .map(([g,n,no,ch,why,rn])=>`
+      <tr><td><b>${g}</b><div style="font-size:11px;color:var(--mute)">${n}</div></td>
+        <td class="num" style="font-size:11.5px">${no}</td>
+        <td style="font-size:12px">${ch}</td>
+        <td style="font-size:12px;color:var(--slate)">${why}</td>
+        <td><span class="pill ${rn==="renewed"?"p-ok":"p-bad"}">${rn}</span></td>
+        <td style="text-align:right"><button class="btn ghost sm"
+          onclick="alert('Transfers him into a registered chapter. His years, seals and history follow him.')">Transfer</button></td></tr>`).join("")}
+  </table></div>
+  <div class="note info" style="margin-top:14px"><b>Unrelated to bootstrap.</b> These two were created
+    by chapters that later stopped functioning. Detaching is not enrolment — a council still cannot
+    create anybody. The real fix is usually reviving the chapter, not relocating the brother.</div>
+</div>`;
+
+V.verifyCouncil=()=>portalTop()+crumb("CNL-2027-0009 · Cabuyao City Council")+`<div class="body">
+  <div class="h1">Council registration — CNL-2027-0009 <span class="pill p-warn" style="font-size:12px;vertical-align:middle">Day 4 of 10</span></div>
+  <div class="sub">Cabuyao City Council · submitted 12 May ${YEAR} by Laguna Provincial Council ·
+    6 seats declared</div>
+
+  <div class="sl" style="margin-top:0">Who approves this</div>
+  <div class="prereq">
+    <div class="p ok"><div class="lv">National</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Region IV-A</div><div class="st">Registered</div></div>
+    <div class="p now"><div class="lv">Laguna Province</div><div class="st">You — the approving body</div></div>
+    <div class="p arm"><div class="lv">Cabuyao City</div><div class="st">This registration</div></div>
+    <div class="p ok"><div class="lv">Chapters</div><div class="st">4 already registered</div></div>
+  </div>
+  <div class="note info" style="margin-top:14px"><b>Those four chapters were never blocked.</b> With
+    no Cabuyao council, the province approved them as nearest existing ancestor — which is exactly how
+    they came to have the 31 members this council is now being seated from. Approving this registration
+    hands routine approval back to Cabuyao and takes it off your desk.</div>
+
+  <div class="grid g21" style="margin-top:18px">
+    <div>
+      <div class="sl" style="margin-top:0">Seats declared — verify each brother</div>
+      <div class="card"><table>
+        <tr><th>Office</th><th>Brother</th><th>Member no.</th><th>Home chapter</th><th>Standing</th><th class="num">Verified</th></tr>
+        ${COUNCIL_SEATS.map(([off,nm,gift,no,ch],i)=>{
+          const bad = i===4;
+          return `<tr><td><b>${off}</b></td>
+            <td><b>${gift}</b><div style="font-size:11px;color:var(--mute)">${nm}</div></td>
+            <td class="num" style="font-size:11.5px">${no}</td>
+            <td style="font-size:12px">${ch}</td>
+            <td><span class="pill ${bad?"p-bad":"p-ok"}">${bad?"lapsed 2026":"renewed "+YEAR}</span></td>
+            <td style="text-align:right"><span class="cbx ${bad?"":"on"}"
+              onclick="alert('Verification is per seat. Return the registration rather than seating an officer you cannot vouch for.')">✓</span></td></tr>`;}).join("")}
+      </table></div>
+      <div class="note" style="margin-top:12px"><b>Bro. LAKAN GAT has not renewed since 2026.</b>
+        A council officer who is not himself a member in good standing cannot approve other people's
+        renewals — the office would be auditing a rule he is currently breaking. Return the
+        registration and let the province name someone else, or let him renew first.
+        <br><br>
+        The system checks this automatically because a human never will: every seat is validated
+        against the member's own <code>RenewedThrough</code> date at the moment of approval.</div>
+    </div>
+
+    <div>
+      <div class="sl" style="margin-top:0">On approval</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.85;color:var(--slate)">
+        1. Cabuyao City Council is created beneath Laguna.<br>
+        2. The 4 Cabuyao chapters route to it instead of to you.<br>
+        3. Six seats are filled with dated terms ending 08 Aug ${YEAR+1}.<br>
+        4. <b>The president receives a one-time enrolment link</b>; he seats the rest.<br>
+        5. It appears in the chapter registration form as a selectable council.<br>
+        6. It inherits the national fee, split and calendar — it configures none of them.</div></div>
+
+      <div class="sl">What it cannot do</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.75;color:var(--slate)">
+        · Set its own fee or renewal dates<br>
+        · Read a chapter's ledger — that stays chapter-exclusive<br>
+        · Delete anything, at any level<br>
+        · Approve its own registration</div></div>
+
+      <div class="btnrow" style="margin-top:16px">
+        <button class="btn brass" onclick="alert('Council seated. Enrolment link sent to the president; 4 chapters attached.')">Approve and seat</button>
+        <button class="btn ghost" onclick="alert('Returned to Laguna Provincial Council with your remark.')">Return with remark</button>
+      </div>
+      <div class="note" style="margin-top:12px">If the province does not act within its window, the
+        region may seat this council on override — and the record will name the province as the body
+        that did not act. That is the same routing rule again, reaching one level further up.</div>
+    </div>
+  </div>
+</div>`;
+
+V.petitionCouncil=()=>{S.councilMode="petition";return V.newCouncil();};
+
+V.newCouncil=()=>{
+  const mode = S.councilMode || "constitute";
+  return portalTop()+crumb("Council registration")+`<div class="body">
+  <div class="h1">Register a council</div>
+  <div class="sub">A council is an organ of the level above it, so it is normally constituted from
+    above rather than petitioned from below. Both routes exist; they differ in who starts it, not in
+    who approves it.</div>
+
+  <div class="chips" style="display:flex;gap:8px;margin-bottom:16px">
+    <button class="btn ${mode==="constitute"?"brass":"ghost"} sm"
+      onclick="S.councilMode='constitute';render()">Constituted from above</button>
+    <button class="btn ${mode==="petition"?"brass":"ghost"} sm"
+      onclick="S.councilMode='petition';render()">Petitioned from below</button>
+    <button class="btn ${mode==="reconstitute"?"brass":"ghost"} sm"
+      onclick="S.councilMode='reconstitute';render()">Reconstitute a dormant council</button>
+  </div>
+
+  ${mode==="constitute" ? `
+    <div class="note info" style="margin-bottom:16px"><b>Laguna Provincial Council is creating a new
+      city council.</b> This is the usual route: a jurisdiction exists, the province seats officers,
+      and chapters attach to it afterwards. <b>A council is created empty</b> — unlike a chapter,
+      it does not need members of its own to exist.</div>` : ""}
+  ${mode==="petition" ? `
+    <div class="note" style="margin-bottom:16px"><b>Chapters in an unserved city are petitioning to
+      constitute their own council.</b> This route needs a public form, because the petitioning
+      chapters have accounts in AIS but no council account to file from. It is approved by the same
+      body either way — the province — and the officers still come from the same dropdown.</div>` : ""}
+  ${mode==="reconstitute" ? `
+    <div class="note bad" style="margin-bottom:16px"><b>Reconstitution is not creation.</b> The
+      council row, its history, its past approvals and its chapters all remain. Only the officers
+      change. <b>A council is never deleted</b> — every chapter, renewal and receipt beneath it
+      references it forever.</div>` : ""}
+
+  <div class="sl" style="margin-top:0">The chain above must already exist</div>
+  <div class="prereq">
+    <div class="p ok"><div class="lv">National</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Region IV-A</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Laguna Province</div><div class="st">The approving body</div></div>
+    <div class="p ok"><div class="lv">Chapters in Cabuyao</div><div class="st">4 registered · 31 members</div></div>
+    <div class="p now"><div class="lv">City / Municipal</div><div class="st">This registration</div></div>
+  </div>
+  <div class="note info" style="margin-top:14px"><b>Chapters come first, and the council is
+    constituted over them.</b> A council cannot be created until at least one registered chapter
+    exists in its jurisdiction — that is what guarantees the officer dropdown has somebody in it, and
+    a council with no chapters governs nothing anyway.
+    <br><br>
+    Until it exists, those four chapters are approved by <b>Laguna Provincial Council</b> — the
+    nearest existing ancestor. Nothing was blocked while waiting.</div>
+
+  <div class="grid g21" style="margin-top:18px">
+    <div>
+      <div class="sl" style="margin-top:0">1 · Jurisdiction</div>
+      <div class="card"><div class="cp"><div class="grid g2">
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Council name</div>
+          <input value="${mode==="reconstitute" ? "San Pedro City Council" : "Cabuyao City Council"}"
+            style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px"></div>
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Level</div>
+          <select style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px">
+            <option>City / Municipal</option><option>Provincial</option><option>Regional</option></select></div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="grid g2">
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Parent council</div>
+          <select style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px"><option>Laguna Provincial Council</option></select></div>
+        <div><div style="font-size:12px;color:var(--slate);margin-bottom:5px">Term of office</div>
+          <input value="09 Aug ${YEAR} — 08 Aug ${YEAR+1}"
+            style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-family:var(--f-num);font-size:12px"></div>
+      </div></div></div>
+
+      <div class="sl">2 · Seated officers <span class="pill p-info">select — no typing</span></div>
+      <div class="card"><table>
+        <tr><th style="width:170px">Office</th><th>Brother</th><th>Home chapter</th><th class="num">Status</th></tr>
+        ${COUNCIL_OFFICES.map(([off,,lvl],i)=>{
+          const picked = S.seats && S.seats[i] ? [...ELIGIBLE,...OUTSIDE].find(m=>m.id===+S.seats[i]) : null;
+          const isOut = picked && !ELIGIBLE.some(m=>m.id===picked.id);
+          const taken = Object.entries(S.seats||{}).filter(([k])=>+k!==i).map(([,v])=>+v);
+          const opt = m => `<option value="${m.id}" ${picked&&picked.id===m.id?"selected":""}
+             ${taken.includes(m.id)?"disabled":""}>${m.gift} — ${m.name} (${m.ch})${taken.includes(m.id)?" · already seated":""}</option>`;
+          return `<tr>
+            <td><b>${off}</b>
+              <div style="margin-top:3px"><span class="pill ${lvl==="admin"?"p-ok":lvl==="read"?"p-warn":"p-info"}">
+                ${lvl==="admin"?"Full admin":lvl==="read"?"Read only":"Officer"}</span></div></td>
+            <td>
+              <select style="width:100%;padding:8px 10px;border:1px solid ${isOut?"#E8D6AC":"var(--line)"};
+                border-radius:7px;font-size:12.5px;background:${isOut?"#FBF5E7":"#fff"}"
+                onchange="pickSeat(${i}, this.value)">
+                <option value="">Select a brother…</option>
+                <optgroup label="Cabuyao City — in jurisdiction">${ELIGIBLE.map(opt).join("")}</optgroup>
+                <optgroup label="Outside jurisdiction — will be logged">${OUTSIDE.map(opt).join("")}</optgroup>
+              </select>
+              ${isOut?`<input placeholder="Reason — required, and recorded permanently"
+                 style="width:100%;margin-top:6px;padding:7px 10px;border:1px solid #E8D6AC;
+                 border-radius:6px;font-size:12px;background:#FBF5E7">`:""}
+            </td>
+            <td style="font-size:12px">
+              ${picked?`${picked.ch}<div style="font-size:11px;color:${isOut?"var(--warn)":"var(--mute)"}">${picked.cty}${isOut?" · outside":""}</div>`
+                      :`<span style="color:var(--mute)">—</span>`}
+            </td>
+            <td style="text-align:right">
+              ${picked?`<span class="pill ${picked.cur?"p-ok":"p-bad"}">${picked.cur?"renewed":"lapsed"}</span>`
+                      :`<span class="pill p-mute">unfilled</span>`}
+            </td></tr>`;}).join("")}
+      </table></div>
+
+      ${(()=>{const n=Object.values(S.seats||{}).filter(Boolean).length;
+        const lapsed=Object.values(S.seats||{}).filter(Boolean)
+          .map(v=>[...ELIGIBLE,...OUTSIDE].find(m=>m.id===+v)).filter(m=>m&&!m.cur);
+        const outs=Object.values(S.seats||{}).filter(Boolean)
+          .map(v=>+v).filter(v=>!ELIGIBLE.some(m=>m.id===v));
+        return `<div class="card" style="margin-top:12px"><div class="cp"
+          style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+          <div><div style="font-size:11px;color:var(--mute)">Seats filled</div>
+            <div class="num" style="font-size:19px;color:${n===6?"var(--in)":"var(--ink)"}">${n} of 6</div></div>
+          <div style="flex:1;min-width:220px;font-size:12px;color:var(--slate);line-height:1.55">
+            ${lapsed.length?`<span style="color:var(--out);font-weight:600">${lapsed.map(m=>m.gift).join(", ")} ${lapsed.length>1?"have":"has"} not renewed.</span>
+               An officer who has lapsed would be approving other people's renewals while breaking the same rule.`
+             :outs.length?`<span style="color:var(--warn);font-weight:600">${outs.length} seat${outs.length>1?"s":""} from outside Cabuyao.</span>
+               Permitted, and each will be recorded with your name and the reason.`
+             :n===6?`All six seats filled from Cabuyao chapters. Nothing to log.`
+             :`31 members available across 4 Cabuyao chapters.`}
+          </div>
+        </div></div>`;})()}
+
+      <div class="note bad" style="margin-top:12px"><b>Every officer field on this form is a dropdown.
+        There is nowhere to type a name.</b> A council has no route into the register — only a chapter
+        does, through a chapter registration or a Chapter Admin approving a sign-up. This form seats
+        people; it enrols nobody.</div>
+      <div class="note info" style="margin-top:12px"><b>The dropdown is filled from chapters in this
+        council's jurisdiction.</b> A Cabuyao council officer is a member of a Cabuyao chapter.
+        <br><br>
+        Seating someone from outside is permitted — one chapter cannot supply six officers — but
+        there is <b>no waiver and no approval step</b>. The seat is simply recorded with the name of
+        whoever made it and the reason, permanently and visibly.
+        <a onclick="go('attached')" style="color:var(--brass-dk);cursor:pointer;font-weight:600">See every such seat →</a></div>
+    </div>
+
+    <div>
+      <div class="sl" style="margin-top:0">What a council can do</div>
+      <div class="card"><table>
+        ${COUNCIL_OFFICES.map(([o,d,lvl])=>`
+          <tr><td><b style="font-size:12px">${o}</b>
+            <div style="font-size:10.5px;color:var(--mute);margin-top:2px">${d}</div></td>
+            <td style="text-align:right;vertical-align:top">
+              <span class="pill ${lvl==="admin"?"p-ok":lvl==="read"?"p-warn":"p-info"}">
+                ${lvl==="admin"?"Full admin":lvl==="read"?"Read only":"Officer"}</span></td></tr>`).join("")}
+      </table></div>
+      <div class="note" style="margin-top:12px">There are <b>no master initiators on a council</b>.
+        That office belongs to a chapter's rite, not to a council's function. Copying the chapter
+        roster wholesale would create three council seats with nothing to do.</div>
+
+      <div class="sl">On approval</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.85;color:var(--slate)">
+        1. The council is created beneath Laguna and appears in the registry.<br>
+        2. It becomes selectable when a chapter registers under it.<br>
+        3. Its six officers are seated with dated terms.<br>
+        4. <b>The president receives a one-time enrolment link</b>, and seats the rest himself.<br>
+        5. It inherits the national fee split and renewal calendar — a council sets neither.</div></div>
+
+      <div class="btnrow" style="margin-top:16px">
+        <button class="btn brass" onclick="alert('Submitted to Laguna Provincial Council.')">
+          ${mode==="reconstitute"?"Submit reconstitution":"Submit registration"}</button>
+        <button class="btn ghost" onclick="go('registry')">Cancel</button>
+      </div>
+      <div class="note" style="margin-top:12px"><b>No fee.</b> A council is not renewed and pays
+        nothing to exist. Only members renew, and only chapters remit.</div>
+    </div>
+  </div>
+</div>`;};
+
+V.registry=()=>{
+  const T=[
+    [0,'National Council','National','—','#8E6D22','NC',1104,18430],
+    [1,'Region IV-A · CALABARZON','Regional','5 provinces','#2E5C8A','IV',187,3210],
+    [2,'Laguna Provincial Council','Provincial','12 cities and municipalities','#2E6B52','LG',73,1486],
+    [3,'Sta. Rosa City Council','City/Municipal','14 chapters','#7A3E8F','SR',14,264],
+    [4,'Brgy. San Isidro Chapter','Chapter','chartered 2005','#2E5C8A','SI',null,18],
+    [4,'Brgy. Malitlit Chapter','Chapter','chartered 2009','#A6392E','ML',null,22],
+    [4,'Brgy. Balibago Chapter','Chapter','chartered 2011','#2F5D63','BL',null,19],
+  ];
+  const DORMANT=[
+    ['San Pedro City Council','City/Municipal','no seated officers since Aug 2026','10 chapters affected'],
+    ['Quezon Provincial Council','Provincial','president deceased, no successor seated','4 city councils affected'],
+  ];
+  return portalTop()+crumb("Organization registry")+`<div class="body">
+  <div class="h1">Organization registry</div>
+  <div class="sub">One database, one address, one login page — and this tree is what tells the system
+    who approves whom. A body cannot exist until the body above it does.</div>
+
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="tile dark"><div class="k">Chapters registered</div><div class="v">1,104</div><div class="d">nationwide</div></div>
+    <div class="tile"><div class="k">Councils</div><div class="v">1,704</div><div class="d">17 regional · 81 provincial · 1,606 city</div></div>
+    <div class="tile"><div class="k">Members on the rolls</div><div class="v">18,430</div><div class="d">across every chapter</div></div>
+    <div class="tile"><div class="k">Awaiting registration</div><div class="v" style="color:var(--warn)">23</div><div class="d">14 chapters · 9 councils</div></div>
+  </div>
+
+  <div class="note info" style="margin-bottom:16px"><b>Read this tree downward, because that is the
+    order it had to be built in.</b> A chapter cannot be registered until its city council exists;
+    a city council cannot exist until its province does. Each body is the approving authority for
+    the one beneath it — which is precisely why the levels must be seeded from the top before any
+    pilot can start.</div>
+
+  <div class="sl">The chain, from national to barangay</div>
+  <div class="tree">
+    ${T.map(([d,nm,lvl,sub,col,mk,ch,mem])=>`
+      <div class="tnode" onclick="go('newChapter')">
+        <div class="rail">${'<span class="stub"></span>'.repeat(d)}<span class="tick"></span><span class="stub"></span></div>
+        <div class="chmark" style="background:${col}">${mk}</div>
+        <div style="flex:1;min-width:0">
+          <div class="lvl">${lvl}</div>
+          <div class="nm">${nm}</div>
+          <div class="sub">${sub}</div>
+        </div>
+        <div style="text-align:right">
+          ${ch!==null?`<div class="num" style="font-size:13px">${ch} chapters</div>`:''}
+          <div class="num" style="font-size:11px;color:var(--mute)">${mem} members</div>
+        </div>
+      </div>`).join("")}
+  </div>
+
+  <div class="sl">Councils needing attention</div>
+  <div class="card"><table>
+    <tr><th>Council</th><th>Level</th><th>Why</th><th>Impact</th><th></th></tr>
+    ${DORMANT.map(([nm,lvl,why,imp])=>`
+      <tr><td><b>${nm}</b></td><td>${lvl}</td>
+        <td style="color:var(--slate)">${why}</td>
+        <td><span class="pill p-bad">${imp}</span></td>
+        <td style="text-align:right"><button class="btn ghost sm" onclick="S.councilMode='reconstitute';go('newCouncil')">Reconstitute</button></td></tr>`).join("")}
+  </table></div>
+  <div class="note bad" style="margin-top:12px"><b>A dormant council is not a cosmetic problem.</b>
+    It is the approving body for everything beneath it, so ten chapters in San Pedro currently have
+    nobody to approve their renewals. The escalation clock covers the delay — the province can act
+    over the empty seat — but that is a workaround, not a fix. Reconstitute it.
+    <br><br>
+    <b>A council is never deleted.</b> If a jurisdiction is merged or reorganised, its chapters are
+    reassigned to another council and the old row stays. Every renewal, receipt and approval ever
+    made beneath it references that row forever.</div>
+
+  <div class="note" style="margin-top:16px"><b>Each chapter has its own mark and colour.</b> The
+    login page is identical for all 1,104 — before a brother signs in the system does not know who
+    he is. From the moment he does, the app carries his chapter's mark. Uniform where it must be,
+    his where it can be.</div>
+  <div class="btnrow" style="margin-top:16px">
+    <button class="btn brass" onclick="go('newChapter')">Register a new chapter</button>
+    <button class="btn ghost" onclick="S.councilMode='constitute';go('newCouncil')">Register a new council</button>
+  </div>
+</div>`;};
+
+V.newChapter=()=>portalTop()+crumb("CHR-2027-0044 · Brgy. Pooc Chapter")+`<div class="body">
+  <div class="h1">Chapter registration — CHR-2027-0044</div>
+  <div class="sub">Brgy. Pooc, Sta. Rosa City · submitted 12 May 2027 · 14 founding brothers,
+    sponsored by Brgy. San Isidro Chapter</div>
+
+  <div class="sl" style="margin-top:0">The chain must already exist</div>
+  <div class="prereq">
+    <div class="p ok"><div class="lv">National</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Region IV-A</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Laguna</div><div class="st">Registered</div></div>
+    <div class="p ok"><div class="lv">Sta. Rosa City</div><div class="st">You — the approving body</div></div>
+    <div class="p now"><div class="lv">Chapter</div><div class="st">This application</div></div>
+  </div>
+
+  <div class="sl">Officers declared — verify each one</div>
+  <div class="card"><table>
+    <tr><th>Office</th><th>Name</th><th>Gift name</th><th>Date survive</th><th>Access on approval</th><th class="num">Verified</th></tr>
+    ${ROSTER.map(([off,nm,gift,ds],i)=>{
+      const lvl=OFFICES[i][2];
+      return `<tr><td><b>${off}</b></td><td>${nm}</td>
+        <td><b>${gift}</b></td><td class="num" style="font-size:11.5px">${ds}</td>
+        <td><span class="pill ${lvl==="admin"?"p-ok":lvl==="officer"?"p-info":lvl==="read"?"p-warn":"p-mute"}">
+          ${lvl==="admin"?"Full admin":lvl==="officer"?"Officer":lvl==="read"?"Read only":"Recorded only"}</span></td>
+        <td style="text-align:right"><span class="cbx ${i!==5?"on":""}" onclick="alert('Verification is per officer. Return the form rather than approving a roster you cannot vouch for.')">✓</span></td></tr>`;}).join("")}
+  </table></div>
+  <div class="note" style="margin-top:12px">One officer is unverified — <b>Bro. ULIRAN's date
+    survive does not match the sponsoring chapter's record.</b> Return the form with that remark.
+    Approving a roster you cannot vouch for is how a chapter ends up with an officer nobody
+    recognises three years from now.</div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">On approval, in one transaction</div>
+      <div style="font-size:12.5px;line-height:1.9;color:var(--slate)">
+        1. The chapter is created and given its chapter number.<br>
+        2. The 8 officers become member records with their offices and term dates.<br>
+        3. Its mark is generated from the chapter name until a logo is uploaded.<br>
+        4. Its ledger opens at zero; its first renewal season is scheduled.<br>
+        5. <b>The President is sent a one-time enrolment link.</b><br>
+        6. It appears in the AIS sign-up list so the other brothers can register.</div>
+    </div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">How access is actually given</div>
+      <div class="note bad" style="margin-bottom:12px"><b>The council never sends a password.</b>
+        Not by SMS, not by email, not by hand. A password you transmit is a password you no longer
+        control, and it will be reused on the treasurer's account within a month.</div>
+      <div style="font-size:12.5px;line-height:1.8;color:var(--slate)">
+        The president receives an <b>enrolment link valid for 72 hours</b>, tied to the mobile number
+        on the form. He sets his own password and enables two-factor before the account works.
+        <br><br>
+        He then invites the vice president, secretary, treasurer and auditor the same way from inside
+        the app. The three master initiators are recorded as officers and are sent nothing — they
+        have no system permission to receive.</div>
+    </div></div>
+  </div>
+
+  <div class="btnrow" style="margin-top:18px">
+    <button class="btn brass" onclick="alert('Chartered. Enrolment link sent to the President. The chapter now appears in the AIS sign-up list.')">Approve and charter</button>
+    <button class="btn ghost" onclick="alert('Returned with your remark. The chapter corrects it and resubmits under the same reference.')">Return with remark</button>
+  </div>
+  <div class="note" style="margin-top:12px">Rejection is not an option here either — a chapter that
+    has organized and petitioned must always have a route forward.</div>
+</div>`;
+
+V.queue=()=>portalTop()+crumb("Sta. Rosa City Council · inbox")+`<div class="body">
+  <div class="h1">Renewal queue</div>
+  <div class="sub">Sorted by how long each application has been waiting. Anything past day 10 is visible to the province and can be acted on without you.</div>
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="tile dark"><div class="k">Awaiting your action</div><div class="v">4</div><div class="d">2 already overdue</div></div>
+    <div class="tile"><div class="k">Approved this season</div><div class="v" style="color:var(--in)">10</div><div class="d">of 14 chapters</div></div>
+    <div class="tile"><div class="k">Members renewed</div><div class="v">131</div><div class="d">city-wide</div></div>
+    <div class="tile"><div class="k">Fees posted</div><div class="v" style="color:var(--in)">${peso(6550)}</div><div class="d">1 application unposted</div></div>
+  </div>
+  <div class="card"><table>
+    <tr><th>Application</th><th>Chapter</th><th class="num">Members</th><th class="num">Fee</th><th>Submitted</th><th>Waiting</th><th>Payment</th><th>Status</th><th></th></tr>
+    ${QUEUE.map(q=>{
+      const late=q.age>10, done=q.st.startsWith("Approved");
+      return `<tr class="click" onclick="go('appDetail')">
+        <td class="num" style="text-align:left">${q.id}</td>
+        <td><b>${q.ch}</b></td>
+        <td class="num">${q.m}</td>
+        <td class="num">${peso(q.amt)}</td>
+        <td>${q.sub}</td>
+        <td><span class="pill ${late&&!done?'p-bad':done?'p-mute':'p-ok'}">day ${q.age}</span></td>
+        <td><span class="pill ${q.pay==="Posted"?"p-ok":"p-warn"}">${q.pay}</span></td>
+        <td><span class="pill ${done?'p-ok':late?'p-bad':'p-warn'}">${q.st}</span></td>
+        <td style="text-align:right">${done?'':'<button class="btn brass sm">Review</button>'}</td></tr>`}).join("")}
+  </table></div>
+  <div class="note bad" style="margin-top:16px"><b>Two applications are past day 10.</b> The Laguna Provincial Council can now approve them over your head, and the record will name your council as the one that did not act. Reviewing them today prevents that.</div>
+</div>`;
+
+V.appDetail=()=>portalTop()+crumb("RNW-2027-0041 · Brgy. San Isidro Chapter")+`<div class="body">
+  <div class="h1">RNW-2027-0041 <span class="pill p-warn" style="font-size:12px;vertical-align:middle">Day 3 of 10</span></div>
+  <div class="sub">Brgy. San Isidro Chapter · submitted by Bro. TANGLAW, Chapter President, on 12 May ${YEAR}</div>
+  <div class="grid g21">
+    <div>
+      <div class="sl" style="margin-top:0">Members declared for renewal</div>
+      <div class="card"><table>
+        <tr><th>Member</th><th>Member no.</th><th>Last renewed</th><th>Years continuous</th><th></th><th class="num">Confirm</th></tr>
+        ${MEMBERS.filter(m=>S.checks[m.id]).slice(0,8).map((m,i)=>`
+          <tr><td><span class="av">${m.g.slice(0,2)}</span><b>${m.g}</b>
+            <div style="font-size:11px;color:var(--mute);margin-left:38px">${m.n}</div></td>
+            <td class="num" style="text-align:left">${m.no}</td>
+            <td class="num" style="text-align:left">${m.last}</td>
+            <td class="num" style="text-align:left">${m.last===2026?(2027-parseInt(m.yr)):1}</td>
+            <td style="text-align:right">${i===2?'<span class="pill p-warn">gap in 2025</span>':'<span class="pill p-ok">clean</span>'}</td>
+            <td style="text-align:right;width:120px"><span class="cbx ${S.verified[m.id]!==false?'on':''}" onclick="event.stopPropagation();S.verified[${m.id}]=${!(S.verified[m.id]!==false)};render()">✓</span>
+              <span style="font-size:11px;color:var(--mute);margin-left:5px">verified</span></td></tr>`).join("")}
+      </table></div>
+      <div class="note info" style="margin-top:14px">You are approving the <b>list</b>, not each brother individually. If one name should not be there, return the application with a remark — do not approve a roster you disagree with and correct it later.</div>
+    </div>
+    <div>
+      <div class="sl" style="margin-top:0">Fee and payment</div>
+      <div class="card"><div class="cp">
+        <table style="font-size:12.5px">
+          <tr><td>8 members × ${peso(FEE)}</td><td class="num"><b>${peso(400)}</b></td></tr>
+          <tr><td style="color:var(--mute)">City Council share</td><td class="num">${peso(40)}</td></tr>
+          <tr><td style="color:var(--mute)">Provincial share</td><td class="num">${peso(80)}</td></tr>
+          <tr><td style="color:var(--mute)">Regional share</td><td class="num">${peso(120)}</td></tr>
+          <tr><td style="color:var(--mute)">National share</td><td class="num">${peso(160)}</td></tr>
+        </table>
+        <div class="note" style="margin-top:12px"><b>The split is shown to everyone, at every level.</b> A share that nobody can see is a share somebody will eventually argue about.</div>
+      </div></div>
+      <div class="sl">Official receipt</div>
+      <div class="card"><div class="cp" style="font-size:12.5px;line-height:1.8;color:var(--slate)">
+        OR number · <b style="font-family:var(--f-num)">OR-2027-00218</b><br>
+        Date paid · 12 May ${YEAR}<br>
+        Received by · Bro. MANDIRIGMA<br>
+        Scan attached · <span class="pill p-ok">Yes</span></div></div>
+      <div class="btnrow" style="margin-top:16px">
+        <button class="btn brass" onclick="go('receipt')">Approve &amp; issue receipt</button>
+        <button class="btn ghost" onclick="alert('Returned to the chapter with your remark. The clock pauses until they resubmit.')">Return with remark</button>
+      </div>
+      <div class="note bad" style="margin-top:12px">Rejection is not an option here. An application is either approved or returned for correction — a chapter that has paid must always have a route forward.</div>
+    </div>
+  </div></div>`;
+
+V.escalate=()=>portalTop()+crumb("RNW-2027-0033 · Brgy. Balibago Chapter")+`<div class="body">
+  <div class="h1">Escalation and override</div>
+  <div class="sub">This application has waited 11 working days. The Laguna Provincial Council may now act in place of the city council.</div>
+  <div class="ladder">
+    <div class="step done"><div class="lv">Chapter</div><div class="st">Submitted</div><div class="dt">04 May</div></div>
+    <div class="step done"><div class="lv">Payment</div><div class="st">Fee posted</div><div class="dt">04 May</div></div>
+    <div class="step arm"><div class="lv">City Council</div><div class="st">No action · day 11</div><div class="dt">exceeded 10-day window</div></div>
+    <div class="step now"><div class="lv">Province</div><div class="st">May approve on override</div><div class="dt">armed 18 May</div></div>
+    <div class="step"><div class="lv">Region</div><div class="st">Arms on day 20</div><div class="dt">not yet armed</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">Override — record of the act</div>
+      <div style="font-size:12px;color:var(--slate);margin-bottom:6px">Reason (required)</div>
+      <select style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;background:#fff">
+        <option>City council did not act within the window</option>
+        <option>City council has no seated secretary</option>
+        <option>Chapter deadline at risk</option>
+        <option>Other — specify below</option></select>
+      <div style="height:10px"></div>
+      <textarea rows="3" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-family:inherit;font-size:12.5px"
+        placeholder="Remarks — this text is shown to the bypassed council and to the chapter"></textarea>
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn danger" onclick="alert('Approved on override. Sta. Rosa City Council notified and named in the record.')">Approve on override</button>
+        <button class="btn ghost" onclick="alert('Reminder sent to the city council. No override recorded.')">Send reminder instead</button></div>
+    </div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">How the record will read</div>
+      <div class="note" style="margin-bottom:12px">
+        <b>RNW-2027-0033 — approved 18 May ${YEAR}</b><br>
+        Approved by: Laguna Provincial Council (Bro. DAKILA)<br>
+        On override of: Sta. Rosa City Council<br>
+        Reason: city council did not act within the 10-working-day window<br>
+        Bypassed council notified: 18 May, 09:12
+      </div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--slate)">
+        An override is never silent. It names who was bypassed, why, and when they were told.
+        <br><br>
+        This is deliberate. An override that leaves no trace stops being a remedy for delay and becomes a tool for taking authority away from a council somebody dislikes.</div>
+    </div></div>
+  </div>
+  <div class="note info" style="margin-top:16px"><b>National Council is the exception.</b> It may act at any point without waiting for the window, because it is the ultimate authority — but the same record is written, and the same notice is sent.</div>
+</div>`;
+
+V.payment=()=>portalTop()+crumb("Sta. Rosa City Council · fees")+`<div class="body">
+  <div class="h1">Fee posting and remittance</div>
+  <div class="sub">Phase 1 records money that has already changed hands. Online payment comes later — reconciliation is the hard part, not the collection.</div>
+  <div class="grid g3" style="margin-bottom:16px">
+    <div class="tile dark"><div class="k">Collected this season</div><div class="v">${peso(6550)}</div><div class="d">131 members × ${peso(FEE)}</div></div>
+    <div class="tile"><div class="k">Remitted upward</div><div class="v" style="color:var(--in)">${peso(5895)}</div><div class="d">province, region, national shares</div></div>
+    <div class="tile"><div class="k">Retained by city</div><div class="v">${peso(655)}</div><div class="d">10% city share</div></div>
+  </div>
+  <div class="sl">Receipts posted</div>
+  <div class="card"><table>
+    <tr><th>OR number</th><th>Chapter</th><th>Date paid</th><th class="num">Amount</th><th>Received by</th><th>Scan</th><th>Remitted</th></tr>
+    ${[["OR-2027-00218","Brgy. San Isidro",  "12 May",400,"Bro. MANDIRIGMA",1,1],
+       ["OR-2027-00214","Brgy. Malitlit",    "09 May",700,"Bro. MANDIRIGMA",1,1],
+       ["OR-2027-00209","Brgy. Balibago",    "04 May",550,"Bro. MANDIRIGMA",1,0],
+       ["OR-2027-00196","Brgy. Dita",        "28 Apr",850,"Bro. MANDIRIGMA",1,1],
+       ["—",            "Brgy. Tagapo",      "—",     450,"—",0,0]].map(([or,ch,d,a,by,sc,rm])=>`
+      <tr><td class="num" style="text-align:left">${or}</td><td>${ch}</td><td>${d}</td>
+        <td class="num">${peso(a)}</td><td style="color:var(--mute)">${by}</td>
+        <td><span class="pill ${sc?'p-ok':'p-bad'}">${sc?'Attached':'Missing'}</span></td>
+        <td><span class="pill ${rm?'p-ok':'p-warn'}">${rm?'Remitted':'Pending'}</span></td></tr>`).join("")}
+  </table></div>
+  <div class="note" style="margin-top:16px"><b>An application cannot be approved while its fee is unposted.</b> Brgy. Tagapo's ₱450 has no receipt against it — approving that renewal would put 9 members on the roll with no money behind them, and the discrepancy would surface a year later when nobody remembers.</div>
+  <div class="note info" style="margin-top:12px">Every posting here mirrors into the paying chapter's AIS ledger, so the chapter's own members see the remittance acknowledged. The two sets of books reconcile by construction rather than by meeting.</div>
+</div>`;
+
+V.province=()=>portalTop()+crumb("Laguna Provincial Council")+`<div class="body">
+  <div class="h1">Province monitor — Laguna</div>
+  <div class="sub">Which councils are moving, and which are sitting on applications. Most delays end the moment they become visible one level up.</div>
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="tile dark"><div class="k">Chapters renewed</div><div class="v">57 / 73</div><div class="d">78% of the province</div></div>
+    <div class="tile"><div class="k">Members renewed</div><div class="v">1,142</div><div class="d">of 1,486 on the rolls</div></div>
+    <div class="tile"><div class="k">Overdue with councils</div><div class="v" style="color:var(--out)">9</div><div class="d">province may act on these</div></div>
+    <div class="tile"><div class="k">Collected</div><div class="v" style="color:var(--in)">${peso(57100)}</div><div class="d">provincial share ${peso(11420)}</div></div>
+  </div>
+  <div class="sl">City and municipal councils</div>
+  <div class="card"><table>
+    <tr><th>Council</th><th class="num">Chapters</th><th class="num">Approved</th><th style="width:180px">Renewal rate</th><th>Average time to act</th><th>Overdue</th><th></th></tr>
+    ${PROVINCE.map(([c,t,a,pc])=>`
+      <tr><td><b>${c}</b></td><td class="num">${t}</td><td class="num">${a}</td>
+        <td><div class="legend"><div class="bar"><i style="width:${pc}%;background:${pc>=80?'var(--in)':pc>=60?'var(--warn)':'var(--out)'}"></i></div><span>${pc}%</span></div></td>
+        <td class="num" style="text-align:left">${pc>=80?'4 days':pc>=60?'9 days':'16 days'}</td>
+        <td>${pc<60?'<span class="pill p-bad">4 waiting</span>':pc<80?'<span class="pill p-warn">2 waiting</span>':'<span class="pill p-ok">none</span>'}</td>
+        <td style="text-align:right">${pc<60?'<button class="btn danger sm" onclick="go(&#39;escalate&#39;)">Act on override</button>':''}</td></tr>`).join("")}
+  </table></div>
+  <div class="note info" style="margin-top:16px"><b>San Pedro City is the real finding here</b> — 40% renewed and 16 days average. That is not a chapter problem, it is a council problem, and it is the kind of thing no annual report has ever surfaced in time to fix.</div>
+</div>`;
+
+V.national=()=>portalTop()+crumb("National Secretariat")+`<div class="body">
+  <div class="h1">National renewal dashboard — ${YEAR}</div>
+  <div class="sub">The season at a glance. Every figure drills down to the chapter that produced it.</div>
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="tile dark"><div class="k">Members renewed</div><div class="v">18,430</div><div class="d">nationwide, as of today</div></div>
+    <div class="tile"><div class="k">Chapters renewed</div><div class="v">742 / 1,104</div><div class="d">67% with 19 days left</div></div>
+    <div class="tile"><div class="k">Collected</div><div class="v" style="color:var(--in)">${peso(921500)}</div><div class="d">national share ${peso(368600)}</div></div>
+    <div class="tile"><div class="k">Stalled applications</div><div class="v" style="color:var(--out)">86</div><div class="d">across 23 councils</div></div>
+  </div>
+  <div class="grid g2">
+    <div><div class="sl" style="margin-top:0">Regions by renewal rate</div>
+      <div class="card"><table>
+        ${[["Region IV-A · CALABARZON",81],["NCR",76],["Region III · Central Luzon",73],
+           ["Region VII · Central Visayas",64],["Region VI · Western Visayas",58],["Region XI · Davao",44]].map(([r,pc])=>`
+          <tr><td><b>${r}</b></td>
+            <td style="width:200px"><div class="legend"><div class="bar"><i style="width:${pc}%;background:${pc>=70?'var(--in)':pc>=55?'var(--warn)':'var(--out)'}"></i></div><span>${pc}%</span></div></td></tr>`).join("")}
+      </table></div></div>
+    <div><div class="sl" style="margin-top:0">Councils holding applications longest</div>
+      <div class="card"><table>
+        <tr><th>Council</th><th class="num">Waiting</th><th class="num">Oldest</th><th></th></tr>
+        ${[["San Pedro City Council",4,23],["Toledo City Council",6,21],["Ormoc City Council",3,19],
+           ["Tagum City Council",5,17],["Iligan City Council",2,15]].map(([c,w,o])=>`
+          <tr><td>${c}</td><td class="num">${w}</td><td class="num">day ${o}</td>
+            <td style="text-align:right"><button class="btn ghost sm" onclick="go('escalate')">Act</button></td></tr>`).join("")}
+      </table></div></div>
+  </div>
+  <div class="note" style="margin-top:16px"><b>Read the low numbers as a question, not a verdict.</b> A region at 44% may have a council problem, a connectivity problem, or a chapter that never learned the portal exists. The dashboard tells you where to look — it does not tell you what you will find.</div>
+</div>`;
+
+V.period=()=>portalTop()+crumb("National Secretariat · configuration")+`<div class="body">
+  <div class="h1">Renewal period setup — ${YEAR}</div>
+  <div class="sub">Set once, nationally, before the season opens. Chapters and councils cannot change any of it.</div>
+  <div class="grid g2">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">The season</div>
+      <table style="font-size:12.5px">
+        <tr><td>Season opens</td><td class="num">01 May ${YEAR}</td></tr>
+        <tr><td>Season closes</td><td class="num">08 August ${YEAR} — anniversary day</td></tr>
+        <tr><td>Grace period ends</td><td class="num">08 October ${YEAR}</td></tr>
+        <tr><td>Late fee during grace</td><td class="num">${peso(25)} per member</td></tr>
+        <tr><td>Fee per member</td><td class="num"><b>${peso(FEE)}</b></td></tr>
+      </table>
+      <div class="note info" style="margin-top:12px">A grace period is not generosity — it is the difference between a brother lapsing and a brother leaving. Most systems that skip it lose people over ₱50 and a fortnight.</div>
+    </div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">The escalation clock</div>
+      <table style="font-size:12.5px">
+        <tr><td>City / municipal council window</td><td class="num">10 working days</td></tr>
+        <tr><td>Province may act after</td><td class="num">day 10</td></tr>
+        <tr><td>Region may act after</td><td class="num">day 20</td></tr>
+        <tr><td>National may act</td><td class="num">any time</td></tr>
+        <tr><td>Clock pauses when returned</td><td class="num">Yes</td></tr>
+      </table>
+      <div class="note" style="margin-top:12px"><b>Ten days is a proposal, not a fact.</b> Set it too short and every application escalates, which makes override meaningless. Set it too long and the chapter carries the cost of a council that will not meet. This is a National Council decision, and the portal should make it changeable without a code release.</div>
+    </div></div>
+  </div>
+  <div class="sl">Fee split by level</div>
+  <div class="card"><table>
+    <tr><th>Level</th><th class="num">Share</th><th class="num">Per member</th><th>Purpose stated to members</th></tr>
+    ${[["National Council",40,20,"National programs, the portal and AIS hosting, national ID issuance"],
+       ["Regional Council",30,15,"Regional activities and council operations"],
+       ["Provincial Council",20,10,"Provincial activities and oversight"],
+       ["City / Municipal Council",10,5,"Local council operations and chapter support"]].map(([l,p,a,d])=>`
+      <tr><td><b>${l}</b></td><td class="num">${p}%</td><td class="num">${peso(a)}</td><td style="color:var(--slate)">${d}</td></tr>`).join("")}
+  </table></div>
+  <div class="note" style="margin-top:14px"><b>Publish the purpose column to members, not just the split.</b> A brother paying ₱50 will accept it readily if he can see what each peso is for. He will resent it permanently if all he sees is a deduction.</div>
+</div>`;
+
+V.chBadge=()=>portalTop()+crumb("Inside AIS · member view")+`<div class="body">
+  <div class="h1">What the brother receives</div>
+  <div class="sub">This is what appears inside his AIS app the moment the city council approves the renewal.</div>
+  <div class="grid g2">
+    <div>
+      <div class="sl" style="margin-top:0">His card, before and after</div>
+      <div class="card"><div class="cp" style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div class="idcard lapsed"><div class="gl"></div><div class="in">
+            <div class="org">ALPHA KAPPA RHO</div>
+            <div class="gift">TANGLAW</div><div class="nm">Ramon C. Delgado</div>
+            <div class="yr"><b>26</b><i>LAPSED</i></div></div>
+            <div class="strip"><span>AKR-04-0117-001</span><span>LAPSED 08 AUG 2027</span></div></div>
+          <div style="font-size:11px;color:var(--mute);margin-top:7px;text-align:center">Before approval</div>
+        </div>
+        <div>
+          <div class="idcard"><div class="gl"></div><div class="in">
+            <div class="org">ALPHA KAPPA RHO</div>
+            <div class="gift">TANGLAW</div><div class="nm">Ramon C. Delgado</div>
+            <div class="yr"><b>27</b><i>08 AUG</i></div></div>
+            <div class="strip"><span>AKR-04-0117-001</span><span>VALID THROUGH 08 AUG 2028</span></div></div>
+          <div style="font-size:11px;color:var(--mute);margin-top:7px;text-align:center">After approval</div>
+        </div>
+      </div></div>
+      <div class="note info" style="margin-top:14px"><b>This is the part with teeth.</b> The QR verification page a hospital or a checkpoint scans now reads <i>current through 08 Aug 2028</i>. Renewal stops being paperwork and starts being the thing that makes his card mean something.</div>
+    </div>
+    <div>
+      <div class="sl" style="margin-top:0">His year seals</div>
+      <div class="card"><div class="cp">
+        <div class="seals">
+          ${[2021,2022,2023].map(y=>`<div class="seal"><div class="disc"><span>'${String(y).slice(2)}</span></div><div class="cap">${y}</div></div>`).join("")}
+          <div class="seal gap"><div class="disc"><span>'24</span></div><div class="cap">lapsed</div></div>
+          ${[2025,2026,2027].map(y=>`<div class="seal"><div class="disc"><span>'${String(y).slice(2)}</span></div><div class="cap">${y}${y===2027?' · new':''}</div></div>`).join("")}
+        </div>
+        <div style="margin-top:16px;font-size:12.5px;color:var(--slate);line-height:1.7">
+          <b>6 years renewed · 3 continuous</b><br>
+          Next milestone at 5 continuous years.</div>
+      </div></div>
+      <div class="sl">Tenure milestone</div>
+      <div class="card"><div class="cp" style="display:flex;gap:14px;align-items:center">
+        <div class="seal silver"><div class="disc"><span>10</span></div><div class="cap">years</div></div>
+        <div style="font-size:12.5px;color:var(--slate);line-height:1.65">
+          Awarded at 10, 15, 20 and 25 continuous years. Rare enough to be worth having — which is the whole reason a brother renews in year four.</div>
+      </div></div>
+      <div class="note" style="margin-top:14px"><b>The gap is shown honestly</b> — but only to him and his officers. His public page shows his current status and his continuous-years count, never a year-by-year map of when he could not afford ₱50.</div>
+    </div>
+  </div></div>`;
+
+V.badge=()=>portalTop()+crumb("Design proposal · for your decision")+`<div class="body">
+  <div class="h1">The badge — my recommendation</div>
+  <div class="sub">You asked whether it should be a digital ID or something else. My answer is that one badge cannot do both jobs, and you need both.</div>
+  <div class="grid g2">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">1 · The consequence <span class="pill p-info">Build first</span></div>
+      <div style="font-family:var(--f-disp);font-size:20px;margin-bottom:8px">A year-validated digital ID</div>
+      <div style="font-size:12.5px;line-height:1.75;color:var(--slate)">
+        The card he already has gains a brass year seal and a validity line. Unrenewed, it greys out and his public verification page reads <i>not current</i>.
+        <br><br>
+        <b>Why this one matters most:</b> it attaches renewal to something that already has weight — his standing as a brother, verifiable by anyone with a phone camera. Without it, renewal is a receipt. With it, renewal is the thing that keeps his card true.</div>
+    </div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">2 · The reward <span class="pill p-info">Build first</span></div>
+      <div style="font-family:var(--f-disp);font-size:20px;margin-bottom:8px">A row of year seals</div>
+      <div style="font-size:12.5px;line-height:1.75;color:var(--slate)">
+        One seal per year renewed, laid out in a row on his profile like a service record. Unbroken runs are counted; gaps are shown to him and his officers only.
+        <br><br>
+        <b>Why you need it too:</b> the ID is a consequence, and consequences alone feel punitive. The seal row is what he shows another brother. It is the part that makes renewing feel like something gained rather than something paid.</div>
+    </div></div>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">3 · Tenure milestones</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--slate)">
+        A distinct, rarer mark at 10, 15, 20 and 25 continuous years. This is what gives a brother in year four a reason to care about year five.</div></div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">4 · A chapter badge</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--slate)">
+        <b>100% renewed, ${YEAR}</b> for a chapter where every active brother renewed. This is the real lever — it turns the chapter president into the person chasing the last three members, which no council ever manages to do from above.</div></div></div>
+    <div class="card"><div class="cp">
+      <div class="sl" style="margin-top:0">5 · A physical pin</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--slate)">
+        Outside the software, but the portal can produce the print list per chapter. A digital seal and a pin on the shirt reinforce each other; neither replaces the other.</div></div></div>
+  </div>
+  <div class="sl">Three cautions</div>
+  <div class="grid g3">
+    <div class="note"><b>Do not let a badge look like rank.</b> Keep the visual language clearly about membership years. A brother with 25 seals must never appear to outrank a seated chapter president.</div>
+    <div class="note"><b>Do not publish the gaps.</b> Current status and continuous-years count can be public. A year-by-year map of when a brother could not pay ₱50 should not be — that is hardship made permanent and visible.</div>
+    <div class="note bad"><b>Do not stack rewards until renewal is enforceable.</b> If a lapsed member's card still verifies as current, no seal will make anyone renew. Build the consequence in the same release as the reward, or neither works.</div>
+  </div>
+  <div class="note info" style="margin-top:16px"><b>My recommendation in one line:</b> ship items 1 and 2 together in the first renewal season, add 3 and 4 in the second once you have a year of clean data to compute them from, and treat 5 as a National Council decision rather than a software one.</div>
+</div>`;
+
+/* ================= RENDER ================= */
+function render(){
+  const authed=!!S.role;
+  const r = authed
+    ? (V[S.r] ? S.r : "chSubmit")
+    : (PUBLIC.includes(S.r) && V[S.r] ? S.r : "login");
+  $("#page").innerHTML=V[r]();
+  if(!authed){
+    $("#nav").innerHTML =
+      '<div class="rl">Portal</div>' +
+      `<a class="${r==="login"?"on":""}" onclick="go('login')">Sign in</a>` +
+      '<div class="rl">No account needed</div>' +
+      `<a class="${r==="applyChapter"?"on":""}" onclick="go('applyChapter')">Chapter registration form</a>` +
+      `<a class="${r==="applySubmitted"?"on":""}" onclick="go('applySubmitted')">After submitting</a>` +
+      `<a class="${r==="petitionCouncil"?"on":""}" onclick="go('petitionCouncil')">Petition for a council</a>`;
+    $("#roles").innerHTML='<div style="font-size:11.5px;color:var(--mute);line-height:1.5">Not signed in. The chapter registration form is open to everyone — that is the point of it.</div>';
+  } else {
+    const groups=[...NAV_BY_ROLE[S.role],DESIGN];
+    $("#nav").innerHTML=groups.map(([g,items])=>`<div class="rl">${g}</div>`+
+      items.map(([k,l])=>`<a class="${S.r===k?'on':''}" onclick="go('${k}')">${l}</a>`).join("")).join("")
+      +'<div class="rl">Session</div><a onclick="signOut()">Sign out</a>';
+    const [n,r2]=ROLES[S.role];
+    $("#roles").innerHTML=`<div style="padding:8px 10px;border:1px solid #2E3846;border-radius:7px">
+      <b style="color:var(--brass);font-size:12.5px;display:block">${n}</b>
+      <span style="font-size:11px;color:#98A2B0">${r2}</span></div>`;
+  }
+  const m=META[r]||["","",""];
+  $("#t").textContent=m[0];$("#d").textContent=m[1];$("#s").textContent=m[2];
+  $("#cap").innerHTML = authed
+    ? `Signed in as <b>${ROLES[S.role][1]}</b> — the menu on the left shows only what this office may do.`
+    : `Sign in as any of the four offices to see the portal as that officer sees it.`;
+}
+render();
+</script>
+</body>
+</html>

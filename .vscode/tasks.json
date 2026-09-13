@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "build", "type": "shell", "command": "dotnet build Akrho.sln", "group": "build",
+      "problemMatcher": "$msCompile" },
+    { "label": "test", "type": "shell", "command": "dotnet test", "group": "test" },
+    { "label": "db: deploy", "type": "shell", "command": "bash scripts/db-deploy.sh" },
+    { "label": "web: dev", "type": "shell", "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/src/web" }, "isBackground": true },
+    { "label": "web: smoke", "type": "shell", "command": "npm run build && npm run smoke",
+      "options": { "cwd": "${workspaceFolder}/src/web" } },
+    { "label": "definition of done", "dependsOrder": "sequence",
+      "dependsOn": ["build", "test", "web: smoke"], "group": { "kind": "test", "isDefault": true } }
+  ]
+}

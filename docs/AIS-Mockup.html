@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIS — AKRHO Information System · Interactive Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AIS MOCKUP — design tokens
+   Palette : records office / member card
+   ink      #0E1116  deep       #171D28  brass  #C39A3E
+   bond     #E8E5DC  paper      #FFFFFF
+   cashin   #2E6B52  cashout    #A6392E
+   Type     : Barlow Condensed (signage/display)
+              IBM Plex Sans (body/UI)
+              IBM Plex Mono (figures, member no.)
+   ============================================================ */
+:root{
+  --ink:#0E1116; --deep:#171D28; --slate:#39424F; --mute:#78828F;
+  --brass:#C39A3E; --brass-dk:#8E6D22; --brass-soft:#F0E5CB;
+  --bond:#E8E5DC; --paper:#FFFFFF; --line:#DAD6CA;
+  --in:#2E6B52; --out:#A6392E; --warn:#B4801E; --info:#2C5C8A;
+  --r:10px; --shadow:0 1px 2px rgba(14,17,22,.06),0 8px 24px rgba(14,17,22,.06);
+  --f-disp:"Barlow Condensed",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--f-body);background:var(--ink);color:var(--bond);
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font:inherit}
+
+/* ---------- workspace shell ---------- */
+.shell{display:grid;grid-template-columns:268px 1fr;min-height:100vh}
+
+.rail{
+  background:var(--deep);border-right:1px solid #232B38;
+  padding:20px 0 40px;overflow-y:auto;height:100vh;position:sticky;top:0;
+}
+.brand{padding:0 20px 18px;border-bottom:1px solid #232B38;margin-bottom:16px}
+.brand .seal{
+  width:38px;height:38px;border-radius:50%;border:2px solid var(--brass);
+  display:grid;place-items:center;font-family:var(--f-disp);font-weight:700;
+  color:var(--brass);letter-spacing:.02em;font-size:15px;margin-bottom:10px;
+}
+.brand h1{font-family:var(--f-disp);font-size:26px;font-weight:600;letter-spacing:.06em;line-height:1}
+.brand p{font-size:11px;color:var(--mute);margin-top:5px;letter-spacing:.04em}
+
+.rail-lbl{
+  font-family:var(--f-disp);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--brass);padding:16px 20px 7px;
+}
+.rail a{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  padding:8px 20px;font-size:13.5px;color:#9AA5B3;text-decoration:none;cursor:pointer;
+  border-left:2px solid transparent;
+}
+.rail a:hover{color:var(--paper);background:#1D2532}
+.rail a.on{color:var(--paper);background:#1D2532;border-left-color:var(--brass)}
+.rail a .tag{
+  font-family:var(--f-num);font-size:9.5px;letter-spacing:.04em;color:var(--brass-dk);
+  border:1px solid #2E3846;border-radius:3px;padding:1px 4px;
+}
+
+.roleswitch{padding:14px 20px 4px}
+.roleswitch .rs-lbl{font-size:11px;color:var(--mute);margin-bottom:7px;letter-spacing:.04em}
+.rs-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.rs-grid button{
+  font-family:var(--f-disp);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 4px;border:1px solid #2E3846;border-radius:6px;color:#9AA5B3;
+}
+.rs-grid button.on{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:600}
+
+/* ---------- stage ---------- */
+.stage{padding:34px 28px 60px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.stage-head{width:100%;max-width:820px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.stage-head h2{font-family:var(--f-disp);font-size:30px;font-weight:600;letter-spacing:.04em}
+.stage-head p{font-size:13px;color:var(--mute);max-width:520px;margin-top:4px;line-height:1.55}
+.stamp{
+  font-family:var(--f-disp);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brass);border:1px solid var(--brass-dk);padding:5px 11px;border-radius:4px;white-space:nowrap;
+}
+
+/* ---------- device ---------- */
+.device{
+  width:392px;height:812px;background:var(--ink);border-radius:44px;padding:11px;
+  box-shadow:0 0 0 1px #2A323F,0 30px 70px rgba(0,0,0,.55);flex:none;
+}
+.viewport{
+  width:100%;height:100%;background:var(--bond);border-radius:34px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;color:var(--ink);
+}
+.statusbar{
+  height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;font-family:var(--f-num);font-size:11px;color:var(--slate);
+  background:var(--paper);border-bottom:1px solid var(--line);
+}
+.screen{flex:1;overflow-y:auto;overscroll-behavior:contain}
+.screen::-webkit-scrollbar{width:0}
+
+/* ---------- app chrome ---------- */
+.appbar{
+  position:sticky;top:0;z-index:5;background:var(--deep);color:var(--paper);
+  padding:13px 16px;display:flex;align-items:center;gap:11px;
+}
+.appbar .back{font-size:19px;line-height:1;color:var(--brass)}
+.appbar h3{font-family:var(--f-disp);font-size:20px;font-weight:600;letter-spacing:.05em;flex:1}
+.appbar .act{font-size:12px;color:var(--brass);letter-spacing:.03em}
+.subbar{background:#20293650;padding:7px 16px;font-size:11px;color:var(--mute);
+  border-bottom:1px solid var(--line);background:var(--paper);letter-spacing:.02em}
+
+.tabnav{
+  flex:none;display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper);
+  border-top:1px solid var(--line);padding:7px 0 12px;
+}
+.tabnav button{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--mute)}
+.tabnav button .ic{font-size:17px;line-height:1}
+.tabnav button .tl{font-family:var(--f-disp);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase}
+.tabnav button.on{color:var(--ink)}
+.tabnav button.on .tl{color:var(--brass-dk);font-weight:600}
+
+/* ---------- content primitives ---------- */
+.pad{padding:16px}
+.sec-lbl{
+  font-family:var(--f-disp);font-size:12.5px;letter-spacing:.19em;text-transform:uppercase;
+  color:var(--slate);margin:20px 16px 8px;display:flex;justify-content:space-between;align-items:center;
+}
+.sec-lbl:first-child{margin-top:16px}
+.sec-lbl a{color:var(--brass-dk);font-size:11px;letter-spacing:.06em;text-transform:none;font-family:var(--f-body)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);margin:0 16px 10px;overflow:hidden}
+.card-pad{padding:14px}
+.row{
+  display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--paper);
+  border-bottom:1px solid var(--line);cursor:pointer;
+}
+.row:last-child{border-bottom:none}
+.row:active{background:#F6F4EE}
+.row .grow{flex:1;min-width:0}
+.row .t{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3}
+.row .s{font-size:12px;color:var(--mute);margin-top:3px;line-height:1.4}
+.row .amt{font-family:var(--f-num);font-size:13.5px;font-weight:500;white-space:nowrap}
+.chev{color:var(--line);font-size:16px}
+
+.avatar{
+  width:42px;height:42px;border-radius:8px;flex:none;display:grid;place-items:center;
+  font-family:var(--f-disp);font-size:17px;font-weight:600;letter-spacing:.03em;
+  background:var(--deep);color:var(--brass-soft);
+}
+.avatar.sm{width:32px;height:32px;font-size:13px;border-radius:6px}
+.avatar.lg{width:78px;height:78px;font-size:30px;border-radius:12px}
+
+.pill{
+  display:inline-block;font-family:var(--f-num);font-size:10px;letter-spacing:.05em;
+  padding:2px 6px;border-radius:4px;border:1px solid;vertical-align:middle;
+}
+.p-blood{color:var(--out);border-color:#E4C4C0;background:#FBF0EF}
+.p-ok{color:var(--in);border-color:#C3DBD0;background:#EEF6F2}
+.p-warn{color:var(--warn);border-color:#E8D6AC;background:#FBF5E7}
+.p-mute{color:var(--mute);border-color:var(--line);background:#F4F2EC}
+.p-info{color:var(--info);border-color:#C3D4E4;background:#EFF4F9}
+
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tag{
+  font-size:11px;padding:2px 7px;border-radius:11px;background:var(--brass-soft);
+  color:var(--brass-dk);border:1px solid #E2D2AC;
+}
+
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px}
+.tile{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:13px;cursor:pointer;
+}
+.tile:active{background:#F6F4EE}
+.tile .k{font-family:var(--f-disp);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.tile .v{font-family:var(--f-num);font-size:20px;font-weight:600;margin-top:5px;letter-spacing:-.02em}
+.tile .d{font-size:11px;color:var(--mute);margin-top:3px}
+.tile.wide{grid-column:1/-1}
+.tile.dark{background:var(--deep);border-color:var(--deep);color:var(--bond)}
+.tile.dark .k{color:var(--brass)}
+.tile.dark .v{color:var(--paper);font-size:27px}
+
+/* forms */
+.field{padding:0 16px 13px}
+.field label{
+  display:block;font-family:var(--f-disp);font-size:12px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--slate);margin-bottom:5px;
+}
+.field .ctl{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;
+  background:var(--paper);font-size:14px;color:var(--ink);
+}
+.field .ctl:focus{outline:2px solid var(--brass);outline-offset:-1px;border-color:var(--brass)}
+.field .hint{font-size:11px;color:var(--mute);margin-top:5px;line-height:1.4}
+.field2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 13px}
+.field2 .field{padding:0}
+
+.btn{
+  display:block;width:calc(100% - 32px);margin:6px 16px 10px;padding:13px;
+  background:var(--deep);color:var(--paper);border-radius:8px;text-align:center;
+  font-family:var(--f-disp);font-size:16px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;
+}
+.btn:active{background:#000}
+.btn.brass{background:var(--brass);color:var(--ink)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--slate)}
+.btn.danger{background:var(--out)}
+.btn.sm{padding:9px;font-size:13.5px}
+.btn-pair{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px}
+.btn-pair .btn{width:100%;margin:0}
+
+.note{
+  margin:0 16px 12px;padding:11px 13px;border-radius:8px;font-size:12.5px;line-height:1.5;
+  background:#FBF5E7;border:1px solid #E8D6AC;color:#6B4E12;
+}
+.note.info{background:#EFF4F9;border-color:#C3D4E4;color:#1F4568}
+.note strong{font-weight:600}
+
+.empty{padding:44px 30px;text-align:center;color:var(--mute)}
+.empty .ic{font-size:30px;opacity:.35;margin-bottom:10px}
+.empty p{font-size:13px;line-height:1.6}
+
+.divider{height:1px;background:var(--line);margin:14px 16px}
+
+/* search + filters */
+.searchwrap{padding:12px 16px 8px;background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:47px;z-index:4}
+.searchwrap input{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bond);font-size:14px;
+}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:9px 16px 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;font-size:12px;padding:5px 11px;border-radius:15px;border:1px solid var(--line);
+  background:var(--paper);color:var(--slate);white-space:nowrap;
+}
+.chip.on{background:var(--deep);border-color:var(--deep);color:var(--brass-soft);font-weight:500}
+
+/* ---------- SIGNATURE: member card ---------- */
+.idstage{padding:20px 16px 8px;perspective:1400px}
+.idcard{
+  position:relative;width:100%;aspect-ratio:1.586/1;transform-style:preserve-3d;
+  transition:transform .75s cubic-bezier(.4,.1,.2,1);cursor:pointer;
+}
+.idcard.flip{transform:rotateY(180deg)}
+.idface{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;overflow:hidden;
+  background:
+    repeating-linear-gradient(115deg,rgba(195,154,62,.07) 0 1px,transparent 1px 7px),
+    repeating-linear-gradient(-115deg,rgba(195,154,62,.06) 0 1px,transparent 1px 9px),
+    radial-gradient(120% 150% at 82% -10%,#28303E 0%,#141A24 55%,#0C1017 100%);
+  border:1px solid #333C4A;box-shadow:0 14px 34px rgba(0,0,0,.4);color:var(--bond);
+}
+.idface.back{transform:rotateY(180deg)}
+.id-top{display:flex;align-items:center;gap:9px;padding:12px 14px 0}
+.id-seal{
+  width:26px;height:26px;border-radius:50%;border:1.5px solid var(--brass);
+  display:grid;place-items:center;font-family:var(--f-disp);font-size:11px;
+  color:var(--brass);font-weight:700;flex:none;
+}
+.id-org{font-family:var(--f-disp);font-size:13px;letter-spacing:.22em;color:var(--brass);line-height:1.2}
+.id-org small{display:block;font-size:9px;letter-spacing:.13em;color:#7E8895;font-family:var(--f-body)}
+.id-body{display:flex;gap:12px;padding:11px 14px}
+.id-photo{
+  width:66px;height:80px;border-radius:6px;flex:none;background:#2A323F;
+  border:1px solid #3A4453;display:grid;place-items:center;font-family:var(--f-disp);
+  font-size:25px;color:var(--brass-soft);
+}
+.id-fields{flex:1;min-width:0}
+.id-gift{font-family:var(--f-disp);font-size:25px;letter-spacing:.05em;line-height:1;color:var(--paper)}
+.id-name{font-size:11.5px;color:#98A2B0;margin-top:3px}
+.id-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:9px}
+.id-meta div{min-width:0}
+.id-meta .k{font-family:var(--f-disp);font-size:9px;letter-spacing:.15em;color:#6F7A88;text-transform:uppercase}
+.id-meta .v{font-family:var(--f-num);font-size:11px;color:var(--brass-soft);margin-top:1px}
+.id-strip{
+  position:absolute;bottom:0;left:0;right:0;padding:6px 14px;background:rgba(195,154,62,.13);
+  border-top:1px solid rgba(195,154,62,.3);display:flex;justify-content:space-between;
+  font-family:var(--f-num);font-size:9.5px;letter-spacing:.06em;color:var(--brass);
+}
+.id-back-in{padding:14px;display:flex;gap:12px;height:100%}
+.qr{
+  width:88px;height:88px;flex:none;border-radius:6px;background:var(--paper);padding:6px;
+  display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:1.5px;
+}
+.qr i{background:var(--ink);border-radius:1px}
+.qr i.off{background:transparent}
+.id-back-txt{flex:1;font-size:10px;line-height:1.5;color:#98A2B0}
+.id-back-txt b{display:block;font-family:var(--f-disp);font-size:12px;letter-spacing:.16em;
+  color:var(--brass);text-transform:uppercase;margin-bottom:5px}
+.flip-hint{text-align:center;font-size:11.5px;color:var(--mute);margin-top:11px;letter-spacing:.03em}
+
+/* year seal + renewal */
+.id-year{position:absolute;right:13px;top:44px;width:58px;height:58px;border-radius:50%;
+  display:grid;place-items:center;border:2px solid #E8CE8E;
+  background:radial-gradient(120% 120% at 30% 20%,#E8CE8E 0%,#C39A3E 45%,#8E6D22 100%)}
+.id-year b{font-family:var(--f-disp);font-size:19px;color:#3A2C0A;line-height:1}
+.id-year i{position:absolute;bottom:6px;font-family:var(--f-disp);font-size:7px;
+  letter-spacing:.1em;color:#3A2C0A;font-style:normal}
+.seals{display:flex;gap:10px;flex-wrap:wrap;padding:2px}
+.seal{width:66px;text-align:center}
+.seal .disc{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;position:relative;
+  border:2px solid #E8CE8E;box-shadow:0 3px 8px rgba(0,0,0,.18);
+  background:radial-gradient(120% 120% at 30% 20%,#E8CE8E 0%,#C39A3E 45%,#8E6D22 100%)}
+.seal .disc span{font-family:var(--f-disp);font-size:20px;font-weight:700;color:#3A2C0A}
+.seal .disc:after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(58,44,10,.35)}
+.seal.gap .disc{background:#EDEBE5;border:2px dashed var(--line);box-shadow:none}
+.seal.gap .disc span{color:#B8B4AA}
+.seal.silver .disc{border-color:#F2F3F5;
+  background:radial-gradient(120% 120% at 30% 20%,#F2F3F5 0%,#B9BEC6 45%,#7C838D 100%)}
+.seal.silver .disc span{color:#2F343B;font-size:15px}
+.seal .cap{font-size:9.5px;color:var(--mute);margin-top:4px}
+
+/* chapter identity — the app is national, the chapter is who you belong to */
+.chmark{width:32px;height:32px;border-radius:8px;flex:none;display:grid;place-items:center;
+  font-family:var(--f-disp);font-size:13px;font-weight:600;letter-spacing:.02em;
+  background:var(--chapter-accent,#2E5C8A);color:#fff;border:1px solid rgba(255,255,255,.22)}
+.chmark.lg{width:56px;height:56px;font-size:21px;border-radius:12px}
+.chmark.sm{width:22px;height:22px;font-size:9px;border-radius:5px}
+
+/* cascading hierarchy picker */
+.chain{margin:0 16px 12px;padding:12px 14px;border-radius:10px;background:var(--paper);
+  border:1px solid var(--line)}
+.chain .step{display:flex;gap:10px;align-items:flex-start;padding:7px 0}
+.chain .rung{width:22px;flex:none;display:flex;flex-direction:column;align-items:center}
+.chain .dot{width:9px;height:9px;border-radius:50%;background:var(--line);margin-top:5px}
+.chain .dot.on{background:var(--brass)}
+.chain .dot.me{background:var(--deep);box-shadow:0 0 0 3px var(--brass-soft)}
+.chain .line{flex:1;width:2px;background:var(--line);min-height:14px}
+.chain .lvl{font-family:var(--f-disp);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mute)}
+.chain .val{font-size:13.5px;color:var(--ink);margin-top:1px;font-weight:500}
+.chain .val.pending{color:var(--mute);font-weight:400;font-style:italic}
+
+/* commemorative year cards — one finish per year */
+.yc{width:100%;aspect-ratio:1.586/1;border-radius:14px;position:relative;overflow:hidden;
+  color:#EDEAE2;box-shadow:0 12px 30px rgba(0,0,0,.32)}
+.yc .pat{position:absolute;inset:0;opacity:.16}
+.yc .in{position:relative;padding:14px 16px;height:100%;display:flex;flex-direction:column}
+.yc .org{font-family:var(--f-disp);font-size:11px;letter-spacing:.24em;opacity:.85}
+.yc .big{font-family:var(--f-disp);font-size:60px;font-weight:700;line-height:.9;margin-top:auto;letter-spacing:-.01em}
+.yc .span{font-family:var(--f-num);font-size:10.5px;letter-spacing:.12em;opacity:.8;margin-top:3px}
+.yc .who{font-family:var(--f-disp);font-size:21px;letter-spacing:.05em;margin-top:9px}
+.yc .no{font-family:var(--f-num);font-size:9.5px;opacity:.7;margin-top:2px}
+.yc .emb{position:absolute;right:14px;top:14px;width:54px;height:54px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--f-disp);font-size:15px;font-weight:700}
+.yc .thm{position:absolute;right:16px;bottom:14px;text-align:right;font-family:var(--f-disp);
+  font-size:12px;letter-spacing:.16em;opacity:.9;max-width:44%;line-height:1.3}
+/* finishes */
+.yc-brass{background:radial-gradient(120% 150% at 80% -10%,#2C3546 0%,#151B25 55%,#0B0E14 100%)}
+.yc-brass .pat{background:repeating-linear-gradient(115deg,#C39A3E 0 1px,transparent 1px 8px),
+  repeating-linear-gradient(-115deg,#C39A3E 0 1px,transparent 1px 10px)}
+.yc-brass .big,.yc-brass .org,.yc-brass .thm{color:#E3C179}
+.yc-brass .emb{background:linear-gradient(145deg,#E8CE8E,#8E6D22);color:#2B2007}
+.yc-jade{background:radial-gradient(120% 150% at 20% -10%,#1C4038 0%,#0F2721 55%,#08150F 100%)}
+.yc-jade .pat{background:repeating-linear-gradient(90deg,#7FD3B0 0 1px,transparent 1px 11px),
+  repeating-linear-gradient(0deg,#7FD3B0 0 1px,transparent 1px 11px)}
+.yc-jade .big,.yc-jade .org,.yc-jade .thm{color:#9FE0C2}
+.yc-jade .emb{background:linear-gradient(145deg,#EFF2F3,#8A939B);color:#12261F}
+.yc-ox{background:radial-gradient(120% 150% at 75% 110%,#5A1E1B 0%,#33100F 55%,#170708 100%)}
+.yc-ox .pat{background:repeating-radial-gradient(circle at 50% 50%,#E0B15F 0 1px,transparent 1px 13px)}
+.yc-ox .big,.yc-ox .org,.yc-ox .thm{color:#E9C徐}
+.yc-ox .big,.yc-ox .org,.yc-ox .thm{color:#E9C77E}
+.yc-ox .emb{background:linear-gradient(145deg,#F0D79A,#A97C22);color:#2E1608}
+.yc-steel{background:radial-gradient(120% 150% at 30% -10%,#3A4350 0%,#20262F 55%,#10141A 100%)}
+.yc-steel .pat{background:repeating-linear-gradient(45deg,#CFD6DE 0 1px,transparent 1px 9px)}
+.yc-steel .big,.yc-steel .org,.yc-steel .thm{color:#D7DEE6}
+.yc-steel .emb{background:linear-gradient(145deg,#F2F4F6,#79828D);color:#1B2027}
+.yc-indigo{background:radial-gradient(120% 150% at 85% 10%,#25306B 0%,#151B3C 55%,#0A0C1C 100%)}
+.yc-indigo .pat{background:repeating-linear-gradient(135deg,#9AA6F5 0 1px,transparent 1px 12px)}
+.yc-indigo .big,.yc-indigo .org,.yc-indigo .thm{color:#B3BCF7}
+.yc-indigo .emb{background:linear-gradient(145deg,#DCE0FB,#5A64B8);color:#141838}
+.ycmeta{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ycmeta .k{font-size:10.5px;color:var(--mute)}
+.ycmeta .v{font-size:12.5px;color:var(--ink);margin-top:2px}
+
+/* scanner */
+.scanner{margin:16px;border-radius:14px;aspect-ratio:1/1;background:#0B0E13;position:relative;
+  overflow:hidden;display:grid;place-items:center}
+.scanner .grain{position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 4px)}
+.vf{width:62%;aspect-ratio:1/1;position:relative}
+.vf i{position:absolute;width:28px;height:28px;border:3px solid var(--brass)}
+.vf i:nth-child(1){top:0;left:0;border-right:none;border-bottom:none;border-radius:7px 0 0 0}
+.vf i:nth-child(2){top:0;right:0;border-left:none;border-bottom:none;border-radius:0 7px 0 0}
+.vf i:nth-child(3){bottom:0;left:0;border-right:none;border-top:none;border-radius:0 0 0 7px}
+.vf i:nth-child(4){bottom:0;right:0;border-left:none;border-top:none;border-radius:0 0 7px 0}
+.vf .laser{position:absolute;left:5%;right:5%;height:2px;background:var(--brass);
+  box-shadow:0 0 14px var(--brass);animation:sweep 2.6s ease-in-out infinite}
+@keyframes sweep{0%,100%{top:8%}50%{top:90%}}
+@media (prefers-reduced-motion:reduce){.vf .laser{animation:none;top:50%}}
+.scanner .hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;
+  color:#8B95A3;font-size:12px;letter-spacing:.02em}
+.trust{display:flex;gap:11px;align-items:flex-start;margin:0 16px 12px;padding:12px 14px;border-radius:10px}
+.trust.live{background:#EEF6F2;border:1px solid #C3DBD0}
+.trust.offline{background:#FBF5E7;border:1px solid #E8D6AC}
+.trust.bad{background:#FBF0EF;border:1px solid #E4C4C0}
+.trust .dot{width:11px;height:11px;border-radius:50%;flex:none;margin-top:3px}
+.trust .tt{font-size:13px;font-weight:600;line-height:1.35}
+.trust .ts{font-size:11.5px;color:var(--slate);margin-top:3px;line-height:1.5}
+.browserbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#E3E1DA;
+  border-bottom:1px solid var(--line);font-family:var(--f-num);font-size:11px;color:var(--slate)}
+.browserbar .url{flex:1;background:var(--paper);border-radius:14px;padding:5px 11px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* chat */
+.chatwrap{display:flex;flex-direction:column;height:100%}
+.msgs{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:11px}
+.msg{max-width:80%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45}
+.msg .who{font-family:var(--f-disp);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brass-dk);margin-bottom:3px}
+.msg .tm{font-family:var(--f-num);font-size:9.5px;color:var(--mute);margin-top:4px}
+.msg.them{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:3px}
+.msg.me{align-self:flex-end;background:var(--deep);color:var(--bond);border-bottom-right-radius:3px}
+.msg.me .tm{color:#7E8895}
+.msg.sys{align-self:center;background:transparent;font-size:11px;color:var(--mute);text-align:center;max-width:100%}
+.composer{flex:none;display:flex;gap:8px;padding:10px 12px;background:var(--paper);border-top:1px solid var(--line)}
+.composer input{flex:1;padding:10px 13px;border:1px solid var(--line);border-radius:20px;background:var(--bond);font-size:13.5px}
+.composer .send{width:40px;height:40px;border-radius:50%;background:var(--brass);color:var(--ink);display:grid;place-items:center;font-size:16px;flex:none}
+
+/* video */
+.video{
+  margin:16px;border-radius:var(--r);aspect-ratio:16/9;background:var(--deep);
+  display:grid;place-items:center;border:1px solid var(--line);position:relative;overflow:hidden;
+}
+.video .play{width:54px;height:54px;border-radius:50%;border:2px solid var(--brass);color:var(--brass);
+  display:grid;place-items:center;font-size:19px;padding-left:4px}
+.video .cap{position:absolute;left:0;right:0;bottom:0;padding:9px 12px;background:linear-gradient(transparent,rgba(0,0,0,.8));
+  font-size:11.5px;color:var(--bond)}
+
+/* attendance list */
+.att-row{display:flex;align-items:center;gap:11px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--paper)}
+.att-row:last-child{border-bottom:none}
+.cbx{width:21px;height:21px;border-radius:5px;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;
+  font-size:12px;color:transparent;background:var(--paper)}
+.cbx.on{background:var(--deep);border-color:var(--deep);color:var(--brass)}
+.att-row .amtin{width:82px;flex:none;padding:6px 8px;border:1px solid var(--line);border-radius:6px;
+  font-family:var(--f-num);font-size:12.5px;text-align:right;background:var(--bond)}
+.att-row.dim{opacity:.45}
+
+/* receipts */
+.recgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px}
+.rec{aspect-ratio:3/4;border-radius:8px;border:1px dashed var(--line);background:var(--paper);
+  display:grid;place-items:center;font-size:11px;color:var(--mute);text-align:center;padding:6px;line-height:1.35}
+.rec.filled{border-style:solid;background:var(--deep);color:var(--brass-soft)}
+
+/* ledger figures */
+.led-in{color:var(--in)}
+.led-out{color:var(--out)}
+
+/* caption under device */
+.caption{
+  max-width:392px;font-size:12.5px;line-height:1.6;color:var(--mute);text-align:center;
+}
+.caption b{color:var(--brass);font-weight:500}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .rail{height:auto;position:static;border-right:none;border-bottom:1px solid #232B38}
+  .device{width:100%;max-width:392px;height:760px}
+  .stage{padding:22px 14px 50px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ================= RAIL ================= -->
+  <nav class="rail">
+    <div class="brand">
+      <div class="seal">ΑΚΡ</div>
+      <h1>AIS</h1>
+      <p>AKRHO Information System · Mockup v1</p>
+    </div>
+
+    <div class="roleswitch">
+      <div class="rs-lbl">Preview as</div>
+      <div class="rs-grid" id="roleGrid">
+        <button data-role="member" class="on">Member</button>
+        <button data-role="officer">Officer</button>
+        <button data-role="admin">Chapter Admin</button>
+        <button data-role="guest">Not signed in</button>
+      </div>
+    </div>
+
+    <div id="railNav"></div>
+  </nav>
+
+  <!-- ================= STAGE ================= -->
+  <main class="stage">
+    <div class="stage-head">
+      <div>
+        <h2 id="stageTitle">Sign in</h2>
+        <p id="stageDesc"></p>
+      </div>
+      <div class="stamp" id="stageStamp">Phase 0</div>
+    </div>
+
+    <div class="device">
+      <div class="viewport">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span>Barangay San Isidro Chapter</span>
+          <span>▮▮▮ 84%</span>
+        </div>
+        <div class="screen" id="screen"></div>
+        <div id="tabs"></div>
+      </div>
+    </div>
+
+    <p class="caption" id="caption"></p>
+  </main>
+</div>
+
+<script>
+/* ================================================================
+   MOCK DATA
+   ================================================================ */
+const CHAPTER = "Barangay San Isidro Chapter";
+/* Chapter identity. One deployment, one URL — so the chapter's own mark is what
+   makes the app feel like theirs once they are inside it. */
+const CHAPTER_MARK = "SI";
+const CHAPTER_ACCENT = "#2E5C8A";
+const COUNCIL = "Sta. Rosa City Council · Laguna · Region IV-A";
+
+const MEMBERS = [
+  {id:1, gift:"TANGLAW", first:"Ramon", mid:"Cruz", last:"Delgado", no:"AKR-04-0117-001",
+   blood:"O+", prof:"Electrician", skills:["Electrician","Driver","Welder"], status:"Active",
+   survive:"2011-03-19", pres:"Bro. E. Villanueva", init:"Bro. J. Sarmiento",
+   addr:"12 Mabini St., Brgy. San Isidro", bday:"1988-07-04", mobile:"0917 •••  4412"},
+  {id:2, gift:"BAGWIS", first:"Joel", mid:"Reyes", last:"Mariano", no:"AKR-04-0117-002",
+   blood:"A+", prof:"Registered Nurse", skills:["Nurse","First Aid"], status:"Active",
+   survive:"2013-08-02", pres:"Bro. R. Delgado", init:"Bro. E. Villanueva",
+   addr:"7 Rizal Ext., Brgy. San Isidro", bday:"1991-11-22", mobile:"0918 ••• 7730"},
+  {id:3, gift:"LAKANDULA", first:"Arnel", mid:"Santos", last:"Bautista", no:"AKR-04-0117-003",
+   blood:"O−", prof:"Heavy Equipment Operator", skills:["Driver","Heavy Equipment","Mechanic"],
+   status:"Active", survive:"2009-12-06", pres:"Bro. M. Alcantara", init:"Bro. P. Ocampo",
+   addr:"Purok 3, Brgy. San Isidro", bday:"1985-02-15", mobile:"0995 ••• 1189"},
+  {id:4, gift:"HIMAGSIK", first:"Dennis", mid:"Lim", last:"Portugal", no:"AKR-04-0117-004",
+   blood:"B+", prof:"Carpenter", skills:["Carpenter","Mason","Painter"], status:"Active",
+   survive:"2016-05-21", pres:"Bro. J. Mariano", init:"Bro. R. Delgado",
+   addr:"9 Bonifacio Rd., Brgy. San Isidro", bday:"1994-09-30", mobile:"0906 ••• 3355"},
+  {id:5, gift:"SIGWA", first:"Michael", mid:"Ang", last:"Rosales", no:"AKR-04-0117-005",
+   blood:"AB+", prof:"IT Support", skills:["IT / Computer","Photography"], status:"Inactive",
+   survive:"2018-02-10", pres:"Bro. A. Bautista", init:"Bro. D. Portugal",
+   addr:"22 Luna St., Brgy. San Isidro", bday:"1996-04-18", mobile:"0927 ••• 8064"},
+  {id:6, gift:"AGOS", first:"Rey", mid:"Ocampo", last:"Fabian", no:"AKR-04-0117-006",
+   blood:"O+", prof:"Barangay Tanod", skills:["Security","Driver"], status:"Active",
+   survive:"2019-10-05", pres:"Bro. D. Portugal", init:"Bro. J. Mariano",
+   addr:"Purok 5, Brgy. San Isidro", bday:"1990-01-09", mobile:"0932 ••• 2201"},
+];
+const ME = MEMBERS[0];
+
+/* Membership year runs 09 Aug → 08 Aug. Named by the year it opens. */
+const YEARCARDS = {
+  2021:{f:"yc-steel", th:"TEMPERED",  pres:"Bro. E. VILLANUEVA", ann:"48th", n:"18,204"},
+  2022:{f:"yc-jade",  th:"ROOTED",    pres:"Bro. E. VILLANUEVA", ann:"49th", n:"18,977"},
+  2023:{f:"yc-ox",    th:"UNBROKEN",  pres:"Bro. M. ALCANTARA",  ann:"50th", n:"19,640"},
+  2025:{f:"yc-indigo",th:"STEADFAST", pres:"Bro. M. ALCANTARA",  ann:"52nd", n:"20,115"},
+  2026:{f:"yc-steel", th:"IN STEP",   pres:"Bro. P. OCAMPO",     ann:"53rd", n:"20,588"},
+  2027:{f:"yc-brass", th:"KAPATIRAN", pres:"Bro. P. OCAMPO",     ann:"54th", n:"21,032"},
+};
+
+const PENDING = [
+  {name:"Kevin B. Salvador", gift:"TALIM", survive:"2024-11-16", pres:"Bro. R. Delgado",
+   init:"Bro. A. Bautista", seconder:"Bro. HIMAGSIK — confirmed", when:"2 days ago"},
+  {name:"Noel V. Aguinaldo", gift:"PANDAY", survive:"2025-02-08", pres:"Bro. R. Delgado",
+   init:"Bro. J. Mariano", seconder:"awaiting Bro. AGOS", when:"5 days ago"},
+];
+
+const MEETINGS = [
+  {id:1, subj:"Regular Chapter Meeting — August", date:"Aug 09, 2026", present:14, total:18,
+   collected:3400, locked:true,
+   body:"Agenda: (1) Reading of previous minutes (2) Treasurer's report (3) Planning for the Brgy. Clean-Up Drive (4) Reminder on the medical mission head count (5) Open forum."},
+  {id:2, subj:"Special Meeting — Clean-Up Drive Planning", date:"Jul 26, 2026", present:11, total:18,
+   collected:2200, locked:true,
+   body:"Agenda: assignment of committees, canvassing of materials, coordination letter to the Barangay Council."},
+  {id:3, subj:"Regular Chapter Meeting — July", date:"Jul 12, 2026", present:16, total:18,
+   collected:4150, locked:true, body:"Agenda: election of new Auditor, review of chapter funds, welcome of two new brothers."},
+  {id:4, subj:"Regular Chapter Meeting — September", date:"Sep 13, 2026", present:0, total:18,
+   collected:0, locked:false, body:"Agenda to be finalized by the Secretary."},
+];
+
+const ATTENDEES = [
+  {m:1, in:true, amt:300, st:"Present"},{m:2, in:true, amt:300, st:"Present"},
+  {m:3, in:true, amt:500, st:"Present"},{m:4, in:true, amt:200, st:"Late"},
+  {m:5, in:false, amt:0, st:"Absent"},{m:6, in:true, amt:0, st:"Excused"},
+];
+
+const ANNOUNCE = [
+  {t:"Medical mission head count due Friday", d:"Aug 13, 2026", by:"Bro. BAGWIS · Secretary", read:12,
+   b:"Brothers, please confirm your attendance for the free medical mission on August 22 at the Barangay Hall. We need the final head count by Friday so we can prepare enough kits. Reply in the chapter chat or message the Secretary directly."},
+  {t:"Chapter meeting moved to 7:00 PM", d:"Aug 07, 2026", by:"Bro. TANGLAW · President", read:17,
+   b:"Due to the barangay assembly scheduled in the afternoon, our regular meeting on August 9 will start at 7:00 PM instead of 5:00 PM. Same venue."},
+  {t:"Urgent: O− blood donor needed", d:"Jul 30, 2026", by:"Bro. LAKANDULA", read:18, urgent:true,
+   b:"A brother's mother is in need of O− blood at the Sta. Rosa Community Hospital. If you are O− and eligible to donate, please contact Bro. LAKANDULA immediately."},
+];
+
+const MEMOS = [
+  {no:"MEMO-2026-004", t:"Guidelines on chapter fund handling", d:"Aug 01, 2026", by:"Chapter President", att:"guidelines.pdf",
+   b:"All collections during meetings shall be counted and confirmed by two officers before posting to the ledger. Receipts must be attached to every disbursement without exception. The chapter balance will be read aloud at the start of every regular meeting."},
+  {no:"MEMO-2026-003", t:"Revised schedule of chapter activities", d:"Jun 18, 2026", by:"Chapter Secretary", att:"calendar-2026.pdf",
+   b:"Please be guided by the revised calendar of activities for the second semester attached to this memo."},
+];
+
+const CASES = [
+  {id:1, m:5, cat:"Non-attendance", st:"Pending", d:"Jul 15, 2026", by:"Bro. TANGLAW",
+   body:"Bro. SIGWA has not attended six consecutive regular meetings and has not responded to follow-ups from the Secretary. Referred to the Committee on Discipline for a formal conference before any status change is made.",
+   updates:[{d:"Jul 15, 2026", w:"Case filed by the Chapter President."},
+            {d:"Jul 28, 2026", w:"Notice served through the Secretary. Conference set for Aug 16."}]},
+  {id:2, m:4, cat:"Conduct", st:"Reconciled", d:"Apr 03, 2026", by:"Bro. BAGWIS",
+   body:"Misunderstanding with a brother from a neighbouring chapter during a joint activity. Both parties were heard by the officers.",
+   updates:[{d:"Apr 03, 2026", w:"Case filed."},{d:"Apr 19, 2026", w:"Both parties reconciled in the presence of the officers. Case closed."}]},
+];
+
+const LEDGER = [
+  {d:"Aug 09, 2026", t:"Meeting collection — Regular Meeting August", ty:"in", a:3400, src:"Meeting #1"},
+  {d:"Aug 05, 2026", t:"Tarpaulin and printing — Clean-Up Drive", ty:"out", a:1250, src:"Expense #7"},
+  {d:"Aug 02, 2026", t:"Donation — Hon. R. Villamor, Brgy. Kagawad", ty:"in", a:5000, src:"Donation #3"},
+  {d:"Jul 28, 2026", t:"Cleaning materials — 24 pcs walis, sacks, gloves", ty:"out", a:2840, src:"Expense #6"},
+  {d:"Jul 26, 2026", t:"Meeting collection — Special Meeting", ty:"in", a:2200, src:"Meeting #2"},
+  {d:"Jul 20, 2026", t:"Snacks for volunteers — medical mission prep", ty:"out", a:1600, src:"Expense #5"},
+  {d:"Jul 12, 2026", t:"Meeting collection — Regular Meeting July", ty:"in", a:4150, src:"Meeting #3"},
+];
+
+const EXPENSES = [
+  {id:7, t:"Tarpaulin and printing", act:"Barangay Clean-Up Drive", d:"Aug 05, 2026", a:1250, payee:"RJ Digital Print", rec:2, by:"Bro. BAGWIS"},
+  {id:6, t:"Cleaning materials", act:"Barangay Clean-Up Drive", d:"Jul 28, 2026", a:2840, payee:"San Isidro Hardware", rec:3, by:"Bro. BAGWIS"},
+  {id:5, t:"Snacks for volunteers", act:"Free Medical Mission", d:"Jul 20, 2026", a:1600, payee:"Aling Nena Carinderia", rec:1, by:"Bro. TANGLAW"},
+];
+
+const DONATIONS = [
+  {id:3, donor:"Hon. Ricardo Villamor", type:"Government Official", d:"Aug 02, 2026", a:5000,
+   act:"Barangay Clean-Up Drive", ack:"AR-2026-0031",
+   b:"Cash donation for the purchase of cleaning materials and refreshments for the volunteers."},
+  {id:2, donor:"San Isidro Hardware", type:"Business", d:"Jul 24, 2026", a:0, inkind:"12 sacks, 6 rakes",
+   act:"Barangay Clean-Up Drive", ack:"AR-2026-0028", b:"In-kind donation of cleaning implements."},
+  {id:1, donor:"Hon. Marilou Ceniza", type:"Government Official", d:"Jun 30, 2026", a:8000,
+   act:"Free Medical Mission", ack:"AR-2026-0019", b:"Cash donation for medicines and medical supplies."},
+];
+
+const CHAT = [
+  {w:"BAGWIS", m:"Brothers, final head count for the medical mission — please confirm here.", t:"7:12 PM"},
+  {w:"HIMAGSIK", m:"Present po, kasama ako sa registration.", t:"7:14 PM"},
+  {w:"AGOS", m:"Sasama rin ako, may dala akong dalawang table at monoblock.", t:"7:15 PM"},
+  {w:"me", m:"Noted. Bro. BAGWIS please list them down and post here by Friday.", t:"7:18 PM"},
+  {w:"LAKANDULA", m:"Sir, may available pa bang kit para sa senior citizens?", t:"7:22 PM"},
+];
+
+/* ================================================================
+   NAV STRUCTURE
+   ================================================================ */
+const NAV = [
+  {grp:"Access", items:[
+    ["login","Sign in","guest"],["register","Find your chapter","guest"],["registerDetails","Register — details","guest"],["pending","Awaiting approval","guest"],
+  ]},
+  {grp:"Member app", items:[
+    ["home","Home"],["dash","Chapter dashboard"],["directory","Member directory"],
+    ["profile","Member profile"],["crosschapter","Cross-chapter search"],["id","My digital ID","sig"],
+    ["scan","Scan an ID","★"],["verify","Verification result"],["verifyPublic","Public verify page"],
+    ["seals","Renewal & year seals","★"],["yearCard","Year card (collectible)","★"],
+    ["meetings","Meetings"],["meeting","Meeting detail"],["announce","Announcements"],
+    ["announceDetail","Announcement"],["memos","Memos"],["cases","Corrective actions"],
+    ["caseDetail","Case detail"],["ledger","Ledger"],["expenses","Expenses"],
+    ["expenseDetail","Expense detail"],["donations","Donations"],["chat","Chapter chat"],
+    ["dm","Private message"],["myprofile","Edit my profile"],
+  ]},
+  {grp:"Officer & Admin", items:[
+    ["approvals","Approval queue","admin"],["approvalDetail","Review application","admin"],
+    ["newMeeting","Create meeting","officer"],["attendance","Record attendance","officer"],
+    ["scanAttend","Scan for attendance","officer"],
+    ["newExpense","Record expense","officer"],["newDonation","Record donation","officer"],
+    ["newCase","File corrective action","admin"],["newAnnounce","Post announcement","officer"],
+    ["settings","Chapter settings","admin"],["branding","Chapter identity","admin"],["audit","Audit log","admin"],
+  ]},
+];
+
+const META = {
+  loginX:["unused","The only public screen. Registration link sits directly beneath, as specified.","Phase 0"],
+  register:["Find your chapter","One URL serves every chapter. The applicant picks his way down the hierarchy, and the app names the exact body that will receive his application.","Phase 1"],
+  registerDetails:["Register — details","All declared fields plus a seconder — an existing brother who vouches for the applicant.","Phase 1"],
+  pending:["Awaiting approval","Applicants cannot sign in until a Chapter Admin approves. Status is visible so they don't re-register.","Phase 1"],
+  home:["Home","Featured video (YouTube link only) and the chapter chat, as briefed, plus what's new since last visit.","Phase 7"],
+  dash:["Chapter dashboard","Every tile drills down. A number nobody can open is not transparency.","Phase 6"],
+  directory:["Member directory","Filter by blood type, skill, profession. Skills are a controlled tag list, not free text.","Phase 1"],
+  profile:["Member profile","What one brother sees about another inside his own chapter.","Phase 1"],
+  crosschapter:["Cross-chapter search","Per your decision: name, chapter and status only. No contact details, no blood type.","Phase 1"],
+  id:["My digital ID","Tap the card to flip it. QR resolves to a public verification page — no personal data is encoded in the code itself.","Phase 1"],
+  yearCard:["Year card — the collectible","Each membership year has its own finish, emblem and theme. It can only be earned in that year, and it is deliberately not verifiable.","Renewal · Phase 2"],
+  seals:["Renewal & year seals","What a brother receives when the council approves his annual renewal — the year seal on his card, and the row of seals behind it.","Renewal · Phase 2"],
+  scan:["Scan an ID","Any brother can verify another brother's card. Works offline — the signature is checked on the device, not on the server.","Phase 1"],
+  verify:["Verification result","Green means the status was confirmed live. Amber means the card is genuine but the status is from the last sync. The difference is stated, never hidden.","Phase 1"],
+  verifyPublic:["Public verify page","What a hospital, a barangay official or a checkpoint sees from a plain phone camera — no app, no login, and only four facts.","Phase 1"],
+  scanAttend:["Scan for attendance","The secretary scans each brother as he arrives. This is the feature that saves the most officer time.","Phase 2"],
+  meetings:["Meetings","Finalized meetings are locked. Attendance and amounts can no longer be quietly edited.","Phase 2"],
+  meeting:["Meeting detail","Who attended and what each one gave. Contributions are voluntary, so blanks are normal and carry no penalty.","Phase 2"],
+  announce:["Announcements","Push-notified on publish. Read count tells officers who has actually opened it.","Phase 3"],
+  announceDetail:["Announcement","Urgent blood requests use the same channel but notify matching donors first.","Phase 3"],
+  memos:["Memos","Numbered, formal, may carry a PDF. Distinct from announcements by weight, not by mechanism.","Phase 3"],
+  cases:["Corrective actions","Option B in effect: every member sees name, category, status and date. The narrative is not public.","Phase 5"],
+  caseDetail:["Case detail — member view","A member sees the timeline of status changes without the allegation text. Officers and the member concerned see the full narrative.","Phase 5"],
+  ledger:["Ledger","Append-only. A mistake is corrected by a reversing entry, never by an edit.","Phase 4"],
+  expenses:["Expenses","Grouped by activity so a donor can see exactly where a project's money went.","Phase 4"],
+  expenseDetail:["Expense detail","Receipts are attached to the record, not filed in a drawer.","Phase 4"],
+  donations:["Donations","Cash and in-kind, with the acknowledgement receipt number for cross-checking.","Phase 4"],
+  chat:["Chapter chat","Public room. Messages are retained for one year and can be flagged for officer review.","Phase 7"],
+  dm:["Private message","One-to-one. Same retention, same moderation reach — members are told this at registration.","Phase 7"],
+  myprofile:["Edit my profile","A member edits his own details. Gift name, date survive and initiator are locked after approval.","Phase 1"],
+  approvals:["Approval queue","The practical verification points are date survive, president and master initiator — plus the seconder's confirmation.","Phase 1"],
+  approvalDetail:["Review application","Approve, return for correction, or reject with a reason. Every action is logged.","Phase 1"],
+  newMeeting:["Create meeting","Subject, date, body. Attendance is recorded separately, after the meeting.","Phase 2"],
+  attendance:["Record attendance","Check the brothers present, enter what each gave. Total posts to the ledger as one entry on save.","Phase 2"],
+  newExpense:["Record expense","Receipt capture straight from the phone camera. No receipt, no posting.","Phase 4"],
+  newDonation:["Record donation","Cash or in-kind, tied to the activity it was given for.","Phase 4"],
+  newCase:["File corrective action","Filing is restricted to the Chapter Admin. Nothing here can ever be deleted.","Phase 5"],
+  newAnnounce:["Post announcement","Publishes and notifies immediately, as briefed.","Phase 3"],
+  branding:["Chapter identity","One URL for everyone, but the chapter's own mark once a brother is inside. Where it appears — and where it deliberately does not — is the whole design.","Phase 0"],
+  settings:["Chapter settings","Per your decision, chapters configure their own. Suggested contribution is a guide, never a charge.","Phase 0"],
+  audit:["Audit log","Who changed what, when, from where. The backstop behind every other transparency claim.","Phase 0"],
+};
+
+/* ================================================================
+   STATE + HELPERS
+   ================================================================ */
+let S = {route:"login", role:"member", flip:false, tab:"home", yc:2027, ycFlip:false, reg:{},
+         checks:{}, filter:"All", caseOpen:1, mem:2, exp:7, ann:0, mtg:1};
+
+const $ = s => document.querySelector(s);
+const peso = n => "₱" + n.toLocaleString("en-PH", {minimumFractionDigits:2, maximumFractionDigits:2});
+const initials = m => (m.gift||"").slice(0,2);
+const full = m => `${m.first} ${m.mid?m.mid[0]+". ":""}${m.last}`;
+const mem = id => MEMBERS.find(m=>m.id===id);
+const go = r => { S.route = r; if(r==="id") S.flip=false; render(); window.scrollTo({top:0,behavior:"smooth"}); };
+
+function bar(title, back, act){
+  return `<div class="appbar">
+    ${back?`<button class="back" onclick="go('${back}')">‹</button>`
+          :`<div class="chmark">${CHAPTER_MARK}</div>`}
+    <h3>${title}</h3>${act||""}</div>`;
+}
+function tabs(active){
+  const t = [["home","⌂","Home"],["directory","☰","Members"],["meetings","▤","Meetings"],
+             ["ledger","₱","Funds"],["more","⋯","More"]];
+  return `<div class="tabnav">${t.map(([r,i,l])=>
+    `<button class="${active===r?"on":""}" onclick="go('${r==="more"?"dash":r}')">
+       <span class="ic">${i}</span><span class="tl">${l}</span></button>`).join("")}</div>`;
+}
+function memberRow(m, onclick){
+  return `<div class="row" onclick="${onclick||`S.mem=${m.id};go('profile')`}">
+    <div class="avatar">${initials(m)}</div>
+    <div class="grow">
+      <div class="t">${m.gift} <span class="pill p-blood">${m.blood}</span></div>
+      <div class="s">${full(m)} · ${m.prof}</div>
+      <div class="tags">${m.skills.slice(0,3).map(s=>`<span class="tag">${s}</span>`).join("")}</div>
+    </div><span class="chev">›</span></div>`;
+}
+
+/* ================================================================
+   SCREENS
+   ================================================================ */
+const V = {};
+
+V.login = () => `
+  <div style="background:var(--deep);padding:52px 24px 34px;text-align:center;color:var(--bond)">
+    <div style="width:66px;height:66px;border-radius:50%;border:2px solid var(--brass);margin:0 auto 16px;
+      display:grid;place-items:center;font-family:var(--f-disp);font-size:24px;color:var(--brass);font-weight:700">ΑΚΡ</div>
+    <div style="font-family:var(--f-disp);font-size:44px;letter-spacing:.1em;line-height:.95">AIS</div>
+    <div style="font-size:12px;color:#8B95A3;margin-top:8px;letter-spacing:.05em">AKRHO Information System</div>
+    <div style="font-size:12px;color:#8B95A3;margin-top:8px;letter-spacing:.05em">Alpha Kappa Rho · Philippines</div>
+  </div>
+  <div class="card" style="margin-top:14px;background:#F6F4EE">
+    <div class="row" style="cursor:default;background:transparent">
+      <div class="chmark lg">${CHAPTER_MARK}</div>
+      <div class="grow"><div class="s" style="font-size:11px">Signing back in to</div>
+        <div class="t">${CHAPTER}</div>
+        <div class="s">Sta. Rosa City · Laguna</div></div>
+      <span style="font-size:11px;color:var(--brass-dk)">Not you?</span></div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="field"><label>Member number or mobile</label>
+    <input class="ctl" value="AKR-04-0117-001"></div>
+  <div class="field"><label>Password</label><input class="ctl" type="password" value="••••••••••"></div>
+  <button class="btn brass" onclick="S.role='member';syncRole();go('home')">Sign in</button>
+  <div style="text-align:center;font-size:12.5px;color:var(--mute);padding:2px 0 14px">
+    <a onclick="alert('Recovery is sent to the registered mobile number.')" style="color:var(--brass-dk);cursor:pointer">Forgot password</a>
+  </div>
+  <div class="divider"></div>
+  <div style="text-align:center;padding:4px 26px 8px">
+    <div style="font-size:13px;color:var(--slate);line-height:1.55">Not yet registered in the system?</div>
+  </div>
+  <button class="btn ghost" onclick="go('register')">Register as member</button>
+  <div style="text-align:center;font-size:11px;color:var(--mute);padding:6px 30px 24px;line-height:1.5">
+    Registration is reviewed by the Chapter Admin before access is granted.</div>`;
+
+V.register = () => {
+  const c = S.reg || {};
+  const rung = (lvl, val, state) => `
+    <div class="step">
+      <div class="rung"><div class="dot ${state}"></div><div class="line"></div></div>
+      <div><div class="lvl">${lvl}</div>
+        <div class="val ${val ? "" : "pending"}">${val || "not chosen yet"}</div></div>
+    </div>`;
+  const pick = (key, label, opts, enabled) => `
+    <div class="field"><label>${label}</label>
+      <select class="ctl" ${enabled ? "" : "disabled"} onchange="S.reg={...S.reg,${key}:this.value};render()">
+        <option value="">${enabled ? "Select…" : "Choose the level above first"}</option>
+        ${opts.map(o => `<option ${c[key] === o ? "selected" : ""}>${o}</option>`).join("")}
+      </select></div>`;
+
+  return `
+  ${bar("Register","login")}
+  <div class="subbar">Step 1 of 3 · Find your chapter</div>
+  <div class="note info">One app serves every chapter in the country. Tell us where you belong and
+    your application goes to the right people automatically.</div>
+
+  ${pick("region","Region",["Region IV-A · CALABARZON","Region III · Central Luzon","NCR"],true)}
+  ${pick("province","Province",["Laguna","Cavite","Batangas","Rizal","Quezon"],!!c.region)}
+  ${pick("city","City or municipality",["Sta. Rosa City","Biñan City","Cabuyao City","Calamba City"],!!c.province)}
+  ${pick("chapter","Chapter (barangay)",["Brgy. San Isidro Chapter","Brgy. Malitlit Chapter","Brgy. Balibago Chapter","Brgy. Tagapo Chapter"],!!c.city)}
+
+  <div class="sec-lbl">Where you will sit</div>
+  <div class="chain">
+    ${rung("National","National Council","on")}
+    ${rung("Region",c.region,c.region?"on":"")}
+    ${rung("Province",c.province,c.province?"on":"")}
+    ${rung("City / Municipal",c.city,c.city?"on":"")}
+    ${rung("Chapter",c.chapter,c.chapter?"me":"")}
+  </div>
+
+  ${c.chapter ? `
+    <div class="card"><div class="card-pad" style="display:flex;gap:12px;align-items:center">
+      <div class="chmark lg">SI</div>
+      <div style="min-width:0">
+        <div style="font-size:14px;font-weight:600">${c.chapter}</div>
+        <div style="font-size:12px;color:var(--mute);margin-top:3px">
+          Chartered 2005 · 18 members · ${c.city}</div></div>
+    </div></div>
+    <div class="note"><strong>Your application goes to the Chapter Admin of ${c.chapter}</strong> —
+      not to the city council. Councils approve chapters and renewals; a chapter approves its own
+      brothers.</div>
+    <button class="btn brass" onclick="go('registerDetails')">Continue to my details</button>
+  ` : `
+    <div class="empty"><div class="ic">◌</div>
+      <p>Choose down to your chapter and we will show you<br>exactly who receives your application.</p></div>
+  `}
+  <div style="text-align:center;font-size:11.5px;color:var(--mute);padding:0 26px 20px;line-height:1.55">
+    Cannot find your chapter? It may not be registered yet. Ask your chapter president —
+    a chapter is registered by its city council in the Central Portal.</div>
+  <div style="height:16px"></div>`;
+};
+
+V.registerDetails = () => `
+  ${bar("Register","register")}
+  <div class="subbar">Step 2 of 3 · Personal details</div>
+  <div class="chain" style="margin-top:12px">
+    <div class="step"><div class="rung"><div class="dot me"></div></div>
+      <div><div class="lvl">Applying to</div>
+        <div class="val">${(S.reg && S.reg.chapter) || "Brgy. San Isidro Chapter"}</div></div></div>
+  </div>
+  <div class="field2">
+    <div class="field"><label>First name</label><input class="ctl" placeholder="Kevin"></div>
+    <div class="field"><label>Middle name</label><input class="ctl" placeholder="Bautista"></div>
+  </div>
+  <div class="field"><label>Last name</label><input class="ctl" placeholder="Salvador"></div>
+  <div class="field2">
+    <div class="field"><label>Birthdate</label><input class="ctl" type="date"></div>
+    <div class="field"><label>Blood type</label><select class="ctl"><option>Select</option><option>O+</option><option>O−</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option></select></div>
+  </div>
+  <div class="field"><label>Address</label><input class="ctl" placeholder="House no., street, purok"></div>
+  <div class="field"><label>Profession</label><input class="ctl" placeholder="Driver"></div>
+  <div class="field"><label>Skills</label>
+    <div class="tags" style="margin-top:0">
+      <span class="tag">Driver ✕</span><span class="tag">Welder ✕</span>
+      <span class="tag" style="background:var(--paper);border-style:dashed">+ Add skill</span></div>
+    <div class="hint">Choose from the list so the blood-type and skill search stays reliable. Ask an officer to add a skill that is missing.</div>
+  </div>
+  <div class="divider"></div>
+  <div class="sec-lbl">Organizational details</div>
+  <div class="field"><label>Gift name</label><input class="ctl" placeholder="TALIM"></div>
+  <div class="field"><label>Date survive</label><input class="ctl" type="date"></div>
+  <div class="field"><label>President during survive</label><input class="ctl" placeholder="Bro. R. Delgado"></div>
+  <div class="field"><label>Master initiator during survive</label><input class="ctl" placeholder="Bro. A. Bautista"></div>
+  <div class="field"><label>Seconder</label><select class="ctl"><option>Select a brother from your chapter</option>${MEMBERS.map(m=>`<option>${m.gift} — ${full(m)}</option>`).join("")}</select>
+    <div class="hint">He will be asked to confirm that he knows you. This is what the Chapter Admin checks first.</div></div>
+  <div class="field"><label>Photo</label>
+    <div class="recgrid" style="padding:0;grid-template-columns:1fr 2fr">
+      <div class="rec">Tap to<br>take photo</div>
+      <div style="font-size:11.5px;color:var(--mute);line-height:1.5;align-self:center">
+        Plain background, shoulders up. This becomes your digital ID photo.</div></div></div>
+  <div class="note">By registering you agree to the chapter's data privacy notice. Your blood type and contact number are shown to brothers in your chapter. Officers can review chat messages for moderation.</div>
+  <button class="btn brass" onclick="go('pending')">Submit application</button>
+  <div style="height:16px"></div>`;
+
+V.pending = () => `
+  ${bar("Application status","login")}
+  <div style="padding:44px 26px 20px;text-align:center">
+    <div style="width:62px;height:62px;border-radius:50%;border:2px dashed var(--brass);margin:0 auto 18px;
+      display:grid;place-items:center;font-size:24px;color:var(--brass)">⏳</div>
+    <div style="font-family:var(--f-disp);font-size:26px;letter-spacing:.05em">Awaiting approval</div>
+    <p style="font-size:13px;color:var(--slate);line-height:1.6;margin-top:10px">
+      Your application was received on August 13. The Chapter Admin of ${CHAPTER} is reviewing it.</p>
+  </div>
+  <div class="card"><div class="card-pad">
+    <div style="font-size:12px;color:var(--mute);margin-bottom:9px">Progress</div>
+    <div style="display:flex;flex-direction:column;gap:11px;font-size:13px">
+      <div><span class="pill p-ok">Done</span> &nbsp;Application submitted</div>
+      <div><span class="pill p-ok">Done</span> &nbsp;Bro. HIMAGSIK confirmed as seconder</div>
+      <div><span class="pill p-warn">Now</span> &nbsp;Chapter Admin review</div>
+      <div style="color:var(--mute)"><span class="pill p-mute">Next</span> &nbsp;Member number and digital ID issued</div>
+    </div></div></div>
+  <div class="note info">You will receive an SMS the moment a decision is made. There is no need to register again.</div>
+  <button class="btn ghost" onclick="go('login')">Back to sign in</button>`;
+
+V.home = () => `
+  ${bar(`Kumusta, ${ME.gift}`,null,`<button class="act" onclick="go('announce')">🔔 3</button>`)}
+  <div style="display:flex;gap:12px;align-items:center;padding:13px 16px;background:var(--paper);
+       border-bottom:1px solid var(--line)">
+    <div class="chmark lg">${CHAPTER_MARK}</div>
+    <div style="min-width:0">
+      <div style="font-family:var(--f-disp);font-size:19px;letter-spacing:.03em;line-height:1.1">${CHAPTER}</div>
+      <div style="font-size:11px;color:var(--mute);margin-top:3px">${COUNCIL}</div>
+    </div>
+  </div>
+  <div class="video">
+    <button class="play">▶</button>
+    <div class="cap">Chapter Feature · "Brgy. San Isidro Clean-Up Drive 2026" — YouTube</div>
+  </div>
+  <div class="tiles">
+    <div class="tile dark wide" onclick="go('dash')">
+      <div class="k">Chapter balance today</div>
+      <div class="v">${peso(38420)}</div>
+      <div class="d" style="color:#8B95A3">Last posting Aug 09 · tap to open the full dashboard</div>
+    </div>
+  </div>
+  <div class="sec-lbl">Needs your attention <a onclick="go('announce')">See all</a></div>
+  <div class="card">
+    <div class="row" onclick="S.ann=2;go('announceDetail')">
+      <div class="avatar" style="background:var(--out);color:#fff">O−</div>
+      <div class="grow"><div class="t">Urgent: O− blood donor needed</div>
+      <div class="s">Sta. Rosa Community Hospital · posted by Bro. LAKANDULA</div></div><span class="chev">›</span></div>
+    <div class="row" onclick="S.ann=0;go('announceDetail')">
+      <div class="avatar" style="background:var(--brass-soft);color:var(--brass-dk)">📣</div>
+      <div class="grow"><div class="t">Medical mission head count due Friday</div>
+      <div class="s">You have not confirmed yet</div></div><span class="chev">›</span></div>
+    <div class="row" onclick="go('scan')">
+      <div class="avatar" style="background:var(--brass-soft);color:var(--brass-dk)">▣</div>
+      <div class="grow"><div class="t">Scan a brother's ID</div>
+      <div class="s">Verify a card in seconds — works without signal</div></div><span class="chev">›</span></div>
+    <div class="row" onclick="go('meetings')">
+      <div class="avatar" style="background:#EFF4F9;color:var(--info)">▤</div>
+      <div class="grow"><div class="t">Next meeting · Sep 13, 2026</div>
+      <div class="s">Regular Chapter Meeting — September</div></div><span class="chev">›</span></div>
+  </div>
+  <div class="sec-lbl">Chapter chat <a onclick="go('chat')">Open</a></div>
+  <div class="card"><div class="card-pad" style="padding:0">
+    ${CHAT.slice(0,3).map(c=>`<div class="row" onclick="go('chat')">
+      <div class="avatar sm">${c.w==="me"?"TA":c.w.slice(0,2)}</div>
+      <div class="grow"><div class="t" style="font-size:12.5px">${c.w==="me"?"You":"Bro. "+c.w}</div>
+      <div class="s" style="margin-top:2px">${c.m}</div></div>
+      <span style="font-family:var(--f-num);font-size:10px;color:var(--mute)">${c.t}</span></div>`).join("")}
+  </div></div>
+  <div class="sec-lbl">Today in the chapter</div>
+  <div class="card"><div class="card-pad" style="font-size:13px;line-height:1.6;color:var(--slate)">
+    🎂 Bro. AGOS celebrates his birthday today.<br>
+    🕯️ Bro. HIMAGSIK marks 10 years since his date survive.</div></div>
+  <div style="height:22px"></div>`;
+
+V.dash = () => `
+  ${bar("Chapter dashboard","home",`<button class="act">Aug 2026 ▾</button>`)}
+  <div class="subbar">Figures are open to every member. Tap any tile to see the entries behind it.</div>
+  <div class="sec-lbl">Funds</div>
+  <div class="tiles">
+    <div class="tile dark wide" onclick="go('ledger')"><div class="k">Current balance</div>
+      <div class="v">${peso(38420)}</div><div class="d" style="color:#8B95A3">7 postings this month</div></div>
+    <div class="tile" onclick="go('meetings')"><div class="k">Funds collected</div>
+      <div class="v led-in">${peso(29310)}</div><div class="d">from 11 meetings</div></div>
+    <div class="tile" onclick="go('expenses')"><div class="k">Expenses</div>
+      <div class="v led-out">${peso(21890)}</div><div class="d">18 records, all with receipts</div></div>
+    <div class="tile wide" onclick="go('donations')"><div class="k">Donations received</div>
+      <div class="v led-in">${peso(31000)}</div><div class="d">6 donors · 2 in-kind</div></div>
+  </div>
+  <div class="sec-lbl">Membership</div>
+  <div class="tiles">
+    <div class="tile" onclick="go('directory')"><div class="k">Total members</div><div class="v">18</div></div>
+    <div class="tile" onclick="go('directory')"><div class="k">Active</div><div class="v" style="color:var(--in)">16</div></div>
+    <div class="tile" onclick="go('directory')"><div class="k">Inactive</div><div class="v" style="color:var(--mute)">2</div>
+      <div class="d">set manually by the Admin</div></div>
+    <div class="tile" onclick="go('approvals')"><div class="k">Pending</div><div class="v" style="color:var(--warn)">2</div></div>
+  </div>
+  <div class="sec-lbl">Activity</div>
+  <div class="tiles">
+    <div class="tile" onclick="go('meetings')"><div class="k">Meetings held</div><div class="v">11</div>
+      <div class="d">this year</div></div>
+    <div class="tile" onclick="go('meetings')"><div class="k">Avg. attendance</div><div class="v">78%</div></div>
+    <div class="tile wide" onclick="go('cases')"><div class="k">Corrective actions</div>
+      <div class="v">4</div><div class="d">1 pending · 3 reconciled</div></div>
+  </div>
+  <div class="note info" style="margin-top:16px">Contributions are voluntary, so no arrears figure is shown. Participation is reported as attendance, not as debt.</div>
+  <div style="height:16px"></div>`;
+
+V.directory = () => {
+  const f = S.filter;
+  const list = MEMBERS.filter(m =>
+    f==="All" ? true : f==="O+"||f==="O−" ? m.blood===f : m.skills.includes(f));
+  return `${bar("Members","home",`<button class="act" onclick="go('crosschapter')">Other chapters</button>`)}
+  <div class="searchwrap"><input placeholder="Search gift name, real name, profession"></div>
+  <div class="chips">
+    ${["All","O+","O−","Driver","Nurse","Electrician","Welder","IT / Computer"].map(c=>
+      `<button class="chip ${f===c?"on":""}" onclick="S.filter='${c}';render()">${c}</button>`).join("")}
+  </div>
+  <div class="sec-lbl">${list.length} of ${MEMBERS.length} shown${f!=="All"?` · filtered by ${f}`:""}</div>
+  <div class="card" style="padding:0">${list.map(m=>memberRow(m)).join("") ||
+    `<div class="empty"><div class="ic">◌</div><p>No brother in this chapter matches that filter.<br>Try the cross-chapter search.</p></div>`}</div>
+  <div class="note">Looking for a donor urgently? Post it as an announcement — brothers with a matching blood type are notified first.</div>
+  <div style="height:16px"></div>`;
+};
+
+V.profile = () => { const m = mem(S.mem); return `
+  ${bar(m.gift,"directory")}
+  <div style="background:var(--deep);padding:20px 16px;display:flex;gap:14px;align-items:center;color:var(--bond)">
+    <div class="avatar lg">${initials(m)}</div>
+    <div style="min-width:0">
+      <div style="font-family:var(--f-disp);font-size:28px;letter-spacing:.05em;line-height:1">${m.gift}</div>
+      <div style="font-size:12.5px;color:#9AA5B3;margin-top:4px">${full(m)}</div>
+      <div style="margin-top:8px"><span class="pill p-blood">${m.blood}</span>
+        <span class="pill ${m.status==="Active"?"p-ok":"p-mute"}">${m.status}</span></div>
+    </div>
+  </div>
+  <div class="card"><div class="card-pad">
+    <div class="sec-lbl" style="margin:0 0 9px">Contact</div>
+    <div class="row" style="padding:9px 0;border:none" onclick="go('dm')">
+      <div class="grow"><div class="s">Mobile</div><div class="t" style="font-family:var(--f-num);font-size:13.5px">${m.mobile}</div></div>
+      <span class="pill p-info">Call</span></div>
+    <div class="row" style="padding:9px 0;border:none" onclick="go('dm')">
+      <div class="grow"><div class="s">Address</div><div class="t" style="font-size:13px;font-weight:400">${m.addr}</div></div></div>
+  </div></div>
+  <button class="btn ghost sm" onclick="go('dm')">Send a private message</button>
+  <div class="sec-lbl">Skills</div>
+  <div class="card"><div class="card-pad"><div class="tags" style="margin:0">
+    ${m.skills.map(s=>`<span class="tag">${s}</span>`).join("")}</div>
+    <div style="font-size:12.5px;color:var(--mute);margin-top:10px">Profession · ${m.prof}</div></div></div>
+  <div class="sec-lbl">Organizational record</div>
+  <div class="card"><div class="card-pad" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div><div class="s" style="font-size:11px;color:var(--mute)">Member number</div>
+      <div style="font-family:var(--f-num);font-size:12.5px">${m.no}</div></div>
+    <div><div class="s" style="font-size:11px;color:var(--mute)">Date survive</div>
+      <div style="font-family:var(--f-num);font-size:12.5px">${m.survive}</div></div>
+    <div><div class="s" style="font-size:11px;color:var(--mute)">President during survive</div>
+      <div style="font-size:12.5px">${m.pres}</div></div>
+    <div><div class="s" style="font-size:11px;color:var(--mute)">Master initiator</div>
+      <div style="font-size:12.5px">${m.init}</div></div>
+  </div></div>
+  <div class="sec-lbl">Participation</div>
+  <div class="tiles"><div class="tile"><div class="k">Meetings attended</div><div class="v">9 / 11</div></div>
+  <div class="tile"><div class="k">Years in chapter</div><div class="v">15</div></div></div>
+  <div style="height:20px"></div>`; };
+
+V.crosschapter = () => `
+  ${bar("Other chapters","directory")}
+  <div class="searchwrap"><input placeholder="Search a brother by gift name or real name"></div>
+  <div class="note info">Outside your own chapter you see name, chapter and status only. To reach a brother, go through his Chapter Admin.</div>
+  <div class="sec-lbl">4 results for “LAKAN”</div>
+  <div class="card">
+    ${[["LAKANBINI","Jerome A. Padilla","Brgy. Malitlit Chapter","Active"],
+       ["LAKANDIWA","Ferdie C. Nuñez","Brgy. Balibago Chapter","Active"],
+       ["LAKANDULA","Arnel S. Bautista","Barangay San Isidro Chapter","Active"],
+       ["LAKAN GAT","Ronnie M. Espino","Brgy. Tagapo Chapter","Inactive"]].map(([g,n,c,st])=>
+      `<div class="row" style="cursor:default">
+        <div class="avatar">${g.slice(0,2)}</div>
+        <div class="grow"><div class="t">${g}</div><div class="s">${n}</div>
+          <div class="s" style="color:var(--slate)">${c}</div></div>
+        <span class="pill ${st==="Active"?"p-ok":"p-mute"}">${st}</span></div>`).join("")}
+  </div>
+  <div style="height:20px"></div>`;
+
+V.id = () => `
+  ${bar("My digital ID","home",`<button class="act" onclick="alert('Added to wallet (mock).')">Wallet</button>`)}
+  <div class="idstage">
+    <div class="idcard ${S.flip?"flip":""}" onclick="S.flip=!S.flip;render()">
+      <div class="idface">
+        <div class="id-top"><div class="id-seal">ΑΚΡ</div>
+          <div class="id-org">ALPHA KAPPA RHO<small>${CHAPTER}</small></div></div>
+        <div class="id-body">
+          <div class="id-photo">${initials(ME)}</div>
+          <div class="id-fields">
+            <div class="id-gift">${ME.gift}</div>
+            <div class="id-name">${full(ME)}</div>
+            <div class="id-meta">
+              <div><div class="k">Member no.</div><div class="v">${ME.no}</div></div>
+              <div><div class="k">Blood</div><div class="v">${ME.blood}</div></div>
+              <div><div class="k">Date survive</div><div class="v">${ME.survive}</div></div>
+              <div><div class="k">Status</div><div class="v">ACTIVE</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="id-year"><b>27</b><i>08 AUG</i></div>
+        <div class="id-strip"><span>REGION IV-A · STA. ROSA CITY</span><span>VALID THROUGH 08 AUG 2028</span></div>
+      </div>
+      <div class="idface back">
+        <div class="id-back-in">
+          <div class="qr">${Array.from({length:49},(_,i)=>
+            `<i class="${[0,1,2,5,6,7,8,12,13,14,16,18,20,21,24,27,28,30,32,34,35,36,38,40,42,43,44,47,48].includes(i)?"":"off"}"></i>`).join("")}</div>
+          <div class="id-back-txt"><b>Verify this ID</b>
+            Scan to open the public verification page. The code carries a signed token only — no personal details are stored in it.
+            <br><br>The page shows photo, gift name, chapter and current status. Nothing else.
+            <br><br>If this card is found, please return it to the chapter Secretary.</div>
+        </div>
+        <div class="id-strip"><span>ISSUED 04 JAN 2026</span><span>SAN ISIDRO · AIS</span></div>
+      </div>
+    </div>
+    <div class="flip-hint">Tap the card to turn it over</div>
+  </div>
+  <div class="btn-pair" style="margin-bottom:10px">
+    <button class="btn brass sm" onclick="go('scan')">Scan a brother's ID</button>
+    <button class="btn ghost sm" onclick="go('seals')">My year seals</button></div>
+  <div class="note info">Your ID regenerates automatically if your status changes, so a suspended card cannot be shown as active.</div>
+  <div style="height:20px"></div>`;
+
+V.meetings = () => `
+  ${bar("Meetings","home", S.role!=="member"?`<button class="act" onclick="go('newMeeting')">+ New</button>`:"")}
+  <div class="tiles" style="padding-top:14px">
+    <div class="tile"><div class="k">Held this year</div><div class="v">11</div></div>
+    <div class="tile"><div class="k">Total collected</div><div class="v led-in" style="font-size:16px">${peso(29310)}</div></div>
+  </div>
+  <div class="sec-lbl">Upcoming</div>
+  <div class="card"><div class="row" onclick="S.mtg=4;go('meeting')">
+    <div class="avatar" style="background:#EFF4F9;color:var(--info)">13<br></div>
+    <div class="grow"><div class="t">${MEETINGS[3].subj}</div>
+      <div class="s">${MEETINGS[3].date} · <span class="pill p-warn">Draft</span></div></div><span class="chev">›</span></div></div>
+  <div class="sec-lbl">Past meetings</div>
+  <div class="card">${MEETINGS.slice(0,3).map(m=>`
+    <div class="row" onclick="S.mtg=${m.id};go('meeting')">
+      <div class="grow"><div class="t">${m.subj}</div>
+        <div class="s">${m.date} · ${m.present} of ${m.total} present ${m.locked?'<span class="pill p-mute">Locked</span>':""}</div></div>
+      <div class="amt led-in">${peso(m.collected)}</div></div>`).join("")}</div>
+  <div class="note">Once a meeting is finalized, attendance and amounts are locked. Any later change is recorded as a separate adjustment with a reason.</div>
+  <div style="height:16px"></div>`;
+
+V.meeting = () => { const M = MEETINGS.find(x=>x.id===S.mtg) || MEETINGS[0]; return `
+  ${bar("Meeting","meetings", S.role!=="member" && !M.locked?`<button class="act" onclick="go('attendance')">Attendance</button>`:"")}
+  <div class="card"><div class="card-pad">
+    <div style="font-family:var(--f-disp);font-size:22px;line-height:1.15;letter-spacing:.02em">${M.subj}</div>
+    <div style="font-size:12px;color:var(--mute);margin-top:6px">${M.date} · Barangay Hall, San Isidro
+      ${M.locked?' · <span class="pill p-mute">Finalized</span>':' · <span class="pill p-warn">Draft</span>'}</div>
+    <div style="font-size:13.5px;line-height:1.65;color:var(--slate);margin-top:12px">${M.body}</div>
+  </div></div>
+  ${M.locked?`
+  <div class="tiles">
+    <div class="tile"><div class="k">Attendance</div><div class="v">${M.present} / ${M.total}</div></div>
+    <div class="tile"><div class="k">Collected</div><div class="v led-in" style="font-size:16px">${peso(M.collected)}</div></div>
+  </div>
+  <div class="sec-lbl">Who attended and what each gave</div>
+  <div class="card">${ATTENDEES.map(a=>{const m=mem(a.m);return `
+    <div class="row" onclick="S.mem=${m.id};go('profile')">
+      <div class="avatar sm">${initials(m)}</div>
+      <div class="grow"><div class="t" style="font-size:13px">${m.gift}</div>
+        <div class="s"><span class="pill ${a.st==="Present"?"p-ok":a.st==="Absent"?"p-mute":"p-warn"}">${a.st}</span></div></div>
+      <div class="amt ${a.amt?"led-in":""}" style="${a.amt?"":"color:var(--mute)"}">${a.amt?peso(a.amt):"—"}</div></div>`}).join("")}</div>
+  <div class="note">A dash means no contribution was given. Contributions are voluntary and carry no penalty — the record exists for transparency, not for collection.</div>
+  `:`<div class="empty"><div class="ic">▤</div><p>Attendance has not been recorded yet.<br>It is entered by the Secretary after the meeting.</p></div>`}
+  <div style="height:16px"></div>`; };
+
+V.announce = () => `
+  ${bar("Announcements","home", S.role!=="member"?`<button class="act" onclick="go('newAnnounce')">+ Post</button>`:"")}
+  <div class="chips"><button class="chip on">Announcements</button>
+    <button class="chip" onclick="go('memos')">Memos</button></div>
+  <div class="sec-lbl">3 posts</div>
+  <div class="card">${ANNOUNCE.map((a,i)=>`
+    <div class="row" onclick="S.ann=${i};go('announceDetail')">
+      <div class="avatar" style="${a.urgent?"background:var(--out);color:#fff":"background:var(--brass-soft);color:var(--brass-dk)"}">${a.urgent?"!":"📣"}</div>
+      <div class="grow"><div class="t">${a.t}</div>
+        <div class="s">${a.d} · ${a.by}</div>
+        <div class="s" style="color:var(--slate)">Read by ${a.read} of 18</div></div><span class="chev">›</span></div>`).join("")}</div>
+  <div style="height:16px"></div>`;
+
+V.announceDetail = () => { const a = ANNOUNCE[S.ann]||ANNOUNCE[0]; return `
+  ${bar("Announcement","announce")}
+  <div class="card"><div class="card-pad">
+    ${a.urgent?`<span class="pill p-blood" style="font-size:11px">URGENT · BLOOD REQUEST</span><div style="height:9px"></div>`:""}
+    <div style="font-family:var(--f-disp);font-size:24px;line-height:1.15">${a.t}</div>
+    <div style="font-size:12px;color:var(--mute);margin-top:7px">${a.d} · ${a.by}</div>
+    <div style="font-size:14px;line-height:1.7;color:var(--slate);margin-top:14px">${a.b}</div>
+  </div></div>
+  ${a.urgent?`
+  <div class="sec-lbl">O− brothers in your chapter</div>
+  <div class="card">${MEMBERS.filter(m=>m.blood==="O−").map(m=>memberRow(m)).join("")}</div>
+  <div class="note">Brothers with a matching blood type were notified first, ahead of the general chapter announcement.</div>
+  `:`<div class="btn-pair" style="margin-bottom:12px">
+    <button class="btn brass sm" onclick="alert('Confirmed. The Secretary has been notified.')">I'm attending</button>
+    <button class="btn ghost sm" onclick="alert('Noted.')">Can't attend</button></div>`}
+  <div class="sec-lbl">Read by 12 of 18</div>
+  <div class="card"><div class="card-pad" style="font-size:12.5px;color:var(--mute);line-height:1.6">
+    Officers can see who has opened this. Unread brothers are reminded automatically after 48 hours.</div></div>
+  <div style="height:16px"></div>`; };
+
+V.memos = () => `
+  ${bar("Memos","home")}
+  <div class="chips"><button class="chip" onclick="go('announce')">Announcements</button>
+    <button class="chip on">Memos</button></div>
+  <div class="sec-lbl">Chapter memoranda</div>
+  <div class="card">${MEMOS.map(m=>`
+    <div class="row" onclick="alert('Opens the memo with its PDF attachment.')">
+      <div class="grow">
+        <div style="font-family:var(--f-num);font-size:10.5px;color:var(--brass-dk);letter-spacing:.05em">${m.no}</div>
+        <div class="t" style="margin-top:3px">${m.t}</div>
+        <div class="s">${m.d} · ${m.by} · 📎 ${m.att}</div></div><span class="chev">›</span></div>`).join("")}</div>
+  <div class="card"><div class="card-pad" style="font-size:13.5px;line-height:1.65;color:var(--slate)">
+    <div style="font-family:var(--f-disp);font-size:12.5px;letter-spacing:.18em;color:var(--brass-dk);margin-bottom:8px">${MEMOS[0].no}</div>
+    ${MEMOS[0].b}</div></div>
+  <div style="height:16px"></div>`;
+
+V.cases = () => `
+  ${bar("Corrective actions","home", S.role==="admin"?`<button class="act" onclick="go('newCase')">+ File</button>`:"")}
+  <div class="note info"><strong>What you can see.</strong> Every member sees the brother's name, the category, the status and the date. The written details are kept between the officers and the brother concerned.</div>
+  <div class="tiles">
+    <div class="tile"><div class="k">Pending</div><div class="v" style="color:var(--warn)">1</div></div>
+    <div class="tile"><div class="k">Reconciled</div><div class="v" style="color:var(--in)">3</div></div>
+  </div>
+  <div class="sec-lbl">All cases · nothing here is ever deleted</div>
+  <div class="card">${CASES.map(c=>{const m=mem(c.m);return `
+    <div class="row" onclick="S.caseOpen=${c.id};go('caseDetail')">
+      <div class="avatar sm">${initials(m)}</div>
+      <div class="grow"><div class="t" style="font-size:13.5px">${m.gift}</div>
+        <div class="s">${c.cat} · filed ${c.d}</div></div>
+      <span class="pill ${c.st==="Reconciled"?"p-ok":"p-warn"}">${c.st}</span></div>`}).join("")}</div>
+  <div style="height:16px"></div>`;
+
+V.caseDetail = () => { const c = CASES.find(x=>x.id===S.caseOpen)||CASES[0]; const m = mem(c.m);
+  const priv = S.role!=="member"; return `
+  ${bar("Case record","cases", priv?`<button class="act">Update</button>`:"")}
+  <div class="card"><div class="card-pad">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="avatar">${initials(m)}</div>
+      <div><div style="font-family:var(--f-disp);font-size:22px;letter-spacing:.04em">${m.gift}</div>
+        <div style="font-size:12px;color:var(--mute)">${full(m)}</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px">
+      <div><div style="font-size:11px;color:var(--mute)">Category</div><div style="font-size:13.5px">${c.cat}</div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Status</div>
+        <div><span class="pill ${c.st==="Reconciled"?"p-ok":"p-warn"}">${c.st}</span></div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Date filed</div><div style="font-size:13.5px">${c.d}</div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Filed by</div><div style="font-size:13.5px">${c.by}</div></div>
+    </div></div></div>
+  ${priv ? `
+    <div class="sec-lbl">Narrative <span class="pill p-info">Officers only</span></div>
+    <div class="card"><div class="card-pad" style="font-size:13.5px;line-height:1.7;color:var(--slate)">${c.body}</div></div>
+  ` : `
+    <div class="card"><div class="card-pad" style="text-align:center;padding:26px 20px">
+      <div style="font-size:24px;opacity:.3">🔒</div>
+      <div style="font-family:var(--f-disp);font-size:17px;letter-spacing:.06em;margin-top:9px">Details not shown</div>
+      <p style="font-size:12.5px;color:var(--mute);line-height:1.6;margin-top:7px">
+        The written account is available to the officers and to the brother concerned. Switch the preview to Officer to see it.</p>
+    </div></div>`}
+  <div class="sec-lbl">Timeline</div>
+  <div class="card">${c.updates.map(u=>`
+    <div class="row" style="cursor:default;align-items:flex-start">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--brass);margin-top:6px;flex:none"></div>
+      <div class="grow"><div class="s" style="font-family:var(--f-num);font-size:11px">${u.d}</div>
+        <div style="font-size:13px;line-height:1.55;margin-top:3px;color:var(--slate)">${u.w}</div></div></div>`).join("")}</div>
+  <div class="note">Records here are never deleted. Corrections are added to the timeline so the history stays whole.</div>
+  <div style="height:16px"></div>`; };
+
+V.ledger = () => `
+  ${bar("Ledger","home",`<button class="act">Export</button>`)}
+  <div class="tiles" style="padding-top:14px">
+    <div class="tile dark wide"><div class="k">Running balance</div><div class="v">${peso(38420)}</div>
+      <div class="d" style="color:#8B95A3">as of Aug 09, 2026</div></div>
+    <div class="tile"><div class="k">Cash in</div><div class="v led-in" style="font-size:16px">${peso(60310)}</div></div>
+    <div class="tile"><div class="k">Cash out</div><div class="v led-out" style="font-size:16px">${peso(21890)}</div></div>
+  </div>
+  <div class="sec-lbl">Postings <a>This month ▾</a></div>
+  <div class="card">${LEDGER.map(l=>`
+    <div class="row" onclick="${l.src.startsWith("Expense")?"go('expenseDetail')":l.src.startsWith("Donation")?"go('donations')":"go('meeting')"}">
+      <div class="grow"><div class="t" style="font-size:13px;font-weight:500">${l.t}</div>
+        <div class="s" style="font-family:var(--f-num);font-size:10.5px">${l.d} · ${l.src}</div></div>
+      <div class="amt ${l.ty==="in"?"led-in":"led-out"}">${l.ty==="in"?"+":"−"}${peso(l.a)}</div></div>`).join("")}</div>
+  <div class="note"><strong>Append-only.</strong> No posting here can be edited or deleted. A mistake is corrected by adding a reversing entry, which stays visible beside the original.</div>
+  <div style="height:16px"></div>`;
+
+V.expenses = () => `
+  ${bar("Expenses","ledger", S.role!=="member"?`<button class="act" onclick="go('newExpense')">+ Record</button>`:"")}
+  <div class="sec-lbl">Barangay Clean-Up Drive <span class="pill p-info">Activity</span></div>
+  <div class="card"><div class="card-pad" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+    <div><div style="font-size:10.5px;color:var(--mute)">Donated</div>
+      <div style="font-family:var(--f-num);font-size:14px;color:var(--in)">${peso(5000)}</div></div>
+    <div><div style="font-size:10.5px;color:var(--mute)">Spent</div>
+      <div style="font-family:var(--f-num);font-size:14px;color:var(--out)">${peso(4090)}</div></div>
+    <div><div style="font-size:10.5px;color:var(--mute)">Remaining</div>
+      <div style="font-family:var(--f-num);font-size:14px">${peso(910)}</div></div>
+  </div></div>
+  <div class="sec-lbl">All expenses</div>
+  <div class="card">${EXPENSES.map(e=>`
+    <div class="row" onclick="S.exp=${e.id};go('expenseDetail')">
+      <div class="grow"><div class="t">${e.t}</div>
+        <div class="s">${e.d} · ${e.act}</div>
+        <div class="s">📎 ${e.rec} receipt${e.rec>1?"s":""} · recorded by ${e.by}</div></div>
+      <div class="amt led-out">${peso(e.a)}</div></div>`).join("")}</div>
+  <div style="height:16px"></div>`;
+
+V.expenseDetail = () => { const e = EXPENSES.find(x=>x.id===S.exp)||EXPENSES[0]; return `
+  ${bar("Expense","expenses")}
+  <div class="card"><div class="card-pad">
+    <div style="font-family:var(--f-disp);font-size:23px;line-height:1.15">${e.t}</div>
+    <div style="font-family:var(--f-num);font-size:26px;color:var(--out);margin-top:8px">${peso(e.a)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+      <div><div style="font-size:11px;color:var(--mute)">Date</div><div style="font-size:13.5px">${e.d}</div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Payee</div><div style="font-size:13.5px">${e.payee}</div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Activity</div><div style="font-size:13.5px">${e.act}</div></div>
+      <div><div style="font-size:11px;color:var(--mute)">Recorded by</div><div style="font-size:13.5px">${e.by}</div></div>
+    </div></div></div>
+  <div class="sec-lbl">Receipts</div>
+  <div class="recgrid">${Array.from({length:e.rec},(_,i)=>`<div class="rec filled">Receipt<br>${i+1}</div>`).join("")}
+    ${S.role!=="member"?`<div class="rec">+ Add<br>photo</div>`:""}</div>
+  <div class="note">Every peso that leaves the chapter has a receipt attached to its record. Tap a receipt to view it full size.</div>
+  <div style="height:16px"></div>`; };
+
+V.donations = () => `
+  ${bar("Donations","ledger", S.role!=="member"?`<button class="act" onclick="go('newDonation')">+ Record</button>`:"")}
+  <div class="tiles" style="padding-top:14px">
+    <div class="tile"><div class="k">Cash received</div><div class="v led-in" style="font-size:16px">${peso(31000)}</div></div>
+    <div class="tile"><div class="k">In-kind</div><div class="v" style="font-size:16px">2 records</div></div>
+  </div>
+  <div class="sec-lbl">Donors</div>
+  <div class="card">${DONATIONS.map(d=>`
+    <div class="row" onclick="alert('Opens the full donation record with the acknowledgement receipt.')">
+      <div class="grow"><div class="t">${d.donor}</div>
+        <div class="s">${d.d} · ${d.act}</div>
+        <div class="s"><span class="pill ${d.type==="Government Official"?"p-info":"p-mute"}">${d.type}</span>
+          <span style="font-family:var(--f-num);font-size:10px;color:var(--mute)">&nbsp;${d.ack}</span></div></div>
+      <div class="amt ${d.a?"led-in":""}" style="${d.a?"":"color:var(--slate);font-size:11px;white-space:normal;text-align:right;max-width:88px"}">
+        ${d.a?peso(d.a):d.inkind}</div></div>`).join("")}</div>
+  <div class="note info">Donation records are open to every member and can be shown to the donor. This is the page a barangay official is most likely to ask to see.</div>
+  <div style="height:16px"></div>`;
+
+V.chat = () => `
+  ${bar("Chapter chat","home",`<button class="act">18 online</button>`)}
+  <div class="chatwrap" style="height:calc(100% - 47px)">
+    <div class="msgs">
+      <div class="msg sys">Messages in this room are kept for one year and can be reviewed by officers.</div>
+      ${CHAT.map(c=>c.w==="me"
+        ? `<div class="msg me">${c.m}<div class="tm">${c.t} ✓✓</div></div>`
+        : `<div class="msg them"><div class="who">Bro. ${c.w}</div>${c.m}<div class="tm">${c.t}</div></div>`).join("")}
+      ${S.role!=="member"?`<div class="msg sys">You are an officer here — long-press any message to hide or flag it.</div>`:""}
+    </div>
+    <div class="composer"><input placeholder="Message the chapter"><button class="send">↑</button></div>
+  </div>`;
+
+V.dm = () => `
+  ${bar("Bro. BAGWIS","directory",`<button class="act">Call</button>`)}
+  <div class="chatwrap" style="height:calc(100% - 47px)">
+    <div class="msgs">
+      <div class="msg sys">Private message · not end-to-end encrypted</div>
+      <div class="msg them"><div class="who">Bro. BAGWIS</div>Sir, nakuha ko na po yung listahan ng mga sasama sa medical mission.<div class="tm">6:40 PM</div></div>
+      <div class="msg me">Salamat. Ilan lahat?<div class="tm">6:44 PM</div></div>
+      <div class="msg them"><div class="who">Bro. BAGWIS</div>Labing-apat po. Ipo-post ko na sa chapter chat mamaya.<div class="tm">6:45 PM</div></div>
+      <div class="msg me">Sige, i-post mo na rin sa announcement para ma-notify lahat.<div class="tm">6:47 PM</div></div>
+    </div>
+    <div class="composer"><input placeholder="Message Bro. BAGWIS"><button class="send">↑</button></div>
+  </div>`;
+
+V.scan = () => `
+  ${bar("Scan an ID","id")}
+  <div class="chips" style="padding-top:12px">
+    <button class="chip on">Verify a brother</button>
+    <button class="chip" onclick="go('scanAttend')">Meeting check-in</button>
+  </div>
+  <div class="scanner">
+    <div class="grain"></div>
+    <div class="vf"><i></i><i></i><i></i><i></i><div class="laser"></div></div>
+    <div class="hint">Point the camera at the QR on the back of the card</div>
+  </div>
+  <div class="btn-pair" style="margin-bottom:12px">
+    <button class="btn brass sm" onclick="go('verify')">Simulate a scan</button>
+    <button class="btn ghost sm" onclick="alert('Enter the member number printed on the front of the card instead.')">Enter number</button>
+  </div>
+  <div class="note info"><strong>Works without signal.</strong> The card's signature is checked on your own phone against a key stored during your last sync. A barangay hall with no data still verifies.</div>
+  <div class="sec-lbl">Your recent scans</div>
+  <div class="card">
+    ${[["BAGWIS","Verified live","Today · 7:02 PM","ok"],
+       ["HIMAGSIK","Verified offline","Aug 09 · 5:41 PM","warn"],
+       ["Unknown card","Signature failed","Aug 02 · 3:18 PM","bad"]].map(([g,st,t,k])=>`
+      <div class="row" onclick="go('verify')">
+        <div class="avatar sm">${g.slice(0,2)}</div>
+        <div class="grow"><div class="t" style="font-size:13px">${g}</div><div class="s">${t}</div></div>
+        <span class="pill ${k==="ok"?"p-ok":k==="warn"?"p-warn":"p-blood"}">${st}</span></div>`).join("")}
+  </div>
+  <div class="note">Every scan is recorded, and the brother you scanned can see that you verified his card. Verification is not surveillance if both sides can see it.</div>
+  <div style="height:16px"></div>`;
+
+V.verify = () => `
+  ${bar("Verification result","scan",`<button class="act" onclick="go('scan')">Scan again</button>`)}
+  <div class="trust live">
+    <div class="dot" style="background:var(--in)"></div>
+    <div><div class="tt" style="color:var(--in)">Genuine card · status confirmed live</div>
+      <div class="ts">Signature valid, and the chapter register was checked just now. This is the strongest result the system can give.</div></div>
+  </div>
+  <div style="background:var(--deep);padding:18px 16px;display:flex;gap:14px;align-items:center;color:var(--bond)">
+    <div class="avatar lg">BA</div>
+    <div style="min-width:0">
+      <div style="font-family:var(--f-disp);font-size:28px;letter-spacing:.05em;line-height:1">BAGWIS</div>
+      <div style="font-size:12.5px;color:#9AA5B3;margin-top:4px">Joel R. Mariano</div>
+      <div style="margin-top:8px"><span class="pill p-ok">Active</span>
+        <span class="pill p-blood">A+</span></div>
+    </div>
+  </div>
+  <div class="card"><div class="card-pad" style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+    <div><div style="font-size:11px;color:var(--mute)">Member number</div>
+      <div style="font-family:var(--f-num);font-size:12.5px">AKR-04-0117-002</div></div>
+    <div><div style="font-size:11px;color:var(--mute)">Chapter</div>
+      <div style="font-size:12.5px">Brgy. San Isidro</div></div>
+    <div><div style="font-size:11px;color:var(--mute)">Date survive</div>
+      <div style="font-family:var(--f-num);font-size:12.5px">2013-08-02</div></div>
+    <div><div style="font-size:11px;color:var(--mute)">Card issued</div>
+      <div style="font-family:var(--f-num);font-size:12.5px">2026-08-01</div></div>
+  </div></div>
+  <div class="btn-pair" style="margin-bottom:10px">
+    <button class="btn brass sm" onclick="go('profile')">Open his profile</button>
+    <button class="btn ghost sm" onclick="go('dm')">Message him</button></div>
+  ${S.role!=="member"?`<button class="btn ghost sm" onclick="alert('Checked in to the September meeting at 7:04 PM.')">Check in to tonight's meeting</button>`:""}
+  <div class="sec-lbl">If the result had been different</div>
+  <div class="trust offline">
+    <div class="dot" style="background:var(--warn)"></div>
+    <div><div class="tt" style="color:#8A6410">Genuine card · status from last sync</div>
+      <div class="ts">No signal, so the signature was checked on this phone. The card is real, but a suspension issued since your last sync would not show yet.</div></div>
+  </div>
+  <div class="trust bad">
+    <div class="dot" style="background:var(--out)"></div>
+    <div><div class="tt" style="color:var(--out)">Not a valid AKRHO card</div>
+      <div class="ts">The signature does not match, the card has expired, or it was revoked. Refer the person to the Chapter Admin — do not confront him on the spot.</div></div>
+  </div>
+  <div class="note">Always compare the photo to the person in front of you. A screenshot of a QR code can be shown by anyone; a face cannot.</div>
+  <div style="height:16px"></div>`;
+
+V.verifyPublic = () => `
+  <div class="browserbar"><span>🔒</span>
+    <div class="url">verify.akrho.ph/v/8f3a…c21</div><span>⋯</span></div>
+  <div style="background:var(--deep);padding:22px 16px;text-align:center;color:var(--bond)">
+    <div style="width:44px;height:44px;border-radius:50%;border:2px solid var(--brass);margin:0 auto 10px;
+      display:grid;place-items:center;font-family:var(--f-disp);font-size:16px;color:var(--brass);font-weight:700">ΑΚΡ</div>
+    <div style="font-family:var(--f-disp);font-size:15px;letter-spacing:.2em;color:var(--brass)">ALPHA KAPPA RHO</div>
+    <div style="font-size:11px;color:#8B95A3;margin-top:4px">Membership verification</div>
+  </div>
+  <div style="text-align:center;padding:26px 20px 8px">
+    <div class="avatar lg" style="margin:0 auto;width:96px;height:96px;font-size:34px">BA</div>
+    <div style="font-family:var(--f-disp);font-size:30px;letter-spacing:.05em;margin-top:14px">BAGWIS</div>
+    <div style="font-size:13px;color:var(--mute);margin-top:4px">Brgy. San Isidro Chapter</div>
+    <div style="margin-top:14px"><span class="pill p-ok" style="font-size:12px;padding:5px 12px">ACTIVE MEMBER IN GOOD STANDING</span></div>
+    <div style="font-family:var(--f-num);font-size:10.5px;color:var(--mute);margin-top:14px">
+      Verified 24 Aug 2026 · 09:41</div>
+  </div>
+  <div class="note info" style="margin-top:18px">This page shows four facts and nothing more: photo, name in the organization, chapter, and status. No contact number, no address, no blood type, no records.</div>
+  <div class="card"><div class="card-pad" style="font-size:12.5px;line-height:1.6;color:var(--slate)">
+    Anyone can open this page with a plain phone camera — a hospital, a barangay official, a checkpoint. No app, no account, no login.
+    <div style="height:9px"></div>
+    If this page does not load, the card is not genuine.</div></div>
+  <div style="height:16px"></div>`;
+
+V.scanAttend = () => `
+  ${bar("Meeting check-in","attendance",`<button class="act" onclick="go('attendance')">Sheet</button>`)}
+  <div class="subbar">Regular Chapter Meeting — September · scanning since 6:52 PM</div>
+  <div class="scanner" style="aspect-ratio:4/3">
+    <div class="grain"></div>
+    <div class="vf" style="width:52%"><i></i><i></i><i></i><i></i><div class="laser"></div></div>
+    <div class="hint">Next brother — hold the card steady</div>
+  </div>
+  <div class="tiles">
+    <div class="tile dark"><div class="k">Checked in</div><div class="v">11</div>
+      <div class="d" style="color:#8B95A3">of 18 members</div></div>
+    <div class="tile"><div class="k">Collected so far</div><div class="v led-in" style="font-size:17px">${peso(2600)}</div>
+      <div class="d">entered after each scan</div></div>
+  </div>
+  <div class="note info">Scanning only marks him present. The contribution amount is still typed in — voluntary means the officer never assumes a figure.</div>
+  <div class="sec-lbl">Just scanned</div>
+  <div class="card">
+    <div class="row" style="cursor:default;background:#EEF6F2">
+      <div class="avatar sm">HI</div>
+      <div class="grow"><div class="t" style="font-size:13px">HIMAGSIK</div>
+        <div class="s">Checked in 7:04 PM</div></div>
+      <input class="amtin" value="300.00"></div>
+    <div class="row" style="cursor:default;background:#FBF5E7">
+      <div class="avatar sm">AG</div>
+      <div class="grow"><div class="t" style="font-size:13px">AGOS</div>
+        <div class="s" style="color:#8A6410">Already checked in at 6:58 PM — not counted twice</div></div>
+      <span class="pill p-warn">Duplicate</span></div>
+    <div class="row" style="cursor:default">
+      <div class="avatar sm">LA</div>
+      <div class="grow"><div class="t" style="font-size:13px">LAKANDULA</div>
+        <div class="s">Checked in 6:56 PM</div></div>
+      <input class="amtin" value="500.00"></div>
+    <div class="row" style="cursor:default;background:#FBF0EF">
+      <div class="avatar sm" style="background:var(--out);color:#fff">?</div>
+      <div class="grow"><div class="t" style="font-size:13px">Card from another chapter</div>
+        <div class="s" style="color:var(--out)">Brgy. Malitlit · log as a visitor instead</div></div>
+      <span class="pill p-blood">Not ours</span></div>
+  </div>
+  <button class="btn brass" onclick="go('attendance')">Stop scanning and finish the sheet</button>
+  <div class="note">Anyone without a phone is still checked manually on the sheet. The scanner speeds the queue up; it never becomes the only way in.</div>
+  <div style="height:16px"></div>`;
+
+V.seals = () => `
+  ${bar("Renewal & year seals","id")}
+  <div class="note info"><strong>Renewed for 2027–28.</strong> Approved by the Sta. Rosa City Council. Your ID is valid through <strong>08 August 2028</strong>, and the 2027 card has been added to your collection.</div>
+  <div class="sec-lbl">Your years</div>
+  <div class="card"><div class="card-pad">
+    <div class="seals">
+      ${[2021,2022,2023,2024,2025,2026,2027].map(y=>YEARCARDS[y]
+        ? `<div class="seal" onclick="S.yc=${y};go('yearCard')" style="cursor:pointer">
+             <div class="disc"><span>'${String(y).slice(2)}</span></div>
+             <div class="cap">${y}${y===2027?" · new":""}</div></div>`
+        : `<div class="seal gap"><div class="disc"><span>'${String(y).slice(2)}</span></div>
+             <div class="cap">lapsed</div></div>`).join("")}
+    </div>
+    <div style="font-size:11.5px;color:var(--mute);margin-top:10px">Tap any year to open that year's card.</div>
+    <div style="margin-top:14px;font-size:13.5px;color:var(--slate);line-height:1.6">
+      <strong>6 years renewed · 3 continuous</strong><br>
+      <span style="color:var(--mute)">Next milestone at 10 continuous years.</span></div>
+  </div></div>
+  <div class="sec-lbl">Milestones</div>
+  <div class="card"><div class="card-pad" style="display:flex;gap:14px;align-items:center">
+    <div class="seal silver" style="opacity:.35"><div class="disc"><span>10</span></div><div class="cap">locked</div></div>
+    <div style="font-size:12.5px;color:var(--slate);line-height:1.6">
+      Awarded at 10, 15, 20 and 25 continuous years. Rare on purpose — it is what makes year five worth reaching.</div>
+  </div></div>
+  <div class="sec-lbl">Your chapter</div>
+  <div class="card"><div class="card-pad" style="display:flex;gap:14px;align-items:center">
+    <div class="seal"><div class="disc"><span>100</span></div><div class="cap">2027</div></div>
+    <div style="font-size:12.5px;color:var(--slate);line-height:1.6">
+      <strong>Brgy. San Isidro — 100% renewed.</strong> Every active brother renewed for 2027. The chapter badge is earned by the chapter, not by any one member.</div>
+  </div></div>
+  <div class="note">The 2024 gap is shown to you and to your officers only. Your public verification page shows your current status and your continuous-years count — never a year-by-year record of when you could not renew.</div>
+  <div style="height:16px"></div>`;
+
+V.yearCard = () => {
+  const y = S.yc, c = YEARCARDS[y] || YEARCARDS[2027];
+  const yrs = Object.keys(YEARCARDS).map(Number).sort();
+  return `
+  ${bar(`${y} card`,"seals",`<button class="act" onclick="alert('Saved to Photos. Most brothers post it the same day — which is exactly how the next man finds out these exist.')">Share</button>`)}
+  <div style="padding:18px 16px 6px">
+    <div class="yc ${c.f}" onclick="S.ycFlip=!S.ycFlip;render()" style="cursor:pointer">
+      <div class="pat"></div>
+      <div class="emb">${c.ann}</div>
+      <div class="in">
+        <div class="org">ALPHA KAPPA RHO</div>
+        ${S.ycFlip ? `
+          <div style="margin-top:auto;font-size:11.5px;line-height:1.85;opacity:.92">
+            National President · ${c.pres}<br>
+            Chapter · Brgy. San Isidro<br>
+            Brothers renewed nationwide · ${c.n}<br>
+            Renewed · 08 August ${y}<br>
+            Valid through · 08 August ${y+1}</div>
+          <div class="thm">${c.th}</div>`
+        : `
+          <div class="big">${y}</div>
+          <div class="span">09 AUG ${y} — 08 AUG ${y+1}</div>
+          <div class="who">${ME.gift}</div>
+          <div class="no">${ME.no}</div>
+          <div class="thm">${c.th}</div>`}
+      </div>
+    </div>
+    <div style="text-align:center;font-size:11.5px;color:var(--mute);margin-top:10px">Tap the card to turn it over</div>
+  </div>
+  <div class="card"><div class="card-pad">
+    <div class="ycmeta">
+      <div><div class="k">Membership year</div><div class="v">${y}–${String(y+1).slice(2)}</div></div>
+      <div><div class="k">Theme</div><div class="v">${c.th}</div></div>
+      <div><div class="k">Anniversary</div><div class="v">${c.ann}</div></div>
+      <div><div class="k">Finish</div><div class="v">${{"yc-brass":"Obsidian & brass","yc-jade":"Jade & silver","yc-ox":"Oxblood & gold","yc-steel":"Steel","yc-indigo":"Indigo"}[c.f]}</div></div>
+    </div>
+    <div style="margin-top:13px;font-size:12.5px;color:var(--slate);line-height:1.6">
+      Every membership year has its own finish, emblem and theme. This one can only be earned in ${y} — there is no other way to get it later.</div>
+  </div></div>
+  <div class="sec-lbl">Your collection <a onclick="go('seals')">All years</a></div>
+  <div class="card"><div class="card-pad" style="display:flex;gap:9px;overflow-x:auto;padding-bottom:14px">
+    ${yrs.map(v=>`<div style="flex:none;width:104px;cursor:pointer" onclick="S.yc=${v};S.ycFlip=false;render()">
+      <div class="yc ${YEARCARDS[v].f}" style="box-shadow:none;${v===y?"outline:2px solid var(--brass);outline-offset:2px":"opacity:.62"}">
+        <div class="pat"></div>
+        <div class="in" style="padding:8px"><div class="org" style="font-size:6.5px">ALPHA KAPPA RHO</div>
+          <div class="big" style="font-size:24px">${v}</div></div></div>
+      <div style="font-size:10px;color:var(--mute);text-align:center;margin-top:5px">${YEARCARDS[v].th}</div></div>`).join("")}
+  </div></div>
+  <div class="note info"><strong>This card is a keepsake, not proof of standing.</strong> It carries no QR and cannot be verified. Your digital ID remains the only card that proves you are current — so a beautiful old card can never be mistaken for a valid one.</div>
+  <div class="note">A card is issued only by renewing in that year. It is never sold, never gifted, and never transferable between brothers.</div>
+  <div style="height:16px"></div>`;
+};
+
+V.branding = () => `
+  ${bar("Chapter identity","settings",`<button class="act" onclick="alert('Submitted to the Sta. Rosa City Council for approval.')">Submit</button>`)}
+  <div class="note info">The app is the same for all 1,100 chapters — one address, one login page.
+    What changes once a brother signs in is <strong>your mark</strong>, so the app feels like his
+    chapter's rather than head office's.</div>
+
+  <div class="sec-lbl">Your mark</div>
+  <div class="card"><div class="card-pad" style="display:flex;gap:14px;align-items:center">
+    <div class="chmark lg" style="width:74px;height:74px;font-size:27px;border-radius:14px">${CHAPTER_MARK}</div>
+    <div style="font-size:12.5px;color:var(--slate);line-height:1.6">
+      Square image, transparent background, at least 512px, under 200 KB.<br>
+      <span style="color:var(--mute)">No logo yet? A monogram from your chapter name is generated
+      automatically, so nothing looks unfinished on day one.</span></div>
+  </div></div>
+  <div class="btn-pair" style="margin-bottom:12px">
+    <button class="btn brass sm" onclick="alert('Camera or gallery.')">Upload a logo</button>
+    <button class="btn ghost sm" onclick="alert('Reverted to the generated monogram.')">Use monogram</button></div>
+
+  <div class="sec-lbl">Accent colour</div>
+  <div class="card"><div class="card-pad">
+    <div style="display:flex;gap:9px;flex-wrap:wrap">
+      ${["#2E5C8A","#2E6B52","#7A3E8F","#A6392E","#8E6D22","#2F5D63"].map((c,i)=>`
+        <div onclick="alert('Accent set.')" style="width:44px;height:44px;border-radius:10px;background:${c};cursor:pointer;
+          ${i===0?"outline:2px solid var(--ink);outline-offset:2px":""}"></div>`).join("")}
+    </div>
+    <div style="font-size:12px;color:var(--mute);margin-top:11px;line-height:1.55">
+      Six approved colours, chosen so text stays readable on every one. The rest of the palette
+      stays national — a chapter that could restyle the whole app would be a chapter nobody could
+      support over the phone.</div>
+  </div></div>
+
+  <div class="sec-lbl">Where your mark appears</div>
+  <div class="card">
+    ${[["App header and home","Every screen a brother opens","yes"],
+       ["Chapter reports and exports","Printed or shared outside the app","yes"],
+       ["Digital ID","Small, on the back, beside the member number","limited"],
+       ["Public verification page","National seal only","no"],
+       ["Login page","The same for everyone until you sign in","no"]].map(([k,v,st])=>`
+      <div class="row" style="cursor:default">
+        <div class="grow"><div class="t" style="font-size:13.5px">${k}</div>
+          <div class="s">${v}</div></div>
+        <span class="pill ${st==="yes"?"p-ok":st==="limited"?"p-warn":"p-mute"}">
+          ${st==="yes"?"Your mark":st==="limited"?"Secondary":"National only"}</span></div>`).join("")}
+  </div>
+  <div class="note"><strong>The ID stays national on purpose.</strong> A card that leads with a
+    chapter logo stops looking like one national credential and starts looking like 1,100 different
+    ones — which is exactly what a hospital or a checkpoint cannot verify at a glance.</div>
+
+  <div class="sec-lbl">Approval</div>
+  <div class="card"><div class="card-pad" style="font-size:12.5px;line-height:1.7;color:var(--slate)">
+    A new logo is reviewed by your city council before it goes live. Not bureaucracy — it is the
+    only thing standing between the organization and a chapter uploading something it should not.
+    <div style="height:8px"></div>
+    <span class="pill p-ok">Current mark approved</span>
+    <span style="font-family:var(--f-num);font-size:10.5px;color:var(--mute);margin-left:6px">12 May 2027</span>
+  </div></div>
+  <div style="height:16px"></div>`;
+
+V.myprofile = () => `
+  ${bar("Edit my profile","home",`<button class="act" onclick="alert('Saved.')">Save</button>`)}
+  <div style="text-align:center;padding:20px 0 6px">
+    <div class="avatar lg" style="margin:0 auto">${initials(ME)}</div>
+    <div style="font-size:12px;color:var(--brass-dk);margin-top:9px;cursor:pointer">Change photo</div></div>
+  <div class="field"><label>Mobile number</label><input class="ctl" value="0917 445 4412"></div>
+  <div class="field"><label>Address</label><input class="ctl" value="${ME.addr}"></div>
+  <div class="field"><label>Profession</label><input class="ctl" value="${ME.prof}"></div>
+  <div class="field"><label>Skills</label><div class="tags" style="margin-top:0">
+    ${ME.skills.map(s=>`<span class="tag">${s} ✕</span>`).join("")}
+    <span class="tag" style="background:var(--paper);border-style:dashed">+ Add</span></div></div>
+  <div class="field"><label>Blood type</label><select class="ctl"><option>O+</option></select>
+    <div class="hint">Shown to brothers in your chapter so they can find a donor quickly.</div></div>
+  <div class="divider"></div>
+  <div class="sec-lbl">Locked after approval</div>
+  <div class="card"><div class="card-pad" style="display:grid;gap:11px;font-size:13px;color:var(--mute)">
+    <div>Gift name · <span style="color:var(--slate)">${ME.gift}</span></div>
+    <div>Date survive · <span style="color:var(--slate)">${ME.survive}</span></div>
+    <div>President during survive · <span style="color:var(--slate)">${ME.pres}</span></div>
+    <div>Master initiator · <span style="color:var(--slate)">${ME.init}</span></div>
+    <div>Member number · <span style="color:var(--slate)">${ME.no}</span></div>
+  </div></div>
+  <div class="note">These are part of your organizational record. Ask the Chapter Admin to correct them if something is wrong — the change is logged.</div>
+  <div style="height:16px"></div>`;
+
+V.approvals = () => `
+  ${bar("Approval queue","home")}
+  <div class="subbar">2 applications waiting · oldest 5 days</div>
+  <div class="card">${PENDING.map((p,i)=>`
+    <div class="row" onclick="go('approvalDetail')">
+      <div class="avatar">${p.gift.slice(0,2)}</div>
+      <div class="grow"><div class="t">${p.gift}</div><div class="s">${p.name}</div>
+        <div class="s"><span class="pill ${p.seconder.includes("confirmed")?"p-ok":"p-warn"}">${p.seconder}</span></div></div>
+      <span class="chev">›</span></div>`).join("")}</div>
+  <div class="note info">Applications older than 7 days are flagged to the Chapter President automatically.</div>
+  <div style="height:16px"></div>`;
+
+V.approvalDetail = () => `
+  ${bar("Review application","approvals")}
+  <div style="background:var(--deep);padding:18px 16px;display:flex;gap:13px;align-items:center;color:var(--bond)">
+    <div class="avatar lg">TA</div>
+    <div><div style="font-family:var(--f-disp);font-size:26px;letter-spacing:.05em">TALIM</div>
+      <div style="font-size:12.5px;color:#9AA5B3">Kevin B. Salvador</div>
+      <div style="margin-top:7px"><span class="pill p-warn">Pending review</span></div></div></div>
+  <div class="sec-lbl">Verification points</div>
+  <div class="card"><div class="card-pad" style="display:grid;gap:13px">
+    <div><div style="font-size:11px;color:var(--mute)">Date survive</div>
+      <div style="font-family:var(--f-num);font-size:13.5px">2024-11-16</div></div>
+    <div><div style="font-size:11px;color:var(--mute)">President during survive</div>
+      <div style="font-size:13.5px">Bro. R. Delgado <span class="pill p-ok">matches record</span></div></div>
+    <div><div style="font-size:11px;color:var(--mute)">Master initiator</div>
+      <div style="font-size:13.5px">Bro. A. Bautista <span class="pill p-ok">matches record</span></div></div>
+    <div><div style="font-size:11px;color:var(--mute)">Seconder</div>
+      <div style="font-size:13.5px">Bro. HIMAGSIK <span class="pill p-ok">confirmed Aug 12</span></div></div>
+  </div></div>
+  <div class="sec-lbl">Declared details</div>
+  <div class="card"><div class="card-pad" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+    <div><div style="font-size:11px;color:var(--mute)">Blood type</div>B+</div>
+    <div><div style="font-size:11px;color:var(--mute)">Profession</div>Driver</div>
+    <div><div style="font-size:11px;color:var(--mute)">Birthdate</div>1997-06-11</div>
+    <div><div style="font-size:11px;color:var(--mute)">Photo</div><span class="pill p-ok">Attached</span></div>
+  </div></div>
+  <div class="btn-pair" style="margin-bottom:10px">
+    <button class="btn brass sm" onclick="alert('Approved. Member number issued and digital ID generated.')">Approve</button>
+    <button class="btn ghost sm" onclick="alert('Returned to the applicant with your note.')">Return</button></div>
+  <button class="btn danger sm" onclick="alert('A reason is required and will be sent by SMS.')">Reject with reason</button>
+  <div class="note">Approving issues the member number and generates the digital ID. The action, your name and the timestamp are written to the audit log.</div>
+  <div style="height:16px"></div>`;
+
+V.newMeeting = () => `
+  ${bar("New meeting","meetings",`<button class="act" onclick="go('attendance')">Next</button>`)}
+  <div class="field"><label>Subject / agenda title</label><input class="ctl" value="Regular Chapter Meeting — September"></div>
+  <div class="field2">
+    <div class="field"><label>Meeting date</label><input class="ctl" type="date" value="2026-09-13"></div>
+    <div class="field"><label>Time</label><input class="ctl" type="time" value="19:00"></div></div>
+  <div class="field"><label>Venue</label><input class="ctl" value="Barangay Hall, San Isidro"></div>
+  <div class="field"><label>Agenda / body</label>
+    <textarea class="ctl" rows="6" placeholder="1. Reading of previous minutes&#10;2. Treasurer's report&#10;3. ..."></textarea></div>
+  <div class="note info">Attendance is recorded after the meeting. Saving here creates a draft that members can already see under Upcoming.</div>
+  <button class="btn brass" onclick="go('attendance')">Save and record attendance</button>
+  <div style="height:16px"></div>`;
+
+V.attendance = () => {
+  const on = i => S.checks[i] !== false;
+  return `${bar("Record attendance","meetings",`<button class="act" onclick="alert('Saved. ₱1,300.00 posted to the ledger as one entry.')">Save</button>`)}
+  <div class="subbar">Regular Chapter Meeting — September · Sep 13, 2026</div>
+  <div class="card"><div class="card-pad" style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+    <button class="chip on" onclick="MEMBERS.forEach(m=>S.checks[m.id]=true);render()">Check all</button>
+    <button class="chip" onclick="MEMBERS.forEach(m=>S.checks[m.id]=false);render()">Clear all</button>
+    <button class="chip" onclick="alert('Sets the suggested amount on every checked brother. Still editable one by one.')">Set ₱300 to checked</button>
+  </div></div>
+  <div class="sec-lbl">18 members · check who is present</div>
+  <div class="card" style="padding:0">${MEMBERS.map(m=>`
+    <div class="att-row ${on(m.id)?"":"dim"}">
+      <button class="cbx ${on(m.id)?"on":""}" onclick="S.checks[${m.id}]=${!on(m.id)};render()">✓</button>
+      <div class="avatar sm">${initials(m)}</div>
+      <div class="grow"><div class="t" style="font-size:13px">${m.gift}</div>
+        <div class="s">${full(m)}</div></div>
+      <input class="amtin" value="${on(m.id)?"300.00":"0.00"}" ${on(m.id)?"":"disabled"}>
+    </div>`).join("")}</div>
+  <div class="card"><div class="card-pad" style="display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:11px;color:var(--mute)">Total to post</div>
+      <div style="font-family:var(--f-num);font-size:19px;color:var(--in)">${peso(MEMBERS.filter(m=>on(m.id)).length*300)}</div></div>
+    <div style="text-align:right;font-size:11.5px;color:var(--mute);line-height:1.5">
+      ${MEMBERS.filter(m=>on(m.id)).length} present<br>posts as one ledger entry</div>
+  </div></div>
+  <div class="note">Contributions are voluntary — leave an amount at zero when a brother gives nothing. Once you finalize this meeting, these figures lock.</div>
+  <button class="btn brass" onclick="alert('Meeting finalized and locked. Attendance and amounts can no longer be edited, only adjusted with a reason.')">Save and finalize</button>
+  <div style="height:16px"></div>`;
+};
+
+V.newExpense = () => `
+  ${bar("Record expense","expenses",`<button class="act" onclick="alert('Posted to the ledger.')">Save</button>`)}
+  <div class="field"><label>Activity / project</label>
+    <select class="ctl"><option>Barangay Clean-Up Drive</option><option>Free Medical Mission</option>
+      <option>General chapter operations</option><option>+ New activity</option></select>
+    <div class="hint">Tying the expense to an activity is what lets a donor see exactly where their money went.</div></div>
+  <div class="field"><label>Description</label><input class="ctl" placeholder="Tarpaulin and printing"></div>
+  <div class="field2">
+    <div class="field"><label>Amount</label><input class="ctl" placeholder="0.00" style="font-family:var(--f-num)"></div>
+    <div class="field"><label>Date</label><input class="ctl" type="date"></div></div>
+  <div class="field"><label>Payee</label><input class="ctl" placeholder="RJ Digital Print"></div>
+  <div class="field"><label>Receipts</label>
+    <div class="recgrid" style="padding:0">
+      <div class="rec filled">Receipt 1</div><div class="rec">📷<br>Camera</div><div class="rec">🖼<br>Gallery</div></div>
+    <div class="hint">At least one receipt is required before this can be posted.</div></div>
+  <div class="field"><label>Approved by</label><select class="ctl"><option>Bro. TANGLAW — President</option></select></div>
+  <button class="btn brass" onclick="alert('Expense saved and posted to the ledger as a Cash Out entry.')">Post expense</button>
+  <div style="height:16px"></div>`;
+
+V.newDonation = () => `
+  ${bar("Record donation","donations",`<button class="act" onclick="alert('Saved.')">Save</button>`)}
+  <div class="field"><label>Donor name</label><input class="ctl" placeholder="Hon. Ricardo Villamor"></div>
+  <div class="field"><label>Donor type</label><select class="ctl">
+    <option>Government Official</option><option>Private Individual</option>
+    <option>Business</option><option>Member</option></select></div>
+  <div class="field"><label>Activity / project</label><select class="ctl">
+    <option>Barangay Clean-Up Drive</option><option>Free Medical Mission</option></select></div>
+  <div class="field"><label>Subject</label><input class="ctl" placeholder="Cash donation for cleaning materials"></div>
+  <div class="field"><label>Details</label><textarea class="ctl" rows="3" placeholder="Purpose and conditions, if any"></textarea></div>
+  <div class="field2">
+    <div class="field"><label>Cash amount</label><input class="ctl" placeholder="0.00" style="font-family:var(--f-num)"></div>
+    <div class="field"><label>Ack. receipt no.</label><input class="ctl" placeholder="AR-2026-0031" style="font-family:var(--f-num)"></div></div>
+  <div class="field"><label>Or in-kind description</label><input class="ctl" placeholder="12 sacks, 6 rakes"></div>
+  <div class="note info">Cash donations post to the ledger automatically. In-kind donations are recorded for transparency but do not affect the balance.</div>
+  <button class="btn brass" onclick="alert('Donation recorded.')">Save donation</button>
+  <div style="height:16px"></div>`;
+
+V.newCase = () => `
+  ${bar("File corrective action","cases")}
+  <div class="note"><strong>This cannot be undone.</strong> Corrective action records are never deleted. Status changes and updates are appended to the timeline instead.</div>
+  <div class="field"><label>Member concerned</label><select class="ctl">
+    ${MEMBERS.map(m=>`<option>${m.gift} — ${full(m)}</option>`).join("")}</select></div>
+  <div class="field"><label>Category</label><select class="ctl">
+    <option>Non-attendance</option><option>Conduct</option><option>Financial</option>
+    <option>Violation of by-laws</option><option>Other</option></select>
+    <div class="hint">The category and status are what the whole chapter sees. Choose it carefully.</div></div>
+  <div class="field"><label>Narrative</label><textarea class="ctl" rows="6" placeholder="State the facts, the dates, and what has already been done."></textarea>
+    <div class="hint">Visible to officers and to the brother concerned only.</div></div>
+  <div class="field"><label>Status</label><select class="ctl"><option>Pending</option><option>Under review</option></select></div>
+  <button class="btn danger" onclick="alert('Case filed. The brother concerned is notified and the chapter sees his name, the category and the status.')">File case</button>
+  <div style="height:16px"></div>`;
+
+V.newAnnounce = () => `
+  ${bar("Post announcement","announce")}
+  <div class="field"><label>Title</label><input class="ctl" placeholder="Medical mission head count due Friday"></div>
+  <div class="field"><label>Body</label><textarea class="ctl" rows="6" placeholder="Write the announcement"></textarea></div>
+  <div class="field"><label>Type</label><select class="ctl">
+    <option>General announcement</option><option>Urgent — blood request</option><option>Urgent — assistance needed</option></select>
+    <div class="hint">An urgent blood request notifies matching donors first, then the rest of the chapter.</div></div>
+  <div class="field2">
+    <div class="field"><label>Publish</label><select class="ctl"><option>Immediately</option><option>Schedule</option></select></div>
+    <div class="field"><label>Expires</label><input class="ctl" type="date"></div></div>
+  <div class="note info">All 18 members receive a push notification the moment this is published. Read receipts start counting immediately.</div>
+  <button class="btn brass" onclick="alert('Published. 18 members notified.')">Publish and notify</button>
+  <div style="height:16px"></div>`;
+
+V.settings = () => `
+  ${bar("Chapter settings","home")}
+  <div class="note info">Each chapter configures its own. National defaults apply until you change them.</div>
+  <div class="sec-lbl">Contributions</div>
+  <div class="card"><div class="card-pad">
+    <div class="field" style="padding:0 0 12px"><label>Suggested amount per meeting</label>
+      <input class="ctl" value="300.00" style="font-family:var(--f-num)">
+      <div class="hint">Pre-fills the attendance sheet. It is a suggestion only — contributions are voluntary and no arrears are computed.</div></div>
+  </div></div>
+  <div class="sec-lbl">Visibility</div>
+  <div class="card">
+    <div class="row" style="cursor:default"><div class="grow"><div class="t" style="font-size:13.5px">Corrective action details</div>
+      <div class="s">Name, category and status shown to all · narrative restricted</div></div>
+      <span class="pill p-ok">Option B</span></div>
+    <div class="row" style="cursor:default"><div class="grow"><div class="t" style="font-size:13.5px">Cross-chapter profile</div>
+      <div class="s">Name, chapter and status only</div></div><span class="pill p-ok">On</span></div>
+    <div class="row" style="cursor:default"><div class="grow"><div class="t" style="font-size:13.5px">Council access to chapter finances</div>
+      <div class="s">Chapter-exclusive for now</div></div><span class="pill p-mute">Off</span></div>
+  </div>
+  <div class="sec-lbl">Records</div>
+  <div class="card">
+    <div class="row" style="cursor:default"><div class="grow"><div class="t" style="font-size:13.5px">Chat retention</div>
+      <div class="s">Messages kept before automatic purge</div></div>
+      <span style="font-family:var(--f-num);font-size:13px">12 months</span></div>
+    <div class="row" style="cursor:default"><div class="grow"><div class="t" style="font-size:13.5px">Member number format</div>
+      <div class="s">AKR-RR-CCCC-NNN · region, chapter, sequence</div></div></div>
+    <div class="row" onclick="go('branding')"><div class="grow"><div class="t" style="font-size:13.5px">Chapter identity</div>
+      <div class="s">Your logo and accent colour</div></div><span class="chev">›</span></div>
+    <div class="row" onclick="go('audit')"><div class="grow"><div class="t" style="font-size:13.5px">Audit log</div>
+      <div class="s">Every change, who made it, and when</div></div><span class="chev">›</span></div>
+  </div>
+  <div style="height:16px"></div>`;
+
+V.audit = () => `
+  ${bar("Audit log","settings",`<button class="act">Export</button>`)}
+  <div class="subbar">Read-only. Entries cannot be edited or removed by anyone, including the System Admin.</div>
+  <div class="card">${[
+    ["Aug 13 · 09:12","Bro. TANGLAW","Approved member application — TALIM","192.168.1.44"],
+    ["Aug 09 · 21:03","Bro. BAGWIS","Finalized Meeting #1 · posted ₱3,400.00 to ledger","192.168.1.17"],
+    ["Aug 09 · 20:51","Bro. BAGWIS","Recorded attendance for Meeting #1 · 14 present","192.168.1.17"],
+    ["Aug 05 · 14:22","Bro. BAGWIS","Created Expense #7 · ₱1,250.00 · 2 receipts","192.168.1.17"],
+    ["Aug 02 · 11:08","Bro. TANGLAW","Recorded Donation #3 · ₱5,000.00","192.168.1.44"],
+    ["Jul 28 · 16:40","Bro. TANGLAW","Updated corrective action #1 · notice served","192.168.1.44"],
+  ].map(([t,w,a,ip])=>`
+    <div class="row" style="cursor:default"><div class="grow">
+      <div class="s" style="font-family:var(--f-num);font-size:10.5px">${t} · ${ip}</div>
+      <div class="t" style="font-size:13px;font-weight:500;margin-top:3px">${a}</div>
+      <div class="s">${w}</div></div></div>`).join("")}</div>
+  <div style="height:16px"></div>`;
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+const TABBED = ["home","dash","directory","meetings","ledger","expenses","donations","memos","announce","cases"];
+const TABMAP = {home:"home",dash:"more",directory:"directory",crosschapter:"directory",
+  meetings:"meetings",meeting:"meetings",ledger:"ledger",expenses:"ledger",donations:"ledger",
+  announce:"more",memos:"more",cases:"more"};
+
+function railHTML(){
+  return NAV.map(g => `
+    <div class="rail-lbl">${g.grp}</div>
+    ${g.items.map(([r,l,t]) => `
+      <a class="${S.route===r?"on":""}" onclick="go('${r}')">
+        <span>${l}</span>${t?`<span class="tag">${t==="sig"?"★":t}</span>`:""}
+      </a>`).join("")}`).join("");
+}
+
+function render(){
+  const r = V[S.route] ? S.route : "login";
+  $("#screen").innerHTML = V[r]();
+  $("#tabs").innerHTML = TABBED.includes(r) ? tabs(TABMAP[r]||r) : "";
+  $("#railNav").innerHTML = railHTML();
+  const m = META[r] || ["","",""];
+  $("#stageTitle").textContent = m[0];
+  $("#stageDesc").textContent = m[1];
+  $("#stageStamp").textContent = m[2];
+  $("#caption").innerHTML = `Preview as <b>${
+    {member:"Member",officer:"Officer",admin:"Chapter Admin",guest:"Not signed in"}[S.role]
+  }</b> — switch roles on the left to see how the same screen changes.`;
+}
+function syncRole(){
+  document.querySelectorAll("#roleGrid button").forEach(b =>
+    b.classList.toggle("on", b.dataset.role === S.role));
+}
+document.getElementById("roleGrid").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  S.role = b.dataset.role; syncRole();
+  if(S.role === "guest" && !["login","register","pending"].includes(S.route)) S.route = "login";
+  if(S.role !== "guest" && ["login","register","pending"].includes(S.route)) S.route = "home";
+  render();
+});
+render();
+</script>
+</body>
+</html>

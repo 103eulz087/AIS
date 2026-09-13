@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet run:*)",
+      "Bash(npm run:*)",
+      "Bash(npm ci)",
+      "Bash(npm install:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(scripts/*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(docker:*)"
+    ],
+    "deny": [
+      "Bash(sqlcmd:*-d Akrho_Prod*)",
+      "Read(./src/Akrho.Api/appsettings.Production.json)",
+      "Read(./**/*.pfx)",
+      "Read(./**/.env)"
+    ]
+  }
+}

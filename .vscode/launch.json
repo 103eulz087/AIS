@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Akrho.Api/bin/Debug/net8.0/Akrho.Api.dll",
+      "cwd": "${workspaceFolder}/src/Akrho.Api",
+      "env": { "ASPNETCORE_ENVIRONMENT": "Development" },
+      "serverReadyAction": { "action": "openExternally", "pattern": "\\bNow listening on:\\s+(https?://\\S+)" }
+    },
+    {
+      "name": "Web (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src/web/src"
+    }
+  ],
+  "compounds": [
+    { "name": "API + Web", "configurations": ["API", "Web (Chrome)"] }
+  ]
+}
