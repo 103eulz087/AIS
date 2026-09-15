@@ -13,5 +13,11 @@
     "baseUrl": ".",
     "paths": { "@/*": ["src/*"] }
   },
-  "include": ["src"]
+  "include": ["src"],
+  // sw.ts targets the WebWorker lib, not DOM — TypeScript can't type-check both libs
+  // in the one program (conflicting global declarations for `self` and friends), so
+  // it is excluded here and left to vite-plugin-pwa's own esbuild-based bundling
+  // (see vite.config.ts's injectManifest strategy) to build. sw.ts's own header
+  // comment has the full reasoning.
+  "exclude": ["src/sw.ts"]
 }

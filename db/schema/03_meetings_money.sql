@@ -15,6 +15,12 @@ CREATE TABLE dbo.Meeting (
     RowVersion    ROWVERSION
 );
 GO
+/* Widened to match usp_Meeting_Create/usp_Meeting_Update's @Location NVARCHAR(250) —
+   guarded so re-running this script is a no-op once the column is already this size. */
+IF EXISTS (SELECT 1 FROM sys.columns
+           WHERE object_id = OBJECT_ID('dbo.Meeting') AND name = 'Location' AND max_length < 500)
+    ALTER TABLE dbo.Meeting ALTER COLUMN Location NVARCHAR(250) NULL;
+GO
 IF OBJECT_ID('dbo.AttendanceStatus') IS NULL
 CREATE TABLE dbo.AttendanceStatus (
     AttendanceStatusId INT IDENTITY PRIMARY KEY,
@@ -74,6 +80,18 @@ BEGIN
     THROW 51001, 'LedgerEntry is append-only. Use usp_Ledger_Reverse to correct an entry.', 1;
 END
 GO
+/* A meeting can be reopened more than once; each occurrence keeps its OWN reason —
+   never overwritten. That is why this is a child table and not columns on Meeting. */
+IF OBJECT_ID('dbo.MeetingReopen') IS NULL
+CREATE TABLE dbo.MeetingReopen (
+    MeetingReopenId INT IDENTITY PRIMARY KEY,
+    MeetingId       INT NOT NULL REFERENCES dbo.Meeting(MeetingId),
+    ReopenedBy      INT NOT NULL REFERENCES dbo.Member(MemberId),
+    ReopenedDate    DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    Reason          NVARCHAR(400) NOT NULL,
+    ReversedLedgerEntryId INT NULL REFERENCES dbo.LedgerEntry(LedgerEntryId)
+);
+GO
 IF OBJECT_ID('dbo.Expense') IS NULL
 CREATE TABLE dbo.Expense (
     ExpenseId   INT IDENTITY PRIMARY KEY,
@@ -118,4 +136,6 @@ IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='IX_Ledger_Chapter_Date')
     CREATE INDEX IX_Ledger_Chapter_Date ON dbo.LedgerEntry(ChapterId, EntryDate DESC);
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='IX_Attendance_Meeting')
     CREATE INDEX IX_Attendance_Meeting ON dbo.MeetingAttendance(MeetingId);
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_Meeting_Chapter_Date')
+    CREATE INDEX IX_Meeting_Chapter_Date ON dbo.Meeting(ChapterId, MeetingDate DESC);
 GO

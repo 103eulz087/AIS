@@ -13,16 +13,21 @@ public sealed record MemberListRow(
 
 public interface IMemberRepository
 {
+    /// <summary>
+    /// <paramref name="statusId"/> is optional — NULL/omitted leaves behavior for every
+    /// existing caller unchanged (a purely additive filter to one exact MemberStatus, added
+    /// so a dashboard tile can drill into a filtered list; see usp_Member_Search.sql).
+    /// </summary>
     Task<IReadOnlyList<MemberListRow>> SearchAsync(
         int requestingMemberId, int? chapterId, string? search, int? bloodTypeId,
-        int? skillId, bool includeInactive, int skip, int take, CancellationToken ct);
+        int? skillId, bool includeInactive, int? statusId, int skip, int take, CancellationToken ct);
 }
 
 public sealed class MemberRepository(ISqlConnectionFactory factory) : IMemberRepository
 {
     public async Task<IReadOnlyList<MemberListRow>> SearchAsync(
         int requestingMemberId, int? chapterId, string? search, int? bloodTypeId,
-        int? skillId, bool includeInactive, int skip, int take, CancellationToken ct)
+        int? skillId, bool includeInactive, int? statusId, int skip, int take, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
 
@@ -38,6 +43,7 @@ public sealed class MemberRepository(ISqlConnectionFactory factory) : IMemberRep
                     BloodTypeId = bloodTypeId,
                     SkillId = skillId,
                     IncludeInactive = includeInactive,
+                    StatusId = statusId,
                     Skip = skip,
                     Take = Math.Clamp(take, 1, 200)
                 },

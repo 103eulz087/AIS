@@ -3,6 +3,7 @@ import { api, type Paged } from "@/shared/api";
 import { peso, pesoSigned, shortDate } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import type { LedgerEntry } from "@/shared/types";
+import { FundsTabs } from "./FundsTabs";
 
 export function Ledger({ chapterId }: { chapterId: number }) {
   const { data, error, isLoading, refetch } = useQuery({
@@ -14,9 +15,14 @@ export function Ledger({ chapterId }: { chapterId: number }) {
   if (error) return <ErrorState message={(error as Error).message} onRetry={() => refetch()} />;
 
   if (!data?.items.length) {
-    return <EmptyState
-      title="No postings yet"
-      body="Meeting collections, donations and expenses appear here as they are recorded." />;
+    return (
+      <div>
+        <FundsTabs active="ledger" />
+        <EmptyState
+          title="No postings yet"
+          body="Meeting collections, donations and expenses appear here as they are recorded." />
+      </div>
+    );
   }
 
   const cashIn = data.items.filter(e => e.entryType === "In").reduce((s, e) => s + e.amount, 0);
@@ -24,6 +30,8 @@ export function Ledger({ chapterId }: { chapterId: number }) {
 
   return (
     <div>
+      <FundsTabs active="ledger" />
+
       <div style={{ margin: 16, padding: 14, borderRadius: "var(--r)", background: "var(--deep)",
                     color: "var(--brass-soft)" }}>
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 12, letterSpacing: ".14em",

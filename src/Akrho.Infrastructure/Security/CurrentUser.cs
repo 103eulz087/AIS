@@ -10,6 +10,15 @@ public interface ICurrentUser
 {
     int MemberId { get; }
     int ChapterId { get; }
+
+    /// <summary>
+    /// The "aid" claim — an internal UserAccount row id, not personal data (see
+    /// AccessTokenService's own header comment). Only needed where a procedure's own
+    /// parameter is an account id rather than a member id, e.g. usp_PushSubscription_Register/
+    /// _Remove — dbo.PushSubscription is keyed off the account that owns the device, not the
+    /// member directly.
+    /// </summary>
+    int AccountId { get; }
     IReadOnlySet<string> Roles { get; }
     bool IsChapterOfficer { get; }
     bool IsCouncilOfficer { get; }
@@ -19,13 +28,15 @@ public sealed class CurrentUser : ICurrentUser
 {
     public CurrentUser(ClaimsPrincipal principal)
     {
-        MemberId = int.TryParse(principal.FindFirstValue("mid"), out var m) ? m : 0;
-        ChapterId = int.TryParse(principal.FindFirstValue("chp"), out var c) ? c : 0;
+        MemberId = int.TryParse(principal.FindFirst("mid")?.Value, out var m) ? m : 0;
+        ChapterId = int.TryParse(principal.FindFirst("chp")?.Value, out var c) ? c : 0;
+        AccountId = int.TryParse(principal.FindFirst("aid")?.Value, out var a) ? a : 0;
         Roles = principal.FindAll(ClaimTypes.Role).Select(r => r.Value).ToHashSet(StringComparer.Ordinal);
     }
 
     public int MemberId { get; }
     public int ChapterId { get; }
+    public int AccountId { get; }
     public IReadOnlySet<string> Roles { get; }
 
     public bool IsChapterOfficer =>

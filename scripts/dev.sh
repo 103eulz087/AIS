@@ -16,10 +16,19 @@ echo
 
 bash scripts/db-deploy.sh
 
-# The dev certificate matters: getUserMedia (QR scanning) and PWA install both
-# require a secure context. Without this, the camera is simply dead in dev.
+# The dev certificate matters: getUserMedia (QR scanning), PWA install, and (since
+# Auth slice 1) the Secure refresh-token cookie all require a secure context. Without
+# this, the camera is dead and the browser silently refuses to store the session cookie.
 echo "→ trusting the ASP.NET dev certificate"
 dotnet dev-certs https --trust || echo "  (trust it manually if this failed)"
+
+# Vite needs the SAME trusted cert so the web origin itself is HTTPS too — not just the
+# API. A Secure cookie set by an HTTPS API is still refused by the browser if the page
+# that receives it was loaded over plain HTTP.
+echo "→ exporting the dev certificate for Vite"
+mkdir -p src/web/.certs
+dotnet dev-certs https --export-path src/web/.certs/dev-cert.pfx -p devcert --trust \
+  || echo "  (export it manually if this failed — src/web/vite.config.ts falls back to plain HTTP without it)"
 
 echo "→ restoring"
 dotnet restore Akrho.sln

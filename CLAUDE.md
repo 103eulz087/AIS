@@ -36,7 +36,7 @@ If a task appears to require breaking one, **stop and raise it** rather than imp
 | 7 | **Cross-chapter member data is name, chapter, status only.** No contact details, no blood type. | Directory search |
 | 8 | **The QR token contains no personal data.** Opaque credential id, chapter code, member number, status, iat, exp. Never `MemberId`, never a name. | `CredentialService` |
 | 9 | **A commemorative year card is never verifiable.** No QR, no verification endpoint. Only the digital ID proves currency. | Recognition module |
-| 10 | **Every write is audited.** `AuditLog` is written by the interceptor, not by feature code. | `AuditInterceptor` |
+| 10 | **Every write is audited.** `AuditLog` is written inside the same transaction as the write it records — by the stored procedure, not by feature code reaching around it. (Originally planned as an HTTP-level interceptor; that was never built, and the procedure-level pattern shipped in Auth slice 1 — `usp_Enrolment_Redeem`, `usp_RefreshToken_Rotate`, `usp_Auth_RecordSignInResult` — is stronger anyway: it is atomic with the write and sees outcomes an interceptor cannot, such as *why* a sign-in failed. Continue this pattern; do not add a parallel interceptor.) | Every write proc — see `usp_Enrolment_Redeem.sql` for the pattern |
 | 11 | **One deployment, one URL, one database.** A chapter is a row in `dbo.Chapter`, never a site or an app pool. The chapter comes from the JWT, never from the hostname or the request body. | Everywhere |
 | 12 | **A body cannot be registered before the body above it.** National → Regional → Provincial → City → Chapter → Member. Each level approves the one beneath. | Portal registry |
 | 13 | **Members are created by chapters only** — as founding officers on a chapter registration, or by sign-up approved by a Chapter Admin. **No council may enrol anybody**, and no procedure that lets one may ever be added. | `dbo.Member` |
@@ -179,7 +179,12 @@ Android phones, many of them not in tech. No jargon. Filipino terms where they a
 
 1. **iOS Safari has no `BarcodeDetector`.** QR scanning needs the `zxing-wasm` fallback. Do not
    remove it because "the API exists" — it exists on Chrome only.
-2. **`getUserMedia` requires HTTPS.** Local dev must run over the dev certificate, or the camera is dead.
+2. **`getUserMedia` requires HTTPS — and so does the session cookie.** The refresh-token
+   cookie is `Secure`, so a browser will not store it on a page served over plain HTTP,
+   regardless of what scheme the API used. Local dev must run over the dev certificate on
+   **both** the API and the Vite dev server (`scripts/dev.sh` exports it to
+   `src/web/.certs/dev-cert.pfx` for Vite to pick up), or the camera is dead and sign-in
+   silently never persists.
 3. **Never name a top-level browser binding `top`, `name`, `status`, `self`, `parent` or `length`.**
    They collide with non-configurable `window` properties and kill the whole script before it runs.
 4. **The escalation clock counts working days**, respecting Philippine public holidays. See
@@ -193,12 +198,58 @@ Android phones, many of them not in tech. No jargon. Filipino terms where they a
 ## 9. Commands
 
 ```bash
-scripts/dev.sh              # SQL Server in Docker, deploy schema, seed, run API + web
-scripts/db-deploy.sh        # schema → procs → seed, in order, idempotent
-dotnet build Akrho.sln
-dotnet test
-cd src/web && npm run dev   # Vite on :5173, proxying /api to :5080
-cd src/web && npm run smoke # jsdom route smoke test
+scripts/dev.sh                        # SQL Server in Docker, deploy schema, seed, restore both projects
+scripts/db-deploy.sh                  # schema → procs → seed, in order, idempotent
+
+dotnet run --project src/Akrho.Api    # https://localhost:5443/swagger (also http://localhost:5080)
+dotnet build Akrho.sln --warnaserror  # matches CI; warnings-as-errors is also on by default (Directory.Build.props)
+dotnet test                           # all xUnit tests
+dotnet test --filter "FullyQualifiedName~MembershipYearTests"   # one test class
+dotnet test --filter "FullyQualifiedName~MoneyTests.SplitsWithoutLosingCentavos"  # one test
+
+cd src/web && npm run dev             # Vite on https://localhost:5173 (needs src/web/.certs/dev-cert.pfx — see §8.2), proxying /api to :5443
+cd src/web && npm run build           # tsc -b && vite build
+cd src/web && npm run lint            # tsc --noEmit
+cd src/web && npm test                # vitest, all specs except the smoke harness
+cd src/web && npx vitest run src/shared/format.test.ts   # one spec file
+cd src/web && npm run smoke           # jsdom route smoke test — every route must mount clean
+```
+
+The full definition of done (§6), also what CI (`.github/workflows/ci.yml`) runs:
+
+```bash
+dotnet build Akrho.sln --warnaserror && dotnet test
+cd src/web && npm ci && npm run lint && npm run build && npm test && npm run smoke
 ```
 
 Slash commands: `/new-module`, `/review`, `/ship`.
+
+---
+
+## 10. Shared development/test database
+
+There is a shared SQL Server for development and testing when Docker/local SQL Server isn't
+available:
+
+```
+Server    corex.itcoreapps.com,6601
+Database  AISDB
+```
+
+**Never put the password for this server in a file tracked by git — not here, not in
+`appsettings.*.json`, not in a script.** This file is checked into the repository; anyone who
+clones it, or looks at its history, would get the credential permanently. Get the password from a
+teammate or the team's password manager, then supply it one of two ways:
+
+- As an environment variable when running the API, e.g.
+  `ConnectionStrings__Akrho="Server=corex.itcoreapps.com,6601;Database=AISDB;User Id=...;Password=...;TrustServerCertificate=True;Encrypt=True" dotnet run --project src/Akrho.Api`
+- Or in `src/Akrho.Api/appsettings.Development.local.json` — already gitignored
+  (`appsettings.*.local.json`), safe to keep the connection string there for repeat local runs.
+
+`scripts/db-deploy.sh` already reads `AKRHO_SQL_SERVER` / `AKRHO_SQL_USER` /
+`AKRHO_SQL_PASSWORD` / `AKRHO_DB` from the environment, so it can be pointed at this server the
+same way instead of the Docker default.
+
+The `sqlcmd` bundled with some local SQL Server client tool installs defaults
+`QUOTED_IDENTIFIER` to `OFF`, which fails on the filtered indexes in `db/schema/02_members.sql`.
+Pass `-I` to enable it if you run `sqlcmd` directly instead of through `db-deploy.sh`.

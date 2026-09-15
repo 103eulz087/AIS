@@ -1009,6 +1009,7 @@ Confirmed by the client. Any change to these has downstream consequences and sho
 | 16 | **One deployment, one URL, one database.** A chapter is a row, never a site |
 | 17 | Chapters carry their own **mark and accent colour** inside the app; the login page and the digital ID stay national |
 | 18 | **Passwords are never transmitted.** Access is granted by a one-time enrolment link; the officer sets his own password |
+| 18a | **2FA on officer accounts is deferred to Auth slice 2.** Decision 18 (passwords never transmitted) is fully honoured in slice 1; the second-factor half of §7A.4 step 5 is not yet built. Officer accounts are password-only until then. Closes before the first officer account is enrolled on a production host |
 | 19 | **Accounts are never shared or handed over.** Officer turnover issues a new account and closes the old term |
 | 20 | **Members are created by chapters only.** No council may enrol anybody, and no procedure that lets one may ever be added |
 | 20a | **Approvals route to the nearest existing ancestor with seated officers.** Bootstrap, dormancy and delay are all cases of this one rule |

@@ -1,6 +1,13 @@
 /* Directory search.
    Cross-chapter results are restricted to gift name, chapter and status — client decision.
-   The restricted columns are returned as NULL so the API maps them to a narrower DTO. */
+   The restricted columns are returned as NULL so the API maps them to a narrower DTO.
+
+   @StatusId (optional) filters to one exact dbo.MemberStatus — added so a dashboard
+   tile like "Inactive: 7" can link to a real filtered list instead of a dead-end
+   number. NULL/omitted leaves every existing caller's behavior unchanged. Note this
+   only ADDS to the @IncludeInactive gate above, it does not replace it — a caller
+   drilling into a non-Approved/Active status (e.g. Suspended, Pending, Rejected)
+   must still pass @IncludeInactive = 1 alongside @StatusId, same as today. */
 CREATE OR ALTER PROCEDURE dbo.usp_Member_Search
     @RequestingMemberId INT,
     @ChapterId   INT           = NULL,
@@ -8,6 +15,7 @@ CREATE OR ALTER PROCEDURE dbo.usp_Member_Search
     @BloodTypeId INT           = NULL,
     @SkillId     INT           = NULL,
     @IncludeInactive BIT       = 0,
+    @StatusId   INT            = NULL,   -- optional: filter to one MemberStatus (dashboard drill-down)
     @Skip INT = 0,
     @Take INT = 50
 AS
@@ -39,6 +47,7 @@ BEGIN
     WHERE   m.ChapterId = @ChapterId
       AND   m.IsDeleted = 0
       AND   (@IncludeInactive = 1 OR ms.StatusName IN ('Approved','Active'))
+      AND   (@StatusId IS NULL OR m.StatusId = @StatusId)
       AND   (@Search IS NULL OR m.GiftName LIKE '%' + @Search + '%'
                              OR m.LastName LIKE '%' + @Search + '%'
                              OR m.MemberNumber LIKE '%' + @Search + '%')

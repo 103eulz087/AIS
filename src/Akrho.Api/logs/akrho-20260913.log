@@ -1,0 +1,1561 @@
+2026-09-13 11:02:00.211 +08:00 [DBG] Hosting starting
+2026-09-13 11:02:00.390 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-13 11:02:00.417 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 11:02:00.418 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 11:02:00.418 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 11:02:00.418 +08:00 [INF] Hosting environment: Development
+2026-09-13 11:02:00.418 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 11:02:00.418 +08:00 [DBG] Hosting started
+2026-09-13 11:02:24.262 +08:00 [INF] HTTP GET /health responded 200 in 832.7752 ms
+2026-09-13 11:02:24.327 +08:00 [INF] HTTP GET /health responded 307 in 1.7801 ms
+2026-09-13 11:02:24.387 +08:00 [INF] HTTP GET /api/members responded 307 in 0.6286 ms
+2026-09-13 11:48:19.465 +08:00 [INF] HTTP GET /swagger responded 301 in 0.2628 ms
+2026-09-13 11:48:19.528 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 60.4750 ms
+2026-09-13 11:48:19.567 +08:00 [INF] HTTP GET /swagger/index.css responded 200 in 26.1189 ms
+2026-09-13 11:48:19.569 +08:00 [INF] HTTP GET /swagger/index.js responded 200 in 26.7989 ms
+2026-09-13 11:48:19.591 +08:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 50.1334 ms
+2026-09-13 11:48:19.603 +08:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 61.5195 ms
+2026-09-13 11:48:19.609 +08:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 67.2110 ms
+2026-09-13 11:48:19.733 +08:00 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 0.1320 ms
+2026-09-13 11:48:19.861 +08:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 141.4841 ms
+2026-09-13 11:48:59.810 +08:00 [INF] HTTP GET /api/members responded 307 in 0.1137 ms
+2026-09-13 11:48:59.822 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 1.2018 ms
+2026-09-13 11:48:59.833 +08:00 [INF] HTTP GET /api/members responded 401 in 5.5372 ms
+2026-09-13 11:49:00.839 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0592 ms
+2026-09-13 11:49:00.843 +08:00 [INF] HTTP GET /api/members responded 401 in 1.5897 ms
+2026-09-13 11:49:01.818 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0626 ms
+2026-09-13 11:49:01.821 +08:00 [INF] HTTP GET /api/members responded 401 in 0.8499 ms
+2026-09-13 11:49:02.825 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0586 ms
+2026-09-13 11:49:02.827 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1427 ms
+2026-09-13 11:49:03.833 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0610 ms
+2026-09-13 11:49:03.835 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1919 ms
+2026-09-13 11:49:04.851 +08:00 [INF] HTTP GET /api/members responded 307 in 0.1019 ms
+2026-09-13 11:49:04.853 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 0.0780 ms
+2026-09-13 11:49:04.854 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1181 ms
+2026-09-13 12:19:30.731 +08:00 [DBG] Hosting starting
+2026-09-13 12:19:30.891 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-13 12:19:30.913 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 12:19:30.914 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 12:19:30.914 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 12:19:30.914 +08:00 [INF] Hosting environment: Development
+2026-09-13 12:19:30.914 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 12:19:30.914 +08:00 [DBG] Hosting started
+2026-09-13 12:19:49.590 +08:00 [ERR] HTTP GET /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4 responded 500 in 1396.7337 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 IsValid, System.String FirstName, System.String GiftName, System.String ChapterName, System.DateTime ExpiresOn) is required for Akrho.Infrastructure.Repositories.EnrolmentLinkRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.EnrolmentRepository.GetAsync(Byte[] tokenHash, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\EnrolmentRepository.cs:line 39
+   at Akrho.Api.Features.Enrolment.EnrolmentEndpoints.Get(String token, IEnrolmentRepository repo, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Enrolment\EnrolmentEndpoints.cs:line 29
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:19:49.628 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 IsValid, System.String FirstName, System.String GiftName, System.String ChapterName, System.DateTime ExpiresOn) is required for Akrho.Infrastructure.Repositories.EnrolmentLinkRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.EnrolmentRepository.GetAsync(Byte[] tokenHash, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\EnrolmentRepository.cs:line 39
+   at Akrho.Api.Features.Enrolment.EnrolmentEndpoints.Get(String token, IEnrolmentRepository repo, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Enrolment\EnrolmentEndpoints.cs:line 29
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:19:49.631 +08:00 [ERR] Unhandled error on /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 IsValid, System.String FirstName, System.String GiftName, System.String ChapterName, System.DateTime ExpiresOn) is required for Akrho.Infrastructure.Repositories.EnrolmentLinkRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.EnrolmentRepository.GetAsync(Byte[] tokenHash, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\EnrolmentRepository.cs:line 39
+   at Akrho.Api.Features.Enrolment.EnrolmentEndpoints.Get(String token, IEnrolmentRepository repo, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Enrolment\EnrolmentEndpoints.cs:line 29
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:19:49.921 +08:00 [INF] HTTP POST /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4/complete responded 404 in 214.5178 ms
+2026-09-13 12:19:49.992 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 6.1717 ms
+2026-09-13 12:20:39.073 +08:00 [INF] HTTP GET /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4 responded 404 in 79.4600 ms
+2026-09-13 12:20:39.267 +08:00 [INF] HTTP POST /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4/complete responded 404 in 127.0863 ms
+2026-09-13 12:20:39.442 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 65.5212 ms
+2026-09-13 12:20:46.162 +08:00 [INF] HTTP GET /api/enrolment/Wj9sUQt-ZO0QydaR4kuKSyitvOxvGzRwpeoDXEheBa4 responded 404 in 55.5638 ms
+2026-09-13 12:22:15.366 +08:00 [INF] HTTP GET /api/enrolment/gigRU6I7V0cm2O4gv7LqCC6gYD0ag6GXzNMsLhYmRqs responded 200 in 71.8898 ms
+2026-09-13 12:22:15.794 +08:00 [INF] HTTP POST /api/enrolment/gigRU6I7V0cm2O4gv7LqCC6gYD0ag6GXzNMsLhYmRqs/complete responded 200 in 375.8450 ms
+2026-09-13 12:22:22.894 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 358.3160 ms
+2026-09-13 12:22:23.056 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.9974 ms
+2026-09-13 12:22:23.119 +08:00 [INF] HTTP GET /api/members responded 401 in 0.8757 ms
+2026-09-13 12:22:23.361 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 173.7795 ms
+2026-09-13 12:22:31.435 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 89.5848 ms
+2026-09-13 12:22:31.673 +08:00 [INF] HTTP GET /api/members responded 200 in 190.2785 ms
+2026-09-13 12:22:31.827 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 68.9592 ms
+2026-09-13 12:22:31.935 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 57.8212 ms
+2026-09-13 12:24:21.216 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 180.1225 ms
+2026-09-13 12:24:26.955 +08:00 [INF] HTTP POST /api/auth/sign-in responded 400 in 22.6952 ms
+2026-09-13 12:24:27.080 +08:00 [INF] HTTP GET /api/enrolment/bogus-token-xyz responded 404 in 55.4334 ms
+2026-09-13 12:24:27.129 +08:00 [INF] HTTP POST /api/enrolment/bogus-token-xyz/complete responded 400 in 0.8450 ms
+2026-09-13 12:26:12.401 +08:00 [INF] HTTP GET /api/members responded 307 in 0.6555 ms
+2026-09-13 12:26:12.412 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 0.7898 ms
+2026-09-13 12:26:12.418 +08:00 [INF] HTTP GET /api/members responded 401 in 0.3405 ms
+2026-09-13 12:26:13.430 +08:00 [INF] HTTP GET /api/members responded 307 in 0.1047 ms
+2026-09-13 12:26:13.433 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1343 ms
+2026-09-13 12:26:14.462 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0582 ms
+2026-09-13 12:26:14.465 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1460 ms
+2026-09-13 12:26:15.481 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0525 ms
+2026-09-13 12:26:15.484 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1313 ms
+2026-09-13 12:26:25.839 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0601 ms
+2026-09-13 12:26:25.842 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 0.1217 ms
+2026-09-13 12:26:25.843 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1372 ms
+2026-09-13 12:26:26.849 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0636 ms
+2026-09-13 12:26:26.851 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1397 ms
+2026-09-13 12:27:14.863 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0566 ms
+2026-09-13 12:27:14.865 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 0.0624 ms
+2026-09-13 12:27:14.866 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1166 ms
+2026-09-13 12:27:39.065 +08:00 [INF] HTTP GET /api/members responded 307 in 0.0754 ms
+2026-09-13 12:27:39.067 +08:00 [INF] HTTP OPTIONS /api/members responded 204 in 0.0930 ms
+2026-09-13 12:27:39.069 +08:00 [INF] HTTP GET /api/members responded 401 in 0.1398 ms
+2026-09-13 12:28:21.901 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0701 ms
+2026-09-13 12:28:21.901 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.1027 ms
+2026-09-13 12:28:21.903 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3093 ms
+2026-09-13 12:28:21.903 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0852 ms
+2026-09-13 12:32:53.623 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0738 ms
+2026-09-13 12:32:53.623 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0437 ms
+2026-09-13 12:32:53.627 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2076 ms
+2026-09-13 12:32:53.627 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2076 ms
+2026-09-13 12:33:21.247 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0405 ms
+2026-09-13 12:33:21.250 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.1085 ms
+2026-09-13 12:33:21.588 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 337.1186 ms
+2026-09-13 12:33:32.102 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0369 ms
+2026-09-13 12:33:32.104 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.0896 ms
+2026-09-13 12:33:32.166 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 60.7703 ms
+2026-09-13 12:33:33.793 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0338 ms
+2026-09-13 12:33:33.856 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 60.6125 ms
+2026-09-13 12:33:38.496 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0443 ms
+2026-09-13 12:33:38.498 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.0516 ms
+2026-09-13 12:33:38.560 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 60.9265 ms
+2026-09-13 12:33:45.954 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0425 ms
+2026-09-13 12:33:45.959 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.4456 ms
+2026-09-13 12:33:46.269 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 308.8639 ms
+2026-09-13 12:33:46.274 +08:00 [INF] HTTP GET /api/auth/me responded 307 in 0.0640 ms
+2026-09-13 12:33:46.275 +08:00 [INF] HTTP OPTIONS /api/auth/me responded 204 in 0.0604 ms
+2026-09-13 12:33:46.276 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.1425 ms
+2026-09-13 12:33:46.279 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0306 ms
+2026-09-13 12:33:46.281 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0921 ms
+2026-09-13 12:34:11.135 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.1380 ms
+2026-09-13 12:34:11.138 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.1546 ms
+2026-09-13 12:34:11.140 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.5503 ms
+2026-09-13 12:34:21.222 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0294 ms
+2026-09-13 12:34:21.224 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.0646 ms
+2026-09-13 12:34:21.225 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0848 ms
+2026-09-13 12:34:24.176 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0308 ms
+2026-09-13 12:34:24.489 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 311.3445 ms
+2026-09-13 12:34:24.493 +08:00 [INF] HTTP GET /api/auth/me responded 307 in 0.0517 ms
+2026-09-13 12:34:24.495 +08:00 [INF] HTTP OPTIONS /api/auth/me responded 204 in 0.0498 ms
+2026-09-13 12:34:24.496 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.1021 ms
+2026-09-13 12:34:24.499 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0252 ms
+2026-09-13 12:34:24.500 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0899 ms
+2026-09-13 12:34:58.202 +08:00 [INF] HTTP GET /swagger responded 301 in 0.3335 ms
+2026-09-13 12:34:58.245 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 40.5784 ms
+2026-09-13 12:34:58.267 +08:00 [INF] HTTP GET /swagger/index.css responded 200 in 0.3853 ms
+2026-09-13 12:34:58.268 +08:00 [INF] HTTP GET /swagger/index.js responded 200 in 0.5042 ms
+2026-09-13 12:34:58.273 +08:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 5.8570 ms
+2026-09-13 12:34:58.273 +08:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 11.1329 ms
+2026-09-13 12:34:58.276 +08:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 8.8150 ms
+2026-09-13 12:34:58.503 +08:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 88.2020 ms
+2026-09-13 12:35:27.695 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 313.6815 ms
+2026-09-13 12:35:48.004 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0320 ms
+2026-09-13 12:35:48.007 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0344 ms
+2026-09-13 12:35:48.019 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1929 ms
+2026-09-13 12:35:48.020 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0951 ms
+2026-09-13 12:36:05.880 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0452 ms
+2026-09-13 12:36:05.883 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.0492 ms
+2026-09-13 12:36:06.203 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 318.8882 ms
+2026-09-13 12:36:06.207 +08:00 [INF] HTTP GET /api/auth/me responded 307 in 0.0902 ms
+2026-09-13 12:36:06.209 +08:00 [INF] HTTP OPTIONS /api/auth/me responded 204 in 0.0750 ms
+2026-09-13 12:36:06.210 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.1503 ms
+2026-09-13 12:36:06.213 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0278 ms
+2026-09-13 12:36:06.215 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0865 ms
+2026-09-13 12:36:15.190 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0289 ms
+2026-09-13 12:36:15.192 +08:00 [INF] HTTP OPTIONS /api/auth/sign-in responded 204 in 0.0466 ms
+2026-09-13 12:36:15.499 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 305.7683 ms
+2026-09-13 12:36:15.503 +08:00 [INF] HTTP GET /api/auth/me responded 307 in 0.0316 ms
+2026-09-13 12:36:15.505 +08:00 [INF] HTTP OPTIONS /api/auth/me responded 204 in 0.0472 ms
+2026-09-13 12:36:15.506 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.1059 ms
+2026-09-13 12:36:15.509 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0249 ms
+2026-09-13 12:36:15.511 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1080 ms
+2026-09-13 12:37:32.896 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0158 ms
+2026-09-13 12:37:32.981 +08:00 [INF] HTTP POST /api/auth/sign-in responded 307 in 0.0184 ms
+2026-09-13 12:37:33.310 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 303.9180 ms
+2026-09-13 12:38:36.317 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0290 ms
+2026-09-13 12:38:36.318 +08:00 [INF] HTTP POST /api/auth/refresh responded 307 in 0.0117 ms
+2026-09-13 12:38:36.328 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1145 ms
+2026-09-13 12:38:36.329 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1668 ms
+2026-09-13 12:40:02.865 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 377.5842 ms
+2026-09-13 12:40:03.178 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 122.3964 ms
+2026-09-13 12:55:58.156 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 616.7523 ms
+2026-09-13 12:55:58.224 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 58.1016 ms
+2026-09-13 12:55:58.300 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 759.0642 ms
+2026-09-13 12:55:58.308 +08:00 [INF] HTTP GET /api/members responded 200 in 58.8937 ms
+2026-09-13 12:56:12.952 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 292.5734 ms
+2026-09-13 12:56:13.015 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 52.7018 ms
+2026-09-13 12:56:26.492 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.8327 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:26.493 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:26.493 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:27.505 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3564 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:27.505 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:27.506 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:28.508 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3799 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:28.509 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:28.509 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:29.521 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3344 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:29.521 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:29.521 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:30.820 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3106 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:30.820 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:30.820 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:31.836 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3333 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 12:56:31.836 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:31.836 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method15(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 12:56:32.296 +08:00 [INF] HTTP GET /api/members responded 200 in 55.3725 ms
+2026-09-13 12:56:38.658 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 55.0568 ms
+2026-09-13 13:33:10.060 +08:00 [DBG] Hosting starting
+2026-09-13 13:33:10.235 +08:00 [INF] Now listening on: http://127.0.0.1:5099
+2026-09-13 13:33:10.236 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 13:33:10.236 +08:00 [INF] Hosting environment: Development
+2026-09-13 13:33:10.236 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 13:33:10.236 +08:00 [DBG] Hosting started
+2026-09-13 13:33:14.253 +08:00 [WRN] Failed to determine the https port for redirect.
+2026-09-13 13:33:14.279 +08:00 [INF] HTTP GET /health responded 200 in 36.8779 ms
+2026-09-13 13:34:00.322 +08:00 [DBG] Hosting starting
+2026-09-13 13:34:00.535 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 13:34:00.536 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 13:34:00.536 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 13:34:00.536 +08:00 [INF] Hosting environment: Development
+2026-09-13 13:34:00.536 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 13:34:00.536 +08:00 [DBG] Hosting started
+2026-09-13 13:34:12.076 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 824.6103 ms
+2026-09-13 13:34:12.318 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 97.4261 ms
+2026-09-13 13:34:12.479 +08:00 [ERR] HTTP GET /api/chapters/1/meetings/2 responded 500 in 108.7957 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 MeetingId, System.Int32 ChapterId, System.String Subject, System.DateTime MeetingDate, System.String Body, System.String Location, System.Boolean IsFinalized, System.Int32 FinalizedBy, System.DateTime FinalizedDate, System.Int32 CreatedBy, System.DateTime CreatedDate, System.Int32 LedgerEntryId, System.Int32 LedgerEntryIsReversed) is required for Akrho.Infrastructure.Repositories.MeetingHeaderRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ReadRowAsyncImpl[T](Type type, Row row) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 216
+   at Akrho.Infrastructure.Repositories.MeetingRepository.GetAsync(Int32 meetingId, Int32 requestingMemberId, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\MeetingRepository.cs:line 217
+   at Akrho.Api.Features.Meetings.MeetingsEndpoints.Get(Int32 chapterId, Int32 meetingId, IMeetingRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Meetings\MeetingsEndpoints.cs:line 77
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 13:34:12.497 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 MeetingId, System.Int32 ChapterId, System.String Subject, System.DateTime MeetingDate, System.String Body, System.String Location, System.Boolean IsFinalized, System.Int32 FinalizedBy, System.DateTime FinalizedDate, System.Int32 CreatedBy, System.DateTime CreatedDate, System.Int32 LedgerEntryId, System.Int32 LedgerEntryIsReversed) is required for Akrho.Infrastructure.Repositories.MeetingHeaderRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ReadRowAsyncImpl[T](Type type, Row row) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 216
+   at Akrho.Infrastructure.Repositories.MeetingRepository.GetAsync(Int32 meetingId, Int32 requestingMemberId, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\MeetingRepository.cs:line 217
+   at Akrho.Api.Features.Meetings.MeetingsEndpoints.Get(Int32 chapterId, Int32 meetingId, IMeetingRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Meetings\MeetingsEndpoints.cs:line 77
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 13:34:12.501 +08:00 [ERR] Unhandled error on /api/chapters/1/meetings/2
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 MeetingId, System.Int32 ChapterId, System.String Subject, System.DateTime MeetingDate, System.String Body, System.String Location, System.Boolean IsFinalized, System.Int32 FinalizedBy, System.DateTime FinalizedDate, System.Int32 CreatedBy, System.DateTime CreatedDate, System.Int32 LedgerEntryId, System.Int32 LedgerEntryIsReversed) is required for Akrho.Infrastructure.Repositories.MeetingHeaderRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ReadRowAsyncImpl[T](Type type, Row row) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 216
+   at Akrho.Infrastructure.Repositories.MeetingRepository.GetAsync(Int32 meetingId, Int32 requestingMemberId, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\MeetingRepository.cs:line 217
+   at Akrho.Api.Features.Meetings.MeetingsEndpoints.Get(Int32 chapterId, Int32 meetingId, IMeetingRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Meetings\MeetingsEndpoints.cs:line 77
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 13:34:56.330 +08:00 [INF] HTTP GET /api/chapters/1/meetings/2 responded 200 in 92.9199 ms
+2026-09-13 13:35:02.555 +08:00 [INF] HTTP POST /api/chapters/1/meetings responded 200 in 65.3580 ms
+2026-09-13 13:35:02.671 +08:00 [INF] HTTP POST /api/chapters/1/meetings/2/reopen responded 400 in 53.9749 ms
+2026-09-13 13:35:10.852 +08:00 [INF] HTTP POST /api/chapters/1/meetings/2/reopen responded 400 in 52.0152 ms
+2026-09-13 13:35:41.105 +08:00 [INF] HTTP POST /api/chapters/1/meetings/2/reopen responded 400 in 79.5052 ms
+2026-09-13 13:44:27.893 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 4.7007 ms
+2026-09-13 13:44:28.076 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.4632 ms
+2026-09-13 13:44:28.076 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.6531 ms
+2026-09-13 13:46:13.020 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1770 ms
+2026-09-13 13:46:13.022 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1501 ms
+2026-09-13 13:46:17.993 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1638 ms
+2026-09-13 13:46:17.994 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1936 ms
+2026-09-13 13:48:32.648 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 705.8516 ms
+2026-09-13 13:48:37.952 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 314.5499 ms
+2026-09-13 13:48:38.100 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 75.1779 ms
+2026-09-13 13:48:44.102 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 302.3236 ms
+2026-09-13 13:48:44.279 +08:00 [INF] HTTP GET /api/chapters/1/meetings/2 responded 200 in 102.9115 ms
+2026-09-13 16:27:41.243 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1682 ms
+2026-09-13 16:27:41.245 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1787 ms
+2026-09-13 16:27:52.025 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 628.6675 ms
+2026-09-13 16:27:52.104 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 70.0324 ms
+2026-09-13 16:27:52.273 +08:00 [INF] HTTP GET /api/members responded 200 in 128.1908 ms
+2026-09-13 16:27:59.232 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 70.5850 ms
+2026-09-13 16:28:00.768 +08:00 [INF] HTTP GET /api/chapters/1/meetings/3 responded 200 in 60.4921 ms
+2026-09-13 16:28:04.013 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4697 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method22(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 16:28:04.013 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method22(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 16:28:04.014 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method22(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 16:28:28.812 +08:00 [INF] HTTP POST /api/chapters/1/meetings responded 200 in 84.3846 ms
+2026-09-13 16:28:28.884 +08:00 [INF] HTTP GET /api/chapters/1/meetings/4 responded 200 in 57.2939 ms
+2026-09-13 16:28:51.977 +08:00 [INF] HTTP PUT /api/chapters/1/meetings/4/attendance responded 200 in 219.1345 ms
+2026-09-13 16:28:52.043 +08:00 [INF] HTTP GET /api/chapters/1/meetings/4 responded 200 in 56.5608 ms
+2026-09-13 16:29:00.172 +08:00 [INF] HTTP GET /api/members responded 200 in 58.1983 ms
+2026-09-13 16:29:00.763 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 56.4638 ms
+2026-09-13 16:29:37.154 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 55.8976 ms
+2026-09-13 16:29:38.862 +08:00 [INF] HTTP GET /api/members responded 200 in 59.0115 ms
+2026-09-13 16:51:57.991 +08:00 [DBG] Hosting starting
+2026-09-13 16:51:58.208 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 16:51:58.209 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 16:51:58.209 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 16:51:58.210 +08:00 [INF] Hosting environment: Development
+2026-09-13 16:51:58.210 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 16:51:58.210 +08:00 [DBG] Hosting started
+2026-09-13 16:59:11.046 +08:00 [DBG] Hosting starting
+2026-09-13 16:59:11.286 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 16:59:11.287 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 16:59:11.287 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 16:59:11.287 +08:00 [INF] Hosting environment: Development
+2026-09-13 16:59:11.287 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 16:59:11.287 +08:00 [DBG] Hosting started
+2026-09-13 16:59:37.630 +08:00 [ERR] HTTP POST /api/auth/sign-in responded 500 in 15137.9087 ms
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-13 16:59:37.653 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-13 16:59:37.657 +08:00 [ERR] Unhandled error on /api/auth/sign-in
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-13 17:05:13.596 +08:00 [DBG] Hosting starting
+2026-09-13 17:05:13.823 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 17:05:13.824 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 17:05:13.824 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 17:05:13.824 +08:00 [INF] Hosting environment: Development
+2026-09-13 17:05:13.824 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 17:05:13.824 +08:00 [DBG] Hosting started
+2026-09-13 17:05:25.944 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1042.1174 ms
+2026-09-13 17:05:26.212 +08:00 [ERR] HTTP GET /api/chapters/1/announcements responded 500 in 122.5771 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AnnouncementId, System.String Title, System.String Body, System.Boolean IsUrgent, System.String UrgentType, System.Int32 UrgentTypeId, System.String UrgentTypeName, System.Int32 BloodTypeId, System.String BloodTypeName, System.DateTime PublishDate, System.DateTime ExpiryDate, System.Int32 CreatedBy, System.Int32 EditedBy, System.DateTime EditedDate, System.Boolean IsWithdrawn, System.Int32 WithdrawnBy, System.DateTime WithdrawnDate, System.String WithdrawnReason, System.Boolean HasRead, System.Int32 TotalCount) is required for Akrho.Infrastructure.Repositories.AnnouncementRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 442
+   at Akrho.Infrastructure.Repositories.AnnouncementRepository.GetForMemberAsync(Int32 chapterId, Int32 requestingMemberId, Int32 skip, Int32 take, Boolean includeWithdrawn, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\CommunicationsRepository.cs:line 236
+   at Akrho.Api.Features.Communications.CommunicationsEndpoints.ListAnnouncements(Int32 chapterId, AnnouncementListRequest req, IAnnouncementRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Communications\CommunicationsEndpoints.cs:line 63
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 17:05:26.224 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AnnouncementId, System.String Title, System.String Body, System.Boolean IsUrgent, System.String UrgentType, System.Int32 UrgentTypeId, System.String UrgentTypeName, System.Int32 BloodTypeId, System.String BloodTypeName, System.DateTime PublishDate, System.DateTime ExpiryDate, System.Int32 CreatedBy, System.Int32 EditedBy, System.DateTime EditedDate, System.Boolean IsWithdrawn, System.Int32 WithdrawnBy, System.DateTime WithdrawnDate, System.String WithdrawnReason, System.Boolean HasRead, System.Int32 TotalCount) is required for Akrho.Infrastructure.Repositories.AnnouncementRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 442
+   at Akrho.Infrastructure.Repositories.AnnouncementRepository.GetForMemberAsync(Int32 chapterId, Int32 requestingMemberId, Int32 skip, Int32 take, Boolean includeWithdrawn, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\CommunicationsRepository.cs:line 236
+   at Akrho.Api.Features.Communications.CommunicationsEndpoints.ListAnnouncements(Int32 chapterId, AnnouncementListRequest req, IAnnouncementRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Communications\CommunicationsEndpoints.cs:line 63
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:05:26.228 +08:00 [ERR] Unhandled error on /api/chapters/1/announcements
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AnnouncementId, System.String Title, System.String Body, System.Boolean IsUrgent, System.String UrgentType, System.Int32 UrgentTypeId, System.String UrgentTypeName, System.Int32 BloodTypeId, System.String BloodTypeName, System.DateTime PublishDate, System.DateTime ExpiryDate, System.Int32 CreatedBy, System.Int32 EditedBy, System.DateTime EditedDate, System.Boolean IsWithdrawn, System.Int32 WithdrawnBy, System.DateTime WithdrawnDate, System.String WithdrawnReason, System.Boolean HasRead, System.Int32 TotalCount) is required for Akrho.Infrastructure.Repositories.AnnouncementRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 442
+   at Akrho.Infrastructure.Repositories.AnnouncementRepository.GetForMemberAsync(Int32 chapterId, Int32 requestingMemberId, Int32 skip, Int32 take, Boolean includeWithdrawn, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\CommunicationsRepository.cs:line 236
+   at Akrho.Api.Features.Communications.CommunicationsEndpoints.ListAnnouncements(Int32 chapterId, AnnouncementListRequest req, IAnnouncementRepository repo, ICurrentUser caller, IScopeGuard scope, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Communications\CommunicationsEndpoints.cs:line 63
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:05:26.400 +08:00 [INF] HTTP GET /api/chapters/1/memos responded 200 in 88.8089 ms
+2026-09-13 17:05:26.522 +08:00 [INF] HTTP GET /api/documents/Announcement/1/read-receipts responded 200 in 72.6868 ms
+2026-09-13 17:06:53.887 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 100.6024 ms
+2026-09-13 17:06:54.183 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 220.3617 ms
+2026-09-13 17:07:00.503 +08:00 [INF] HTTP POST /api/chapters/1/announcements responded 200 in 82.7092 ms
+2026-09-13 17:10:39.881 +08:00 [INF] HTTP GET /api/members responded 401 in 4.6556 ms
+2026-09-13 17:10:40.053 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 161.2734 ms
+2026-09-13 17:10:40.206 +08:00 [INF] HTTP GET /api/members responded 200 in 141.9877 ms
+2026-09-13 17:13:08.136 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 127.5468 ms
+2026-09-13 17:13:08.275 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 265.4031 ms
+2026-09-13 17:13:13.953 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2465 ms
+2026-09-13 17:13:13.955 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1989 ms
+2026-09-13 17:13:19.970 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1810 ms
+2026-09-13 17:13:19.972 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1384 ms
+2026-09-13 17:15:19.293 +08:00 [INF] HTTP GET /api/auth/me responded 401 in 0.3281 ms
+2026-09-13 17:15:24.765 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 321.1449 ms
+2026-09-13 17:15:30.804 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 330.1170 ms
+2026-09-13 17:15:30.855 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 401 in 0.1544 ms
+2026-09-13 17:15:30.966 +08:00 [INF] HTTP GET /api/chapters/1/memos responded 401 in 0.2020 ms
+2026-09-13 17:15:37.673 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 331.9346 ms
+2026-09-13 17:15:37.841 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 65.4343 ms
+2026-09-13 17:15:37.991 +08:00 [INF] HTTP GET /api/chapters/1/memos responded 200 in 78.2247 ms
+2026-09-13 17:15:45.800 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 320.5512 ms
+2026-09-13 17:15:45.977 +08:00 [INF] HTTP POST /api/documents/Announcement/2/read responded 200 in 84.7327 ms
+2026-09-13 17:15:46.110 +08:00 [INF] HTTP GET /api/documents/Announcement/2/read-receipts responded 200 in 63.6959 ms
+2026-09-13 17:18:27.008 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1593 ms
+2026-09-13 17:18:27.009 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1034 ms
+2026-09-13 17:18:47.785 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 328.1466 ms
+2026-09-13 17:18:47.860 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 64.1721 ms
+2026-09-13 17:18:47.964 +08:00 [INF] HTTP GET /api/members responded 200 in 64.4914 ms
+2026-09-13 17:18:51.762 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 115.5225 ms
+2026-09-13 17:18:52.809 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4127 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 17:18:52.810 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:18:52.811 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:18:53.825 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3673 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 17:18:53.825 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:18:53.825 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:18:56.002 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 66.1539 ms
+2026-09-13 17:19:01.289 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3942 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 17:19:01.290 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:19:01.290 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method30(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 17:19:03.312 +08:00 [INF] HTTP GET /api/chapters/1/memos responded 200 in 72.8194 ms
+2026-09-13 18:15:42.083 +08:00 [DBG] Hosting starting
+2026-09-13 18:15:42.367 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 18:15:42.368 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 18:15:42.368 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 18:15:42.369 +08:00 [INF] Hosting environment: Development
+2026-09-13 18:15:42.369 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 18:15:42.369 +08:00 [DBG] Hosting started
+2026-09-13 18:15:54.025 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 962.7946 ms
+2026-09-13 18:15:54.266 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 121.1855 ms
+2026-09-13 18:16:14.062 +08:00 [INF] HTTP POST /api/attachments responded 200 in 105.6076 ms
+2026-09-13 18:16:27.335 +08:00 [INF] HTTP GET /api/attachments/3 responded 200 in 86.6628 ms
+2026-09-13 18:16:27.598 +08:00 [INF] HTTP POST /api/chapters/1/expenses responded 200 in 130.4917 ms
+2026-09-13 18:16:27.681 +08:00 [INF] HTTP POST /api/chapters/1/expenses responded 400 in 13.8045 ms
+2026-09-13 18:16:27.830 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 86.5413 ms
+2026-09-13 18:16:28.011 +08:00 [INF] HTTP POST /api/chapters/1/donations responded 200 in 91.7756 ms
+2026-09-13 18:16:28.157 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 72.5371 ms
+2026-09-13 18:16:38.950 +08:00 [INF] HTTP POST /api/chapters/1/expenses/2/void responded 200 in 75.9452 ms
+2026-09-13 18:16:39.094 +08:00 [INF] HTTP POST /api/chapters/1/donations/3/void responded 200 in 77.9118 ms
+2026-09-13 18:16:39.220 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 64.0043 ms
+2026-09-13 18:18:10.887 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 156.4531 ms
+2026-09-13 18:18:10.960 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 64.2162 ms
+2026-09-13 18:18:11.029 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 298.5940 ms
+2026-09-13 18:18:11.115 +08:00 [INF] HTTP GET /api/members responded 200 in 128.5581 ms
+2026-09-13 18:18:22.110 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 193.2028 ms
+2026-09-13 18:18:28.725 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 338.6706 ms
+2026-09-13 18:18:33.092 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 336.4106 ms
+2026-09-13 18:18:33.166 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 63.2920 ms
+2026-09-13 18:18:33.474 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 309.2051 ms
+2026-09-13 18:18:33.561 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 401 in 2.2751 ms
+2026-09-13 18:18:36.259 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.5526 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:36.264 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:36.268 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:37.282 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.5560 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:37.282 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:37.283 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:38.489 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 78.1088 ms
+2026-09-13 18:18:39.172 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 289.9578 ms
+2026-09-13 18:18:39.438 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 62.1483 ms
+2026-09-13 18:18:39.572 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 61.2259 ms
+2026-09-13 18:18:39.691 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 69.3873 ms
+2026-09-13 18:18:41.444 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4716 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:41.445 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:41.445 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:42.457 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3662 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:42.458 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:42.458 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:44.365 +08:00 [INF] HTTP GET /api/members responded 200 in 65.4382 ms
+2026-09-13 18:18:45.315 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.4758 ms
+2026-09-13 18:18:45.489 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 401 in 0.2221 ms
+2026-09-13 18:18:45.553 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 401 in 0.1200 ms
+2026-09-13 18:18:46.930 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 84.3198 ms
+2026-09-13 18:18:49.679 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0807 ms
+2026-09-13 18:18:52.507 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4656 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:52.507 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:52.508 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:53.519 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4549 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:18:53.520 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:53.520 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method43(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:18:54.364 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0699 ms
+2026-09-13 18:19:07.077 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0576 ms
+2026-09-13 18:19:12.185 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0564 ms
+2026-09-13 18:19:17.284 +08:00 [INF] HTTP POST /api/auth/sign-in responded 429 in 0.0529 ms
+2026-09-13 18:19:22.733 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 357.6274 ms
+2026-09-13 18:19:33.847 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 401 in 0.1702 ms
+2026-09-13 18:19:33.907 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 401 in 0.1123 ms
+2026-09-13 18:19:39.173 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 64.6819 ms
+2026-09-13 18:19:39.332 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 72.1221 ms
+2026-09-13 18:19:46.024 +08:00 [INF] HTTP GET /api/chapters/1/expenses/1 responded 200 in 101.3783 ms
+2026-09-13 18:19:46.157 +08:00 [INF] HTTP GET /api/chapters/1/expenses/2 responded 200 in 62.3454 ms
+2026-09-13 18:19:52.575 +08:00 [ERR] HTTP GET /api/attachments/1 responded 500 in 63.2663 ms
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:19:52.586 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:19:52.586 +08:00 [ERR] Unhandled error on /api/attachments/1
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:19:52.758 +08:00 [ERR] HTTP GET /api/attachments/2 responded 500 in 62.3257 ms
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:19:52.758 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:19:52.759 +08:00 [ERR] Unhandled error on /api/attachments/2
+System.InvalidOperationException: Resolved file path escapes the storage root.
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 94
+   at Akrho.Api.Features.Attachments.AttachmentsEndpoints.Download(Int32 attachmentStagingId, IAttachmentRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Api\Features\Attachments\AttachmentsEndpoints.cs:line 82
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:19:52.949 +08:00 [INF] HTTP GET /api/attachments/3 responded 200 in 63.5872 ms
+2026-09-13 18:19:53.163 +08:00 [INF] HTTP GET /api/attachments/4 responded 404 in 72.6742 ms
+2026-09-13 18:21:44.008 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 131.8614 ms
+2026-09-13 18:21:44.376 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 67.4170 ms
+2026-09-13 18:21:44.377 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 69.3351 ms
+2026-09-13 18:26:01.041 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2053 ms
+2026-09-13 18:26:01.043 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1331 ms
+2026-09-13 18:26:06.047 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1372 ms
+2026-09-13 18:26:06.049 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2357 ms
+2026-09-13 18:26:08.989 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1346 ms
+2026-09-13 18:26:08.990 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1558 ms
+2026-09-13 18:32:26.986 +08:00 [DBG] Hosting starting
+2026-09-13 18:32:27.287 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 18:32:27.288 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 18:32:27.288 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 18:32:27.288 +08:00 [INF] Hosting environment: Development
+2026-09-13 18:32:27.289 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 18:32:27.289 +08:00 [DBG] Hosting started
+2026-09-13 18:32:43.217 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 873.6320 ms
+2026-09-13 18:32:43.471 +08:00 [INF] HTTP POST /api/attachments responded 200 in 96.5138 ms
+2026-09-13 18:32:43.831 +08:00 [INF] HTTP POST /api/chapters/1/expenses responded 200 in 165.4471 ms
+2026-09-13 18:32:44.089 +08:00 [INF] HTTP GET /api/chapters/1/expenses/3 responded 200 in 89.3045 ms
+2026-09-13 18:32:44.356 +08:00 [INF] HTTP GET /api/chapters/1/expenses/3/attachments/4 responded 200 in 73.0459 ms
+2026-09-13 18:33:15.883 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 5.9724 ms
+2026-09-13 18:33:16.487 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1871 ms
+2026-09-13 18:33:16.487 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.3107 ms
+2026-09-13 18:34:23.868 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2201 ms
+2026-09-13 18:34:24.325 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2290 ms
+2026-09-13 18:34:24.326 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1814 ms
+2026-09-13 18:35:50.647 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2142 ms
+2026-09-13 18:35:50.648 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1501 ms
+2026-09-13 18:36:00.510 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 266.4737 ms
+2026-09-13 18:36:00.593 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 69.4332 ms
+2026-09-13 18:36:00.654 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 3.9544 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:00.660 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:00.665 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:01.680 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.6374 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:01.680 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:01.681 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:02.708 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.5124 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:02.709 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:02.709 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:03.723 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3773 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:03.723 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:03.723 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:04.813 +08:00 [INF] HTTP GET /api/members responded 200 in 76.2424 ms
+2026-09-13 18:36:05.443 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 62.2763 ms
+2026-09-13 18:36:06.804 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.6226 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:06.804 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:06.805 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:07.816 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3681 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:07.816 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:07.817 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:08.389 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 62.3716 ms
+2026-09-13 18:36:12.014 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 105.5992 ms
+2026-09-13 18:36:12.073 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 50.1681 ms
+2026-09-13 18:36:12.163 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 55.5281 ms
+2026-09-13 18:36:12.202 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 294.6549 ms
+2026-09-13 18:36:19.111 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1825 ms
+2026-09-13 18:36:19.112 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1802 ms
+2026-09-13 18:36:22.876 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2337 ms
+2026-09-13 18:36:22.877 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1295 ms
+2026-09-13 18:36:32.714 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 302.6793 ms
+2026-09-13 18:36:32.785 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 62.4470 ms
+2026-09-13 18:36:32.876 +08:00 [INF] HTTP GET /api/members responded 200 in 61.0769 ms
+2026-09-13 18:36:34.635 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 58.0453 ms
+2026-09-13 18:36:35.530 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3241 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:35.531 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:35.531 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:36.543 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3269 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:36.543 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:36.543 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:37.627 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 57.5560 ms
+2026-09-13 18:36:54.642 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3088 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:54.642 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:54.643 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:55.654 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.3005 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:36:55.654 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:36:55.655 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:37:37.623 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 291.9913 ms
+2026-09-13 18:37:37.775 +08:00 [ERR] HTTP GET /api/chapters/1/ledger responded 500 in 0.4477 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-13 18:37:37.776 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:37:37.776 +08:00 [ERR] Unhandled error on /api/chapters/1/ledger
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int skip" was not provided from query string.
+   at lambda_method44(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-13 18:39:12.308 +08:00 [DBG] Hosting starting
+2026-09-13 18:39:12.599 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 18:39:12.600 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 18:39:12.600 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 18:39:12.601 +08:00 [INF] Hosting environment: Development
+2026-09-13 18:39:12.601 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 18:39:12.601 +08:00 [DBG] Hosting started
+2026-09-13 18:39:20.409 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 679.0108 ms
+2026-09-13 18:40:35.323 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 170.9425 ms
+2026-09-13 18:40:35.402 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 68.3187 ms
+2026-09-13 18:40:35.430 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 277.7209 ms
+2026-09-13 18:40:35.495 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 73.4865 ms
+2026-09-13 18:40:43.183 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 355.9789 ms
+2026-09-13 18:40:43.256 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 63.4640 ms
+2026-09-13 18:40:47.427 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 74.4098 ms
+2026-09-13 18:40:54.700 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 60.0235 ms
+2026-09-13 18:40:54.702 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 63.5413 ms
+2026-09-13 18:40:55.534 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 82.3627 ms
+2026-09-13 18:41:23.363 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 64.6505 ms
+2026-09-13 18:41:30.825 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 66.1623 ms
+2026-09-13 18:41:34.241 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 59.6783 ms
+2026-09-13 18:41:34.253 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 72.4127 ms
+2026-09-13 18:41:34.763 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 73.3009 ms
+2026-09-13 18:41:56.203 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 63.5644 ms
+2026-09-13 18:42:03.333 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 65.5307 ms
+2026-09-13 18:42:04.859 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 73.0643 ms
+2026-09-13 18:42:06.486 +08:00 [INF] HTTP GET /api/members responded 200 in 90.6350 ms
+2026-09-13 18:47:13.352 +08:00 [DBG] Hosting starting
+2026-09-13 18:47:13.633 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 18:47:13.634 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 18:47:13.634 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 18:47:13.634 +08:00 [INF] Hosting environment: Development
+2026-09-13 18:47:13.634 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 18:47:13.634 +08:00 [DBG] Hosting started
+2026-09-13 18:47:21.099 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 1024.4935 ms
+2026-09-13 18:48:14.330 +08:00 [INF] HTTP POST /api/enrolment/iTgIUygalCZR1wgzoNsMIbcVV45s-SU8iap5SWDz1pI/complete responded 200 in 590.6779 ms
+2026-09-13 18:50:42.074 +08:00 [INF] HTTP GET /api/members responded 200 in 191.9234 ms
+2026-09-13 18:59:12.094 +08:00 [INF] HTTP POST /api/auth/sign-out responded 401 in 6.9022 ms
+2026-09-13 18:59:19.035 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 552.4395 ms
+2026-09-13 18:59:19.105 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 60.6833 ms
+2026-09-13 18:59:19.181 +08:00 [INF] HTTP GET /api/members responded 200 in 60.8031 ms
+2026-09-13 18:59:20.828 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 73.0816 ms
+2026-09-13 18:59:21.701 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 68.4227 ms
+2026-09-13 18:59:23.356 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 67.0892 ms
+2026-09-13 18:59:24.070 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 57.4684 ms
+2026-09-13 18:59:24.341 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 327.6160 ms
+2026-09-13 18:59:25.075 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 70.1710 ms
+2026-09-13 18:59:30.177 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 72.1887 ms
+2026-09-13 18:59:31.245 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 67.6754 ms
+2026-09-13 18:59:31.251 +08:00 [INF] HTTP POST /api/documents/Announcement/2/read responded 200 in 74.5208 ms
+2026-09-13 18:59:38.739 +08:00 [INF] HTTP GET /api/chapters/1/meetings/2 responded 200 in 105.2947 ms
+2026-09-13 18:59:45.816 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 70.1800 ms
+2026-09-13 18:59:56.974 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 292.3548 ms
+2026-09-13 18:59:57.041 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 56.6103 ms
+2026-09-13 18:59:57.119 +08:00 [INF] HTTP GET /api/members responded 200 in 61.0058 ms
+2026-09-13 18:59:59.655 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 77.1340 ms
+2026-09-13 19:00:00.334 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 59.0376 ms
+2026-09-13 19:00:03.339 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 58.2943 ms
+2026-09-13 19:00:06.864 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 60.4362 ms
+2026-09-13 20:04:55.249 +08:00 [INF] HTTP GET /api/enrolment/test-token-for-membership-approve responded 200 in 365.1879 ms
+2026-09-13 22:42:16.445 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 682.6698 ms
+2026-09-13 22:42:24.418 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 185.3133 ms
+2026-09-13 22:42:36.367 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 310.1285 ms
+2026-09-13 22:42:36.435 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 57.7993 ms
+2026-09-13 22:42:36.551 +08:00 [INF] HTTP GET /api/members responded 200 in 97.2561 ms
+2026-09-13 22:42:38.922 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 63.8690 ms
+2026-09-13 22:42:49.764 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 312.4940 ms
+2026-09-13 22:42:49.833 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 59.0424 ms
+2026-09-13 22:42:51.863 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 68.2099 ms
+2026-09-13 22:42:53.845 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 66.1859 ms
+2026-09-13 22:42:58.342 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 70.5153 ms
+2026-09-13 22:42:58.870 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 59.5834 ms
+2026-09-13 22:42:59.142 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 330.9022 ms
+2026-09-13 22:42:59.317 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 85.5234 ms
+2026-09-13 23:11:40.492 +08:00 [DBG] Hosting starting
+2026-09-13 23:11:40.845 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 23:11:40.846 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 23:11:40.846 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 23:11:40.846 +08:00 [INF] Hosting environment: Development
+2026-09-13 23:11:40.846 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 23:11:40.846 +08:00 [DBG] Hosting started
+2026-09-13 23:11:52.042 +08:00 [INF] HTTP GET /api/chapters responded 200 in 1820.3811 ms
+2026-09-13 23:11:52.284 +08:00 [INF] HTTP POST /api/membership-applications responded 200 in 172.7134 ms
+2026-09-13 23:11:59.913 +08:00 [INF] HTTP GET /api/membership-applications/status responded 200 in 78.4011 ms
+2026-09-13 23:12:00.023 +08:00 [INF] HTTP GET /api/membership-applications/status responded 404 in 59.3365 ms
+2026-09-13 23:12:00.447 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 370.9393 ms
+2026-09-13 23:12:00.706 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 94.6341 ms
+2026-09-13 23:12:09.000 +08:00 [INF] HTTP POST /api/membership-applications/6/approve responded 200 in 87.9887 ms
+2026-09-13 23:12:09.301 +08:00 [INF] HTTP GET /api/enrolment/GdnblXJoS959OER6AewGQwZzmj40_dgfmqMraqLdaKM responded 200 in 61.8238 ms
+2026-09-13 23:12:09.634 +08:00 [INF] HTTP POST /api/enrolment/GdnblXJoS959OER6AewGQwZzmj40_dgfmqMraqLdaKM/complete responded 200 in 264.7113 ms
+2026-09-13 23:15:01.285 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 388.6660 ms
+2026-09-13 23:15:09.086 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 62.1998 ms
+2026-09-13 23:15:09.210 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 57.7718 ms
+2026-09-13 23:15:09.320 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 56.9887 ms
+2026-09-13 23:15:09.445 +08:00 [INF] HTTP GET /api/chapters responded 200 in 56.1387 ms
+2026-09-13 23:15:09.592 +08:00 [INF] HTTP GET /api/membership-applications/1 responded 200 in 78.8795 ms
+2026-09-13 23:15:09.716 +08:00 [INF] HTTP GET /api/membership-applications/6 responded 200 in 60.1953 ms
+2026-09-13 23:15:28.315 +08:00 [INF] HTTP GET /api/membership-applications/5 responded 200 in 57.8564 ms
+2026-09-13 23:15:28.422 +08:00 [INF] HTTP GET /api/membership-applications/status responded 404 in 57.6935 ms
+2026-09-13 23:15:28.548 +08:00 [INF] HTTP GET /api/membership-applications/status responded 200 in 57.0461 ms
+2026-09-13 23:20:22.213 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 143.4614 ms
+2026-09-13 23:20:22.372 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 302.6054 ms
+2026-09-13 23:20:28.030 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2445 ms
+2026-09-13 23:20:28.031 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1810 ms
+2026-09-13 23:31:46.233 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2769 ms
+2026-09-13 23:31:46.235 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1659 ms
+2026-09-13 23:31:53.609 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 547.1096 ms
+2026-09-13 23:31:53.679 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 60.4814 ms
+2026-09-13 23:31:53.813 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 94.5430 ms
+2026-09-13 23:31:58.195 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 60.7913 ms
+2026-09-13 23:31:59.720 +08:00 [INF] HTTP GET /api/chapters responded 200 in 66.4367 ms
+2026-09-13 23:58:51.251 +08:00 [DBG] Hosting starting
+2026-09-13 23:58:51.566 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-13 23:58:51.567 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-13 23:58:51.567 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-13 23:58:51.567 +08:00 [INF] Hosting environment: Development
+2026-09-13 23:58:51.567 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-13 23:58:51.567 +08:00 [DBG] Hosting started
+2026-09-13 23:59:03.236 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 990.3162 ms
+2026-09-13 23:59:03.504 +08:00 [INF] HTTP GET /api/members/me responded 200 in 114.9271 ms
+2026-09-13 23:59:03.678 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 66.5047 ms
+2026-09-13 23:59:32.034 +08:00 [INF] HTTP PATCH /api/members/me responded 200 in 183.3058 ms
+2026-09-13 23:59:32.248 +08:00 [INF] HTTP PATCH /api/members/me responded 400 in 62.5714 ms
+2026-09-13 23:59:32.490 +08:00 [INF] HTTP PATCH /api/members/me responded 401 in 189.0211 ms
+2026-09-13 23:59:32.820 +08:00 [INF] HTTP PATCH /api/members/me responded 200 in 259.3677 ms
+2026-09-13 23:59:42.088 +08:00 [INF] HTTP POST /api/members/me/photo/stage responded 200 in 110.3872 ms
+2026-09-13 23:59:42.333 +08:00 [INF] HTTP POST /api/members/me/photo responded 200 in 75.3541 ms
+2026-09-13 23:59:42.466 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 65.0574 ms
+2026-09-13 23:59:42.754 +08:00 [INF] HTTP GET /api/members responded 200 in 176.1726 ms

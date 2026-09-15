@@ -7,9 +7,23 @@
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageReference Include="FluentAssertions" Version="6.12.1" />
+    <!-- xunit 2.9.2 has no Assert.Skip (that's a v3 feature) — this is the well-established
+         package for a real, reported-as-Skipped result under xunit v2. Used only by
+         ChatModuleIntegrationTests.cs's DB-backed tests. -->
+    <PackageReference Include="Xunit.SkippableFact" Version="1.5.85" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Akrho.Domain\Akrho.Domain.csproj" />
     <ProjectReference Include="..\Akrho.Infrastructure\Akrho.Infrastructure.csproj" />
+    <!-- Only for ChatModuleIntegrationTests.cs: reflection over the Chat request DTOs
+         (PostMessageRequest etc.) and a direct-construction unit test of ChatHub's
+         group-assignment logic. No other test in this project needs API-layer types. -->
+    <ProjectReference Include="..\Akrho.Api\Akrho.Api.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Akrho.Api is a Sdk.Web project; ChatHub derives from Microsoft.AspNetCore.SignalR.Hub
+         and the reflection test touches ASP.NET Core types transitively. This project itself
+         is plain Sdk, so the shared framework has to be pulled in explicitly. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 </Project>

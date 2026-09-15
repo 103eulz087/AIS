@@ -38,4 +38,32 @@ MERGE dbo.CorrectiveActionCategory AS t USING (VALUES
  ('Non-attendance'),('Conduct'),('Financial'),('Violation of by-laws'),('Other')
 ) AS s(CategoryName) ON t.CategoryName = s.CategoryName
 WHEN NOT MATCHED THEN INSERT (CategoryName) VALUES (s.CategoryName);
+
+/* Announcement.IsUrgent's structured type — see db/schema/08_comms_align.sql. */
+MERGE dbo.UrgentType AS t USING (VALUES
+ ('BloodRequest'),('Assistance')
+) AS s(TypeName) ON t.TypeName = s.TypeName
+WHEN NOT MATCHED THEN INSERT (TypeName) VALUES (s.TypeName);
+
+/* Expense.CategoryId's controlled list — see db/schema/09_expenses_donations.sql. */
+MERGE dbo.ExpenseCategory AS t USING (VALUES
+ ('Food & Refreshments'),('Transport'),('Supplies'),('Venue'),
+ ('Utilities'),('Donation Given'),('Council Remittance'),('Other')
+) AS s(CategoryName) ON t.CategoryName = s.CategoryName
+WHEN NOT MATCHED THEN INSERT (CategoryName) VALUES (s.CategoryName);
+
+/* Donation.DonorTypeId's controlled list — kept alongside the existing free-text
+   Donation.DonorType column. See db/schema/09_expenses_donations.sql. */
+MERGE dbo.DonorType AS t USING (VALUES
+ ('Government Official'),('Private'),('Business'),('Member')
+) AS s(TypeName) ON t.TypeName = s.TypeName
+WHEN NOT MATCHED THEN INSERT (TypeName) VALUES (s.TypeName);
+
+/* MembershipApplication's own decision states — a SEPARATE concept from dbo.MemberStatus
+   (which describes a MEMBER's renewal/standing, not an application's decision). See
+   db/schema/10_membership_applications.sql design note 3. */
+MERGE dbo.MembershipApplicationStatus AS t USING (VALUES
+ ('PendingApproval'),('ReturnedForCorrection'),('Approved'),('Rejected')
+) AS s(StatusName) ON t.StatusName = s.StatusName
+WHEN NOT MATCHED THEN INSERT (StatusName) VALUES (s.StatusName);
 GO

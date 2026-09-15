@@ -4,6 +4,15 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.10" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+    <!-- Push-dispatch worker (Chat module slice 2): BackgroundService/IHostedService lives
+         here, alongside the repositories it calls, rather than in Akrho.Api — it has no
+         ASP.NET Core-specific dependency of its own, only DI/hosting abstractions. -->
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    <!-- Typed VAPID/Web Push client — see IPushSender/PushSender. -->
+    <PackageReference Include="Lib.Net.Http.WebPush" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Akrho.Domain\Akrho.Domain.csproj" />

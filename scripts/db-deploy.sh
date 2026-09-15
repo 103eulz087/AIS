@@ -10,7 +10,12 @@ DB="${AKRHO_DB:-Akrho}"
 SEED="${AKRHO_SEED:-1}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-sql() { sqlcmd -S "$SERVER" -U "$USER" -P "$PASS" -C -b "$@"; }
+# -f 65001 forces sqlcmd to read input files as UTF-8. Without it, sqlcmd falls back to
+# the console's codepage and silently mangles any non-ASCII character (em dashes, curly
+# quotes, ₱) baked into a literal string — the text still "deploys" with no error, it's
+# just wrong forever in the compiled procedure, which is far worse than a failed deploy.
+# -I enables QUOTED_IDENTIFIER, needed for this repo's filtered indexes.
+sql() { sqlcmd -S "$SERVER" -U "$USER" -P "$PASS" -C -b -I -f 65001 "$@"; }
 
 echo "→ ensuring database $DB"
 sql -Q "IF DB_ID('$DB') IS NULL CREATE DATABASE [$DB];"

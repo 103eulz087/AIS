@@ -1,0 +1,139 @@
+2026-09-15 00:24:31.675 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 2.6511 ms
+2026-09-15 00:24:31.675 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 2.6380 ms
+2026-09-15 00:24:32.018 +08:00 [INF] HTTP GET /api/enrolment/y3lpPBVvJah5Be0pGJm1Uy1H0H3zo18LBOeKBCMhMl4 responded 200 in 345.8528 ms
+2026-09-15 00:25:16.779 +08:00 [INF] HTTP POST /api/enrolment/y3lpPBVvJah5Be0pGJm1Uy1H0H3zo18LBOeKBCMhMl4/complete responded 200 in 365.1676 ms
+2026-09-15 00:25:16.879 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 90.9924 ms
+2026-09-15 00:25:17.033 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 100.8117 ms
+2026-09-15 00:25:17.259 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 329.0453 ms
+2026-09-15 00:25:25.729 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 333.0452 ms
+2026-09-15 00:25:25.795 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 56.9023 ms
+2026-09-15 00:25:25.887 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 63.8672 ms
+2026-09-15 00:25:25.893 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 69.0505 ms
+2026-09-15 00:25:29.428 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 63.6198 ms
+2026-09-15 00:25:29.453 +08:00 [INF] HTTP GET /api/members/me responded 200 in 93.1712 ms
+2026-09-15 00:25:29.557 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 92.1602 ms
+2026-09-15 00:25:29.662 +08:00 [INF] HTTP GET /api/skills responded 200 in 297.1165 ms
+2026-09-15 00:25:40.901 +08:00 [INF] HTTP GET /api/members responded 200 in 123.2136 ms
+2026-09-15 00:25:42.406 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 57.8396 ms
+2026-09-15 00:25:43.238 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 91.0343 ms
+2026-09-15 00:25:48.407 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 60.7730 ms
+2026-09-15 00:25:48.473 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 60.1926 ms
+2026-09-15 00:34:04.272 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 375.5179 ms
+2026-09-15 00:34:04.841 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 943.2227 ms
+2026-09-15 00:34:06.654 +08:00 [INF] HTTP GET /api/members/me responded 200 in 111.0163 ms
+2026-09-15 00:34:06.668 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 124.1597 ms
+2026-09-15 00:34:07.047 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 372.4288 ms
+2026-09-15 00:34:07.417 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 874.0909 ms
+2026-09-15 00:34:07.417 +08:00 [INF] HTTP GET /api/skills responded 200 in 872.7542 ms
+2026-09-15 00:34:09.173 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 543.0031 ms
+2026-09-15 00:34:09.173 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 544.3717 ms
+2026-09-15 00:34:09.295 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 113.1364 ms
+2026-09-15 00:34:09.409 +08:00 [INF] HTTP GET /api/skills responded 200 in 79.3779 ms
+2026-09-15 00:34:09.416 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 86.6959 ms
+2026-09-15 00:34:09.431 +08:00 [INF] HTTP GET /api/members/me responded 200 in 102.2401 ms
+2026-09-15 00:34:09.529 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 88.2768 ms
+2026-09-15 00:34:19.350 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 65.4058 ms
+2026-09-15 00:34:19.359 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 69.4292 ms
+2026-09-15 00:34:20.525 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 81.4991 ms
+2026-09-15 00:34:20.628 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 97.2685 ms
+2026-09-15 00:34:28.070 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 268.0323 ms
+2026-09-15 00:34:37.046 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 100.4920 ms
+2026-09-15 00:34:43.880 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 323.2637 ms
+2026-09-15 00:34:43.952 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 62.1926 ms
+2026-09-15 00:34:46.414 +08:00 [INF] HTTP GET /api/members/me responded 200 in 62.8905 ms
+2026-09-15 00:34:46.417 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 65.3905 ms
+2026-09-15 00:34:46.491 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 65.3664 ms
+2026-09-15 00:47:46.212 +08:00 [DBG] Hosting starting
+2026-09-15 00:47:46.516 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-15 00:47:46.517 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-15 00:47:46.517 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-15 00:47:46.518 +08:00 [INF] Hosting environment: Development
+2026-09-15 00:47:46.518 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-15 00:47:46.518 +08:00 [DBG] Hosting started
+2026-09-15 00:47:59.948 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 44.0682 ms
+2026-09-15 00:48:00.019 +08:00 [INF] HTTP GET /api/members/me/credential responded 401 in 18.6074 ms
+2026-09-15 00:48:17.368 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 580.9932 ms
+2026-09-15 00:48:17.454 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 77.2133 ms
+2026-09-15 00:48:17.488 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 701.4244 ms
+2026-09-15 00:48:17.544 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 52.9662 ms
+2026-09-15 00:48:17.568 +08:00 [INF] HTTP GET /api/members/me responded 200 in 82.1120 ms
+2026-09-15 00:48:17.655 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 75.3190 ms
+2026-09-15 00:48:17.711 +08:00 [INF] HTTP GET /api/skills responded 200 in 219.1682 ms
+2026-09-15 00:48:17.723 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 935.9800 ms
+2026-09-15 00:48:17.723 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 935.9704 ms
+2026-09-15 01:02:09.374 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 532.3075 ms
+2026-09-15 01:02:09.434 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 50.4321 ms
+2026-09-15 01:02:09.510 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 49.6742 ms
+2026-09-15 01:02:09.759 +08:00 [INF] HTTP GET /api/skills responded 200 in 297.3784 ms
+2026-09-15 01:02:09.775 +08:00 [INF] HTTP GET /api/members/me responded 200 in 314.2209 ms
+2026-09-15 01:02:09.854 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 69.4022 ms
+2026-09-15 01:02:16.440 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 62.3127 ms
+2026-09-15 01:02:16.446 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 74.1699 ms
+2026-09-15 01:02:18.424 +08:00 [INF] HTTP GET /api/members/me responded 200 in 63.2471 ms
+2026-09-15 01:02:18.519 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 157.9038 ms
+2026-09-15 01:02:18.578 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 144.0979 ms
+2026-09-15 01:04:40.922 +08:00 [INF] HTTP GET /api/members/me responded 200 in 50.8271 ms
+2026-09-15 01:04:40.969 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 103.5039 ms
+2026-09-15 01:04:41.158 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 285.2925 ms
+2026-09-15 01:04:41.227 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 59.7115 ms
+2026-09-15 01:05:11.937 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 55.5127 ms
+2026-09-15 01:05:11.954 +08:00 [INF] HTTP GET /api/members/me responded 200 in 73.2378 ms
+2026-09-15 01:05:11.959 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 78.7172 ms
+2026-09-15 01:05:12.044 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 85.2472 ms
+2026-09-15 01:05:24.836 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 67.0853 ms
+2026-09-15 01:05:37.460 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 67.1774 ms
+2026-09-15 01:19:36.228 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 401 in 1.7530 ms
+2026-09-15 01:19:36.228 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 401 in 2.5299 ms
+2026-09-15 01:19:36.603 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 359.0150 ms
+2026-09-15 01:19:36.671 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 59.3018 ms
+2026-09-15 01:19:36.811 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 565.8039 ms
+2026-09-15 09:17:34.565 +08:00 [DBG] Hosting starting
+2026-09-15 09:17:34.916 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-15 09:17:34.917 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-15 09:17:34.917 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-15 09:17:34.918 +08:00 [INF] Hosting environment: Development
+2026-09-15 09:17:34.918 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-15 09:17:34.919 +08:00 [DBG] Hosting started
+2026-09-15 09:17:44.882 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 41.6650 ms
+2026-09-15 09:17:44.974 +08:00 [INF] HTTP GET /api/chapters/1/chat/room responded 401 in 20.4097 ms
+2026-09-15 09:36:10.492 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1029.4571 ms
+2026-09-15 09:36:10.592 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 88.5608 ms
+2026-09-15 09:36:10.733 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 95.0304 ms
+2026-09-15 09:36:10.988 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 350.5659 ms
+2026-09-15 09:36:14.294 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 130.5724 ms
+2026-09-15 09:36:16.442 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.2430 ms
+2026-09-15 09:36:16.442 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.9451 ms
+2026-09-15 09:36:19.715 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 359.9891 ms
+2026-09-15 09:36:19.787 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 63.5103 ms
+2026-09-15 09:36:19.893 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 62.8212 ms
+2026-09-15 09:36:19.897 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 68.7312 ms
+2026-09-15 09:36:23.669 +08:00 [INF] HTTP GET /api/members/me responded 200 in 95.0012 ms
+2026-09-15 09:36:23.690 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 118.9152 ms
+2026-09-15 09:36:23.782 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 103.5224 ms
+2026-09-15 09:36:29.052 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 2.8196 ms
+2026-09-15 09:36:29.052 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 1.6916 ms
+2026-09-15 09:36:29.114 +08:00 [INF] HTTP GET /api/chapters/1/chat/room responded 200 in 63.8987 ms
+2026-09-15 09:36:29.184 +08:00 [INF] HTTP GET /api/chapters/1/chat/room responded 200 in 61.1432 ms
+2026-09-15 09:36:29.197 +08:00 [INF] HTTP GET /api/chapters/1/chat/messages responded 200 in 70.9334 ms
+2026-09-15 09:36:29.267 +08:00 [INF] HTTP GET /api/chapters/1/chat/messages responded 200 in 62.1499 ms
+2026-09-15 09:36:29.364 +08:00 [INF] HTTP POST /api/chapters/1/chat/read responded 200 in 75.2256 ms
+2026-09-15 09:36:38.120 +08:00 [INF] HTTP POST /api/chapters/1/chat/messages responded 200 in 74.5653 ms
+2026-09-15 09:36:38.200 +08:00 [INF] HTTP POST /api/chapters/1/chat/read responded 200 in 68.5022 ms
+2026-09-15 09:36:39.475 +08:00 [INF] HTTP POST /api/chapters/1/chat/messages/54/flag responded 200 in 89.1354 ms
+2026-09-15 09:36:45.113 +08:00 [INF] HTTP GET /hubs/chat responded 101 in 16049.0494 ms
+2026-09-15 11:19:41.892 +08:00 [DBG] Hosting starting
+2026-09-15 11:19:42.292 +08:00 [INF] Now listening on: http://127.0.0.1:5089
+2026-09-15 11:19:42.293 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-15 11:19:42.294 +08:00 [INF] Hosting environment: Development
+2026-09-15 11:19:42.294 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-15 11:19:42.294 +08:00 [DBG] Hosting started
+2026-09-15 11:20:05.762 +08:00 [DBG] Hosting starting
+2026-09-15 11:20:06.091 +08:00 [INF] Now listening on: http://127.0.0.1:5089
+2026-09-15 11:20:06.092 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-15 11:20:06.092 +08:00 [INF] Hosting environment: Development
+2026-09-15 11:20:06.092 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-15 11:20:06.093 +08:00 [DBG] Hosting started
+2026-09-15 11:20:09.200 +08:00 [WRN] Failed to determine the https port for redirect.
+2026-09-15 11:20:09.225 +08:00 [INF] HTTP GET /health responded 200 in 35.4705 ms
+2026-09-15 11:20:09.291 +08:00 [INF] HTTP GET /api/notifications/vapid-key responded 401 in 7.6958 ms
+2026-09-15 11:20:09.329 +08:00 [INF] HTTP GET /api/conversations responded 401 in 2.0526 ms

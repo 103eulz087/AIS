@@ -10,7 +10,7 @@ namespace Akrho.Tests;
 /// </summary>
 public class ScopeGuardTests
 {
-    private sealed record FakeUser(int MemberId, int ChapterId, IReadOnlySet<string> Roles) : ICurrentUser
+    private sealed record FakeUser(int MemberId, int ChapterId, IReadOnlySet<string> Roles, int AccountId = 0) : ICurrentUser
     {
         public bool IsChapterOfficer =>
             Roles.Overlaps(["ChapterOfficer", "ChapterTreasurer", "ChapterAdmin"]);

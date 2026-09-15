@@ -24,7 +24,7 @@ ASP.NET dev certificate, and restores both projects. Then, in two terminals:
 
 ```bash
 dotnet run --project src/Akrho.Api    # https://localhost:5443/swagger
-cd src/web && npm run dev             # http://localhost:5173
+cd src/web && npm run dev             # https://localhost:5173 (HTTPS once scripts/dev.sh has exported the dev cert — see CLAUDE.md §8.2)
 ```
 
 In VS Code: **Run → API + Web**, or the *definition of done* task to run every check.
