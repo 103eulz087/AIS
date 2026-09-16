@@ -22,6 +22,16 @@ public static class ReferenceEndpoints
         app.MapGet("/api/corrective-action-categories", ListCorrectiveActionCategories)
             .WithName("ListCorrectiveActionCategories").WithTags("Reference").RequireAuthorization();
 
+        // Public, unauthenticated — unlike every lookup above, these feed the chapter/council
+        // registration module (a later module; docs §4.1, §7A), which happens BEFORE any
+        // account exists, same reasoning as GET /api/chapters (MembersEndpoints/Apply.tsx).
+        // Nothing sensitive here either way: public PH geography, not member data.
+        app.MapGet("/api/regions", ListRegions).WithName("ListRegions").WithTags("Reference");
+
+        app.MapGet("/api/provinces", ListProvinces).WithName("ListProvinces").WithTags("Reference");
+
+        app.MapGet("/api/municipalities", ListMunicipalities).WithName("ListMunicipalities").WithTags("Reference");
+
         return app;
     }
 
@@ -47,6 +57,32 @@ public static class ReferenceEndpoints
         var rows = await repo.ListCorrectiveActionCategoriesAsync(ct);
         IReadOnlyList<CorrectiveActionCategoryDto> items =
             rows.Select(r => new CorrectiveActionCategoryDto(r.CategoryId, r.CategoryName)).ToList();
+        return TypedResults.Ok(items);
+    }
+
+    private static async Task<Ok<IReadOnlyList<RegionDto>>> ListRegions(
+        IReferenceRepository repo, CancellationToken ct)
+    {
+        var rows = await repo.ListRegionsAsync(ct);
+        IReadOnlyList<RegionDto> items = rows.Select(r => new RegionDto(r.RegionId, r.RegionCode, r.RegionName)).ToList();
+        return TypedResults.Ok(items);
+    }
+
+    private static async Task<Ok<IReadOnlyList<ProvinceDto>>> ListProvinces(
+        int? regionId, IReferenceRepository repo, CancellationToken ct)
+    {
+        var rows = await repo.ListProvincesAsync(regionId, ct);
+        IReadOnlyList<ProvinceDto> items =
+            rows.Select(r => new ProvinceDto(r.ProvinceId, r.RegionId, r.ProvinceCode, r.ProvinceName)).ToList();
+        return TypedResults.Ok(items);
+    }
+
+    private static async Task<Ok<IReadOnlyList<MunicipalityDto>>> ListMunicipalities(
+        int? provinceId, IReferenceRepository repo, CancellationToken ct)
+    {
+        var rows = await repo.ListMunicipalitiesAsync(provinceId, ct);
+        IReadOnlyList<MunicipalityDto> items = rows.Select(r =>
+            new MunicipalityDto(r.MunicipalityId, r.ProvinceId, r.MunicipalityCode, r.MunicipalityName, r.ZipCode)).ToList();
         return TypedResults.Ok(items);
     }
 }

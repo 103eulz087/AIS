@@ -27,9 +27,19 @@ MERGE dbo.Skill AS t USING (VALUES
 ) AS s(SkillName) ON t.SkillName = s.SkillName
 WHEN NOT MATCHED THEN INSERT (SkillName) VALUES (s.SkillName);
 
+/* ChapterAuditor (chapter-registration module): the Auditor office's role. Read-only —
+   §7A.4 "An auditor who can edit what he audits is not an auditor." Must NEVER appear in
+   any write-granting authorization policy anywhere in the codebase (backend's job to
+   honour; noted here so the constraint travels with the role's own definition).
+
+   CouncilAdmin (chapter-registration module, decision E1b): the council President's
+   full-admin capability, seeded because no generic council "president/full admin" role
+   existed before this module — CouncilSecretary already covered the verifier half of
+   two-person control (Secretary verifies each officer; President gives final approval),
+   but nothing covered the approver half. IsCouncilRole=1 like every other council role. */
 MERGE dbo.Role AS t USING (VALUES
- ('Member',0),('ChapterOfficer',0),('ChapterTreasurer',0),('ChapterAdmin',0),
- ('CouncilSecretary',1),('CouncilTreasurer',1),('ProvincialOfficer',1),
+ ('Member',0),('ChapterOfficer',0),('ChapterTreasurer',0),('ChapterAdmin',0),('ChapterAuditor',0),
+ ('CouncilSecretary',1),('CouncilTreasurer',1),('CouncilAdmin',1),('ProvincialOfficer',1),
  ('RegionalOfficer',1),('NationalSecretariat',1),('SystemAdmin',1)
 ) AS s(RoleName,IsCouncilRole) ON t.RoleName = s.RoleName
 WHEN NOT MATCHED THEN INSERT (RoleName,IsCouncilRole) VALUES (s.RoleName,s.IsCouncilRole);
@@ -66,4 +76,50 @@ MERGE dbo.MembershipApplicationStatus AS t USING (VALUES
  ('PendingApproval'),('ReturnedForCorrection'),('Approved'),('Rejected')
 ) AS s(StatusName) ON t.StatusName = s.StatusName
 WHEN NOT MATCHED THEN INSERT (StatusName) VALUES (s.StatusName);
+
+/* dbo.ChapterRegistrationStatus — EXACTLY these three rows, forever. No 'Rejected' row:
+   see db/schema/17_chapter_registration.sql's header for why this list is shorter than
+   MembershipApplicationStatus's on purpose. */
+MERGE dbo.ChapterRegistrationStatus AS t USING (VALUES
+ ('Submitted'),('ReturnedForCorrection'),('Approved')
+) AS s(StatusName) ON t.StatusName = s.StatusName
+WHEN NOT MATCHED THEN INSERT (StatusName) VALUES (s.StatusName);
+
+/* dbo.ChapterOffice — the eight offices of §7A.4's paper form, in form order.
+   RoleId resolved BY NAME (never a literal id) per this codebase's own habit (see
+   db/schema/10_membership_applications.sql design note 2). GrantsLogin=0 for the three
+   Master Initiator seats only — "recorded office, no login" per §7A.4. */
+MERGE dbo.ChapterOffice AS t USING (
+    SELECT s.OfficeName, s.SortOrder, r.RoleId, s.GrantsLogin
+    FROM (VALUES
+        ('President',1,'ChapterAdmin',1),
+        ('Vice President',2,'ChapterOfficer',1),
+        ('Secretary',3,'ChapterOfficer',1),
+        ('Treasurer',4,'ChapterTreasurer',1),
+        ('Auditor',5,'ChapterAuditor',1),
+        ('Master Initiator I',6,'Member',0),
+        ('Master Initiator II',7,'Member',0),
+        ('Master Initiator III',8,'Member',0)
+    ) AS s(OfficeName,SortOrder,RoleName,GrantsLogin)
+    JOIN dbo.Role r ON r.RoleName = s.RoleName
+) AS s(OfficeName,SortOrder,RoleId,GrantsLogin) ON t.OfficeName = s.OfficeName
+WHEN NOT MATCHED THEN INSERT (OfficeName,SortOrder,RoleId,GrantsLogin)
+    VALUES (s.OfficeName,s.SortOrder,s.RoleId,s.GrantsLogin);
+
+/* dbo.ChapterAccent — the six-colour approved palette (§7A.3, "not a colour picker").
+   Brass and Slate reuse this app's own existing design tokens verbatim
+   (src/web/src/shared/tokens.css: --brass / --slate); Forest, Maroon and Ochre reuse the
+   same file's semantic accents (--in / --out / --warn) under names that read naturally
+   as chapter colours rather than as status colours. Navy is the one genuinely new hex
+   here, chosen to sit comfortably alongside the other five without clashing with --info
+   (already used for informational UI, not decoration). */
+MERGE dbo.ChapterAccent AS t USING (VALUES
+ ('Brass',  '#C39A3E'),
+ ('Slate',  '#39424F'),
+ ('Forest', '#2E6B52'),
+ ('Maroon', '#A6392E'),
+ ('Navy',   '#1F3A5F'),
+ ('Ochre',  '#B4801E')
+) AS s(AccentName,HexValue) ON t.AccentName = s.AccentName
+WHEN NOT MATCHED THEN INSERT (AccentName,HexValue) VALUES (s.AccentName,s.HexValue);
 GO

@@ -55,6 +55,15 @@ public static class MembersEndpoints
         // with the procedure's own.
         g.MapGet("/{memberId:int}/photo", GetPhoto).WithName("GetMemberPhoto");
 
+        // Chapter Admin only — "I forgot my password" recovery. Never a password reset: a
+        // fresh one-time enrolment link, same as first-time access (CLAUDE.md invariant #16).
+        // memberId comes from the route, but the chapter it is checked against comes from the
+        // member's own row inside usp_Enrolment_Issue, never from this caller's JWT or request
+        // — a Chapter Admin cannot use this to reach into another chapter's roster.
+        g.MapPost("/{memberId:int}/enrolment-link", ReissueEnrolmentLink)
+            .WithName("ReissueMemberEnrolmentLink")
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembersEnrolmentReissue);
+
         return app;
     }
 
@@ -251,6 +260,42 @@ public static class MembersEndpoints
             // who has never uploaded a photo — anti-enumeration, usp_Member_GetPhoto's own
             // header comment.
             return TypedResults.NotFound();
+        }
+    }
+
+    private static async Task<Results<Ok<ReissueMemberEnrolmentLinkResponseDto>, NotFound, ProblemHttpResult>> ReissueEnrolmentLink(
+        int memberId, IEnrolmentRepository enrolment, IConfiguration config, ICurrentUser caller, CancellationToken ct)
+    {
+        // Generated here, never persisted or logged — same "SHOW-ONCE" discipline as
+        // MembershipApplicationsEndpoints.Approve. Only the SHA-256 hash reaches the database.
+        var rawToken = OpaqueToken.GenerateRaw();
+        var tokenHash = OpaqueToken.Hash(rawToken);
+
+        try
+        {
+            var result = await enrolment.IssueAsync(memberId, caller.MemberId, tokenHash, ct);
+
+            var webOrigin = (config["Web:Origin"] ?? "").TrimEnd('/');
+            var enrolmentUrl = $"{webOrigin}/enrol/{rawToken}";
+
+            return TypedResults.Ok(new ReissueMemberEnrolmentLinkResponseDto(memberId, enrolmentUrl, result.ExpiresOn));
+        }
+        catch (EnrolmentIssueException ex)
+        {
+            return ex.Reason switch
+            {
+                // 51100/51101 — no such member, or one with no active role at all. Same
+                // "not found" whether the id is wrong or just belongs to another chapter;
+                // anti-enumeration, matching MembershipApplicationsEndpoints.GetOne.
+                EnrolmentIssueFailureReason.MemberNotFound => TypedResults.NotFound(),
+                EnrolmentIssueFailureReason.NoActiveRole => TypedResults.NotFound(),
+                // 51290 — a real member of ANOTHER chapter. Unreachable via the normal path
+                // (ChapterMembersEnrolmentReissue only proves ChapterAdmin somewhere, not for
+                // THIS member's chapter), so the procedure's own check is what actually
+                // enforces CLAUDE.md invariant #4 here — surfaced as 403, not 404, since the
+                // member id itself is real and this doesn't leak which chapter he belongs to.
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden)
+            };
         }
     }
 

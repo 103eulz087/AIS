@@ -540,6 +540,19 @@ export interface ApproveMembershipApplicationResponse {
 }
 
 /**
+ * SHOW-ONCE. Mirrors ReissueMemberEnrolmentLinkResponseDto — POST
+ * /api/members/{id}/enrolment-link, the "forgot my password" recovery path (CLAUDE.md
+ * invariant #16: recovery is a new link, never a transmitted or admin-set password).
+ * enrolmentUrl carries the raw token and is returned on this ONE response only — there
+ * is no endpoint to re-fetch it. Never persist this outside the panel that displays it once.
+ */
+export interface ReissueMemberEnrolmentLinkResponse {
+  memberId: number;
+  enrolmentUrl: string;
+  expiresOnUtc: string;
+}
+
+/**
  * CorrectiveAction.CategoryId reference data — GET /api/corrective-action-categories,
  * returning CorrectiveActionCategoryDto[]. A live endpoint (unlike ATTENDANCE_STATUSES/
  * EXPENSE_CATEGORIES above), so this is fetched with a plain useQuery, never hardcoded.

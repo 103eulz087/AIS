@@ -80,3 +80,11 @@ public sealed record MemberSearchRequest(
     int? ChapterId = null, string? Search = null, int? BloodTypeId = null,
     int? SkillId = null, bool IncludeInactive = false, int? StatusId = null,
     int Skip = 0, int Take = 50);
+
+/// <summary>
+/// POST /api/members/{id}/enrolment-link — a Chapter Admin re-issuing access for a member of
+/// his own chapter who forgot his password. SHOW-ONCE, same as
+/// ApproveMembershipApplicationResponseDto: this is the only response that will ever carry
+/// EnrolmentUrl's raw token. A lost link means the admin issues another fresh one.
+/// </summary>
+public sealed record ReissueMemberEnrolmentLinkResponseDto(int MemberId, string EnrolmentUrl, DateTime ExpiresOnUtc);

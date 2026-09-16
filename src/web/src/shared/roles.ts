@@ -78,3 +78,13 @@ export function canApproveApplications(roles: readonly string[]): boolean {
 export function canModerateChat(roles: readonly string[]): boolean {
   return roles.includes("ChapterOfficer") || roles.includes("ChapterAdmin");
 }
+
+/**
+ * ChapterAdmin only — re-issue an enrolment link for an existing member who forgot his
+ * password. Mirrors AuthorizationPolicies.ChapterMembersEnrolmentReissue. Same narrowing
+ * as canApproveApplications: granting account access is a Chapter Admin action, not a
+ * general officer one.
+ */
+export function canReissueEnrolmentLink(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin");
+}

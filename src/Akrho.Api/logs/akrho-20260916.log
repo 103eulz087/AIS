@@ -1,0 +1,311 @@
+2026-09-16 09:24:19.803 +08:00 [DBG] Hosting starting
+2026-09-16 09:24:20.251 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 09:24:20.252 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 09:24:20.253 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 09:24:20.254 +08:00 [INF] Hosting environment: Development
+2026-09-16 09:24:20.255 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\akrho.api
+2026-09-16 09:24:20.256 +08:00 [DBG] Hosting started
+2026-09-16 09:24:34.252 +08:00 [INF] HTTP GET / responded 404 in 783.4415 ms
+2026-09-16 09:24:47.569 +08:00 [INF] Application is shutting down...
+2026-09-16 09:24:47.569 +08:00 [DBG] Hosting stopping
+2026-09-16 09:24:47.580 +08:00 [DBG] Hosting stopped
+2026-09-16 09:48:29.814 +08:00 [DBG] Hosting starting
+2026-09-16 09:48:30.190 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 09:48:30.190 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 09:48:30.191 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 09:48:30.191 +08:00 [INF] Hosting environment: Development
+2026-09-16 09:48:30.191 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 09:48:30.191 +08:00 [DBG] Hosting started
+2026-09-16 09:48:35.870 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 46.0266 ms
+2026-09-16 09:49:05.046 +08:00 [ERR] HTTP POST /api/auth/sign-in responded 500 in 15821.8675 ms
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\akrho.api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-16 09:49:05.083 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\akrho.api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-16 09:49:05.087 +08:00 [ERR] Unhandled error on /api/auth/sign-in
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.)
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String memberNumber, CancellationToken ct) in D:\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\AuthRepository.cs:line 56
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct) in D:\PROJECTS\AIS\src\akrho.api\Features\Auth\AuthEndpoints.cs:line 31
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:258,State:0,Class:20
+2026-09-16 09:50:06.515 +08:00 [DBG] Hosting starting
+2026-09-16 09:50:06.873 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 09:50:06.874 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 09:50:06.874 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 09:50:06.874 +08:00 [INF] Hosting environment: Development
+2026-09-16 09:50:06.874 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 09:50:06.875 +08:00 [DBG] Hosting started
+2026-09-16 09:50:12.193 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 48.1889 ms
+2026-09-16 09:50:24.754 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 936.1027 ms
+2026-09-16 09:53:06.089 +08:00 [DBG] Hosting starting
+2026-09-16 09:53:06.446 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 09:53:06.448 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 09:53:06.449 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 09:53:06.450 +08:00 [INF] Hosting environment: Development
+2026-09-16 09:53:06.450 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 09:53:06.451 +08:00 [DBG] Hosting started
+2026-09-16 09:53:28.086 +08:00 [INF] Application is shutting down...
+2026-09-16 09:53:28.087 +08:00 [DBG] Hosting stopping
+2026-09-16 09:53:28.093 +08:00 [DBG] Hosting stopped
+2026-09-16 09:53:42.844 +08:00 [DBG] Hosting starting
+2026-09-16 09:53:43.199 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 09:53:43.201 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 09:53:43.202 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 09:53:43.203 +08:00 [INF] Hosting environment: Development
+2026-09-16 09:53:43.204 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 09:53:43.205 +08:00 [DBG] Hosting started
+2026-09-16 09:54:30.757 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 26.5171 ms
+2026-09-16 09:54:30.757 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 26.4714 ms
+2026-09-16 09:54:48.409 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 6.6633 ms
+2026-09-16 09:54:48.409 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 6.6673 ms
+2026-09-16 09:55:40.532 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2465 ms
+2026-09-16 09:55:40.533 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1614 ms
+2026-09-16 09:55:57.739 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1697 ms
+2026-09-16 09:55:57.740 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1170 ms
+2026-09-16 09:56:14.207 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1069.0368 ms
+2026-09-16 09:56:14.310 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 90.6939 ms
+2026-09-16 09:56:14.459 +08:00 [INF] HTTP GET /api/conversations responded 200 in 73.2002 ms
+2026-09-16 09:56:14.763 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 376.3249 ms
+2026-09-16 09:56:14.767 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 381.0959 ms
+2026-09-16 09:56:20.761 +08:00 [INF] HTTP GET /api/conversations responded 200 in 57.9342 ms
+2026-09-16 09:56:22.249 +08:00 [INF] HTTP GET /api/members responded 200 in 190.0302 ms
+2026-09-16 09:56:27.092 +08:00 [INF] HTTP POST /api/conversations responded 200 in 147.2675 ms
+2026-09-16 09:56:27.131 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 2.5498 ms
+2026-09-16 09:56:27.131 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 3.2467 ms
+2026-09-16 09:56:27.186 +08:00 [INF] HTTP GET /api/conversations/169/messages responded 200 in 61.5588 ms
+2026-09-16 09:56:27.250 +08:00 [INF] HTTP GET /api/conversations/169/messages responded 200 in 55.9464 ms
+2026-09-16 09:57:19.537 +08:00 [INF] HTTP POST /api/conversations/169/messages responded 200 in 99.4292 ms
+2026-09-16 09:57:19.622 +08:00 [INF] HTTP POST /api/conversations/169/read responded 200 in 70.7636 ms
+2026-09-16 09:57:21.832 +08:00 [INF] HTTP GET /hubs/chat responded 101 in 54688.5819 ms
+2026-09-16 09:57:21.916 +08:00 [INF] HTTP GET /api/conversations responded 200 in 61.2876 ms
+2026-09-16 09:57:23.542 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 61.4784 ms
+2026-09-16 09:57:23.547 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 60.7852 ms
+2026-09-16 09:57:23.769 +08:00 [INF] HTTP GET /api/conversations responded 200 in 281.4251 ms
+2026-09-16 09:57:25.431 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 129.7423 ms
+2026-09-16 09:57:30.261 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 102.6330 ms
+2026-09-16 09:57:32.173 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 96.4218 ms
+2026-09-16 09:57:32.450 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 57.0093 ms
+2026-09-16 09:57:32.503 +08:00 [INF] HTTP GET /api/chapters/1/expenses responded 200 in 109.0678 ms
+2026-09-16 09:57:32.932 +08:00 [INF] HTTP GET /api/chapters/1/donations responded 200 in 110.8437 ms
+2026-09-16 09:57:45.552 +08:00 [INF] HTTP GET /api/members/me responded 200 in 140.5342 ms
+2026-09-16 09:57:45.579 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 168.3170 ms
+2026-09-16 09:57:45.779 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 215.4734 ms
+2026-09-16 09:57:53.821 +08:00 [INF] HTTP GET /api/members responded 200 in 61.3002 ms
+2026-09-16 09:57:56.918 +08:00 [INF] HTTP GET /api/members responded 200 in 59.1674 ms
+2026-09-16 09:57:57.283 +08:00 [INF] HTTP GET /api/members responded 200 in 57.6047 ms
+2026-09-16 09:57:58.819 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 57.7442 ms
+2026-09-16 09:57:58.819 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 57.6321 ms
+2026-09-16 09:57:58.820 +08:00 [INF] HTTP GET /api/conversations responded 200 in 57.7948 ms
+2026-09-16 09:58:04.991 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 56.9997 ms
+2026-09-16 09:58:08.010 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 61.3436 ms
+2026-09-16 09:58:18.887 +08:00 [INF] HTTP GET /api/conversations responded 200 in 66.3043 ms
+2026-09-16 09:58:19.852 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 0.3197 ms
+2026-09-16 09:58:19.854 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 0.3739 ms
+2026-09-16 09:58:19.903 +08:00 [INF] HTTP GET /api/conversations/169/messages responded 200 in 57.8514 ms
+2026-09-16 09:58:19.971 +08:00 [INF] HTTP GET /api/conversations/169/messages responded 200 in 59.8208 ms
+2026-09-16 09:58:20.045 +08:00 [INF] HTTP POST /api/conversations/169/read responded 200 in 59.6936 ms
+2026-09-16 09:58:21.851 +08:00 [INF] HTTP GET /hubs/chat responded 101 in 1987.1831 ms
+2026-09-16 09:58:24.807 +08:00 [INF] HTTP GET /api/members/me responded 200 in 56.2331 ms
+2026-09-16 09:58:24.811 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 60.5929 ms
+2026-09-16 09:58:24.811 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 60.8798 ms
+2026-09-16 09:58:24.879 +08:00 [INF] HTTP GET /api/members/2/photo responded 200 in 59.3045 ms
+2026-09-16 09:58:28.070 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 0.1945 ms
+2026-09-16 09:58:28.071 +08:00 [INF] HTTP POST /hubs/chat/negotiate responded 200 in 0.4507 ms
+2026-09-16 09:58:28.128 +08:00 [INF] HTTP GET /api/members responded 200 in 57.5816 ms
+2026-09-16 09:58:28.163 +08:00 [INF] HTTP GET /api/chapters/1/chat/room responded 200 in 91.0689 ms
+2026-09-16 09:58:28.228 +08:00 [INF] HTTP GET /api/chapters/1/chat/room responded 200 in 56.6405 ms
+2026-09-16 09:58:28.240 +08:00 [INF] HTTP GET /api/chapters/1/chat/messages responded 200 in 62.9341 ms
+2026-09-16 09:58:28.305 +08:00 [INF] HTTP GET /api/chapters/1/chat/messages responded 200 in 56.8458 ms
+2026-09-16 09:58:28.388 +08:00 [INF] HTTP POST /api/chapters/1/chat/read responded 200 in 64.3308 ms
+2026-09-16 09:58:31.311 +08:00 [INF] HTTP GET /hubs/chat responded 101 in 3228.4940 ms
+2026-09-16 09:58:31.385 +08:00 [INF] HTTP GET /api/members responded 200 in 58.0259 ms
+2026-09-16 09:58:34.406 +08:00 [INF] HTTP GET /api/chapters/1/meetings/2 responded 200 in 118.4688 ms
+2026-09-16 09:58:37.750 +08:00 [INF] HTTP GET /api/conversations responded 200 in 56.5034 ms
+2026-09-16 09:58:37.751 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 58.2079 ms
+2026-09-16 09:58:37.754 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 61.0578 ms
+2026-09-16 09:58:38.429 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 56.0148 ms
+2026-09-16 09:58:47.015 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 72.2661 ms
+2026-09-16 09:59:05.704 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 59.8934 ms
+2026-09-16 09:59:09.950 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 82.5764 ms
+2026-09-16 09:59:09.950 +08:00 [INF] HTTP GET /api/conversations responded 200 in 82.4934 ms
+2026-09-16 09:59:09.955 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 86.4857 ms
+2026-09-16 09:59:43.856 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 127.2399 ms
+2026-09-16 09:59:56.513 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 345.5934 ms
+2026-09-16 09:59:56.581 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 56.0557 ms
+2026-09-16 09:59:56.704 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 57.7177 ms
+2026-09-16 09:59:56.709 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 56.5160 ms
+2026-09-16 09:59:56.710 +08:00 [INF] HTTP GET /api/conversations responded 200 in 56.7135 ms
+2026-09-16 09:59:58.629 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 270.3492 ms
+2026-09-16 10:00:04.730 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 99.2648 ms
+2026-09-16 10:00:20.393 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 57.6621 ms
+2026-09-16 10:06:04.844 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 516.2563 ms
+2026-09-16 10:06:16.293 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 479.4769 ms
+2026-09-16 10:06:16.368 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 62.4847 ms
+2026-09-16 10:06:16.496 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 64.9612 ms
+2026-09-16 10:06:16.751 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 297.9244 ms
+2026-09-16 10:06:16.772 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 318.4140 ms
+2026-09-16 10:06:17.011 +08:00 [INF] HTTP GET /api/conversations responded 200 in 552.2686 ms
+2026-09-16 10:06:17.059 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 598.0939 ms
+2026-09-16 10:06:21.726 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 65.5301 ms
+2026-09-16 10:06:22.400 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 67.5165 ms
+2026-09-16 10:06:23.822 +08:00 [INF] HTTP GET /api/membership-applications/7 responded 200 in 152.9956 ms
+2026-09-16 10:08:54.126 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 61.3413 ms
+2026-09-16 10:08:54.147 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 82.3737 ms
+2026-09-16 10:08:54.154 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 89.4804 ms
+2026-09-16 10:08:54.375 +08:00 [INF] HTTP GET /api/conversations responded 200 in 309.5844 ms
+2026-09-16 10:08:54.783 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 66.0350 ms
+2026-09-16 10:08:57.506 +08:00 [INF] HTTP GET /api/chapters/1/activities responded 200 in 59.4374 ms
+2026-09-16 10:09:00.527 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 66.6339 ms
+2026-09-16 10:09:10.436 +08:00 [INF] HTTP GET /api/members/me responded 200 in 67.2867 ms
+2026-09-16 10:09:10.564 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 200.9683 ms
+2026-09-16 10:14:31.333 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 79.1795 ms
+2026-09-16 10:14:34.023 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 61.6536 ms
+2026-09-16 10:14:36.818 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 59.4022 ms
+2026-09-16 10:14:38.991 +08:00 [INF] HTTP GET /api/members responded 200 in 62.3842 ms
+2026-09-16 10:14:44.171 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 57.1638 ms
+2026-09-16 10:14:44.172 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 56.8627 ms
+2026-09-16 10:14:44.178 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 64.0763 ms
+2026-09-16 10:14:44.180 +08:00 [INF] HTTP GET /api/conversations responded 200 in 65.3009 ms
+2026-09-16 10:14:51.893 +08:00 [INF] HTTP GET /api/chapters/1/meetings/3 responded 200 in 69.3185 ms
+2026-09-16 10:15:11.610 +08:00 [DBG] Hosting starting
+2026-09-16 10:15:12.008 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 10:15:12.009 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 10:15:12.009 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 10:15:12.009 +08:00 [INF] Hosting environment: Development
+2026-09-16 10:15:12.009 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 10:15:12.010 +08:00 [DBG] Hosting started
+2026-09-16 10:15:16.577 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 45.2253 ms
+2026-09-16 10:15:30.197 +08:00 [INF] HTTP GET /api/regions responded 200 in 561.1170 ms
+2026-09-16 10:15:30.327 +08:00 [INF] HTTP GET /api/regions responded 200 in 60.2340 ms
+2026-09-16 10:15:30.403 +08:00 [ERR] HTTP GET /api/provinces responded 500 in 4.2885 ms
+Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to bind parameter "Nullable<int> regionId" from "".
+   at lambda_method95(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-16 10:15:30.408 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to bind parameter "Nullable<int> regionId" from "".
+   at lambda_method95(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-16 10:15:30.410 +08:00 [ERR] Unhandled error on /api/provinces
+Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to bind parameter "Nullable<int> regionId" from "".
+   at lambda_method95(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-16 10:15:35.714 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 158.6622 ms
+2026-09-16 10:15:40.605 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 124.8155 ms
+2026-09-16 10:15:41.899 +08:00 [INF] HTTP GET /api/chapters responded 200 in 77.2746 ms
+2026-09-16 10:15:42.001 +08:00 [INF] HTTP GET /api/provinces responded 200 in 82.2971 ms
+2026-09-16 10:15:42.122 +08:00 [INF] HTTP GET /api/provinces responded 200 in 60.2765 ms
+2026-09-16 10:15:50.135 +08:00 [INF] HTTP GET /api/municipalities responded 200 in 75.8317 ms
+2026-09-16 10:24:00.930 +08:00 [DBG] Hosting starting
+2026-09-16 10:24:01.283 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-16 10:24:01.284 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-16 10:24:01.284 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-16 10:24:01.284 +08:00 [INF] Hosting environment: Development
+2026-09-16 10:24:01.284 +08:00 [INF] Content root path: D:\PROJECTS\AIS\src\Akrho.Api
+2026-09-16 10:24:01.285 +08:00 [DBG] Hosting started
+2026-09-16 10:24:05.908 +08:00 [INF] HTTP GET /swagger/index.html responded 200 in 42.5927 ms
+2026-09-16 10:24:19.732 +08:00 [INF] HTTP GET /api/regions responded 200 in 707.1861 ms
+2026-09-16 10:25:20.780 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 7.2597 ms
+2026-09-16 10:25:20.781 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 7.6971 ms
+2026-09-16 10:25:21.849 +08:00 [INF] HTTP GET /api/chapters responded 200 in 86.0311 ms
+2026-09-16 10:45:19.924 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.2397 ms
+2026-09-16 10:45:19.928 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1716 ms
+2026-09-16 10:45:20.259 +08:00 [INF] HTTP GET /api/chapters responded 200 in 338.2126 ms
+2026-09-16 12:10:11.654 +08:00 [INF] HTTP GET /api/chapters responded 200 in 456.3266 ms

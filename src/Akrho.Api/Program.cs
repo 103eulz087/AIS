@@ -46,6 +46,20 @@ const string DevOnlyPlaceholderVapidPrivateKey = "f8EEhVV_AW1HXa6qEPlCishmJdD1bX
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Local-only overrides (CLAUDE.md §10) — NEVER committed, matched by the
+// appsettings.*.local.json .gitignore rule. ASP.NET Core's own default configuration
+// sources stop at appsettings.{Environment}.json; nothing loads a ".local.json" variant
+// unless it is added explicitly, which is what this line does. Without it, a connection
+// string placed in appsettings.Development.local.json for the shared dev SQL Server was
+// silently ignored, and the app fell back to the Docker-default localhost connection
+// string baked into appsettings.json instead — working only in whichever terminal
+// session happened to still have ConnectionStrings__Akrho exported, and failing (every
+// DB call, sign-in included, throwing a generic 500) in every fresh one, including after
+// a reboot. Loaded after the environment-specific file and before Serilog reads
+// configuration, so a local override can also affect logging if one is ever added.
+builder.Configuration.AddJsonFile(
+    $"appsettings.{builder.Environment.EnvironmentName}.local.json", optional: true, reloadOnChange: true);
+
 builder.Host.UseSerilog((ctx, cfg) => cfg
     .ReadFrom.Configuration(ctx.Configuration)
     .WriteTo.Console()
@@ -188,6 +202,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.ChapterDisciplineWrite, p =>
         p.RequireRole("ChapterAdmin"));
     options.AddPolicy(AuthorizationPolicies.ChapterMembershipApprove, p =>
+        p.RequireRole("ChapterAdmin"));
+    options.AddPolicy(AuthorizationPolicies.ChapterMembersEnrolmentReissue, p =>
         p.RequireRole("ChapterAdmin"));
 
     // A new, narrow policy for the Public chat module — same role set as

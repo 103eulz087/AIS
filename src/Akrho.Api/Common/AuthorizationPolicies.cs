@@ -49,6 +49,13 @@ public static class AuthorizationPolicies
     public const string ChapterMembershipApprove = "ChapterMembershipApprove";
 
     /// <summary>
+    /// ChapterAdmin only — re-issue an enrolment link for an existing member who forgot his
+    /// password. Same role bar as <see cref="ChapterMembershipApprove"/> for the same reason:
+    /// this grants account access (CLAUDE.md invariant #16), not a general officer action.
+    /// </summary>
+    public const string ChapterMembersEnrolmentReissue = "ChapterMembersEnrolmentReissue";
+
+    /// <summary>
     /// ChapterOfficer or ChapterAdmin — remove a chat message, resolve its flags, or view the
     /// moderation queue. Same role set as <see cref="ChapterCommsWrite"/>/<see cref="ChapterActivitiesWrite"/>,
     /// kept as its own named policy per this codebase's one-policy-per-capability convention

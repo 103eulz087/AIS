@@ -2,7 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
-import { isSameChapter, MEMBER_STATUSES, type ConversationStarted, type DirectoryRow } from "@/shared/types";
+import { useAuth } from "@/shared/auth";
+import { canReissueEnrolmentLink } from "@/shared/roles";
+import {
+  isSameChapter, MEMBER_STATUSES,
+  type ConversationStarted, type DirectoryRow, type ReissueMemberEnrolmentLinkResponse,
+} from "@/shared/types";
 import { useState, type CSSProperties } from "react";
 
 const BLOOD = ["All", "O+", "O−", "A+", "B+", "AB+"];
@@ -11,6 +16,33 @@ export function MemberDirectory() {
   const [blood, setBlood] = useState("All");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const { claims } = useAuth();
+  const canReissue = canReissueEnrolmentLink(claims?.roles ?? []);
+
+  // "Forgot my password" recovery — a fresh one-time enrolment link, never a password
+  // (CLAUDE.md invariant #16). SHOW-ONCE, same pattern as ApplicationDetail's approve
+  // panel: held only in local state, never persisted, never refetched.
+  const [reissuingId, setReissuingId] = useState<number | null>(null);
+  const [reissueError, setReissueError] = useState<string | null>(null);
+  const [reissueResult, setReissueResult] = useState<ReissueMemberEnrolmentLinkResponse | null>(null);
+  const [reissueLinkCopied, setReissueLinkCopied] = useState(false);
+
+  async function handleReissueLink(memberId: number) {
+    setReissueError(null);
+    setReissuingId(memberId);
+    try {
+      const res = await api.post<ReissueMemberEnrolmentLinkResponse>(
+        `/api/members/${memberId}/enrolment-link`, {},
+      );
+      setReissueResult(res);
+      setReissueLinkCopied(false);
+    } catch (err) {
+      setReissueError(err instanceof ApiError ? err.message : "Could not issue a new link. Please try again.");
+    } finally {
+      setReissuingId(null);
+    }
+  }
 
   // "tap to call or message" (docs §4.2). Message is same-chapter only this slice —
   // see the row rendering below, gated on isSameChapter(row) alongside the existing
@@ -90,6 +122,41 @@ export function MemberDirectory() {
       </div>
 
       {startError && <p role="alert" style={startErrorStyle}>{startError}</p>}
+      {reissueError && <p role="alert" style={startErrorStyle}>{reissueError}</p>}
+
+      {reissueResult && (
+        <div style={{ margin: "10px 16px 0", padding: 16, borderRadius: "var(--r)", background: "var(--paper)", border: "1px solid var(--brass)" }}>
+          <div style={{ fontFamily: "var(--f-disp)", fontSize: 15, letterSpacing: ".03em", color: "var(--in)" }}>
+            New enrolment link issued
+          </div>
+          <p style={{ fontSize: 13, color: "var(--slate)", marginTop: 8, lineHeight: 1.6 }}>
+            Copy this link now and send it to him yourself — this is the only time it will ever be shown.
+            The old link no longer works.
+          </p>
+          <div style={{ marginTop: 10, padding: 10, borderRadius: 8, background: "var(--bond)", border: "1px solid var(--line)", fontSize: 12.5, wordBreak: "break-all", color: "var(--ink)" }}>
+            {reissueResult.enrolmentUrl}
+          </div>
+          <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard?.writeText(reissueResult.enrolmentUrl)
+                  .then(() => setReissueLinkCopied(true))
+                  .catch(() => { /* clipboard permission denied — the link is still on screen */ });
+              }}
+              style={{ minHeight: "var(--tap)", padding: "0 18px", borderRadius: 8, border: "1px solid var(--line)", background: "var(--paper)", color: "var(--slate)", fontFamily: "var(--f-disp)", fontSize: 14, letterSpacing: ".05em", textTransform: "uppercase" }}
+            >
+              {reissueLinkCopied ? "Copied" : "Copy link"}
+            </button>
+            <button
+              type="button" onClick={() => setReissueResult(null)}
+              style={{ minHeight: "var(--tap)", padding: "0 20px", borderRadius: 8, background: "var(--deep)", color: "var(--brass-soft)", fontFamily: "var(--f-disp)", fontSize: 14, letterSpacing: ".06em", textTransform: "uppercase" }}
+            >
+              I've saved this — dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {statusLabel && (
         <div style={{
@@ -154,6 +221,19 @@ export function MemberDirectory() {
               style={messageButtonStyle}
             >
               {startingId === row.memberId ? "…" : "Message"}
+            </button>
+          )}
+
+          {/* ChapterAdmin only, same-chapter only — "forgot my password" recovery for
+              a brother who already has an account. */}
+          {isSameChapter(row) && canReissue && (
+            <button
+              type="button"
+              onClick={() => { void handleReissueLink(row.memberId); }}
+              disabled={reissuingId === row.memberId}
+              style={messageButtonStyle}
+            >
+              {reissuingId === row.memberId ? "…" : "Resend link"}
             </button>
           )}
         </div>
