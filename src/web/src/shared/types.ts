@@ -886,3 +886,325 @@ export const MEMBER_STATUSES: ReadonlyArray<{ id: number; name: string }> = [
   { id: 5, name: "Suspended" },
   { id: 6, name: "Rejected" },
 ];
+
+/* ============================================================================
+ * Chapter registration (docs/AIS-Project-Documentation.md §7A.4). Mirrors
+ * src/Akrho.Api/Features/ChapterRegistrations/ChapterRegistrationDtos.cs field-for-field —
+ * read that file first if either drifts.
+ * ========================================================================== */
+
+/**
+ * dbo.ChapterOffice — the eight offices of §7A.4's paper form, in form order. Seeded at
+ * db/seed/01_reference.sql, in identity-column insertion order (President=1 ... Master
+ * Initiator III=8). Same kind of GAP as MEMBER_STATUSES/EXPENSE_CATEGORIES above — there
+ * is no GET endpoint exposing dbo.ChapterOffice today (confirmed against
+ * ReferenceEndpoints.cs and ChapterRegistrationValidators.cs, whose own comment says the
+ * exact row count is deliberately never hardcoded server-side — this client list is a
+ * hint only, never authoritative; the server's own count is what actually gates
+ * submission). grantsLogin=false for the three Master Initiator seats only — "recorded
+ * office, no login" per §7A.4.
+ */
+export interface ChapterOfficeOption { officeId: number; officeName: string; grantsLogin: boolean }
+
+export const CHAPTER_OFFICES: readonly ChapterOfficeOption[] = [
+  { officeId: 1, officeName: "President", grantsLogin: true },
+  { officeId: 2, officeName: "Vice President", grantsLogin: true },
+  { officeId: 3, officeName: "Secretary", grantsLogin: true },
+  { officeId: 4, officeName: "Treasurer", grantsLogin: true },
+  { officeId: 5, officeName: "Auditor", grantsLogin: true },
+  { officeId: 6, officeName: "Master Initiator I", grantsLogin: false },
+  { officeId: 7, officeName: "Master Initiator II", grantsLogin: false },
+  { officeId: 8, officeName: "Master Initiator III", grantsLogin: false },
+];
+
+/**
+ * dbo.ChapterAccent — the six-colour approved chapter-mark palette (§7A.3, "not a colour
+ * picker, free colour choice breaks text contrast"). Seeded at db/seed/01_reference.sql,
+ * in identity-column insertion order.
+ *
+ * GAP, more serious than the other hardcoded reference lists in this file: there is no
+ * GET /api/chapter-accents endpoint today (confirmed against ReferenceEndpoints.cs — only
+ * /api/regions, /api/provinces, /api/municipalities are public there). Unlike
+ * MEMBER_STATUSES/EXPENSE_CATEGORIES, a wrong AccentId here does not just mis-render a
+ * dropdown — it permanently assigns the WRONG colour to a real chapter's mark on
+ * approval, with no correction path built in this slice. This list is inferred from the
+ * seed script's own insertion order (db/seed/01_reference.sql, dbo.ChapterAccent MERGE)
+ * and cross-checked against the six names/hexes named in this module's own brief; it has
+ * NOT been confirmed against a live AccentId value returned by the API. Flagged for
+ * backend/tech-lead: add a small GET /api/chapter-accents (mirrors ListRegions et al.
+ * exactly) before this goes anywhere near production data.
+ */
+export interface ChapterAccentOption { accentId: number; accentName: string; hexValue: string }
+
+export const CHAPTER_ACCENTS: readonly ChapterAccentOption[] = [
+  { accentId: 1, accentName: "Brass", hexValue: "#C39A3E" },
+  { accentId: 2, accentName: "Slate", hexValue: "#39424F" },
+  { accentId: 3, accentName: "Forest", hexValue: "#2E6B52" },
+  { accentId: 4, accentName: "Maroon", hexValue: "#A6392E" },
+  { accentId: 5, accentName: "Navy", hexValue: "#1F3A5F" },
+  { accentId: 6, accentName: "Ochre", hexValue: "#B4801E" },
+];
+
+/**
+ * dbo.ChapterRegistrationStatus has exactly three rows, seeded at db/seed/01_reference.sql
+ * in this insertion order, and per that schema file's own header comment none may ever be
+ * added. Same kind of GAP as MEMBERSHIP_APPLICATION_STATUSES above — no GET endpoint
+ * exists for this table either.
+ */
+export type ChapterRegistrationStatusName = "Submitted" | "ReturnedForCorrection" | "Approved";
+
+export const CHAPTER_REGISTRATION_STATUSES: ReadonlyArray<{ id: number; name: ChapterRegistrationStatusName }> = [
+  { id: 1, name: "Submitted" },
+  { id: 2, name: "ReturnedForCorrection" },
+  { id: 3, name: "Approved" },
+];
+
+export type ChapterRegistrationType = "Charter" | "Turnover";
+
+/**
+ * One typed-in officer on a Charter petition — nobody exists yet (no MemberId). Mirrors
+ * ChapterCharterOfficerInputDto. A mobile number is required for every officer, including
+ * the three Master Initiators, who receive no login (§7A.4).
+ */
+export interface ChapterCharterOfficerInput {
+  officeId: number;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  giftName: string;
+  birthDate: string;
+  mobileNo: string;
+  email: string | null;
+  dateSurvive: string | null;
+  presidentDuringSurvive: string | null;
+  masterInitiatorDuringSurvive: string | null;
+}
+
+/** POST /api/chapter-registrations request body. Mirrors SubmitChapterRegistrationRequest. */
+export interface SubmitChapterRegistrationRequest {
+  proposedChapterName: string;
+  barangay: string | null;
+  regionId: number;
+  provinceId: number;
+  municipalityId: number;
+  markAccentId: number | null;
+  officers: ChapterCharterOfficerInput[];
+}
+
+export interface SubmitChapterRegistrationResponse { referenceNo: string }
+
+/**
+ * The petitioner's own view of a registration's current state. Mirrors
+ * ChapterRegistrationStatusDto. Deliberately thin — NEVER carries the officer roster, and
+ * (unlike MembershipApplicationStatus) also never carries geography/accent/barangay, so a
+ * resubmission screen built against this cannot pre-fill anything beyond
+ * proposedChapterName; see RegisterChapterStatus.tsx's own header comment.
+ */
+export interface ChapterRegistrationStatus {
+  referenceNo: string;
+  registrationType: ChapterRegistrationType;
+  proposedChapterName: string | null;
+  chapterId: number | null;
+  chapterName: string | null;
+  statusName: ChapterRegistrationStatusName;
+  submittedDateUtc: string;
+  decidedDateUtc: string | null;
+  decisionReason: string | null;
+  actingCouncilId: number;
+  actingCouncilName: string;
+}
+
+/**
+ * Every field a returned Charter petition may correct — the WHOLE form, roster and
+ * location included. Mirrors ResubmitChapterRegistrationRequest.
+ */
+export interface ResubmitChapterRegistrationRequest {
+  proposedChapterName: string;
+  barangay: string | null;
+  regionId: number;
+  provinceId: number;
+  municipalityId: number;
+  markAccentId: number | null;
+  officers: ChapterCharterOfficerInput[];
+}
+
+export interface ResubmitChapterRegistrationResponse {
+  registrationId: number;
+  referenceNo: string;
+  statusName: string;
+}
+
+/**
+ * One office/existing-member pair on a chapter's officer-turnover filing — selected from
+ * that same chapter's own roster, never typed-in text. Mirrors ChapterTurnoverOfficerInputDto.
+ */
+export interface ChapterTurnoverOfficerInput { officeId: number; memberId: number }
+
+/** POST /api/chapter-registrations/turnover request body. NO chapterId — the filer's own
+ * chapter is always re-derived server-side from his ChapterAdmin role. Mirrors
+ * SubmitChapterTurnoverRequest. */
+export interface SubmitChapterTurnoverRequest { officers: ChapterTurnoverOfficerInput[] }
+
+export interface SubmitChapterTurnoverResponse { referenceNo: string }
+
+/**
+ * One row of a council officer's own registration queue. Mirrors
+ * ChapterRegistrationQueueItemDto. canAct is a display convenience only, never itself a
+ * permission boundary — the server enforces the real gate regardless.
+ */
+export interface ChapterRegistrationQueueItem {
+  registrationId: number;
+  referenceNo: string;
+  registrationType: ChapterRegistrationType;
+  proposedChapterName: string | null;
+  chapterId: number | null;
+  chapterName: string | null;
+  statusName: ChapterRegistrationStatusName;
+  submittedDateUtc: string;
+  actingCouncilId: number;
+  actingCouncilName: string;
+  intendedCouncilId: number | null;
+  routingReason: string;
+  decidedBy: number | null;
+  decidedDateUtc: string | null;
+  canAct: boolean;
+}
+
+/**
+ * One of the eight seats, resolved identity included, for the council officer reviewing
+ * the registration. Mirrors ChapterRegistrationOfficerDto.
+ */
+export interface ChapterRegistrationOfficer {
+  registrationOfficerId: number;
+  officeId: number;
+  officeName: string;
+  sortOrder: number;
+  grantsLogin: boolean;
+  memberId: number | null;
+  memberNumber: string | null;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  giftName: string;
+  birthDate: string;
+  mobileNo: string;
+  email: string | null;
+  dateSurvive: string | null;
+  presidentDuringSurvive: string | null;
+  masterInitiatorDuringSurvive: string | null;
+  verifiedBy: number | null;
+  verifiedByGiftName: string | null;
+  verifiedDateUtc: string | null;
+  verifyNote: string | null;
+  createdMemberId: number | null;
+}
+
+/** One status-change event in a registration's history. Mirrors ChapterRegistrationUpdateDto. */
+export interface ChapterRegistrationUpdate {
+  chapterRegistrationUpdateId: number;
+  updateDateUtc: string;
+  updatedBy: number | null;
+  statusName: string;
+  notes: string | null;
+}
+
+/** How/why this registration is being decided at ActingCouncilId rather than
+ * IntendedCouncilId. Mirrors ChapterRegistrationRoutingDto. */
+export interface ChapterRegistrationRouting {
+  routingId: number;
+  intendedCouncilId: number | null;
+  actingCouncilId: number;
+  routingReason: string;
+  actorMemberId: number | null;
+  actedOnUtc: string;
+  remarks: string | null;
+}
+
+/**
+ * The full registration, for the council officer reviewing it. Mirrors
+ * ChapterRegistrationDetailDto — never shown to the wider membership.
+ */
+export interface ChapterRegistrationDetail {
+  registrationId: number;
+  referenceNo: string;
+  registrationType: ChapterRegistrationType;
+  chapterId: number | null;
+  chapterName: string | null;
+  proposedChapterName: string | null;
+  barangay: string | null;
+  regionId: number | null;
+  provinceId: number | null;
+  municipalityId: number | null;
+  markAccentId: number | null;
+  accentName: string | null;
+  hexValue: string | null;
+  intendedCouncilId: number | null;
+  intendedCouncilName: string | null;
+  actingCouncilId: number;
+  actingCouncilName: string;
+  routingReason: string;
+  submittedByMemberId: number | null;
+  submittedByGiftName: string | null;
+  submittedDateUtc: string;
+  statusName: ChapterRegistrationStatusName;
+  isOpen: boolean;
+  decidedBy: number | null;
+  decidedByGiftName: string | null;
+  decidedDateUtc: string | null;
+  decisionReason: string | null;
+  createdChapterId: number | null;
+  officers: ChapterRegistrationOfficer[];
+  history: ChapterRegistrationUpdate[];
+  routing: ChapterRegistrationRouting | null;
+}
+
+export interface VerifyChapterRegistrationOfficerResponse { registrationOfficerId: number; verified: boolean }
+
+export interface ReturnChapterRegistrationResponse { registrationId: number; statusName: string }
+
+/**
+ * SHOW-ONCE. Mirrors ChapterCharterApprovalResultDto. enrolmentUrl carries the raw,
+ * unhashed enrolment token — the one and only response that will ever hold it.
+ */
+export interface ChapterCharterApprovalResult {
+  presidentMemberId: number;
+  memberNumberPrefix: string;
+  enrolmentUrl: string;
+  expiresOnUtc: string;
+}
+
+/** SHOW-ONCE, one per newly-enrolled incoming Turnover officer. An officer who kept an
+ * account he already held is simply absent from this list. Mirrors
+ * ChapterTurnoverOfficerEnrolmentDto. */
+export interface ChapterTurnoverOfficerEnrolment {
+  memberId: number;
+  enrolmentUrl: string;
+  expiresOnUtc: string;
+}
+
+/**
+ * POST .../approve response. Exactly one of charter/turnoverEnrolments is populated,
+ * decided entirely by registrationType. Mirrors ApproveChapterRegistrationResponseDto.
+ * Never logged, never persisted, never re-fetchable.
+ */
+export interface ApproveChapterRegistrationResponse {
+  chapterId: number;
+  registrationType: ChapterRegistrationType;
+  charter: ChapterCharterApprovalResult | null;
+  turnoverEnrolments: ChapterTurnoverOfficerEnrolment[] | null;
+}
+
+/** GET /api/regions — public, unauthenticated. Mirrors RegionDto. */
+export interface RegionOption { regionId: number; regionCode: string; regionName: string }
+
+/** GET /api/provinces?regionId= — public, unauthenticated. Mirrors ProvinceDto. */
+export interface ProvinceOption { provinceId: number; regionId: number; provinceCode: number; provinceName: string }
+
+/** GET /api/municipalities?provinceId= — public, unauthenticated. Mirrors MunicipalityDto. */
+export interface MunicipalityOption {
+  municipalityId: number;
+  provinceId: number;
+  municipalityCode: number;
+  municipalityName: string;
+  zipCode: string | null;
+}

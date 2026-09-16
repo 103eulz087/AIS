@@ -5,6 +5,7 @@ using Akrho.Api.Features.Activities;
 using Akrho.Api.Features.Attachments;
 using Akrho.Api.Features.Auth;
 using Akrho.Api.Features.Chapters;
+using Akrho.Api.Features.ChapterRegistrations;
 using Akrho.Api.Features.Chat;
 using Akrho.Api.Features.Communications;
 using Akrho.Api.Features.Conversations;
@@ -90,6 +91,7 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ICredentialRepository, CredentialRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IPushRepository, PushRepository>();
+builder.Services.AddScoped<IChapterRegistrationRepository, ChapterRegistrationRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -213,6 +215,16 @@ builder.Services.AddAuthorization(options =>
     // one-policy-per-capability convention.
     options.AddPolicy(AuthorizationPolicies.ChapterChatModerate, p =>
         p.RequireRole("ChapterOfficer", "ChapterAdmin"));
+
+    // Chapter-registration module (db/schema/17_chapter_registration.sql). ChapterAuditor is
+    // seeded read-only (GrantsLogin=1, but no write capability anywhere) and must NEVER be
+    // added to either council policy below — see AuthorizationPolicies' own comments on both.
+    options.AddPolicy(AuthorizationPolicies.ChapterOfficerRosterFile, p =>
+        p.RequireRole("ChapterAdmin"));
+    options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationVerify, p =>
+        p.RequireRole("CouncilSecretary", "CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationApprove, p =>
+        p.RequireRole("CouncilAdmin"));
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -328,6 +340,26 @@ builder.Services.AddRateLimiter(o =>
             Window = TimeSpan.FromMinutes(1),
             QueueLimit = 0
         }));
+
+    // Public, unauthenticated chapter-charter petition — no member id to partition by, same
+    // reasoning as MembershipApplicationSubmit above.
+    o.AddPolicy(RateLimiting.ChapterRegistrationSubmit, http => RateLimitPartition.GetFixedWindowLimiter(
+        http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        }));
+
+    o.AddPolicy(RateLimiting.ChapterRegistrationStatus, http => RateLimitPartition.GetFixedWindowLimiter(
+        http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        }));
 });
 
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
@@ -375,6 +407,7 @@ app.MapCredential();
 app.MapChat();
 app.MapConversations();
 app.MapNotifications();
+app.MapChapterRegistrations();
 
 // /?access_token= is honoured ONLY here (see the JwtBearerEvents.OnMessageReceived path
 // check above) — every other endpoint in this app still requires a real Authorization header.

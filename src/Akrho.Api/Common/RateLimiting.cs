@@ -70,4 +70,18 @@ public static class RateLimiting
     /// conversation invites at every other member of his chapter in a minute.
     /// </summary>
     public const string ConversationStart = "conversation-start";
+
+    /// <summary>
+    /// Guards POST /api/chapter-registrations and GET/PUT /api/chapter-registrations/status —
+    /// the public charter petition and its "check my registration"/"resubmit after correction"
+    /// lookups. Nobody is authenticated yet for any of the three, so all partition by caller IP,
+    /// same shape as <see cref="MembershipApplicationSubmit"/>/<see cref="MembershipApplicationStatus"/>.
+    /// </summary>
+    public const string ChapterRegistrationSubmit = "chapter-registration-submit";
+
+    /// <summary>See <see cref="ChapterRegistrationSubmit"/> — the status/resubmit pair, same
+    /// reasoning as <see cref="MembershipApplicationStatus"/> distinguishing itself from
+    /// <see cref="MembershipApplicationSubmit"/> (a caller-supplied reference+mobile pair that
+    /// must not be hammerable).</summary>
+    public const string ChapterRegistrationStatus = "chapter-registration-status";
 }

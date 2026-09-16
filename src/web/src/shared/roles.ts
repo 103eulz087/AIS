@@ -88,3 +88,36 @@ export function canModerateChat(roles: readonly string[]): boolean {
 export function canReissueEnrolmentLink(roles: readonly string[]): boolean {
   return roles.includes("ChapterAdmin");
 }
+
+/**
+ * CouncilSecretary or CouncilAdmin — see a council's chapter-registration queue and
+ * detail, tick officers off as verified, return a registration for correction. Mirrors
+ * AuthorizationPolicies.CouncilChapterRegistrationVerify (Program.cs:
+ * RequireRole("CouncilSecretary", "CouncilAdmin")). This is a COUNCIL role check, wholly
+ * separate from ChapterAdmin/ChapterOfficer above.
+ */
+export function canReviewChapterRegistrations(roles: readonly string[]): boolean {
+  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
+}
+
+/**
+ * CouncilAdmin only — final approval of a chapter registration (charter or turnover).
+ * Narrower than canReviewChapterRegistrations by design, same two-person-integrity
+ * reasoning as canFinalizeMeetings vs. canWriteMeetings: a Secretary can verify every
+ * officer but a President/CouncilAdmin alone commits the decision. Mirrors
+ * AuthorizationPolicies.CouncilChapterRegistrationApprove (Program.cs:
+ * RequireRole("CouncilAdmin")).
+ */
+export function canApproveChapterRegistrations(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
+}
+
+/**
+ * ChapterAdmin only — file the chapter's own annual officer-turnover roster. Mirrors
+ * AuthorizationPolicies.ChapterOfficerRosterFile (Program.cs: RequireRole("ChapterAdmin")).
+ * ChapterAuditor is never granted this or any other function in this file — an auditor who
+ * can edit what he audits is not an auditor (§7A.4).
+ */
+export function canFileOfficerRoster(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin");
+}

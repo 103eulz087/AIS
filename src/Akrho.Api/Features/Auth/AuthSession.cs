@@ -27,8 +27,9 @@ public static class AuthSession
             .Select(r => r.RoleName!)
             .Distinct(StringComparer.Ordinal)
             .ToList();
+        var councilIds = CouncilIdsOf(claimRows);
 
-        var access = tokens.IssueAccessToken(accountId, memberId, chapterId, roles);
+        var access = tokens.IssueAccessToken(accountId, memberId, chapterId, roles, councilIds);
 
         var rawRefresh = OpaqueToken.GenerateRaw();
         var refreshExpiresOn = DateTime.UtcNow.Add(RefreshLifetime);
@@ -41,6 +42,19 @@ public static class AuthSession
 
         return new SignInResponseDto(access.Value, access.ExpiresAtUtc);
     }
+
+    /// <summary>
+    /// The distinct <c>ScopeId</c>s of the caller's currently-active Council-scoped roles, out
+    /// of usp_Auth_GetClaims's own result — minted onto the JWT as the "cnc" claim
+    /// (AccessTokenService). Shared by both places that mint an access token (sign-in/enrolment-
+    /// complete here, and the refresh endpoint in AuthEndpoints.cs) so the two never drift.
+    /// </summary>
+    public static IReadOnlyList<int> CouncilIdsOf(IReadOnlyList<MemberClaimRow> claimRows) =>
+        claimRows
+            .Where(r => r.ScopeType == "Council" && r.ScopeId is not null)
+            .Select(r => r.ScopeId!.Value)
+            .Distinct()
+            .ToList();
 
     public static string? DeviceHintOf(HttpContext http)
     {

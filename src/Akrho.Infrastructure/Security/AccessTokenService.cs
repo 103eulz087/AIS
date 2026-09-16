@@ -10,15 +10,18 @@ namespace Akrho.Infrastructure.Security;
 /// <summary>
 /// Mints the short-lived access JWT. Claim shape is a contract with
 /// <see cref="CurrentUser"/>: "mid" (member id), "chp" (chapter id), <see cref="ClaimTypes.Role"/>
-/// per active role. "aid" (account id) rides along too, purely so the API can resolve which
-/// account a sign-out belongs to without a request-supplied id — it is an internal row id,
-/// not personal data, same category as "mid" and "chp".
+/// per active role, "cnc" (one per distinct Council-scoped role the caller currently holds —
+/// see chapter-registration module, db/schema/17_chapter_registration.sql). "aid" (account id)
+/// rides along too, purely so the API can resolve which account a sign-out belongs to without a
+/// request-supplied id — it is an internal row id, not personal data, same category as "mid",
+/// "chp" and "cnc" (a council id, not a name or any other personal data).
 /// This token carries no name, no gift name, no mobile number — see CLAUDE.md §2 invariant 8,
 /// which is written about the QR credential but is the same rule.
 /// </summary>
 public interface IAccessTokenService
 {
-    AccessToken IssueAccessToken(int accountId, int memberId, int chapterId, IEnumerable<string> roles);
+    AccessToken IssueAccessToken(
+        int accountId, int memberId, int chapterId, IEnumerable<string> roles, IEnumerable<int> councilIds);
 }
 
 public sealed record AccessToken(string Value, DateTime ExpiresAtUtc);
@@ -27,7 +30,8 @@ public sealed class AccessTokenService(IConfiguration configuration) : IAccessTo
 {
     private static readonly TimeSpan Lifetime = TimeSpan.FromMinutes(15);
 
-    public AccessToken IssueAccessToken(int accountId, int memberId, int chapterId, IEnumerable<string> roles)
+    public AccessToken IssueAccessToken(
+        int accountId, int memberId, int chapterId, IEnumerable<string> roles, IEnumerable<int> councilIds)
     {
         var signingKey = configuration["Jwt:SigningKey"]
             ?? throw new InvalidOperationException("Jwt:SigningKey is not configured.");
@@ -42,6 +46,7 @@ public sealed class AccessTokenService(IConfiguration configuration) : IAccessTo
             new("aid", accountId.ToString(CultureInfo.InvariantCulture)),
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(councilIds.Select(id => new Claim("cnc", id.ToString(CultureInfo.InvariantCulture))));
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey)), SecurityAlgorithms.HmacSha256);

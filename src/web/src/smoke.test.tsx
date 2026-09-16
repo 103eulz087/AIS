@@ -46,6 +46,11 @@ import { Apply } from "@/ais/screens/Apply";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
 import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
+import { RegisterChapter } from "@/ais/screens/RegisterChapter";
+import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
+import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
+import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -115,6 +120,11 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/apply/status", <ApplyStatus key="aps" />],
   ["/applications", <ApplicationQueue key="aq" />],
   ["/applications/some-application-id", <ApplicationDetail key="ad2" />],
+  ["/register-chapter", <RegisterChapter key="rc" />],
+  ["/register-chapter/status", <RegisterChapterStatus key="rcs" />],
+  ["/officers", <OfficerRoster key="or" />],
+  ["/portal/chapter-registrations", <ChapterRegistrationQueue key="prq" />],
+  ["/portal/chapter-registrations/some-registration-id", <ChapterRegistrationDetail key="prd" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],

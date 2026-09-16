@@ -26,6 +26,12 @@ import { Apply } from "@/ais/screens/Apply";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
 import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
+import { RegisterChapter } from "@/ais/screens/RegisterChapter";
+import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
+import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { PortalShell } from "@/portal/PortalShell";
+import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
+import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -219,6 +225,10 @@ export const router = createBrowserRouter([
   { path: "/enrol/:token", element: <Enrol /> },
   { path: "/apply", element: <Apply /> },
   { path: "/apply/status", element: <ApplyStatus /> },
+  // Public, unauthenticated, no chapter mark (docs §7A.3/§7A.4) — the chapter does not
+  // exist yet when either of these is reached. Same "no chrome" reasoning as /apply above.
+  { path: "/register-chapter", element: <RegisterChapter /> },
+  { path: "/register-chapter/status", element: <RegisterChapterStatus /> },
 
   {
     path: "/",
@@ -237,6 +247,10 @@ export const router = createBrowserRouter([
       // this to the caller's own chapter from the JWT.
       { path: "applications", element: <ApplicationQueue /> },
       { path: "applications/:applicationId", element: <ApplicationDetail /> },
+      // ChapterAdmin-only (canFileOfficerRoster); the annual officer-turnover filing.
+      // No chapterId anywhere — the API re-derives the filer's own chapter from his
+      // ChapterAdmin seat (CLAUDE.md invariant #4/#11), same reasoning as /applications.
+      { path: "officers", element: <OfficerRoster /> },
       { path: "ledger", element: <LedgerForCurrentChapter /> },
       { path: "meetings", element: <MeetingListForCurrentChapter /> },
       { path: "meetings/new", element: <MeetingNewForCurrentChapter /> },
@@ -270,7 +284,27 @@ export const router = createBrowserRouter([
       // neither needs a "ForCurrentChapter" wrapper.
       { path: "conversations", element: <Conversations /> },
       { path: "conversations/:roomId", element: <Conversation /> },
-      // TODO next: /scan, /seals, /portal/*
+      // TODO next: /scan, /seals
+    ],
+  },
+
+  /**
+   * The Council Portal. This is the FIRST /portal route in this codebase — there was no
+   * existing Portal shell or nested-route group to extend, so PortalShell.tsx (its own
+   * header comment explains the judgment call) is deliberately minimal: exactly enough
+   * chrome for this one module. A later Portal module should extend PortalShell's own
+   * nav rather than building separate chrome again.
+   *
+   * canReviewChapterRegistrations/canApproveChapterRegistrations (CouncilSecretary/
+   * CouncilAdmin) gate what each screen actually shows; RequireAuth here only checks
+   * that SOME session exists, same division of labour as the AIS "/" group above.
+   */
+  {
+    path: "/portal",
+    element: <RequireAuth><PortalShell /></RequireAuth>,
+    children: [
+      { path: "chapter-registrations", element: <ChapterRegistrationQueue /> },
+      { path: "chapter-registrations/:registrationId", element: <ChapterRegistrationDetail /> },
     ],
   },
 ]);

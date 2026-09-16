@@ -87,8 +87,9 @@ public static class AuthEndpoints
             .Select(r => r.RoleName!)
             .Distinct(StringComparer.Ordinal)
             .ToList();
+        var councilIds = AuthSession.CouncilIdsOf(claimRows);
 
-        var access = tokens.IssueAccessToken(rotated.AccountId, rotated.MemberId, rotated.ChapterId, roles);
+        var access = tokens.IssueAccessToken(rotated.AccountId, rotated.MemberId, rotated.ChapterId, roles, councilIds);
         AuthSession.SetRefreshCookie(http, rawNew, newExpiresOn);
 
         return TypedResults.Ok(new SignInResponseDto(access.Value, access.ExpiresAtUtc));

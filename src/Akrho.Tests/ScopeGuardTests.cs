@@ -10,8 +10,12 @@ namespace Akrho.Tests;
 /// </summary>
 public class ScopeGuardTests
 {
-    private sealed record FakeUser(int MemberId, int ChapterId, IReadOnlySet<string> Roles, int AccountId = 0) : ICurrentUser
+    private sealed record FakeUser(
+        int MemberId, int ChapterId, IReadOnlySet<string> Roles, int AccountId = 0,
+        IReadOnlySet<int>? CouncilIds = null) : ICurrentUser
     {
+        public IReadOnlySet<int> CouncilIds { get; } = CouncilIds ?? new HashSet<int>();
+
         public bool IsChapterOfficer =>
             Roles.Overlaps(["ChapterOfficer", "ChapterTreasurer", "ChapterAdmin"]);
         public bool IsCouncilOfficer => Roles.Contains("CouncilSecretary");
@@ -22,6 +26,9 @@ public class ScopeGuardTests
 
     private static ICurrentUser Officer(int id, int chapter) =>
         new FakeUser(id, chapter, new HashSet<string> { "Member", "ChapterAdmin" });
+
+    private static ICurrentUser CouncilOfficer(int id, params int[] councilIds) =>
+        new FakeUser(id, 0, new HashSet<string> { "CouncilSecretary" }, CouncilIds: councilIds.ToHashSet());
 
     private readonly ScopeGuard _guard = new();
 
@@ -66,4 +73,28 @@ public class ScopeGuardTests
     public void Officer_cannot_see_a_case_narrative_in_another_chapter()
         => _guard.CanSeeCaseNarrative(Officer(1, 10), subjectMemberId: 2, chapterId: 11)
                  .Should().BeFalse();
+
+    // Chapter-registration module (db/schema/17_chapter_registration.sql): the "cnc" claim's
+    // API-layer counterpart. The stored procedure re-derives the caller's own council seats
+    // from @RequestingMemberId regardless — this is defence in depth, same posture as EnsureChapter.
+    [Fact]
+    public void Council_officer_may_act_on_a_council_he_is_seated_on()
+    {
+        var act = () => _guard.EnsureCouncil(CouncilOfficer(1, 5, 6), 5);
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void Council_officer_cannot_act_on_a_council_he_is_not_seated_on()
+    {
+        var act = () => _guard.EnsureCouncil(CouncilOfficer(1, 5, 6), 7);
+        act.Should().Throw<ScopeViolationException>();
+    }
+
+    [Fact]
+    public void Caller_with_no_council_seat_at_all_cannot_act_on_any_council()
+    {
+        var act = () => _guard.EnsureCouncil(Member(1, 10), 5);
+        act.Should().Throw<ScopeViolationException>();
+    }
 }

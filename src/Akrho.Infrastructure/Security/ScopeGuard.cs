@@ -19,6 +19,15 @@ public interface IScopeGuard
 
     /// <summary>Whether the caller may see a corrective action's narrative.</summary>
     bool CanSeeCaseNarrative(ICurrentUser caller, int subjectMemberId, int chapterId);
+
+    /// <summary>
+    /// Throws unless the caller currently holds a seat on this council (<see cref="ICurrentUser.CouncilIds"/>).
+    /// Chapter-registration module and any future council-facing feature: use this to decide
+    /// whether to even attempt a call, exactly as <see cref="EnsureChapter"/> does for chapters —
+    /// the stored procedure behind the call re-derives the caller's own council seats from
+    /// <c>@RequestingMemberId</c> regardless, so this is defence in depth, not the only defence.
+    /// </summary>
+    void EnsureCouncil(ICurrentUser caller, int councilId);
 }
 
 public sealed class ScopeGuard : IScopeGuard
@@ -28,6 +37,13 @@ public sealed class ScopeGuard : IScopeGuard
         if (caller.ChapterId != chapterId)
             throw new ScopeViolationException(
                 $"Member {caller.MemberId} attempted to access chapter {chapterId}.");
+    }
+
+    public void EnsureCouncil(ICurrentUser caller, int councilId)
+    {
+        if (!caller.CouncilIds.Contains(councilId))
+            throw new ScopeViolationException(
+                $"Member {caller.MemberId} attempted to access council {councilId}.");
     }
 
     public bool IsSameChapter(ICurrentUser caller, int chapterId) => caller.ChapterId == chapterId;

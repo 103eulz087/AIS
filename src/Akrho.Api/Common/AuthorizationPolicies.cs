@@ -63,4 +63,36 @@ public static class AuthorizationPolicies
     /// not a reuse of the comms module's write right).
     /// </summary>
     public const string ChapterChatModerate = "ChapterChatModerate";
+
+    /// <summary>
+    /// ChapterAdmin only — file (or resubmit) a chapter's officer-turnover registration.
+    /// Same role bar as <see cref="ChapterMembershipApprove"/>/<see cref="ChapterMembersEnrolmentReissue"/>
+    /// for the same reason: usp_ChapterRegistration_SubmitTurnover re-derives the caller's own
+    /// chapter from this SAME role, server-side — a chapter's officer roster is filed by its
+    /// own sitting Chapter Admin, nobody else (§7A.4 decision E1a).
+    /// </summary>
+    public const string ChapterOfficerRosterFile = "ChapterOfficerRosterFile";
+
+    /// <summary>
+    /// CouncilSecretary or CouncilAdmin — see a council's chapter-registration queue/detail,
+    /// tick an officer's verification, or return a registration for correction. NOTE:
+    /// <c>ChapterAuditor</c> must NEVER be added here or to any other write-granting policy —
+    /// it is deliberately read-only (docs §7A.4: "an auditor who can edit what he audits is
+    /// not an auditor"). This is a COUNCIL role check (CouncilSecretary/CouncilAdmin), not to
+    /// be confused with the chapter-level ChapterAuditor office seeded by
+    /// db/schema/17_chapter_registration.sql, which never appears in any policy at all.
+    /// </summary>
+    public const string CouncilChapterRegistrationVerify = "CouncilChapterRegistrationVerify";
+
+    /// <summary>
+    /// CouncilAdmin only — final approval of a chapter registration (charter or turnover).
+    /// Narrower than <see cref="CouncilChapterRegistrationVerify"/> by design, same two-person-
+    /// control reasoning as <see cref="ChapterMeetingsFinalize"/> narrowing
+    /// <see cref="ChapterMeetingsWrite"/>: verifying individual officers is the Secretary's (or
+    /// the Admin's) job; giving final approval — which creates member records / regenerates
+    /// credentials — is reserved for the council's own most accountable officer (§7A.4
+    /// decision E1b). <c>ChapterAuditor</c> must NEVER be added here either, for the same
+    /// reason noted on <see cref="CouncilChapterRegistrationVerify"/>.
+    /// </summary>
+    public const string CouncilChapterRegistrationApprove = "CouncilChapterRegistrationApprove";
 }
