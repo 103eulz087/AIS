@@ -864,11 +864,18 @@ Exactly two things are seeded.
 | # | Step | Actor |
 |---|---|---|
 | 0 | Seed the **National Council body** and a **System Admin technical account**. No member is created, no officer seated | System Admin, once |
-| 1 | **Pilot chapters register.** No city, provincial or regional council exists, so National approves them as nearest existing ancestor. *The register comes into existence here* | Chapters → National |
-| 2 | **National seats its own officers**, selected from the members created in step 1. **The System Admin's organizational authority ends** | System Admin → dropdown |
+| 1 | **Pilot chapters are created directly by an audited installation script — not the public registration form.** Approval routing requires an ancestor council with a seated officer, and at this point none exists anywhere, National included; there is no approver for the public form to route to. The script creates each pilot chapter and its founding officers identically to what approval would produce (same tables, same audit trail), one run per chapter. *The register comes into existence here* | System Admin, once per pilot chapter |
+| 2 | **National seats its own officers**, selected from the members created in step 1. **The System Admin's organizational authority ends.** From this point on, National has a seated officer and is a real approver — the ordinary public registration form works for every chapter that follows, with no special case | System Admin → dropdown |
 | 3 | **National creates the first region**, officers from members of chapters inside it | National Council |
 | 4 | **Region creates the province; province creates the city council.** Same screen, same dropdown | Each level |
 | 5 | **Steady state.** New chapters route to their own city council | — |
+
+**Why not let the public form route to National in step 1:** it was considered and rejected. The
+alternative is a standing "System Admin approves on National's behalf until officers are seated"
+power in the application itself — a second approval mechanism existing invariant #13a's own first
+principle (§7A.6 above) says not to build. An install script confined to go-live, run by the same
+System Admin, produces an identical result (chapter + founding officers + audit trail) without
+adding that power to the running system or requiring it to ever be revoked.
 
 **Choose pilot chapters concentrated in one city, one province, one region.** A pilot scattered
 across four regions can seat no council except National.

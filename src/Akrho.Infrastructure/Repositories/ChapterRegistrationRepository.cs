@@ -17,7 +17,17 @@ public sealed class ChapterRegistrationException : Exception
 {
     public ChapterRegistrationErrorCategory Category { get; }
 
-    public ChapterRegistrationException(int sqlErrorNumber, string message) : base(message)
+    public ChapterRegistrationException(int sqlErrorNumber, string message) : base(
+        // 51090 (usp_Approval_ResolveApprover) and 51300 (usp_Council_ResolveJurisdiction) are
+        // NOT owned by this feature — they are shared plumbing, called mid-procedure from
+        // Submit/Resubmit/SubmitTurnover but also used by renewal escalation and future
+        // callers. Their own THROW text ("Seed the National Council...") is written for
+        // whoever is standing up council data, not for the anonymous barangay petitioner who
+        // happens to hit them here. The substitution happens at THIS layer only — never edit
+        // those procedures' THROW messages to make them read as if written for this form.
+        sqlErrorNumber is 51090 or 51300
+            ? "This application can't be routed yet — no council above your area currently has officers in place. Please contact the National Council for help."
+            : message)
     {
         Category = sqlErrorNumber switch
         {
@@ -51,6 +61,15 @@ public sealed class ChapterRegistrationException : Exception
                 or 51570 or 51571 or 51572 or 51573 or 51574 or 51575 or 51576 or 51577
                 => ChapterRegistrationErrorCategory.BadRequest,
 
+            // Not the caller's fault and not a malformed request — the council tree isn't
+            // ready to accept this application right now (no ancestor council has seated
+            // officers, or — the rarer case — even National is missing). Treated as
+            // BadRequest so it surfaces the same way Submit's other "can't proceed" THROWs
+            // do, through every one of Submit/Resubmit/SubmitTurnover's existing catch blocks,
+            // rather than falling into a generic 500.
+            51090 or 51300
+                => ChapterRegistrationErrorCategory.BadRequest,
+
             _ => ChapterRegistrationErrorCategory.BadRequest
         };
     }
@@ -73,7 +92,13 @@ internal static class ChapterRegistrationErrors
         51540, 51541, 51542,
         51550, 51551, 51552, 51553,
         51560, 51561, 51562, 51563, 51564,
-        51570, 51571, 51572, 51573, 51574, 51575, 51576, 51577, 51578, 51579
+        51570, 51571, 51572, 51573, 51574, 51575, 51576, 51577, 51578, 51579,
+        // Not raised by any usp_ChapterRegistration_* procedure itself — thrown by
+        // usp_Approval_ResolveApprover (51090) and usp_Council_ResolveJurisdiction (51300),
+        // called mid-transaction from Submit/Resubmit/SubmitTurnover. Included here so those
+        // three catch blocks translate them instead of letting a raw SqlException escape to
+        // an anonymous petitioner as a generic 500.
+        51090, 51300
     ];
 
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
@@ -186,7 +211,9 @@ public interface IChapterRegistrationRepository
     /// concurrent resubmission for the same (municipality, proposed name) returns the SAME
     /// reference number, never an error. Throws <see cref="ChapterRegistrationException"/>
     /// (BadRequest) for a bad name/geography/accent, wrong officer coverage, a missing mobile,
-    /// or an impossible birthdate.
+    /// an impossible birthdate, or (rare — 51090/51300, bubbled up from the council-routing
+    /// lookup this proc calls) no council anywhere above the proposed chapter's geography
+    /// currently having officers seated to route the application to.
     /// </summary>
     Task<string> SubmitAsync(
         string proposedChapterName, string? barangay, int regionId, int provinceId, int municipalityId,
