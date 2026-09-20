@@ -190,7 +190,7 @@ public class ChapterRegistrationApprovalControlTests
 
             var act = async () => await repo.ApproveAsync(
                 registrationId, "Charter", _fx.CouncilSecretaryMemberId,
-                RandomHash(), null, new Dictionary<int, byte[]>(), CancellationToken.None);
+                RandomHash(), null, new Dictionary<int, byte[]>(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<ChapterRegistrationException>();
             assertion.Which.Category.Should().Be(ChapterRegistrationErrorCategory.Forbidden);
@@ -232,7 +232,7 @@ public class ChapterRegistrationApprovalControlTests
 
             var act = async () => await repo.ApproveAsync(
                 registrationId, "Charter", _fx.CouncilAdminMemberId,
-                RandomHash(), null, new Dictionary<int, byte[]>(), CancellationToken.None);
+                RandomHash(), null, new Dictionary<int, byte[]>(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<ChapterRegistrationException>();
             assertion.Which.Category.Should().Be(ChapterRegistrationErrorCategory.Conflict);
@@ -300,7 +300,7 @@ public class ChapterRegistrationApprovalControlTests
             // own THROW numbers cover, so it propagates unwrapped.
             var act = async () => await repo.ApproveAsync(
                 registrationId, "Charter", _fx.CouncilAdminMemberId,
-                collidingHash, null, new Dictionary<int, byte[]>(), CancellationToken.None);
+                collidingHash, null, new Dictionary<int, byte[]>(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<SqlException>();
             assertion.Which.Number.Should().BeOneOf(2601, 2627);

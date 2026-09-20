@@ -41,6 +41,13 @@ export function Ledger({ chapterId }: { chapterId: number }) {
         </div>
       </div>
 
+      {/* docs/AIS-Project-Documentation.md §3/§10 Decision #7, amended 2026-09-20 — see
+          Dashboard.tsx's identical notice for why this exists. */}
+      <p style={{ margin: "0 16px 16px", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
+        Your council can see this chapter's overall balance and totals for a period.
+        They cannot see individual entries.
+      </p>
+
       {data.items.map(e => (
         // Every posting links to the record behind it. A figure nobody can open
         // is not transparency.

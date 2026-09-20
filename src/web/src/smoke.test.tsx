@@ -43,14 +43,19 @@ import { DonationDetail } from "@/ais/screens/DonationDetail";
 import { SignIn } from "@/ais/screens/SignIn";
 import { Enrol } from "@/ais/screens/Enrol";
 import { Apply } from "@/ais/screens/Apply";
+import { JoinChapter } from "@/ais/screens/JoinChapter";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
 import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
 import { RegisterChapter } from "@/ais/screens/RegisterChapter";
 import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
 import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { InviteMembers } from "@/ais/screens/InviteMembers";
 import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
 import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
+import { IdCardExport } from "@/portal/screens/IdCardExport";
+import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
+import { BlockedMembers } from "@/portal/screens/BlockedMembers";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -60,6 +65,8 @@ import { ChatRoom } from "@/ais/screens/ChatRoom";
 import { ChatModeration } from "@/ais/screens/ChatModeration";
 import { Conversations } from "@/ais/screens/Conversations";
 import { Conversation } from "@/ais/screens/Conversation";
+import { Scan } from "@/ais/screens/Scan";
+import { VerifyCard } from "@/public/VerifyCard";
 import { AuthProvider, RequireAuth } from "@/shared/auth";
 
 // The chat module's SignalR connection (shared/chat-connection.ts) must never open a
@@ -118,13 +125,26 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/enrol/some-token", <Enrol key="e" />],
   ["/apply", <Apply key="ap" />],
   ["/apply/status", <ApplyStatus key="aps" />],
+  ["/j/some-invite-token", <JoinChapter key="jc" />],
   ["/applications", <ApplicationQueue key="aq" />],
   ["/applications/some-application-id", <ApplicationDetail key="ad2" />],
   ["/register-chapter", <RegisterChapter key="rc" />],
   ["/register-chapter/status", <RegisterChapterStatus key="rcs" />],
   ["/officers", <OfficerRoster key="or" />],
+  ["/invite", <InviteMembers key="inv" />],
   ["/portal/chapter-registrations", <ChapterRegistrationQueue key="prq" />],
   ["/portal/chapter-registrations/some-registration-id", <ChapterRegistrationDetail key="prd" />],
+  ["/portal/id-card-export", <IdCardExport key="pice" />],
+  // No session in jsdom -> canViewCouncilStatistics(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/councils/statistics — same reasoning as every other role-gated
+  // Portal screen above.
+  ["/portal/statistics", <CouncilStatistics key="pcs" />],
+  // No session in jsdom -> canManageMemberAccounts(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/members/blocked — same reasoning as every other role-gated Portal
+  // screen above.
+  ["/portal/blocked-members", <BlockedMembers key="pbm" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],
@@ -132,6 +152,13 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/chat/moderation", <ChatModeration key="chatmod" chapterId={1} />],
   ["/conversations", <Conversations key="conv" />],
   ["/conversations/some-room-id", <Conversation key="convd" />],
+  // No navigator.mediaDevices in jsdom, so this deterministically lands on the grey
+  // "can't check right now" state — exactly the empty-of-camera state a plain-HTTP
+  // deployment (CLAUDE.md §8.2) or a permission denial would also show.
+  ["/scan", <Scan key="scan" />],
+  // A well-formed guid so this exercises the real POST /api/verifications call and the
+  // verified render, not just the malformed-token short-circuit.
+  ["/verify/3f2a1c9e-89aa-4b7a-8f0a-000000000000", <VerifyCard key="vc" />],
 ];
 
 const LEAKS = /\b(undefined|NaN|\[object Object\])\b/;
@@ -174,6 +201,19 @@ beforeEach(() => {
     // "tolerate an unrelated payload without ever rendering the word undefined" posture
     // Profile.tsx's own MemberProfileResponse doc comment documents — DigitalId only
     // reads photoUrl off it, and treats an absent one as plainly "no photo on file".
+    // VerifyCard's own POST /api/verifications — a real PublicVerificationDto shape, so
+    // the smoke route below exercises the actual "verified" render (photoUrl: null
+    // deliberately, to exercise the initials fallback rather than depend on jsdom's
+    // unimplemented <img> network loading).
+    if (url.includes("/api/verifications")) {
+      return {
+        ok: true, status: 200,
+        json: async () => ({
+          isValid: true, giftName: "TANGLAW", chapterName: "San Isidro",
+          statusName: "Active", renewedThrough: "2027-08-08", photoUrl: null,
+        }),
+      };
+    }
     if (url.includes("/api/members/me/credential")) {
       return {
         ok: true, status: 200,

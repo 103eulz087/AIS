@@ -24,7 +24,11 @@ CREATE OR ALTER PROCEDURE dbo.usp_ChapterRegistration_Approve
     @RequestingMemberId INT,
     @TokenHash VARBINARY(32) = NULL,
     @ExpiresOn DATETIME2 = NULL,
-    @TurnoverTokenHashes dbo.MemberTokenHashRow READONLY
+    @TurnoverTokenHashes dbo.MemberTokenHashRow READONLY,
+    -- DRY-RUN ONLY (Akrho.Infrastructure.Security.DryRunDefaults). Forwarded verbatim to
+    -- every usp_Enrolment_Issue call this proc makes (Charter's President; Turnover's
+    -- new-account officers) — NULL preserves the original, hardened behaviour.
+    @DefaultPasswordHash NVARCHAR(200) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -65,7 +69,17 @@ BEGIN
     )
         THROW 51562, 'Only this council''s President may give final approval.', 1;
 
-    DECLARE @OfficeCount INT = (SELECT COUNT(*) FROM dbo.ChapterOffice);
+    -- Compared against how many officers this REGISTRATION actually submitted, never
+    -- dbo.ChapterOffice's own row count (8) — a Charter registration can legitimately
+    -- submit fewer than 8 now (President-only is valid; see
+    -- usp_ChapterRegistration_Submit's own header). Comparing against a fixed 8 here
+    -- would mean a partial roster could never accumulate enough verifications to reach
+    -- @OfficeCount and could NEVER be approved. Turnover still always submits all 8
+    -- (usp_ChapterRegistration_SubmitTurnover is unchanged), so this same comparison is
+    -- still correct there too — it was never actually about the office catalog's size,
+    -- only about "has everyone ON THIS REGISTRATION been verified".
+    DECLARE @OfficeCount INT = (
+        SELECT COUNT(*) FROM dbo.ChapterRegistrationOfficer WHERE RegistrationId = @RegistrationId);
     DECLARE @VerifiedCount INT = (
         SELECT COUNT(*) FROM dbo.ChapterRegistrationOfficer
         WHERE RegistrationId = @RegistrationId AND VerifiedBy IS NOT NULL);
@@ -79,6 +93,32 @@ BEGIN
         THROW 51563, @VerifyMsg, 1;
     END
 
+    /* Mobile-number uniqueness guard, Charter only — a Turnover officer is always an
+       EXISTING dbo.Member row (o.MemberId already resolved), never a freshly typed-in
+       mobile number, so this can only ever matter for a Charter's brand-new officers.
+       Dry-run decision: mobile number now doubles as an alternate sign-in identifier
+       (usp_Auth_GetAccountForSignIn), so two members sharing one would make sign-in-by-
+       mobile ambiguous. Checked here as the final gate before any Member row is created;
+       same check repeated in usp_MembershipApplication_Approve and
+       usp_Member_UpdateOwnProfile for the other two paths a Member row's MobileNo can
+       come from. */
+    IF @RegistrationType = 'Charter'
+    BEGIN
+        IF EXISTS (
+            SELECT MobileNo FROM dbo.ChapterRegistrationOfficer
+            WHERE RegistrationId = @RegistrationId AND MobileNo IS NOT NULL
+            GROUP BY MobileNo HAVING COUNT(*) > 1
+        )
+            THROW 51565, 'Two or more officers on this registration share the same mobile number. Each officer needs his own — correct this before approving.', 1;
+
+        IF EXISTS (
+            SELECT 1 FROM dbo.ChapterRegistrationOfficer o
+                 JOIN dbo.Member m ON m.MobileNo = o.MobileNo AND m.IsDeleted = 0
+            WHERE o.RegistrationId = @RegistrationId
+        )
+            THROW 51566, 'One or more officers'' mobile numbers are already registered to an existing member. Each member needs his own — correct this before approving.', 1;
+    END
+
     DECLARE @ApprovedId INT = (SELECT StatusId FROM dbo.ChapterRegistrationStatus WHERE StatusName = 'Approved');
     DECLARE @ActiveStatusId INT = (SELECT StatusId FROM dbo.MemberStatus WHERE StatusName = 'Active');
     DECLARE @PlainMemberRoleId INT = (SELECT RoleId FROM dbo.Role WHERE RoleName = 'Member');
@@ -87,14 +127,99 @@ BEGIN
 
     IF @RegistrationType = 'Charter'
     BEGIN
-        /* a. A chapter is never left without a parent (invariant #15). Prefer the
-           intended council if it now exists (it may have been created between
-           submission and this approval — bootstrap is not instantaneous); otherwise
-           fall back to whichever council actually acted. */
-        DECLARE @ParentCouncilId INT =
-            CASE WHEN @IntendedCouncilId IS NOT NULL
-                      AND EXISTS (SELECT 1 FROM dbo.Council WHERE CouncilId = @IntendedCouncilId)
-                 THEN @IntendedCouncilId ELSE @ActingCouncilId END;
+        /* a. A chapter is never left without a parent (invariant #15), and its Region/
+           Province/City council chain is built here rather than left to whatever
+           usp_Council_ResolveJurisdiction found at SUBMISSION time — that lookup only
+           ever picks the DEEPEST EXISTING match and never creates anything, so a chapter
+           chartering the first-ever chapter in a brand-new city (or province, or region)
+           would otherwise land one or more levels too high, and usp_Chapter_ListPublic's
+           own geography walk (CityName/ProvinceName/RegionName) would then resolve NULL
+           for it — invisible in the public sign-up picker until someone seeds the
+           missing council by hand. This is that seeding, done automatically, in the same
+           transaction as the chapter it justifies (invariant #13b: "a council requires
+           at least one registered chapter in its jurisdiction before it can be created" —
+           THIS chapter, being created a few statements below, is that chapter).
+
+           Officers are DELIBERATELY NEVER auto-seated here — usp_Council_SeatOfficer
+           needs a real, deliberate choice of who sits in each seat, same as any chapter's
+           own registration; a level created this way starts dormant, exactly as if it had
+           been seeded by hand (CLAUDE.md §13a: a dormant council still blocks nothing that
+           can bootstrap-route to National). A DISSOLVED council (IsActive = 0, invariant
+           #15 — reorganized jurisdictions keep their old row) is treated as "does not
+           exist" for this walk, matching usp_Council_ResolveJurisdiction's own IsActive=1
+           filter, so a fresh row is created for the current structure rather than
+           resurrecting a dissolved one.
+
+           CK_ChapterRegistration_Type (17_chapter_registration.sql) already guarantees a
+           Charter row has RegionId/ProvinceId/MunicipalityId ALL set (never partially) —
+           so the ELSE branch below is unreachable in practice, kept only as the same
+           defence-in-depth this codebase applies elsewhere rather than assuming a CHECK
+           constraint can never be relaxed later; it preserves this proc's original
+           behaviour (fall back to whichever council actually acted) if that ever changes. */
+        DECLARE @ParentCouncilId INT;
+
+        IF @RegionId IS NOT NULL
+        BEGIN
+            DECLARE @AutoRegionName NVARCHAR(150) = (SELECT RegionName FROM dbo.Region WHERE RegionId = @RegionId);
+            DECLARE @AutoProvinceName NVARCHAR(150) = (SELECT ProvinceName FROM dbo.Province WHERE ProvinceId = @ProvinceId);
+            DECLARE @AutoMunicipalityName NVARCHAR(150) = (SELECT MunicipalityName FROM dbo.Municipality WHERE MunicipalityId = @MunicipalityId);
+            DECLARE @NationalCouncilId INT = (
+                SELECT c.CouncilId FROM dbo.Council c JOIN dbo.CouncilLevel cl ON cl.CouncilLevelId = c.CouncilLevelId
+                WHERE cl.LevelName = 'National' AND c.IsActive = 1);
+
+            DECLARE @Walk INT = @NationalCouncilId;
+
+            DECLARE @AutoRegionCouncilId INT = (SELECT CouncilId FROM dbo.Council WHERE RegionId = @RegionId AND IsActive = 1);
+            IF @AutoRegionCouncilId IS NULL
+            BEGIN
+                INSERT dbo.Council (ParentCouncilId, CouncilLevelId, CouncilName, RegionId)
+                SELECT @Walk, CouncilLevelId, @AutoRegionName + N' Council', @RegionId
+                FROM   dbo.CouncilLevel WHERE LevelName = 'Regional';
+                SET @AutoRegionCouncilId = SCOPE_IDENTITY();
+
+                INSERT dbo.AuditLog (TableName, RecordId, [Action], NewValues, PerformedBy)
+                VALUES ('Council', CAST(@AutoRegionCouncilId AS NVARCHAR(40)), 'AutoCreate',
+                        CONCAT(N'{"RegionId":', @RegionId, N',"RegistrationId":', @RegistrationId, N'}'), @RequestingMemberId);
+            END
+            SET @Walk = @AutoRegionCouncilId;
+
+            DECLARE @AutoProvinceCouncilId INT = (SELECT CouncilId FROM dbo.Council WHERE ProvinceId = @ProvinceId AND IsActive = 1);
+            IF @AutoProvinceCouncilId IS NULL
+            BEGIN
+                INSERT dbo.Council (ParentCouncilId, CouncilLevelId, CouncilName, ProvinceId)
+                SELECT @Walk, CouncilLevelId, @AutoProvinceName + N' Council', @ProvinceId
+                FROM   dbo.CouncilLevel WHERE LevelName = 'Provincial';
+                SET @AutoProvinceCouncilId = SCOPE_IDENTITY();
+
+                INSERT dbo.AuditLog (TableName, RecordId, [Action], NewValues, PerformedBy)
+                VALUES ('Council', CAST(@AutoProvinceCouncilId AS NVARCHAR(40)), 'AutoCreate',
+                        CONCAT(N'{"ProvinceId":', @ProvinceId, N',"RegistrationId":', @RegistrationId, N'}'), @RequestingMemberId);
+            END
+            SET @Walk = @AutoProvinceCouncilId;
+
+            DECLARE @AutoCityCouncilId INT = (SELECT CouncilId FROM dbo.Council WHERE MunicipalityId = @MunicipalityId AND IsActive = 1);
+            IF @AutoCityCouncilId IS NULL
+            BEGIN
+                INSERT dbo.Council (ParentCouncilId, CouncilLevelId, CouncilName, MunicipalityId)
+                SELECT @Walk, CouncilLevelId, @AutoMunicipalityName + N' Council', @MunicipalityId
+                FROM   dbo.CouncilLevel WHERE LevelName = 'City/Municipal';
+                SET @AutoCityCouncilId = SCOPE_IDENTITY();
+
+                INSERT dbo.AuditLog (TableName, RecordId, [Action], NewValues, PerformedBy)
+                VALUES ('Council', CAST(@AutoCityCouncilId AS NVARCHAR(40)), 'AutoCreate',
+                        CONCAT(N'{"MunicipalityId":', @MunicipalityId, N',"RegistrationId":', @RegistrationId, N'}'), @RequestingMemberId);
+            END
+            SET @Walk = @AutoCityCouncilId;
+
+            SET @ParentCouncilId = @Walk;
+        END
+        ELSE
+        BEGIN
+            SET @ParentCouncilId =
+                CASE WHEN @IntendedCouncilId IS NOT NULL
+                          AND EXISTS (SELECT 1 FROM dbo.Council WHERE CouncilId = @IntendedCouncilId)
+                     THEN @IntendedCouncilId ELSE @ActingCouncilId END;
+        END
 
         /* f. CharteredUnderYear mirrors Akrho.Domain.MembershipYear.YearFor exactly:
            the membership year (09 Aug through 08 Aug, named by the year it opens) that
@@ -207,7 +332,8 @@ BEGIN
         EXEC dbo.usp_Enrolment_Issue
             @MemberId = @PresidentMemberId, @IssuedBy = @RequestingMemberId,
             @TokenHash = @TokenHash, @ExpiresOn = @ExpiresOn,
-            @LinkId = @LinkId OUTPUT, @ExpiresOnOut = @ExpiresOnOut OUTPUT;
+            @LinkId = @LinkId OUTPUT, @ExpiresOnOut = @ExpiresOnOut OUTPUT,
+            @DefaultPasswordHash = @DefaultPasswordHash;
 
         -- i. Decide the registration; record it; audit the chapter itself.
         UPDATE dbo.ChapterRegistration
@@ -310,7 +436,8 @@ BEGIN
             EXEC dbo.usp_Enrolment_Issue
                 @MemberId = @EnrolMemberId, @IssuedBy = @SubmittedByMemberId,
                 @TokenHash = @EnrolTokenHash, @ExpiresOn = @ExpiresOn,
-                @LinkId = @EnrolLinkId OUTPUT, @ExpiresOnOut = @EnrolExpiresOnOut OUTPUT;
+                @LinkId = @EnrolLinkId OUTPUT, @ExpiresOnOut = @EnrolExpiresOnOut OUTPUT,
+                @DefaultPasswordHash = @DefaultPasswordHash;
 
             INSERT INTO @IssuedLinks (MemberId, LinkId, ExpiresOn) VALUES (@EnrolMemberId, @EnrolLinkId, @EnrolExpiresOnOut);
 

@@ -64,6 +64,20 @@ public static class MembersEndpoints
             .WithName("ReissueMemberEnrolmentLink")
             .RequireAuthorization(AuthorizationPolicies.ChapterMembersEnrolmentReissue);
 
+        // National Council only (client decision 2026-09-21) — see
+        // AuthorizationPolicies.NationalMemberAccountManage's own doc comment for why the
+        // ROLE bar here (any CouncilAdmin) is coarser than the actual authority, which
+        // usp_Member_Block/_Unblock/_ResetPassword/_ListBlocked enforce themselves by
+        // walking the caller's own council seat back to the root.
+        g.MapGet("/blocked", ListBlockedMembers).WithName("ListBlockedMembers")
+            .RequireAuthorization(AuthorizationPolicies.NationalMemberAccountManage);
+        g.MapPost("/{memberId:int}/block", BlockMember).WithName("BlockMember")
+            .RequireAuthorization(AuthorizationPolicies.NationalMemberAccountManage);
+        g.MapPost("/{memberId:int}/unblock", UnblockMember).WithName("UnblockMember")
+            .RequireAuthorization(AuthorizationPolicies.NationalMemberAccountManage);
+        g.MapPost("/{memberId:int}/reset-password", ResetMemberPassword).WithName("ResetMemberPassword")
+            .RequireAuthorization(AuthorizationPolicies.NationalMemberAccountManage);
+
         return app;
     }
 
@@ -161,7 +175,9 @@ public static class MembersEndpoints
             }
 
             var newRowVersion = await profileRepo.UpdateOwnProfileAsync(
-                caller.MemberId, req.MobileNo, req.Email, req.Address,
+                caller.MemberId, req.GiftName, req.BirthDate, req.DateSurvive,
+                req.PresidentDuringSurvive, req.MasterInitiatorDuringSurvive,
+                req.MobileNo, req.Email, req.Address,
                 req.BloodTypeId, req.BloodTypeConfirmed, req.Profession,
                 req.SkillIds, req.RowVersion, ct);
 
@@ -264,16 +280,22 @@ public static class MembersEndpoints
     }
 
     private static async Task<Results<Ok<ReissueMemberEnrolmentLinkResponseDto>, NotFound, ProblemHttpResult>> ReissueEnrolmentLink(
-        int memberId, IEnrolmentRepository enrolment, IConfiguration config, ICurrentUser caller, CancellationToken ct)
+        int memberId, IEnrolmentRepository enrolment, IConfiguration config,
+        IPasswordHasherService hasher, ICurrentUser caller, CancellationToken ct)
     {
         // Generated here, never persisted or logged — same "SHOW-ONCE" discipline as
         // MembershipApplicationsEndpoints.Approve. Only the SHA-256 hash reaches the database.
         var rawToken = OpaqueToken.GenerateRaw();
         var tokenHash = OpaqueToken.Hash(rawToken);
 
+        // DRY-RUN ONLY — see Akrho.Infrastructure.Security.DryRunDefaults. Also makes the
+        // member sign-in-capable immediately, on this well-known password; the link above
+        // is untouched and still lets him set his own the moment he uses it.
+        var defaultPasswordHash = hasher.Hash(DryRunDefaults.InitialPassword);
+
         try
         {
-            var result = await enrolment.IssueAsync(memberId, caller.MemberId, tokenHash, ct);
+            var result = await enrolment.IssueAsync(memberId, caller.MemberId, tokenHash, defaultPasswordHash, ct);
 
             var webOrigin = (config["Web:Origin"] ?? "").TrimEnd('/');
             var enrolmentUrl = $"{webOrigin}/enrol/{rawToken}";
@@ -289,12 +311,123 @@ public static class MembersEndpoints
                 // anti-enumeration, matching MembershipApplicationsEndpoints.GetOne.
                 EnrolmentIssueFailureReason.MemberNotFound => TypedResults.NotFound(),
                 EnrolmentIssueFailureReason.NoActiveRole => TypedResults.NotFound(),
-                // 51290 — a real member of ANOTHER chapter. Unreachable via the normal path
-                // (ChapterMembersEnrolmentReissue only proves ChapterAdmin somewhere, not for
-                // THIS member's chapter), so the procedure's own check is what actually
-                // enforces CLAUDE.md invariant #4 here — surfaced as 403, not 404, since the
-                // member id itself is real and this doesn't leak which chapter he belongs to.
+                // 51290 — a real member this caller has no standing over: a ChapterAdmin of
+                // another chapter, or a council officer outside this chapter's jurisdiction, or
+                // (the council branch specifically) a member who already has an account or has
+                // ever redeemed a link before. ChapterMembersEnrolmentReissue only proves ONE of
+                // ChapterAdmin/CouncilSecretary/CouncilAdmin somewhere — it does not scope which
+                // chapter, so usp_Enrolment_Issue's own check is what actually enforces CLAUDE.md
+                // invariant #4 here. Surfaced as 403, not 404, since the member id itself is real
+                // and this doesn't leak which chapter he belongs to.
                 _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<IReadOnlyList<BlockedMemberDto>>, ProblemHttpResult>> ListBlockedMembers(
+        IMemberAccountActionRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        try
+        {
+            var rows = await repo.ListBlockedAsync(caller.MemberId, ct);
+            IReadOnlyList<BlockedMemberDto> items = rows
+                .Select(r => new BlockedMemberDto(
+                    r.MemberId, r.GiftName, r.MemberNumber, r.ChapterName,
+                    r.Reason, r.PerformedDate, r.BlockedByGiftName))
+                .ToList();
+            return TypedResults.Ok(items);
+        }
+        catch (MemberAccountActionException ex)
+        {
+            // Forbidden is the only reachable category here — usp_Member_ListBlocked
+            // has no NotFound/BadRequest arm of its own.
+            return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+    }
+
+    private static async Task<Results<Ok<MemberAccountActionResultDto>, ValidationProblem, NotFound, ProblemHttpResult>> BlockMember(
+        int memberId, MemberAccountActionRequest req,
+        IMemberAccountActionRepository repo, ICurrentUser caller,
+        IValidator<MemberAccountActionRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.BlockAsync(caller.MemberId, memberId, req.Reason, ct);
+            return TypedResults.Ok(new MemberAccountActionResultDto(memberId, "Blocked"));
+        }
+        catch (MemberAccountActionException ex)
+        {
+            return ex.Category switch
+            {
+                MemberAccountActionErrorCategory.NotFound => TypedResults.NotFound(),
+                MemberAccountActionErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<MemberAccountActionResultDto>, ValidationProblem, NotFound, ProblemHttpResult>> UnblockMember(
+        int memberId, MemberAccountActionRequest req,
+        IMemberAccountActionRepository repo, ICurrentUser caller,
+        IValidator<MemberAccountActionRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.UnblockAsync(caller.MemberId, memberId, req.Reason, ct);
+            return TypedResults.Ok(new MemberAccountActionResultDto(memberId, "Unblocked"));
+        }
+        catch (MemberAccountActionException ex)
+        {
+            return ex.Category switch
+            {
+                MemberAccountActionErrorCategory.NotFound => TypedResults.NotFound(),
+                MemberAccountActionErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<MemberPasswordResetDto>, ValidationProblem, NotFound, ProblemHttpResult>> ResetMemberPassword(
+        int memberId, MemberAccountActionRequest req,
+        IMemberAccountActionRepository repo, IConfiguration config, ICurrentUser caller,
+        IValidator<MemberAccountActionRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        // Generated here, never persisted or logged — same SHOW-ONCE discipline as
+        // ReissueEnrolmentLink. Deliberately NO dry-run default password hash: a
+        // National-triggered reset is a real security action, not a batch-onboarding
+        // convenience, so the member sets his own new password via this link, exactly
+        // as invariant #16 requires.
+        var rawToken = OpaqueToken.GenerateRaw();
+        var tokenHash = OpaqueToken.Hash(rawToken);
+
+        try
+        {
+            var (_, expiresOn) = await repo.ResetPasswordAsync(caller.MemberId, memberId, req.Reason, tokenHash, ct);
+
+            var webOrigin = (config["Web:Origin"] ?? "").TrimEnd('/');
+            var enrolmentUrl = $"{webOrigin}/enrol/{rawToken}";
+
+            return TypedResults.Ok(new MemberPasswordResetDto(memberId, enrolmentUrl, expiresOn));
+        }
+        catch (MemberAccountActionException ex)
+        {
+            return ex.Category switch
+            {
+                MemberAccountActionErrorCategory.NotFound => TypedResults.NotFound(),
+                MemberAccountActionErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
             };
         }
     }

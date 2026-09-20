@@ -161,6 +161,14 @@ function FinancialGroup({ financial: f }: { financial: DashboardFinancial }) {
         <div className="num" style={darkCardValueStyle}>{peso(f.currentBalance)}</div>
         <div style={darkCardSubStyle}>The real balance today — tap to see every entry behind it</div>
       </Link>
+
+      {/* docs/AIS-Project-Documentation.md §3/§10 Decision #7, amended 2026-09-20 —
+          the amendment's own closing line requires chapters be told this changed, not
+          just documented. A quiet line, not a warning banner. */}
+      <p style={{ fontSize: 11.5, color: "var(--mute)", marginTop: 10, lineHeight: 1.6 }}>
+        Your council can see this chapter's overall balance and totals for a period.
+        They cannot see individual entries.
+      </p>
     </div>
   );
 }

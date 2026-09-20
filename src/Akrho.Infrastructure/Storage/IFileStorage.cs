@@ -31,6 +31,17 @@ public interface IFileStorage
     /// known-good relative path into bytes.
     /// </summary>
     Task<Stream> OpenReadAsync(string relativePath, CancellationToken ct);
+
+    /// <summary>
+    /// The SAME content-type -&gt; extension mapping <see cref="SaveAsync"/> uses internally to
+    /// name a newly-stored file, exposed so a caller that needs to give a COPY of an already-
+    /// stored file a different, human-meaningful name (e.g. the ID card export renaming a
+    /// member's photo to <c>{MemberNumber}.jpg</c> for a ZIP entry) reuses the exact same
+    /// jpg/png/heic table instead of maintaining a second one. Never used to change the
+    /// on-disk stored file's own name. Falls back to ".bin" for an unmapped or null content
+    /// type, same fallback <see cref="SaveAsync"/> itself uses for an unrecognized upload.
+    /// </summary>
+    string ResolveExtension(string? contentType);
 }
 
 /// <summary>
@@ -97,6 +108,11 @@ public sealed class LocalFileStorage : IFileStorage
             fullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 81920, useAsync: true);
         return Task.FromResult(stream);
     }
+
+    public string ResolveExtension(string? contentType) =>
+        contentType is not null && ExtensionByContentType.TryGetValue(contentType, out var mapped)
+            ? mapped
+            : ".bin";
 
     private static string SanitizeExtension(string originalFileName)
     {

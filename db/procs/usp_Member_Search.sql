@@ -22,12 +22,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @CallerChapterId INT, @SameChapter BIT = 0;
-    SELECT @CallerChapterId = ChapterId FROM dbo.Member WHERE MemberId = @RequestingMemberId;
-    IF @CallerChapterId IS NULL THROW 51010, 'Unknown requesting member.', 1;
+    DECLARE @CallerChapterId INT, @SameChapter BIT = 0, @CallerExists BIT = 0;
+    SELECT @CallerChapterId = ChapterId, @CallerExists = 1
+    FROM dbo.Member WHERE MemberId = @RequestingMemberId;
+
+    -- Only a genuinely unknown/nonexistent @RequestingMemberId (no Member row at all) is an
+    -- error. A detached member (CLAUDE.md invariant #14 — HomeCouncilId set, ChapterId NULL,
+    -- e.g. a council officer whose own chapter went dormant) is a real, expected caller: he
+    -- simply has no chapter of his own, so he can never be "same chapter" as anything, and if
+    -- he supplies no @ChapterId at all there is no home chapter to default to.
+    IF @CallerExists = 0 THROW 51010, 'Unknown requesting member.', 1;
 
     IF @ChapterId IS NULL SET @ChapterId = @CallerChapterId;
-    IF @ChapterId = @CallerChapterId SET @SameChapter = 1;
+    IF @CallerChapterId IS NOT NULL AND @ChapterId = @CallerChapterId SET @SameChapter = 1;
 
     SELECT  m.MemberId, m.GiftName, m.MemberNumber, m.ChapterId, ch.ChapterName,
             ms.StatusName, m.RenewedThrough,

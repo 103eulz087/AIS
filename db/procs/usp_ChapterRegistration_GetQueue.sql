@@ -63,7 +63,7 @@ BEGIN
             cr.ActingCouncilId, ac.CouncilName AS ActingCouncilName,
             cr.IntendedCouncilId, cr.RoutingReason,
             cr.DecidedBy, cr.DecidedDate,
-            CASE WHEN cr.ActingCouncilId IN (SELECT CouncilId FROM @SeatedCouncils) THEN 1 ELSE 0 END AS CanAct,
+            CAST(CASE WHEN cr.ActingCouncilId IN (SELECT CouncilId FROM @SeatedCouncils) THEN 1 ELSE 0 END AS BIT) AS CanAct,
             COUNT(*) OVER() AS TotalCount
     FROM    dbo.ChapterRegistration cr
             JOIN dbo.ChapterRegistrationStatus s ON s.StatusId = cr.StatusId

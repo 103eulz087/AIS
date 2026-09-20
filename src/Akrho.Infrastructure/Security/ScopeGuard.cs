@@ -28,6 +28,19 @@ public interface IScopeGuard
     /// <c>@RequestingMemberId</c> regardless, so this is defence in depth, not the only defence.
     /// </summary>
     void EnsureCouncil(ICurrentUser caller, int councilId);
+
+    /// <summary>
+    /// Throws unless the caller currently holds a seat on ANY council at all (<see
+    /// cref="ICurrentUser.CouncilIds"/> non-empty) — a cheap existence check only, never a
+    /// subtree check. Council Statistics module: used to decide whether to even attempt
+    /// usp_CouncilStatistics_Get, same posture as <see cref="EnsureCouncil"/> and <see
+    /// cref="EnsureChapter"/> — the procedure re-derives the caller's own council seats and
+    /// jurisdiction from <c>@RequestingMemberId</c> regardless (its own 51620/51621), so this
+    /// is defence in depth, not the only defence. Deliberately does NOT check the requested
+    /// council's subtree — that check belongs entirely inside the procedure via
+    /// <c>fn_MemberCouncilScope</c>; do not add a subtree-aware overload here.
+    /// </summary>
+    void EnsureAnyCouncilSeat(ICurrentUser caller);
 }
 
 public sealed class ScopeGuard : IScopeGuard
@@ -44,6 +57,13 @@ public sealed class ScopeGuard : IScopeGuard
         if (!caller.CouncilIds.Contains(councilId))
             throw new ScopeViolationException(
                 $"Member {caller.MemberId} attempted to access council {councilId}.");
+    }
+
+    public void EnsureAnyCouncilSeat(ICurrentUser caller)
+    {
+        if (caller.CouncilIds.Count == 0)
+            throw new ScopeViolationException(
+                $"Member {caller.MemberId} attempted a council-only action while holding no council seat.");
     }
 
     public bool IsSameChapter(ICurrentUser caller, int chapterId) => caller.ChapterId == chapterId;

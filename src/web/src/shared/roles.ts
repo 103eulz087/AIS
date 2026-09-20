@@ -80,13 +80,36 @@ export function canModerateChat(roles: readonly string[]): boolean {
 }
 
 /**
- * ChapterAdmin only — re-issue an enrolment link for an existing member who forgot his
- * password. Mirrors AuthorizationPolicies.ChapterMembersEnrolmentReissue. Same narrowing
- * as canApproveApplications: granting account access is a Chapter Admin action, not a
- * general officer one.
+ * ChapterAdmin (the ordinary "forgot his password" case), OR CouncilSecretary/CouncilAdmin
+ * (a brand-new chapter's very first President, before any ChapterAdmin exists to reissue his
+ * own first link). Mirrors AuthorizationPolicies.ChapterMembersEnrolmentReissue exactly —
+ * the API's own usp_Enrolment_Issue call is what actually narrows the council case down
+ * further (first-credential-only, jurisdiction-scoped); this is only the "should this
+ * button be offered at all" check, same role as everywhere else in this codebase.
  */
 export function canReissueEnrolmentLink(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin") || roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
+}
+
+/** ChapterAdmin only — generate/regenerate the chapter's own permanent join link/QR
+ * code. Mirrors AuthorizationPolicies' own ChapterAdmin-only gate on
+ * usp_ChapterInviteLink_GetOwn/_Regenerate. */
+export function canManageChapterInviteLink(roles: readonly string[]): boolean {
   return roles.includes("ChapterAdmin");
+}
+
+/**
+ * CouncilAdmin — block/unblock a member's login, force a password reset, view currently
+ * blocked members. Mirrors AuthorizationPolicies.NationalMemberAccountManage's own ROLE
+ * bar (any CouncilAdmin) — but the real restriction to specifically National Council is
+ * enforced server-side inside usp_Member_Block/_Unblock/_ResetPassword/_ListBlocked
+ * themselves, since a role claim carries no council-level information for this helper to
+ * check. A CouncilAdmin seated elsewhere still sees these buttons and is turned away by
+ * the real 403 those procedures return — same "coarse client check, real server check"
+ * posture as canExportIdCards' own doc comment describes.
+ */
+export function canManageMemberAccounts(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
 }
 
 /**
@@ -97,6 +120,18 @@ export function canReissueEnrolmentLink(roles: readonly string[]): boolean {
  * separate from ChapterAdmin/ChapterOfficer above.
  */
 export function canReviewChapterRegistrations(roles: readonly string[]): boolean {
+  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
+}
+
+/**
+ * CouncilSecretary or CouncilAdmin — view the council statistics rollup (council-to-
+ * council, council-to-chapter, chapter-to-member). Mirrors
+ * AuthorizationPolicies.CouncilStatisticsRead (Program.cs), same role set as
+ * canReviewChapterRegistrations above — the Secretary is the council's record-keeper
+ * and already sees the registration queue, so this does not narrow further to
+ * CouncilAdmin alone.
+ */
+export function canViewCouncilStatistics(roles: readonly string[]): boolean {
   return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
 }
 
@@ -120,4 +155,18 @@ export function canApproveChapterRegistrations(roles: readonly string[]): boolea
  */
 export function canFileOfficerRoster(roles: readonly string[]): boolean {
   return roles.includes("ChapterAdmin");
+}
+
+/**
+ * CouncilAdmin only — run the National ID card export. Mirrors
+ * AuthorizationPolicies.CouncilChapterRegistrationApprove, which IdCardExportEndpoints.cs
+ * deliberately reuses server-side rather than adding a new policy (RequireRole
+ * "CouncilAdmin") — same role, same reasoning here. This is coarse on purpose: it only
+ * confirms the caller holds CouncilAdmin on SOME council, not specifically the National
+ * one — there is no cheap client-side way to know that without another round trip, so a
+ * CouncilAdmin seated elsewhere still sees this screen and is turned away by the real
+ * 403 the endpoint's own procedure returns (see IdCardExport.tsx).
+ */
+export function canExportIdCards(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
 }

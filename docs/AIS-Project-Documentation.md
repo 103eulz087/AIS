@@ -93,7 +93,7 @@ Roles are **assignments with a scope**, never columns on the member record. A br
 | Regional Officer | Region | The same, one level higher. |
 | National Secretariat | National | Configures the season, fee, split and escalation clock; may approve at any time; national reporting. |
 
-**Council access to chapter financial records in AIS is switched off.** Per client decision, AIS is chapter-exclusive for now. The roll-up capability is built but disabled until the National Council decides otherwise.
+**Council access to chapter financial records in AIS is switched off, with one amendment.** Per client decision, AIS is chapter-exclusive for now. **Amended 2026-09-20** (see Decision #7, §10): the client, seated as National Council, authorized a per-chapter **aggregate** financial rollup (opening balance, period in, period out, closing balance — no drill-down to individual ledger entries) visible to council officers viewing the statistics module. A chapter's own detailed ledger — every meeting collection, expense and donation line — remains visible only to that chapter's own officers and members; it is not exposed to any council. Chapters must be told this changed: their aggregate balances are now visible to their council, though never their transaction-level detail.
 
 ---
 
@@ -254,7 +254,7 @@ The amber state is not a degraded failure to be hidden. It is the honest answer,
 
 ### 4.11 Chapter settings
 
-Per client decision, chapters configure their own, within national defaults: suggested contribution amount, corrective-action visibility, cross-chapter visibility, chat retention. Council access to chapter finances is a national switch, currently off.
+Per client decision, chapters configure their own, within national defaults: suggested contribution amount, corrective-action visibility, cross-chapter visibility, chat retention. Council access to chapter finances is a national switch — see §3's note and Decision #7 (§10) for its current, amended state: aggregate-only per chapter, never a drill-down to individual ledger entries.
 
 ---
 
@@ -1004,7 +1004,7 @@ Confirmed by the client. Any change to these has downstream consequences and sho
 | 4 | A **new database** is being built; the legacy schema is not migrated |
 | 5 | A **new member number format** is created; no existing convention is preserved |
 | 6 | Chapter settings are **flexible per chapter**, within national defaults |
-| 7 | Council access to chapter finances is **off**; AIS is chapter-exclusive for now |
+| 7 | Council access to chapter finances is **off**; AIS is chapter-exclusive for now. **Amended 2026-09-20:** aggregate-only (opening/closing balance, period in/out) per chapter is now visible on the council statistics module — never a drill-down to individual ledger entries. See §3's note for the full statement. |
 | 8 | Hosting is **on-premise**, on the client's own Windows Server |
 | 9 | Scope is the **Philippines only** |
 | 10 | Inactive status is set **manually** |

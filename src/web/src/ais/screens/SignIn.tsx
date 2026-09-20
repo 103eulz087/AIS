@@ -57,17 +57,16 @@ export function SignIn() {
       </div>
 
       <form onSubmit={handleSubmit} style={{ flex: 1, padding: "28px 20px" }}>
-        <label htmlFor="memberNumber" style={labelStyle}>Member number</label>
+        <label htmlFor="memberNumber" style={labelStyle}>Member number or mobile number</label>
         <input
           id="memberNumber"
           value={memberNumber}
           onChange={e => setMemberNumber(e.target.value)}
           autoComplete="username"
-          autoCapitalize="characters"
-          placeholder="AKR-04-0117-001"
+          placeholder="AKR-04-0117-001 or 09171234567"
           style={fieldStyle}
         />
-        <p style={hintStyle}>Your member number is on your ID card.</p>
+        <p style={hintStyle}>Your member number is on your ID card — or just use your mobile number.</p>
 
         <label htmlFor="password" style={labelStyle}>Password</label>
         <input
@@ -95,6 +94,9 @@ export function SignIn() {
 
         <p style={{ marginTop: 14, fontSize: 12.5, textAlign: "center", lineHeight: 1.6 }}>
           New here? <Link to="/apply" style={{ color: "var(--info)" }}>Apply to join a chapter</Link>.
+        </p>
+        <p style={{ marginTop: 6, fontSize: 12.5, textAlign: "center", lineHeight: 1.6 }}>
+          Starting a new chapter? <Link to="/register-chapter" style={{ color: "var(--info)" }}>Register it here</Link>.
         </p>
       </form>
     </div>

@@ -30,9 +30,23 @@ public sealed class RefreshTokenException(RefreshTokenFailureReason reason)
     public RefreshTokenFailureReason Reason { get; } = reason;
 }
 
+/// <summary>The caller's own account hash, for verifying his CURRENT password before a change.</summary>
+public sealed record OwnAccountForPasswordChangeRow(int AccountId, string PasswordHash);
+
+/// <summary>
+/// Thrown by <see cref="IAuthRepository.ChangePasswordAsync"/> — unreachable in the normal
+/// case (an authenticated caller IS an existing account), defence in depth only, same
+/// posture as <c>CredentialException</c>/<c>MemberProfileException</c>'s own "Member not
+/// found" cases.
+/// </summary>
+public sealed class ChangePasswordException() : Exception("Account not found.");
+
 public interface IAuthRepository
 {
-    Task<SignInAccountRow?> GetAccountForSignInAsync(string memberNumber, CancellationToken ct);
+    /// <summary>Looks up an account by either member number or mobile number — see
+    /// usp_Auth_GetAccountForSignIn's own header for why a duplicate mobile number can
+    /// never crash this instead of picking one account.</summary>
+    Task<SignInAccountRow?> GetAccountForSignInAsync(string identifier, CancellationToken ct);
 
     Task RecordSignInResultAsync(int accountId, bool success, string? ip, CancellationToken ct);
 
@@ -47,16 +61,26 @@ public interface IAuthRepository
         byte[] oldTokenHash, byte[] newTokenHash, DateTime expiresOn, string? deviceHint, string? ip, CancellationToken ct);
 
     Task RevokeRefreshTokenFamilyAsync(int accountId, string reason, CancellationToken ct);
+
+    /// <summary>Self-only — the caller's own account hash, to verify his current password
+    /// against before accepting a new one. Never null for an authenticated caller in the
+    /// normal case; a null return is defence-in-depth only.</summary>
+    Task<OwnAccountForPasswordChangeRow?> GetOwnAccountForPasswordChangeAsync(int requestingMemberId, CancellationToken ct);
+
+    /// <summary>Sets the caller's own new password hash (already verified/hashed by the
+    /// caller — this proc never sees a plaintext password) and clears any stale lockout.
+    /// Throws <see cref="ChangePasswordException"/> — unreachable in the normal case.</summary>
+    Task ChangePasswordAsync(int requestingMemberId, string newPasswordHash, CancellationToken ct);
 }
 
 public sealed class AuthRepository(ISqlConnectionFactory factory) : IAuthRepository
 {
-    public async Task<SignInAccountRow?> GetAccountForSignInAsync(string memberNumber, CancellationToken ct)
+    public async Task<SignInAccountRow?> GetAccountForSignInAsync(string identifier, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         return await conn.QuerySingleOrDefaultAsync<SignInAccountRow?>(new CommandDefinition(
             "dbo.usp_Auth_GetAccountForSignIn",
-            new { MemberNumber = memberNumber },
+            new { Identifier = identifier },
             commandType: CommandType.StoredProcedure, cancellationToken: ct));
     }
 
@@ -130,5 +154,30 @@ public sealed class AuthRepository(ISqlConnectionFactory factory) : IAuthReposit
             "dbo.usp_RefreshToken_RevokeFamily",
             new { AccountId = accountId, Reason = reason },
             commandType: CommandType.StoredProcedure, cancellationToken: ct));
+    }
+
+    public async Task<OwnAccountForPasswordChangeRow?> GetOwnAccountForPasswordChangeAsync(int requestingMemberId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        return await conn.QuerySingleOrDefaultAsync<OwnAccountForPasswordChangeRow?>(new CommandDefinition(
+            "dbo.usp_Auth_GetOwnAccountForPasswordChange",
+            new { RequestingMemberId = requestingMemberId },
+            commandType: CommandType.StoredProcedure, cancellationToken: ct));
+    }
+
+    public async Task ChangePasswordAsync(int requestingMemberId, string newPasswordHash, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            await conn.ExecuteAsync(new CommandDefinition(
+                "dbo.usp_Auth_ChangePassword",
+                new { RequestingMemberId = requestingMemberId, NewPasswordHash = newPasswordHash },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+        }
+        catch (SqlException ex) when (ex.Number == 51143)
+        {
+            throw new ChangePasswordException();
+        }
     }
 }

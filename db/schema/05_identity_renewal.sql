@@ -13,6 +13,23 @@ CREATE TABLE dbo.MemberCredential (
     PublicKeyVersion INT NOT NULL DEFAULT 1
 );
 GO
+/* At most one un-revoked row per member, enforced by the database, not just by the
+   issuing procs' own UPDLOCK/HOLDLOCK checks (which only protect against two concurrent
+   issuances racing each other — nothing previously stopped some OTHER future write path
+   from adding a second live-looking row outright). A plain filtered index on
+   "RevokedDate IS NULL AND ExpiryDate > SYSUTCDATETIME()" is not possible here — SQL
+   Server filtered index predicates must be deterministic and cannot reference
+   SYSUTCDATETIME() — so the rule this enforces is "not yet revoked", not "not yet
+   revoked and not yet expired". That is exactly why usp_Credential_GetOrIssueForSelf and
+   usp_Credential_BulkIssueForExport both explicitly REVOKE a stale (expired but
+   never-revoked) row the moment they are about to issue a replacement, rather than
+   leaving it sitting at RevokedDate IS NULL indefinitely — "not yet revoked" and "the
+   member's one current credential" must always mean the same thing for this index to
+   hold, and until that change those two things had quietly drifted apart. */
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'UX_MemberCredential_Member_Live')
+    CREATE UNIQUE INDEX UX_MemberCredential_Member_Live
+        ON dbo.MemberCredential(MemberId) WHERE RevokedDate IS NULL;
+GO
 /* Scan logging is two-way: the scanned member can see who verified his card. */
 IF OBJECT_ID('dbo.ScanLog') IS NULL
 CREATE TABLE dbo.ScanLog (

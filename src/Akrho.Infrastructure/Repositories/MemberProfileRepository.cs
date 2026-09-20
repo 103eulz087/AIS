@@ -31,8 +31,9 @@ public sealed class MemberProfileException : Exception
             51245 => MemberProfileErrorCategory.Conflict,
 
             // A blank mobile number, an unrecognised blood type, an inactive/unknown skill
-            // id, or a staged photo that is missing/not-owned/already-consumed.
-            51241 or 51243 or 51244 or 51246 => MemberProfileErrorCategory.BadRequest,
+            // id, a staged photo that is missing/not-owned/already-consumed, a blank gift
+            // name, or a mobile number already registered to another member.
+            51241 or 51243 or 51244 or 51246 or 51248 or 51259 => MemberProfileErrorCategory.BadRequest,
 
             _ => MemberProfileErrorCategory.BadRequest
         };
@@ -41,7 +42,7 @@ public sealed class MemberProfileException : Exception
 
 internal static class MemberProfileErrors
 {
-    private static readonly HashSet<int> Known = [51240, 51241, 51242, 51243, 51244, 51245, 51246, 51247];
+    private static readonly HashSet<int> Known = [51240, 51241, 51242, 51243, 51244, 51245, 51246, 51247, 51248, 51259];
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
 }
 
@@ -96,7 +97,9 @@ public interface IMemberProfileRepository
     /// <summary>Throws <see cref="MemberProfileException"/> (NotFound / Conflict / BadRequest).
     /// Returns the new RowVersion so the caller can keep editing without a refetch.</summary>
     Task<byte[]> UpdateOwnProfileAsync(
-        int requestingMemberId, string mobileNo, string? email, string? address,
+        int requestingMemberId, string giftName, DateOnly? birthDate, DateOnly? dateSurvive,
+        string? presidentDuringSurvive, string? masterInitiatorDuringSurvive,
+        string mobileNo, string? email, string? address,
         int? bloodTypeId, bool bloodTypeConfirmed, string? profession,
         IReadOnlyList<int> skillIds, byte[] rowVersion, CancellationToken ct);
 
@@ -134,7 +137,9 @@ public sealed class MemberProfileRepository(ISqlConnectionFactory factory) : IMe
     }
 
     public async Task<byte[]> UpdateOwnProfileAsync(
-        int requestingMemberId, string mobileNo, string? email, string? address,
+        int requestingMemberId, string giftName, DateOnly? birthDate, DateOnly? dateSurvive,
+        string? presidentDuringSurvive, string? masterInitiatorDuringSurvive,
+        string mobileNo, string? email, string? address,
         int? bloodTypeId, bool bloodTypeConfirmed, string? profession,
         IReadOnlyList<int> skillIds, byte[] rowVersion, CancellationToken ct)
     {
@@ -150,6 +155,11 @@ public sealed class MemberProfileRepository(ISqlConnectionFactory factory) : IMe
                 new
                 {
                     RequestingMemberId = requestingMemberId,
+                    GiftName = giftName,
+                    BirthDate = birthDate?.ToDateTime(TimeOnly.MinValue),
+                    DateSurvive = dateSurvive?.ToDateTime(TimeOnly.MinValue),
+                    PresidentDuringSurvive = presidentDuringSurvive,
+                    MasterInitiatorDuringSurvive = masterInitiatorDuringSurvive,
                     MobileNo = mobileNo,
                     Email = email,
                     Address = address,

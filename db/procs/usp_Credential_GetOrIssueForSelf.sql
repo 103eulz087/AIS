@@ -13,12 +13,21 @@
    mints a second credential for an already-current one. A NEW row is only inserted when
    none exists yet, or the existing one has been revoked or has expired.
 
-   RACE SAFETY. The "does a live one already exist" check and the conditional insert are
-   inside one transaction, with UPDLOCK/HOLDLOCK on the check, so two concurrent calls for
-   the same member cannot both decide "none exists" and each insert a row — the second
-   call blocks on the first's lock and then sees the row the first call just inserted.
-   (Same posture as usp_MembershipApplication_Approve's NextMemberSeq capture — read and
-   decide under one lock, never a bare SELECT followed by a separate, racy INSERT.)
+   SUPERSEDING A STALE ROW. UX_MemberCredential_Member_Live (05_identity_renewal.sql)
+   allows at most one MemberCredential row per member with RevokedDate IS NULL — so an
+   expired-but-never-revoked row MUST be explicitly revoked before a replacement can be
+   inserted, or the INSERT below would violate that index. This proc does that revoke
+   itself, right before minting the new row, rather than leaving a trail of stale
+   RevokedDate-IS-NULL rows behind (which is exactly the bug this index and this comment
+   were added to close — see that index's own header for the full story).
+
+   RACE SAFETY. The lookup below locks (UPDLOCK, HOLDLOCK) the member's one possible
+   RevokedDate IS NULL row regardless of whether it turns out to be live or merely stale
+   — not just the live-looking subset — so a concurrent second call for the same member
+   always blocks on the first rather than each independently deciding "none exists" and
+   racing to insert two. (Same posture as usp_MembershipApplication_Approve's
+   NextMemberSeq capture — read and decide under one lock, never a bare SELECT followed
+   by a separate, racy INSERT.)
 
    AUDIT (CLAUDE.md invariant #10). Written in the SAME transaction as the INSERT, and
    ONLY when a credential is actually newly issued — reading back an existing, still-live
@@ -50,17 +59,30 @@ BEGIN
         SET @ExpiryDate = DATEADD(YEAR, 1, SYSUTCDATETIME());
 
     DECLARE @CredentialId INT, @TokenSubject UNIQUEIDENTIFIER, @KeyVersion INT, @IssuedNew BIT = 0;
+    DECLARE @ExistingExpiry DATETIME2;
 
     BEGIN TRAN;
+        -- At most one row can ever match (UX_MemberCredential_Member_Live) — locked here
+        -- regardless of whether it turns out live or stale, so a concurrent call always
+        -- blocks on this one, never races it.
         SELECT TOP (1)
-                @CredentialId = CredentialId,
-                @TokenSubject = TokenSubject,
-                @KeyVersion   = PublicKeyVersion
+                @CredentialId   = CredentialId,
+                @TokenSubject   = TokenSubject,
+                @KeyVersion     = PublicKeyVersion,
+                @ExistingExpiry = ExpiryDate
         FROM    dbo.MemberCredential WITH (UPDLOCK, HOLDLOCK)
         WHERE   MemberId    = @RequestingMemberId
-          AND   RevokedDate IS NULL
-          AND   ExpiryDate  > SYSUTCDATETIME()
-        ORDER BY IssuedDate DESC;
+          AND   RevokedDate IS NULL;
+
+        IF @CredentialId IS NOT NULL AND @ExistingExpiry <= SYSUTCDATETIME()
+        BEGIN
+            -- Stale: never revoked, but its time has passed. Supersede it so the new row
+            -- below doesn't collide with it under UX_MemberCredential_Member_Live.
+            UPDATE dbo.MemberCredential
+               SET RevokedDate = SYSUTCDATETIME(), RevokedBy = @RequestingMemberId
+             WHERE CredentialId = @CredentialId;
+            SET @CredentialId = NULL;
+        END
 
         IF @CredentialId IS NULL
         BEGIN

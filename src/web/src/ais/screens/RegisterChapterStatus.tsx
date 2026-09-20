@@ -4,13 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError } from "@/shared/api";
 import { shortDate } from "@/shared/format";
 import {
-  CHAPTER_ACCENTS, type ChapterRegistrationStatus, type MunicipalityOption, type ProvinceOption,
-  type RegionOption, type ResubmitChapterRegistrationRequest, type ResubmitChapterRegistrationResponse,
+  CHAPTER_ACCENTS, CHAPTER_OFFICES, type ChapterRegistrationStatus, type MunicipalityOption,
+  type ProvinceOption, type RegionOption, type ResubmitChapterRegistrationRequest,
+  type ResubmitChapterRegistrationResponse,
 } from "@/shared/types";
 import { ChapterMonogram } from "./ChapterMonogram";
 import {
-  CharterOfficerFieldset, emptyCharterOfficerRoster, toCharterOfficerInput,
-  validateCharterOfficerRoster, type CharterOfficerFormValues,
+  CharterOfficerFieldset, emptyCharterOfficerForm, emptyCharterOfficerRoster,
+  PRESIDENT_OFFICE_ID, toCharterOfficerInput, validateCharterOfficerRoster,
+  type CharterOfficerFormValues,
 } from "./ChapterOfficerFields";
 
 type ViewState =
@@ -32,10 +34,13 @@ type ViewState =
  * council's own detail view from leaking to the wider membership), and unlike
  * MembershipApplicationStatus it ALSO never carries geography, barangay or accent. A
  * resubmission here can therefore only be pre-filled with the proposed chapter name —
- * everything else (location, accent, all eight officers) starts blank and must be
- * re-entered in full, per ResubmitChapterRegistrationRequest's own "the WHOLE form"
- * contract. This is called out plainly on screen rather than silently presenting an
- * apparently-prefilled form that is actually empty underneath.
+ * everything else (location, accent, officers) starts blank and must be re-entered in
+ * full, per ResubmitChapterRegistrationRequest's own "the WHOLE form" contract. This is
+ * called out plainly on screen rather than silently presenting an apparently-prefilled
+ * form that is actually empty underneath.
+ *
+ * Officer roster starts at President-only, same as RegisterChapter.tsx — see
+ * ChapterOfficerFields.tsx's own header for why every other office is optional.
  */
 export function RegisterChapterStatus() {
   const [referenceNo, setReferenceNo] = useState("");
@@ -81,6 +86,19 @@ export function RegisterChapterStatus() {
 
   function updateOfficer<K extends keyof CharterOfficerFormValues>(index: number, field: K, value: CharterOfficerFormValues[K]) {
     setOfficers(prev => prev.map((o, i) => (i === index ? { ...o, [field]: value } : o)));
+  }
+
+  const availableOffices = CHAPTER_OFFICES.filter(o => !officers.some(added => added.officeId === o.officeId));
+  const [nextOfficeId, setNextOfficeId] = useState<string>("");
+
+  function addOfficer() {
+    if (!nextOfficeId) return;
+    setOfficers(prev => [...prev, emptyCharterOfficerForm(Number(nextOfficeId))]);
+    setNextOfficeId("");
+  }
+
+  function removeOfficer(index: number) {
+    setOfficers(prev => prev.filter((_, i) => i !== index));
   }
 
   async function lookup(refNo: string, mobile: string): Promise<ChapterRegistrationStatus | "not-found"> {
@@ -296,12 +314,34 @@ export function RegisterChapterStatus() {
             </div>
 
             <div style={sectionLabelStyle}>Officers</div>
+            <p style={hintStyle}>
+              The President is the only officer required. Add the rest as your chapter fills them.
+            </p>
             {officers.map((o, i) => (
               <CharterOfficerFieldset
                 key={o.officeId} officeId={o.officeId} values={o}
                 onChange={(field, value) => updateOfficer(i, field, value)}
+                onRemove={o.officeId === PRESIDENT_OFFICE_ID ? undefined : () => removeOfficer(i)}
               />
             ))}
+
+            {availableOffices.length > 0 && (
+              <div style={addOfficerRowStyle}>
+                <select
+                  aria-label="Add a position" value={nextOfficeId}
+                  onChange={e => setNextOfficeId(e.target.value)}
+                  style={{ ...fieldStyle, flex: 1 }}
+                >
+                  <option value="">Add a position…</option>
+                  {availableOffices.map(o => (
+                    <option key={o.officeId} value={o.officeId}>{o.officeName}</option>
+                  ))}
+                </select>
+                <button type="button" onClick={addOfficer} disabled={!nextOfficeId} style={addOfficerButtonStyle}>
+                  Add
+                </button>
+              </div>
+            )}
 
             {resubmitError && <p role="alert" style={errorStyle}>{resubmitError}</p>}
 
@@ -347,8 +387,18 @@ const fieldStyle: CSSProperties = {
 
 const errorStyle: CSSProperties = { marginTop: 16, fontSize: 13, color: "var(--out)", lineHeight: 1.5 };
 
+const hintStyle: CSSProperties = { fontSize: 12, color: "var(--mute)", marginTop: 6 };
+
 const buttonStyle: CSSProperties = {
   marginTop: 26, width: "100%", minHeight: "var(--tap)", borderRadius: 8,
   background: "var(--deep)", color: "var(--brass-soft)",
   fontFamily: "var(--f-disp)", fontSize: 16, letterSpacing: ".08em", textTransform: "uppercase",
+};
+
+const addOfficerRowStyle: CSSProperties = { display: "flex", gap: 8, marginTop: 8, marginBottom: 18 };
+
+const addOfficerButtonStyle: CSSProperties = {
+  minHeight: "var(--tap)", padding: "0 18px", borderRadius: 8,
+  border: "1px solid var(--line)", background: "var(--paper)", color: "var(--info)",
+  fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase",
 };

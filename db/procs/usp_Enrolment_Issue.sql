@@ -51,7 +51,14 @@ CREATE OR ALTER PROCEDURE dbo.usp_Enrolment_Issue
     @TokenHash VARBINARY(32),
     @ExpiresOn DATETIME2 = NULL,     -- defaults to 72 hours from now
     @LinkId    INT = NULL OUTPUT,
-    @ExpiresOnOut DATETIME2 = NULL OUTPUT
+    @ExpiresOnOut DATETIME2 = NULL OUTPUT,
+    -- DRY-RUN ONLY (see Akrho.Infrastructure.Security.DryRunDefaults). NULL (the default)
+    -- preserves the original behaviour exactly: no account touched, the link is the only
+    -- way in. A caller that passes a hash here also gets the member signed-in-capable
+    -- immediately, on THIS hash, without waiting for the link to be redeemed — the link
+    -- keeps working unchanged and still lets him set his own password whenever he does
+    -- use it (usp_Enrolment_Redeem's existing "account already exists" branch).
+    @DefaultPasswordHash NVARCHAR(200) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -156,6 +163,33 @@ BEGIN
                 CONCAT(N'{"MemberId":', @MemberId, N',"ExpiresOn":"',
                        CONVERT(NVARCHAR(30), @ExpiresOn, 126), N'"}'),
                 @IssuedBy);
+
+        /* DRY-RUN ONLY. Mirrors usp_Enrolment_Redeem's own create-or-update-account logic
+           exactly, so a member who later DOES redeem this link lands on that same,
+           already-familiar code path (his own chosen password simply overwrites this one).
+           Never fired when @DefaultPasswordHash is NULL — the original, hardened behaviour. */
+        IF @DefaultPasswordHash IS NOT NULL
+        BEGIN
+            IF EXISTS (SELECT 1 FROM dbo.UserAccount WHERE MemberId = @MemberId)
+                UPDATE dbo.UserAccount
+                   SET PasswordHash      = @DefaultPasswordHash,
+                       PasswordUpdatedOn = SYSUTCDATETIME(),
+                       FailedAttempts    = 0,
+                       LockedUntil       = NULL,
+                       IsDisabled        = 0
+                 WHERE MemberId = @MemberId;
+            ELSE
+                INSERT dbo.UserAccount (MemberId, PasswordHash, PasswordUpdatedOn)
+                VALUES (@MemberId, @DefaultPasswordHash, SYSUTCDATETIME());
+
+            -- [Action] is NVARCHAR(20) — 'DryRunDefaultPasswordSet' (24 chars) doesn't fit;
+            -- 'DryRunPasswordSet' (17 chars) does, same short-verb convention every other
+            -- proc's audit rows already use.
+            INSERT dbo.AuditLog (TableName, RecordId, [Action], NewValues, PerformedBy)
+            VALUES ('UserAccount', CAST(@MemberId AS NVARCHAR(40)), 'DryRunPasswordSet',
+                    CONCAT(N'{"MemberId":', @MemberId, N',"LinkId":', @NewLinkId, N'}'),
+                    @IssuedBy);
+        END
     COMMIT;
 
     SET @LinkId = @NewLinkId;

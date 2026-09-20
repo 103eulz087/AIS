@@ -49,9 +49,18 @@ public static class AuthorizationPolicies
     public const string ChapterMembershipApprove = "ChapterMembershipApprove";
 
     /// <summary>
-    /// ChapterAdmin only — re-issue an enrolment link for an existing member who forgot his
-    /// password. Same role bar as <see cref="ChapterMembershipApprove"/> for the same reason:
-    /// this grants account access (CLAUDE.md invariant #16), not a general officer action.
+    /// ChapterAdmin, OR CouncilSecretary/CouncilAdmin — re-issue an enrolment link. The
+    /// ChapterAdmin case is the ordinary one: an existing member forgot his password. The
+    /// council case exists ONLY for a brand-new chapter's very first President, whose original
+    /// enrolment link (issued at charter approval) never got redeemed — nobody has EVER been
+    /// that chapter's admin yet (the President being enrolled IS what creates one), so no
+    /// ChapterAdmin exists to click this for him. usp_Enrolment_Issue has always supported this
+    /// as its own "Bounded Council Issuer" branch (see that proc's header) — this policy simply
+    /// needed to stop being narrower than the procedure it guards. The procedure re-validates
+    /// independently regardless of which branch got the caller past this policy: a council
+    /// officer only succeeds for a member with NO UserAccount yet AND who has never redeemed a
+    /// link, over a chapter inside his own council's jurisdiction — this policy grants no
+    /// standing power over an already-enrolled member, ever (CLAUDE.md invariant #16).
     /// </summary>
     public const string ChapterMembersEnrolmentReissue = "ChapterMembersEnrolmentReissue";
 
@@ -95,4 +104,31 @@ public static class AuthorizationPolicies
     /// reason noted on <see cref="CouncilChapterRegistrationVerify"/>.
     /// </summary>
     public const string CouncilChapterRegistrationApprove = "CouncilChapterRegistrationApprove";
+
+    /// <summary>
+    /// CouncilSecretary or CouncilAdmin — read council-wide/chapter-subtree statistics
+    /// (GET /api/councils/statistics, GET /api/councils/{councilId}/statistics). Same role
+    /// bar as <see cref="CouncilChapterRegistrationVerify"/>: read-only, but still a seated
+    /// council office, not open to every member. <c>ChapterAuditor</c> must NEVER be added
+    /// here either, same reasoning as <see cref="CouncilChapterRegistrationVerify"/>'s own
+    /// note. Do NOT add ProvincialOfficer/RegionalOfficer/NationalSecretariat/SystemAdmin
+    /// here or to any policy — these are seeded role names (db/seed/01_reference.sql) that
+    /// grant nothing anywhere in code today, and this must not be the first place they
+    /// silently start meaning something.
+    /// </summary>
+    public const string CouncilStatisticsRead = "CouncilStatisticsRead";
+
+    /// <summary>
+    /// CouncilAdmin — block/unblock a member's login, force a password reset, and view
+    /// currently-blocked members. The ROLE bar here is coarse (any CouncilAdmin seat, at
+    /// any level) — the actual restriction to specifically National Council is enforced
+    /// inside usp_Member_Block/_Unblock/_ResetPassword/_ListBlocked themselves (same
+    /// defence-in-depth posture as <see cref="CouncilStatisticsRead"/>'s own subtree
+    /// check), because a role claim carries no council-level information to check here.
+    /// Client decision (2026-09-21): National only, deliberately narrower than
+    /// <see cref="CouncilStatisticsRead"/> — see usp_Enrolment_Issue's own header for why
+    /// "any council officer may manage the login of any member anywhere beneath it" is a
+    /// standing power this codebase has consistently refused to grant more broadly.
+    /// </summary>
+    public const string NationalMemberAccountManage = "NationalMemberAccountManage";
 }

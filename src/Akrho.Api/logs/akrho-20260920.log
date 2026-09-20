@@ -1,0 +1,822 @@
+2026-09-20 00:03:04.959 +08:00 [DBG] Hosting starting
+2026-09-20 00:03:05.473 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-20 00:03:05.505 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-20 00:03:05.507 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-20 00:03:05.508 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-20 00:03:05.509 +08:00 [INF] Hosting environment: Development
+2026-09-20 00:03:05.511 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-20 00:03:05.513 +08:00 [DBG] Hosting started
+2026-09-20 00:03:27.814 +08:00 [INF] HTTP GET / responded 404 in 37.3636 ms
+2026-09-20 00:03:27.854 +08:00 [INF] HTTP GET /favicon.ico responded 404 in 2.6247 ms
+2026-09-20 00:04:46.106 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 8.5970 ms
+2026-09-20 00:04:46.106 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 8.5970 ms
+2026-09-20 00:04:57.308 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1970.1149 ms
+2026-09-20 00:04:57.538 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 214.5996 ms
+2026-09-20 00:04:57.766 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 127.8812 ms
+2026-09-20 00:04:58.026 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 389.3375 ms
+2026-09-20 00:04:58.056 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 417.5199 ms
+2026-09-20 00:04:58.512 +08:00 [INF] HTTP GET /api/conversations responded 200 in 874.6199 ms
+2026-09-20 00:04:58.519 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 880.5084 ms
+2026-09-20 00:05:08.659 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 82.8154 ms
+2026-09-20 00:06:21.156 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 125.8143 ms
+2026-09-20 00:06:42.556 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2122 ms
+2026-09-20 00:06:42.556 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0837 ms
+2026-09-20 00:06:52.861 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 497.8452 ms
+2026-09-20 00:06:52.957 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 80.1084 ms
+2026-09-20 00:06:53.106 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 130.0871 ms
+2026-09-20 00:07:02.683 +08:00 [INF] HTTP GET /api/chapter-registrations/65 responded 200 in 143.2923 ms
+2026-09-20 00:07:17.426 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 129.8872 ms
+2026-09-20 00:07:19.985 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/461/verify responded 200 in 106.0110 ms
+2026-09-20 00:07:20.090 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 91.1224 ms
+2026-09-20 00:07:54.063 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1970 ms
+2026-09-20 00:07:54.063 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0765 ms
+2026-09-20 00:08:03.319 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 494.0797 ms
+2026-09-20 00:08:03.458 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 122.0989 ms
+2026-09-20 00:08:03.634 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 89.3650 ms
+2026-09-20 00:08:03.634 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 88.1112 ms
+2026-09-20 00:08:03.634 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 88.6114 ms
+2026-09-20 00:08:03.946 +08:00 [INF] HTTP GET /api/conversations responded 200 in 399.1720 ms
+2026-09-20 00:08:03.995 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 447.4782 ms
+2026-09-20 00:08:10.206 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 107.2175 ms
+2026-09-20 00:08:10.206 +08:00 [INF] HTTP GET /api/skills responded 200 in 106.4079 ms
+2026-09-20 00:08:10.220 +08:00 [INF] HTTP GET /api/members/me responded 200 in 122.2004 ms
+2026-09-20 00:08:10.313 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 52.0527 ms
+2026-09-20 00:08:12.876 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 108.4959 ms
+2026-09-20 00:08:40.052 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1878 ms
+2026-09-20 00:08:40.052 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0675 ms
+2026-09-20 00:08:51.223 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 326.2820 ms
+2026-09-20 00:08:51.290 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 55.6084 ms
+2026-09-20 00:08:51.361 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 48.0506 ms
+2026-09-20 00:08:55.469 +08:00 [INF] HTTP GET /api/chapter-registrations/65 responded 200 in 85.4691 ms
+2026-09-20 00:09:09.071 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 73.4802 ms
+2026-09-20 00:09:32.447 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 134.0049 ms
+2026-09-20 00:09:39.687 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1981 ms
+2026-09-20 00:09:39.688 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2130 ms
+2026-09-20 00:09:49.431 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1118 ms
+2026-09-20 00:09:49.432 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1395 ms
+2026-09-20 00:10:04.200 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 372.9394 ms
+2026-09-20 00:10:04.267 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 53.7835 ms
+2026-09-20 00:10:04.399 +08:00 [INF] HTTP GET /api/chapter-registrations/65 responded 200 in 109.1653 ms
+2026-09-20 00:10:07.449 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 62.5795 ms
+2026-09-20 00:10:09.381 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1069 ms
+2026-09-20 00:10:09.382 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0823 ms
+2026-09-20 00:10:13.944 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 359.4323 ms
+2026-09-20 00:10:14.018 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 49.1529 ms
+2026-09-20 00:10:14.159 +08:00 [INF] HTTP GET /api/chapter-registrations/65 responded 200 in 117.4401 ms
+2026-09-20 00:10:21.111 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 52.7495 ms
+2026-09-20 00:10:24.268 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 54.9364 ms
+2026-09-20 00:10:26.791 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/462/verify responded 200 in 52.1711 ms
+2026-09-20 00:10:26.874 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 71.5076 ms
+2026-09-20 00:10:27.840 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/463/verify responded 200 in 59.3635 ms
+2026-09-20 00:10:27.945 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 88.5404 ms
+2026-09-20 00:10:28.972 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/464/verify responded 200 in 96.0474 ms
+2026-09-20 00:10:29.036 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 50.8782 ms
+2026-09-20 00:10:29.865 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/465/verify responded 200 in 50.6007 ms
+2026-09-20 00:10:29.970 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 88.5021 ms
+2026-09-20 00:10:30.755 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/466/verify responded 200 in 60.0352 ms
+2026-09-20 00:10:30.833 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 63.1332 ms
+2026-09-20 00:10:32.018 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/467/verify responded 200 in 68.5734 ms
+2026-09-20 00:10:32.079 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 47.0990 ms
+2026-09-20 00:10:33.411 +08:00 [INF] HTTP POST /api/chapter-registrations/64/officers/468/verify responded 200 in 48.4079 ms
+2026-09-20 00:10:33.493 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 67.4022 ms
+2026-09-20 00:10:37.688 +08:00 [INF] HTTP POST /api/chapter-registrations/64/approve responded 200 in 273.3138 ms
+2026-09-20 00:10:37.780 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 76.9468 ms
+2026-09-20 00:10:46.117 +08:00 [INF] HTTP GET /api/enrolment/i3sKf0wiP1YAAFnb6ouqV7aM3oVtGwAIp2ckH5q8Eg0 responded 200 in 54.6899 ms
+2026-09-20 00:10:46.208 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 145.0440 ms
+2026-09-20 00:10:46.258 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 194.6223 ms
+2026-09-20 00:10:46.354 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 87.8068 ms
+2026-09-20 00:10:46.498 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 59.2286 ms
+2026-09-20 00:10:46.498 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 69.8373 ms
+2026-09-20 00:10:46.535 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 107.4724 ms
+2026-09-20 00:10:46.535 +08:00 [INF] HTTP GET /api/conversations responded 200 in 95.8172 ms
+2026-09-20 00:10:46.901 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 460.6323 ms
+2026-09-20 00:10:56.479 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 80.5862 ms
+2026-09-20 00:11:02.104 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0751 ms
+2026-09-20 00:11:02.104 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0491 ms
+2026-09-20 00:11:02.216 +08:00 [INF] HTTP GET /api/enrolment/i3sKf0wiP1YAAFnb6ouqV7aM3oVtGwAIp2ckH5q8Eg0 responded 200 in 112.1185 ms
+2026-09-20 00:11:26.435 +08:00 [INF] HTTP POST /api/enrolment/i3sKf0wiP1YAAFnb6ouqV7aM3oVtGwAIp2ckH5q8Eg0/complete responded 200 in 291.9923 ms
+2026-09-20 00:11:26.500 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 51.7230 ms
+2026-09-20 00:11:26.779 +08:00 [INF] HTTP GET /api/conversations responded 200 in 199.1510 ms
+2026-09-20 00:11:26.779 +08:00 [INF] HTTP GET /api/chapters/151/announcements responded 200 in 200.8478 ms
+2026-09-20 00:11:26.779 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 198.5443 ms
+2026-09-20 00:11:26.779 +08:00 [INF] HTTP GET /api/chapters/151/ledger/summary responded 200 in 199.8141 ms
+2026-09-20 00:11:26.779 +08:00 [INF] HTTP GET /api/chapters/151/meetings responded 200 in 200.4138 ms
+2026-09-20 00:11:33.779 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 48.5524 ms
+2026-09-20 00:11:33.830 +08:00 [INF] HTTP GET /api/skills responded 200 in 98.6865 ms
+2026-09-20 00:11:33.830 +08:00 [INF] HTTP GET /api/members/me responded 200 in 99.7437 ms
+2026-09-20 00:11:33.963 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 87.4837 ms
+2026-09-20 00:11:58.209 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 108.2102 ms
+2026-09-20 00:16:28.400 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 114.7831 ms
+2026-09-20 00:16:32.203 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 74.1154 ms
+2026-09-20 00:16:36.046 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 572.6782 ms
+2026-09-20 00:16:36.182 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 121.3187 ms
+2026-09-20 00:16:36.325 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 75.9262 ms
+2026-09-20 00:16:36.325 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 75.3421 ms
+2026-09-20 00:16:36.333 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 84.6973 ms
+2026-09-20 00:16:36.333 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 81.0197 ms
+2026-09-20 00:16:36.333 +08:00 [INF] HTTP GET /api/conversations responded 200 in 82.7111 ms
+2026-09-20 00:16:38.084 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 93.6284 ms
+2026-09-20 00:16:44.849 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1502 ms
+2026-09-20 00:16:44.850 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1049 ms
+2026-09-20 00:16:55.683 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 590.0941 ms
+2026-09-20 00:16:55.793 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 78.2859 ms
+2026-09-20 00:16:55.933 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 108.0933 ms
+2026-09-20 00:17:00.821 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 81.1814 ms
+2026-09-20 00:18:57.971 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 274.1398 ms
+2026-09-20 00:18:58.072 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 70.6656 ms
+2026-09-20 00:18:58.178 +08:00 [INF] HTTP GET /api/chapter-registrations/64 responded 200 in 62.3834 ms
+2026-09-20 00:19:02.293 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 69.3510 ms
+2026-09-20 00:19:07.247 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 138.8936 ms
+2026-09-20 00:19:24.590 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0830 ms
+2026-09-20 00:19:24.590 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1354 ms
+2026-09-20 00:19:52.454 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 83.4504 ms
+2026-09-20 00:19:52.513 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 143.4863 ms
+2026-09-20 00:19:57.325 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 65.6124 ms
+2026-09-20 00:19:57.341 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 80.5474 ms
+2026-09-20 00:20:18.811 +08:00 [INF] Application is shutting down...
+2026-09-20 00:20:18.812 +08:00 [DBG] Hosting stopping
+2026-09-20 00:20:18.818 +08:00 [DBG] Hosting stopped
+2026-09-20 00:20:26.574 +08:00 [DBG] Hosting starting
+2026-09-20 00:20:26.975 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-20 00:20:26.997 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-20 00:20:26.999 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-20 00:20:27.000 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-20 00:20:27.002 +08:00 [INF] Hosting environment: Development
+2026-09-20 00:20:27.003 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-20 00:20:27.005 +08:00 [DBG] Hosting started
+2026-09-20 00:21:03.233 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 32.9476 ms
+2026-09-20 00:21:03.233 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 32.9527 ms
+2026-09-20 00:21:04.036 +08:00 [INF] HTTP GET /api/enrolment/121 responded 404 in 836.7414 ms
+2026-09-20 00:21:12.339 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.0999 ms
+2026-09-20 00:21:12.339 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.1018 ms
+2026-09-20 00:21:12.421 +08:00 [INF] HTTP GET /api/enrolment/122 responded 404 in 85.3704 ms
+2026-09-20 00:22:41.235 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 366.3867 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:22:41.261 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:41.271 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:45.045 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 184.6415 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:22:45.052 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:45.061 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:52.038 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 186.3484 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:22:52.049 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:52.058 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:58.060 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 204.4879 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:22:58.077 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:22:58.088 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:06.050 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 194.4530 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:23:06.056 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:06.062 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:18.098 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 239.3834 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:23:18.105 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:18.110 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:26.084 +08:00 [ERR] HTTP GET /api/chapter-registrations/61 responded 500 in 211.8382 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:23:26.091 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:23:26.097 +08:00 [ERR] Unhandled error on /api/chapter-registrations/61
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:24:15.682 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 520.2986 ms
+2026-09-20 00:24:15.802 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 107.0835 ms
+2026-09-20 00:24:15.943 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 92.3962 ms
+2026-09-20 00:24:16.325 +08:00 [INF] HTTP GET /api/conversations responded 200 in 475.1511 ms
+2026-09-20 00:24:16.355 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 505.2471 ms
+2026-09-20 00:24:16.724 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 874.3151 ms
+2026-09-20 00:24:16.727 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 879.3407 ms
+2026-09-20 00:24:17.697 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 140.8670 ms
+2026-09-20 00:24:24.176 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2524 ms
+2026-09-20 00:24:24.176 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0917 ms
+2026-09-20 00:24:35.326 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 431.0604 ms
+2026-09-20 00:24:35.424 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 84.2721 ms
+2026-09-20 00:24:35.640 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 195.6483 ms
+2026-09-20 00:24:38.441 +08:00 [ERR] HTTP GET /api/chapter-registrations/63 responded 500 in 193.3794 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:24:38.448 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:24:38.454 +08:00 [ERR] Unhandled error on /api/chapter-registrations/63
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:24:39.798 +08:00 [ERR] HTTP GET /api/chapter-registrations/63 responded 500 in 254.8462 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-20 00:24:39.805 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:24:39.810 +08:00 [ERR] Unhandled error on /api/chapter-registrations/63
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 RegistrationOfficerId, System.Int32 OfficeId, System.String OfficeName, System.Int32 SortOrder, System.Boolean GrantsLogin, System.Int32 MemberId, System.String MemberNumber, System.String FirstName, System.String MiddleName, System.String LastName, System.String GiftName, System.DateTime BirthDate, System.String MobileNo, System.String Email, System.DateTime DateSurvive, System.String PresidentDuringSurvive, System.String MasterInitiatorDuringSurvive, System.Int32 VerifiedBy, System.String VerifiedByGiftName, System.DateTime VerifiedDate, System.String VerifyNote, System.Int32 CreatedMemberId, System.Boolean HasAccount) is required for Akrho.Infrastructure.Repositories.ChapterRegistrationOfficerRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.GridReader.ValidateAndMarkConsumed(Type type, Int32& index) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 196
+   at Dapper.SqlMapper.GridReader.ReadAsyncImpl[T](Type type, Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 174
+   at Dapper.SqlMapper.GridReader.ReadAsync[T](Boolean buffered) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 109
+   at Akrho.Infrastructure.Repositories.ChapterRegistrationRepository.GetAsync(Int32 registrationId, Int32 requestingMemberId, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRegistrationRepository.cs:line 473
+   at Akrho.Api.Features.ChapterRegistrations.ChapterRegistrationsEndpoints.GetOne(Int32 id, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\ChapterRegistrations\ChapterRegistrationsEndpoints.cs:line 218
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-20 00:26:17.412 +08:00 [INF] Application is shutting down...
+2026-09-20 00:26:17.413 +08:00 [DBG] Hosting stopping
+2026-09-20 00:26:17.419 +08:00 [DBG] Hosting stopped
+2026-09-20 00:26:24.356 +08:00 [DBG] Hosting starting
+2026-09-20 00:26:24.798 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-20 00:26:24.826 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-20 00:26:24.828 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-20 00:26:24.830 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-20 00:26:24.831 +08:00 [INF] Hosting environment: Development
+2026-09-20 00:26:24.832 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-20 00:26:24.834 +08:00 [DBG] Hosting started
+2026-09-20 00:27:04.287 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 1123.6040 ms
+2026-09-20 00:27:04.299 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1136.9075 ms
+2026-09-20 00:27:04.398 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 92.6216 ms
+2026-09-20 00:27:04.415 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 401 in 3.5904 ms
+2026-09-20 00:27:04.425 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.0605 ms
+2026-09-20 00:27:13.622 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 385.6600 ms
+2026-09-20 00:27:13.682 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 49.4265 ms
+2026-09-20 00:27:13.798 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 89.0201 ms
+2026-09-20 00:27:15.856 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 133.4911 ms
+2026-09-20 00:27:23.148 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 72.2049 ms
+2026-09-20 00:27:27.681 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 57.0914 ms
+2026-09-20 00:27:40.869 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1670 ms
+2026-09-20 00:27:40.870 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2024 ms
+2026-09-20 00:27:50.590 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 362.9852 ms
+2026-09-20 00:27:50.660 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 49.4782 ms
+2026-09-20 00:27:50.744 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 64.0478 ms
+2026-09-20 00:28:04.382 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 84.4727 ms
+2026-09-20 00:28:07.783 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 112.4969 ms
+2026-09-20 00:28:07.813 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 142.3631 ms
+2026-09-20 00:28:07.918 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 93.4518 ms
+2026-09-20 00:28:08.043 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 109.7456 ms
+2026-09-20 00:28:13.648 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 48.1546 ms
+2026-09-20 00:28:15.283 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/453/verify responded 200 in 85.1153 ms
+2026-09-20 00:28:15.343 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 45.6989 ms
+2026-09-20 00:28:15.872 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/454/verify responded 200 in 85.5109 ms
+2026-09-20 00:28:15.935 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 50.7827 ms
+2026-09-20 00:28:17.028 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/455/verify responded 200 in 64.0668 ms
+2026-09-20 00:28:17.136 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 97.6530 ms
+2026-09-20 00:28:17.814 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/456/verify responded 200 in 49.0880 ms
+2026-09-20 00:28:17.917 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 89.5195 ms
+2026-09-20 00:28:19.726 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/457/verify responded 200 in 47.9410 ms
+2026-09-20 00:28:19.786 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 46.6490 ms
+2026-09-20 00:28:20.945 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/458/verify responded 200 in 95.5413 ms
+2026-09-20 00:28:21.009 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 47.8444 ms
+2026-09-20 00:28:21.530 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/459/verify responded 200 in 46.6353 ms
+2026-09-20 00:28:21.622 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 80.5815 ms
+2026-09-20 00:28:22.695 +08:00 [INF] HTTP POST /api/chapter-registrations/63/officers/460/verify responded 200 in 79.6578 ms
+2026-09-20 00:28:22.788 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 77.0317 ms
+2026-09-20 00:28:24.270 +08:00 [INF] HTTP POST /api/chapter-registrations/63/approve responded 200 in 210.7596 ms
+2026-09-20 00:28:24.355 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 74.1459 ms
+2026-09-20 00:28:36.366 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 60.5425 ms
+2026-09-20 00:28:36.420 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 114.0443 ms
+2026-09-20 00:28:36.898 +08:00 [INF] HTTP GET /api/enrolment/daVkvGoJHyl9IMxsWKAKkYdTVgGIlvorbIbtCwwE--8 responded 200 in 593.0474 ms
+2026-09-20 00:28:46.590 +08:00 [INF] HTTP POST /api/enrolment/daVkvGoJHyl9IMxsWKAKkYdTVgGIlvorbIbtCwwE--8/complete responded 200 in 345.3736 ms
+2026-09-20 00:28:46.712 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 102.6785 ms
+2026-09-20 00:28:46.865 +08:00 [INF] HTTP GET /api/conversations responded 200 in 57.0965 ms
+2026-09-20 00:28:46.920 +08:00 [INF] HTTP GET /api/chapters/152/meetings responded 200 in 113.0747 ms
+2026-09-20 00:28:46.922 +08:00 [INF] HTTP GET /api/chapters/152/ledger/summary responded 200 in 113.7085 ms
+2026-09-20 00:28:47.340 +08:00 [INF] HTTP GET /api/chapters/152/announcements responded 200 in 531.5641 ms
+2026-09-20 00:28:47.341 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 531.9539 ms
+2026-09-20 00:28:50.575 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 91.6651 ms
+2026-09-20 00:28:57.046 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0986 ms
+2026-09-20 00:28:57.047 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1123 ms
+2026-09-20 00:28:57.151 +08:00 [INF] HTTP GET /api/enrolment/122 responded 404 in 105.1849 ms
+2026-09-20 00:29:03.903 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 89.4966 ms
+2026-09-20 00:29:34.680 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 102.5747 ms
+2026-09-20 00:30:03.048 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 103.4005 ms
+2026-09-20 00:30:53.103 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 56.7385 ms
+2026-09-20 00:30:54.895 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 69.3949 ms
+2026-09-20 00:31:02.880 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 54.3253 ms
+2026-09-20 00:32:42.749 +08:00 [INF] Application is shutting down...
+2026-09-20 00:32:42.750 +08:00 [DBG] Hosting stopping
+2026-09-20 00:32:42.766 +08:00 [DBG] Hosting stopped
+2026-09-20 00:32:49.087 +08:00 [DBG] Hosting starting
+2026-09-20 00:32:49.554 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-20 00:32:49.577 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-20 00:32:49.579 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-20 00:32:49.580 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-20 00:32:49.580 +08:00 [INF] Hosting environment: Development
+2026-09-20 00:32:49.581 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-20 00:32:49.583 +08:00 [DBG] Hosting started
+2026-09-20 00:33:16.040 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 30.0704 ms
+2026-09-20 00:33:16.040 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 30.0630 ms
+2026-09-20 00:33:27.629 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1401.2646 ms
+2026-09-20 00:33:27.765 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 122.3496 ms
+2026-09-20 00:33:28.026 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 211.7441 ms
+2026-09-20 00:33:30.341 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 168.7956 ms
+2026-09-20 00:36:13.965 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 87.0791 ms
+2026-09-20 00:37:18.296 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 167.5132 ms
+2026-09-20 00:37:18.590 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 461.3415 ms
+2026-09-20 00:37:27.175 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 433.6428 ms
+2026-09-20 00:37:27.294 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 100.2302 ms
+2026-09-20 00:37:27.410 +08:00 [INF] HTTP GET /api/chapter-registrations/61 responded 200 in 95.4059 ms
+2026-09-20 00:37:31.945 +08:00 [INF] HTTP POST /api/members/841/enrolment-link responded 200 in 105.6329 ms
+2026-09-20 00:37:35.607 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 110.9830 ms
+2026-09-20 00:37:35.710 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 212.5363 ms
+2026-09-20 00:37:35.813 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 93.4859 ms
+2026-09-20 00:37:35.968 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 107.9455 ms
+2026-09-20 00:37:35.969 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 106.7099 ms
+2026-09-20 00:37:36.386 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 521.2819 ms
+2026-09-20 00:37:36.386 +08:00 [INF] HTTP GET /api/conversations responded 200 in 517.5785 ms
+2026-09-20 00:37:36.390 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 520.9881 ms
+2026-09-20 00:37:37.901 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 93.0319 ms
+2026-09-20 00:37:37.901 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 93.9450 ms
+2026-09-20 00:37:37.905 +08:00 [INF] HTTP GET /api/enrolment/Thv3ZkrIaS1h-1q-X1qCmJ_e7X6XnZdtKgtAxBFeXKo responded 200 in 97.9233 ms
+2026-09-20 00:37:45.595 +08:00 [INF] HTTP POST /api/enrolment/Thv3ZkrIaS1h-1q-X1qCmJ_e7X6XnZdtKgtAxBFeXKo/complete responded 200 in 395.7489 ms
+2026-09-20 00:37:45.712 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 98.5244 ms
+2026-09-20 00:37:45.891 +08:00 [INF] HTTP GET /api/chapters/149/ledger/summary responded 200 in 91.4721 ms
+2026-09-20 00:37:45.891 +08:00 [INF] HTTP GET /api/chapters/149/announcements responded 200 in 91.8658 ms
+2026-09-20 00:37:45.891 +08:00 [INF] HTTP GET /api/chapters/149/meetings responded 200 in 92.2408 ms
+2026-09-20 00:37:46.315 +08:00 [INF] HTTP GET /api/conversations responded 200 in 515.0036 ms
+2026-09-20 00:37:46.315 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 514.1376 ms
+2026-09-20 00:37:59.923 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 94.6796 ms
+2026-09-20 00:37:59.923 +08:00 [INF] HTTP GET /api/skills responded 200 in 94.3118 ms
+2026-09-20 00:37:59.932 +08:00 [INF] HTTP GET /api/members/me responded 200 in 105.1578 ms
+2026-09-20 00:38:00.068 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 82.3490 ms
+2026-09-20 00:38:12.522 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 82.8086 ms
+2026-09-20 00:40:15.286 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1063 ms
+2026-09-20 00:40:15.286 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0582 ms
+2026-09-20 00:40:15.386 +08:00 [INF] HTTP GET /api/enrolment/122 responded 404 in 101.0820 ms
+2026-09-20 00:40:23.313 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 94.0072 ms
+2026-09-20 00:40:28.771 +08:00 [INF] HTTP GET /api/chapter-registrations/63 responded 200 in 87.4318 ms
+2026-09-20 01:04:06.537 +08:00 [INF] Application is shutting down...
+2026-09-20 01:04:06.537 +08:00 [DBG] Hosting stopping
+2026-09-20 01:04:06.544 +08:00 [DBG] Hosting stopped

@@ -410,6 +410,30 @@ export interface ChapterPublic {
   cityName: string | null;
 }
 
+/** GET /api/chapters/me/invite-link. Never the raw token — see
+ * ChapterInviteLinkStatusDto's own doc comment for why there is no way to recover one
+ * once issued, only to replace it. */
+export interface ChapterInviteLinkStatus {
+  hasLink: boolean;
+  createdDateUtc: string | null;
+}
+
+/** POST /api/chapters/me/invite-link/regenerate. SHOW-ONCE — joinUrl carries the raw
+ * token and is returned on this ONE response only; there is no endpoint to re-fetch it. */
+export interface ChapterInviteLinkIssued {
+  joinUrl: string;
+  createdDateUtc: string;
+}
+
+/** GET /api/chapters/invite/{token} — the public "join this chapter" landing page's
+ * only data source. isValid=false for an unknown/invalidated token or an inactive
+ * chapter, all reading identically (anti-enumeration). */
+export interface ChapterInviteLinkResolved {
+  isValid: boolean;
+  chapterId: number | null;
+  chapterName: string | null;
+}
+
 /**
  * The three-outcome registration flow (docs/AIS-Project-Documentation.md §4.1). Lapsed
  * is a renewal state, not this one — do not conflate the two.
@@ -550,6 +574,34 @@ export interface ReissueMemberEnrolmentLinkResponse {
   memberId: number;
   enrolmentUrl: string;
   expiresOnUtc: string;
+}
+
+/**
+ * SHOW-ONCE. Mirrors MemberPasswordResetDto — POST /api/members/{id}/reset-password,
+ * National Council only (client decision 2026-09-21). Never a password itself, only a
+ * fresh one-time enrolment link (CLAUDE.md invariant #16) — the member's account is
+ * locked (dbo.UserAccount.IsDisabled) until he redeems it and sets his own new password.
+ */
+export interface MemberPasswordReset {
+  memberId: number;
+  enrolmentUrl: string;
+  expiresOnUtc: string;
+}
+
+/**
+ * GET /api/members/blocked — National Council only. Mirrors BlockedMemberDto. One row
+ * per currently-blocked member, derived from dbo.MemberAccountAction's own most-recent-
+ * action state (never dbo.UserAccount.IsDisabled directly — a member blocked before his
+ * first enrolment has no UserAccount row yet and still appears here).
+ */
+export interface BlockedMember {
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  chapterName: string | null;
+  reason: string;
+  performedDateUtc: string;
+  blockedByGiftName: string | null;
 }
 
 /**
@@ -710,6 +762,127 @@ export interface DashboardSummary {
   membership: DashboardMembership;
   activity: DashboardActivity;
   correctiveActionCounts: CorrectiveActionStatusCount[];
+}
+
+/**
+ * GET /api/councils/statistics and GET /api/councils/{councilId}/statistics — one
+ * council's rollup, computed over its ENTIRE subtree, not just direct children (a
+ * National-focused view has zero direct chapters in the real org structure; chapters
+ * hang off City/Municipal councils several levels down). Mirrors CouncilRollupDto,
+ * used both for the focus council itself and, per row, for its direct child councils.
+ *
+ * hasRenewalData/renewedCount/lapsedCount/exemptCount/notRecordedCount: when
+ * hasRenewalData is false, render "No renewal season recorded yet" — never "0%
+ * renewed". A chapter never asked to renew is not a chapter that failed to (CLAUDE.md
+ * "Renewed / Lapsed / Exempt" vocabulary — Lapsed is not disciplinary, and absence of
+ * a season is not Lapsed either).
+ *
+ * detachedMemberCount (invariant #14) is homed on this council directly and is
+ * SEPARATE from every chapter's own member counts below — never add it into a chapter
+ * total or a member-status tile that already sums chapter rolls.
+ */
+export interface CouncilRollupDto {
+  councilId: number;
+  councilName: string;
+  levelName: string;
+  parentCouncilId: number | null;
+  depth: number;
+  hasSeatedOfficers: boolean;
+  directChildCouncilCount: number;
+  totalCouncilsInSubtree: number;
+  directChapterCount: number;
+  totalChaptersInSubtree: number;
+  activeChapterCount: number;
+  inactiveChapterCount: number;
+  memberTotal: number;
+  memberPending: number;
+  memberApproved: number;
+  memberActive: number;
+  memberInactive: number;
+  memberSuspended: number;
+  memberRejected: number;
+  newThisPeriod: number;
+  detachedMemberCount: number;
+  renewedCount: number;
+  lapsedCount: number;
+  exemptCount: number;
+  notRecordedCount: number;
+  hasRenewalData: boolean;
+  regSubmittedCount: number;
+  regReturnedForCorrectionCount: number;
+  regApprovedCount: number;
+  meetingsHeld: number;
+  totalPresent: number;
+  totalOnSheets: number;
+  averagePresentPerMeeting: number;
+}
+
+/**
+ * One row of Set 3 — every chapter in the focus council's entire subtree, paged.
+ * Mirrors ChapterStatisticsDto.
+ *
+ * openingBalance/periodIn/periodOut/closingBalance: AGGREGATE ONLY, per
+ * docs/AIS-Project-Documentation.md §3/§10 Decision #7 as amended 2026-09-20 — never
+ * a drill-down to an individual ledger entry, and these four columns are the entire
+ * financial surface a council ever sees for a chapter it does not belong to. Label
+ * the balance column with the date range actually applied ("Balance as at <toDate>"),
+ * never the bare word "Balance" — outside the default (future-dated) range these are
+ * NOT the chapter's live current balance, only usp_Dashboard_GetChapterSummary's own
+ * currentBalance is that, and this DTO deliberately has no such field.
+ *
+ * caseCount* fields are per-chapter corrective-action counts by status, alongside the
+ * council-wide totals in CouncilStatisticsResponse.correctiveActionTotals — counts
+ * only, never a case list or narrative (invariant #6).
+ */
+export interface ChapterStatisticsDto {
+  chapterId: number;
+  chapterName: string;
+  barangay: string | null;
+  parentCouncilId: number;
+  parentCouncilName: string;
+  isActive: boolean;
+  memberTotal: number;
+  memberPending: number;
+  memberApproved: number;
+  memberActive: number;
+  memberInactive: number;
+  memberSuspended: number;
+  memberRejected: number;
+  newThisPeriod: number;
+  renewedCount: number;
+  lapsedCount: number;
+  exemptCount: number;
+  notRecordedCount: number;
+  hasRenewalData: boolean;
+  meetingsHeld: number;
+  totalPresent: number;
+  totalOnSheets: number;
+  averagePresentPerMeeting: number;
+  openingBalance: number;
+  periodIn: number;
+  periodOut: number;
+  closingBalance: number;
+  caseCountPending: number;
+  caseCountUnderReview: number;
+  caseCountReconciled: number;
+  caseCountDismissed: number;
+}
+
+/**
+ * GET /api/councils/statistics?from=&to=&skip=&take= (the caller's own seat) and
+ * GET /api/councils/{councilId}/statistics?from=&to=&skip=&take= (explicit focus).
+ * fromDate/toDate echo the range actually applied, same convention as DashboardSummary.
+ * chapters is PAGED (skip/take against totalChapterCount) — it is every chapter in the
+ * focus council's subtree, which can be large at National scope.
+ */
+export interface CouncilStatisticsResponse {
+  fromDate: string;
+  toDate: string;
+  focus: CouncilRollupDto;
+  childCouncils: CouncilRollupDto[];
+  chapters: ChapterStatisticsDto[];
+  totalChapterCount: number;
+  correctiveActionTotals: CorrectiveActionStatusCount[];
 }
 
 /**
@@ -1097,6 +1270,11 @@ export interface ChapterRegistrationOfficer {
   verifiedDateUtc: string | null;
   verifyNote: string | null;
   createdMemberId: number | null;
+  /** Drives the "Resend enrolment link" action on an already-decided registration —
+   * offered only for a real member (memberId set) who has none yet. Mirrors
+   * usp_Enrolment_Issue's own "Bounded Council Issuer" branch, which only ever succeeds
+   * for a member with no UserAccount AND who has never redeemed a link. */
+  hasAccount: boolean;
 }
 
 /** One status-change event in a registration's history. Mirrors ChapterRegistrationUpdateDto. */
@@ -1192,6 +1370,64 @@ export interface ApproveChapterRegistrationResponse {
   registrationType: ChapterRegistrationType;
   charter: ChapterCharterApprovalResult | null;
   turnoverEnrolments: ChapterTurnoverOfficerEnrolment[] | null;
+}
+
+/**
+ * POST /api/verifications — public, anonymous, what the public verify page
+ * (`/verify/{token}`, CLAUDE.md's own vocabulary table: "chapter mark ... absent from the
+ * public verification page") renders. Mirrors PublicVerificationDto.
+ *
+ * isValid collapses invalid/revoked/expired into one outcome — same posture as
+ * MemberScanResultDto below; never guess which one occurred, never add a reason.
+ *
+ * photoUrl, when non-null, is a relative path to the anonymous
+ * GET /api/verifications/{token}/photo — no Authorization header needed, so a plain
+ * `<img src>` (resolved to an absolute URL) is enough. A 404 there means "no photo on
+ * file", never an error — same posture as DigitalId.tsx's own photo handling.
+ *
+ * renewedThrough is a DateOnly ("YYYY-MM-DD"), rendered with shortDate. Being null is
+ * NORMAL (CLAUDE.md invariant #5) and is simply omitted on screen.
+ */
+export interface PublicVerificationDto {
+  isValid: boolean;
+  giftName: string | null;
+  chapterName: string | null;
+  statusName: string | null;
+  renewedThrough: string | null;
+  photoUrl: string | null;
+}
+
+/**
+ * POST /api/scans — authenticated, a member/officer scanning someone ELSE's card, what
+ * Scan.tsx renders. Mirrors MemberScanResultDto.
+ *
+ * fullName/memberNumber/bloodTypeName are null unless isSameChapter — server-enforced
+ * (CLAUDE.md invariant #7's cross-chapter posture carried into this scan result). Never
+ * infer or backfill these client-side when isSameChapter is false.
+ */
+export interface MemberScanResultDto {
+  isValid: boolean;
+  giftName: string | null;
+  chapterName: string | null;
+  statusName: string | null;
+  renewedThrough: string | null;
+  isSameChapter: boolean;
+  fullName: string | null;
+  memberNumber: string | null;
+  bloodTypeName: string | null;
+}
+
+/**
+ * GET /api/members/me/scans — the caller's own "who checked my ID" history. Mirrors
+ * ScanLogEntryDto. scannerGiftName/scannerChapterName are null TOGETHER for an anonymous
+ * public-page scan of the caller's own card — render "Not signed in", never a blank line.
+ */
+export interface ScanLogEntryDto {
+  scanDate: string;
+  resultCode: string;
+  wasOffline: boolean;
+  scannerGiftName: string | null;
+  scannerChapterName: string | null;
 }
 
 /** GET /api/regions — public, unauthenticated. Mirrors RegionDto. */

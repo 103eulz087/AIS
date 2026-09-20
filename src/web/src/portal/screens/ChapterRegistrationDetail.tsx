@@ -5,10 +5,10 @@ import { api, ApiError } from "@/shared/api";
 import { shortDate, shortTime } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
-import { canApproveChapterRegistrations, canReviewChapterRegistrations } from "@/shared/roles";
+import { canApproveChapterRegistrations, canReissueEnrolmentLink, canReviewChapterRegistrations } from "@/shared/roles";
 import type {
   ApproveChapterRegistrationResponse, ChapterRegistrationDetail as ChapterRegistrationDetailModel,
-  ChapterRegistrationOfficer,
+  ChapterRegistrationOfficer, ReissueMemberEnrolmentLinkResponse,
 } from "@/shared/types";
 
 function statusLabel(name: string): string {
@@ -70,6 +70,7 @@ export function ChapterRegistrationDetail() {
   const roles = claims?.roles ?? [];
   const canReview = canReviewChapterRegistrations(roles);
   const canApprove = canApproveChapterRegistrations(roles);
+  const canReissue = canReissueEnrolmentLink(roles);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["chapter-registration", registrationId],
@@ -93,6 +94,16 @@ export function ChapterRegistrationDetail() {
   const [returnReason, setReturnReason] = useState("");
   const [returning, setReturning] = useState(false);
   const [returnError, setReturnError] = useState<string | null>(null);
+
+  // "Resend enrolment link" for an already-decided registration whose officer never
+  // redeemed his first one (e.g. it expired, or he lost it) — a council officer here is
+  // usp_Enrolment_Issue's "Bounded Council Issuer" branch, not the ordinary Chapter Admin
+  // path MemberDirectory.tsx's own identical action uses. SHOW-ONCE per member, same as
+  // the approve panel above: held only in local state, never persisted, never refetched.
+  const [reissuingMemberId, setReissuingMemberId] = useState<number | null>(null);
+  const [reissueError, setReissueError] = useState<string | null>(null);
+  const [reissueResults, setReissueResults] = useState<Record<number, ReissueMemberEnrolmentLinkResponse>>({});
+  const [reissueCopiedId, setReissueCopiedId] = useState<number | null>(null);
 
   if (!canReview) {
     return (
@@ -180,6 +191,23 @@ export function ChapterRegistrationDetail() {
     }
   }
 
+  async function handleReissueLink(memberId: number) {
+    setReissueError(null);
+    setReissuingMemberId(memberId);
+    try {
+      const res = await api.post<ReissueMemberEnrolmentLinkResponse>(`/api/members/${memberId}/enrolment-link`, {});
+      setReissueResults(prev => ({ ...prev, [memberId]: res }));
+      setReissueCopiedId(null);
+    } catch (err) {
+      // 403 here means this council seat has no standing over that member's chapter, or
+      // (usp_Enrolment_Issue's own rule) he already has an account — surfaced verbatim,
+      // same anti-guessing posture as everywhere else a 403 reaches the UI unchanged.
+      setReissueError(err instanceof ApiError ? err.message : "Could not issue a new link. Please try again.");
+    } finally {
+      setReissuingMemberId(null);
+    }
+  }
+
   function copy(text: string, key: string) {
     navigator.clipboard?.writeText(text)
       .then(() => setCopiedKey(key))
@@ -237,17 +265,43 @@ export function ChapterRegistrationDetail() {
         </div>
 
         {verifyError && <p role="alert" style={errorTextStyle}>{verifyError}</p>}
+        {reissueError && <p role="alert" style={errorTextStyle}>{reissueError}</p>}
 
-        {data.officers.map(o => (
-          <OfficerRow
-            key={o.registrationOfficerId} officer={o}
-            noteDraft={noteDrafts[o.registrationOfficerId] ?? o.verifyNote ?? ""}
-            onNoteChange={v => setNoteDrafts(prev => ({ ...prev, [o.registrationOfficerId]: v }))}
-            busy={verifyingId === o.registrationOfficerId}
-            canAct={canDecide}
-            onVerify={verified => { void handleVerify(o, verified); }}
-          />
-        ))}
+        {data.officers.map(o => {
+          // The real member id an approved officer resolves to: MemberId for a Turnover
+          // seat (an already-existing member, linked from filing), CreatedMemberId for a
+          // Charter seat (typed-in at filing, a Member row only comes to exist at
+          // approval — usp_ChapterRegistration_Approve.sql only ever sets THIS column for
+          // that branch, never MemberId, since the seat was never a linked member to
+          // begin with). Never both populated for the same registration type, but check
+          // MemberId first so this keeps working if a Turnover officer is ever combined
+          // with this same code path.
+          const targetMemberId = o.memberId ?? o.createdMemberId;
+          return (
+            <OfficerRow
+              key={o.registrationOfficerId} officer={o}
+              noteDraft={noteDrafts[o.registrationOfficerId] ?? o.verifyNote ?? ""}
+              onNoteChange={v => setNoteDrafts(prev => ({ ...prev, [o.registrationOfficerId]: v }))}
+              busy={verifyingId === o.registrationOfficerId}
+              canAct={canDecide}
+              onVerify={verified => { void handleVerify(o, verified); }}
+              canReissue={canReissue && !canDecide}
+              targetMemberId={targetMemberId}
+              reissuing={targetMemberId !== null && reissuingMemberId === targetMemberId}
+              reissueResult={targetMemberId !== null ? reissueResults[targetMemberId] : undefined}
+              reissueCopied={targetMemberId !== null && reissueCopiedId === targetMemberId}
+              onReissue={() => { if (targetMemberId !== null) void handleReissueLink(targetMemberId); }}
+              onCopyReissued={() => {
+                if (targetMemberId === null) return;
+                const url = reissueResults[targetMemberId]?.enrolmentUrl;
+                if (!url) return;
+                navigator.clipboard?.writeText(url)
+                  .then(() => setReissueCopiedId(targetMemberId))
+                  .catch(() => { /* clipboard permission denied — the link is still on screen */ });
+              }}
+            />
+          );
+        })}
       </div>
 
       {data.decisionReason && !canDecide && (
@@ -361,13 +415,23 @@ export function ChapterRegistrationDetail() {
   );
 }
 
-function OfficerRow({ officer: o, noteDraft, onNoteChange, busy, canAct, onVerify }: {
+function OfficerRow({
+  officer: o, noteDraft, onNoteChange, busy, canAct, onVerify,
+  canReissue, targetMemberId, reissuing, reissueResult, reissueCopied, onReissue, onCopyReissued,
+}: {
   officer: ChapterRegistrationOfficer;
   noteDraft: string;
   onNoteChange: (value: string) => void;
   busy: boolean;
   canAct: boolean;
   onVerify: (verified: boolean) => void;
+  canReissue: boolean;
+  targetMemberId: number | null;
+  reissuing: boolean;
+  reissueResult: ReissueMemberEnrolmentLinkResponse | undefined;
+  reissueCopied: boolean;
+  onReissue: () => void;
+  onCopyReissued: () => void;
 }) {
   const isVerified = o.verifiedBy !== null;
   const fullName = [o.firstName, o.middleName, o.lastName].filter(Boolean).join(" ");
@@ -424,6 +488,35 @@ function OfficerRow({ officer: o, noteDraft, onNoteChange, busy, canAct, onVerif
       )}
       {!canAct && o.verifyNote && (
         <p style={{ fontSize: 12.5, color: "var(--slate)", marginTop: 8, lineHeight: 1.5 }}>{o.verifyNote}</p>
+      )}
+
+      {/* Only for a seat that resolves to a real member (targetMemberId set — MemberId
+          for Turnover, CreatedMemberId for an approved Charter seat) with no account yet.
+          An officer who already redeemed his link, or a Charter seat not yet approved
+          (no Member row exists at all), is never offered this. The API/procedure
+          re-check this independently either way; this is only "should the button appear
+          at all". */}
+      {canReissue && o.grantsLogin && targetMemberId !== null && !o.hasAccount && (
+        reissueResult ? (
+          <div style={{ marginTop: 12, padding: 10, borderRadius: 8, background: "var(--bond)", border: "1px solid var(--brass)" }}>
+            <p style={{ fontSize: 12, color: "var(--slate)" }}>
+              New enrolment link issued — copy and send it now, this is the only time it's shown.
+            </p>
+            <div style={enrolmentLinkRowStyle}>
+              <div style={enrolmentLinkBoxStyle}>{reissueResult.enrolmentUrl}</div>
+              <button type="button" onClick={onCopyReissued} style={ghostButtonStyle}>
+                {reissueCopied ? "Copied" : "Copy link"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button" disabled={reissuing} onClick={onReissue}
+            style={{ ...ghostButtonStyle, marginTop: 12 }}
+          >
+            {reissuing ? "…" : "Resend enrolment link"}
+          </button>
+        )
       )}
     </div>
   );

@@ -12,9 +12,12 @@ import { useAuth } from "@/shared/auth";
  * office computer"). No chapter mark anywhere (docs §7A.3 doesn't apply to the Portal at
  * all — this is a council officer's own app, not a chapter's).
  *
- * Deliberately no council-switcher, no sidebar, no additional nav items: this slice adds
- * exactly one Portal module (chapter registrations). A later module should extend this
- * shell's nav rather than each module building its own chrome.
+ * Deliberately no council-switcher, no sidebar: this header nav is a flat list of plain
+ * links, extended in place as each Portal module ships (chapter registrations, then the
+ * National ID card export) rather than each module building its own chrome. Every link
+ * here is visible to any signed-in council officer — each screen does its own coarse
+ * role gate and shows a plain "you don't have access" state to anyone it turns away,
+ * same reasoning as canExportIdCards' own doc comment in shared/roles.ts.
  */
 export function PortalShell() {
   const { claims, signOut } = useAuth();
@@ -23,10 +26,14 @@ export function PortalShell() {
     <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
       <header style={headerStyle}>
         <div style={headerInnerStyle}>
-          <Link to="/portal/chapter-registrations" style={wordmarkStyle}>AKRHO Council Portal</Link>
+          <Link to="/portal/chapter-registrations" style={wordmarkStyle}>Skeptron Council Portal</Link>
 
           {claims && (
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <Link to="/portal/chapter-registrations" style={navLinkStyle}>Chapter registrations</Link>
+              <Link to="/portal/id-card-export" style={navLinkStyle}>ID card export</Link>
+              <Link to="/portal/statistics" style={navLinkStyle}>Statistics</Link>
+              <Link to="/portal/blocked-members" style={navLinkStyle}>Blocked members</Link>
               <span style={{ fontSize: 13, color: "var(--brass-soft)" }}>{claims.giftName}</span>
               <button onClick={() => { void signOut(); }} style={signOutStyle}>Sign out</button>
             </div>
@@ -54,5 +61,9 @@ const wordmarkStyle: CSSProperties = {
 };
 
 const signOutStyle: CSSProperties = { minHeight: 36, padding: "0 4px", fontSize: 12.5, color: "var(--mute)" };
+
+const navLinkStyle: CSSProperties = {
+  fontSize: 13, color: "var(--paper)", textDecoration: "none", minHeight: 36, display: "flex", alignItems: "center",
+};
 
 const contentStyle: CSSProperties = { maxWidth: 1100, margin: "0 auto", padding: "24px 20px 60px" };

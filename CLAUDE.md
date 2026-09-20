@@ -192,6 +192,74 @@ Android phones, many of them not in tech. No jargon. Filipino terms where they a
 5. **Approval is atomic.** Renewal approval writes member status, regenerates credentials, issues
    seals and the receipt, and audits — all in one transaction, or none of it.
 6. **`SET NOCOUNT ON`** at the top of every stored procedure, or Dapper row counts lie.
+7. **A bare `CASE WHEN ... THEN 1 ELSE 0 END` in a proc's `SELECT` infers `INT`, not `BIT`.** If
+   that column feeds a C# record's `bool` property, Dapper can't find a matching constructor and
+   the endpoint 500s with no useful client-side message (`ExceptionHandling.cs` never leaks
+   exception detail — check the day's file in `src/Akrho.Api/logs/` for the real exception).
+   Always `CAST(CASE WHEN ... THEN 1 ELSE 0 END AS BIT)` when the target is `bool`. Found live in
+   `usp_ChapterRegistration_GetQueue`'s `CanAct` column; every other proc using this pattern
+   already casts correctly or feeds an `int` count, not a `bool`.
+8. **If Vite was ever started without the dev cert present, restarting it is not enough.** The old
+   plain-HTTP process can linger and hold port 5173, so the new run falls back to 5174 — and the
+   API's `Cors:Origins` / `Web:Origin` (`appsettings.json`) are hardcoded to `5173`, so API calls
+   and any already-issued enrolment links silently break. After exporting the cert
+   (`dotnet dev-certs https --export-path src/web/.certs/dev-cert.pfx -p devcert --trust` — this
+   pops a Windows trust dialog, it's not headless), confirm port 5173 is actually free before
+   trusting the URL Vite prints.
+9. **Council creation/seating has no UI or API yet** — only `db/procs/usp_Council_Seating.sql`,
+   called the same raw-SQL way `db/seed/02_demo_chapter.sql` seats Sta. Rosa City Council. Until
+   that module ships, testing anywhere outside the seeded Laguna chain means seating a council by
+   hand the same way. Two consequences worth knowing going in:
+   - `dbo.Chapter` has **no region/province/municipality columns of its own** — the public
+     `/apply` picker (`usp_Chapter_ListPublic`) infers them by walking the chapter's council
+     parent chain. A chapter bootstrapped straight under National (because no lower council
+     exists yet) resolves all three as `NULL` and **cannot appear in that picker** until a real
+     council chain is seeded above it and the chapter is reparented (`Chapter.ParentCouncilId`).
+     The chapter's *actually chosen* geography survives on its `ChapterRegistration` row
+     (`RegionId`/`ProvinceId`/`MunicipalityId`) — use that as the source of truth when seeding the
+     missing chain, don't guess.
+   - Seating a council by hand still needs a real member to seat. Prefer an existing member whose
+     role is unused elsewhere; `db/seed/02_demo_chapter.sql`'s own header comments flag
+     `AKR-04-0117-002`/`-003` as relied on by several xUnit fixtures to stay role-less — don't
+     seat those two on the shared dev DB.
+10. **IIS hosts the API as a nested Application aliased `backend`, never `api`.** IIS strips a
+    nested Application's own alias as its `PathBase` before the request ever reaches the app —
+    but every route in `Akrho.Api` already has a literal `/api/` prefix baked in (§3's own
+    endpoint convention), so an Application aliased `api` would see `/api/regions` arrive as just
+    `/regions` and 404 on every single request. The root site's own `web.config`
+    (`src/web/staging.web.config`) carries an "API passthrough" rewrite rule that rewrites
+    `/api/...` to `/backend/api/...` first, specifically to route around this. If a fresh
+    environment 404s on every API call with an empty response body and `X-Powered-By: ASP.NET`
+    even though the app runs fine standalone, this is almost always why — check the Application's
+    alias and the site's own physical path (see next item) before anything else.
+11. **A staging/production IIS site's own physical path must be the folder that holds
+    `index.html` — never the `\api` subfolder.** Point it one level too deep and IIS serves
+    everything, `/` included, straight out of the API's own folder — which happens to still
+    "work" for `/` (a coincidental static-file hit) while every real frontend route 404s with an
+    empty body, misleading anyone debugging it into suspecting the rewrite rules instead.
+    `Get-Website | Format-Table Name, PhysicalPath` is the one-line way to confirm this is right.
+12. **Photo storage is local disk, per deployment, never shared** — only the database is shared
+    across environments (e.g. local dev and staging pointed at the same `corex.itcoreapps.com` dev
+    DB). A photo uploaded on one environment exists in `dbo.Member.PhotoPath` on the shared DB but
+    not on the other environment's disk at all. Any code that reads a member's photo by that path
+    (`IdCardExportEndpoints` included) must treat a missing file as "no photo," not as an error —
+    this is not a bug to chase, it is the expected shape of sharing one DB across environments.
+13. **Redeploying the API's IIS folder must never blindly mirror/replace it wholesale.**
+    `uploads/` (member photos) and `logs/` hold real runtime data with no counterpart in a fresh
+    `dotnet publish` output — a full mirror copy (`robocopy /MIR` or "replace everything") silently
+    deletes both. Copy application files only: `robocopy <publish output> <site path> /E /XD
+    uploads logs`, or merge-not-replace if copying by hand.
+14. **`npm ci` can fail with `EPERM .../esbuild.exe`** if a local `npm run dev` is still running
+    (it holds that binary open) — stop it first. If it recurs with nothing else running, this repo
+    lives inside a Google Drive–synced folder (`D:\MYGDRIVE\...`); Drive's sync client can
+    transiently lock the same file mid-sync. Pause sync and retry.
+15. **A proc that mints a `dbo.MemberCredential` row must revoke any existing un-revoked row for
+    that member FIRST**, even one that only *expired* rather than being deliberately revoked.
+    `UX_MemberCredential_Member_Live` is a filtered unique index on `RevokedDate IS NULL` — SQL
+    Server filtered indexes can't reference `SYSUTCDATETIME()`, so "not yet revoked" and "not yet
+    expired" must be kept the same thing by every writer, not two different conditions, or the
+    INSERT fails. See `usp_Credential_GetOrIssueForSelf`'s and `usp_Credential_BulkIssueForExport`'s
+    own "supersede a stale row" comments before adding a third way to issue one.
 
 ---
 
@@ -213,6 +281,9 @@ cd src/web && npm run lint            # tsc --noEmit
 cd src/web && npm test                # vitest, all specs except the smoke harness
 cd src/web && npx vitest run src/shared/format.test.ts   # one spec file
 cd src/web && npm run smoke           # jsdom route smoke test — every route must mount clean
+
+scripts/build-for-staging.ps1         # builds API (Staging env) + web app locally into .\publish\api and .\publish\web,
+                                       # ready to copy onto the staging IIS server — see §8.10-14 before redeploying
 ```
 
 The full definition of done (§6), also what CI (`.github/workflows/ci.yml`) runs:
@@ -253,3 +324,34 @@ same way instead of the Docker default.
 The `sqlcmd` bundled with some local SQL Server client tool installs defaults
 `QUOTED_IDENTIFIER` to `OFF`, which fails on the filtered indexes in `db/schema/02_members.sql`.
 Pass `-I` to enable it if you run `sqlcmd` directly instead of through `db-deploy.sh`.
+
+---
+
+## 11. Staging server
+
+```
+Site               http://itcoreapps.com:1973   (HTTPS not set up yet — plain HTTP for now)
+IIS site name      akp-staging-api
+Site physical path C:\inetpub\Akp-Staging              (the WEB APP root — NOT \api, see §8.11)
+API app path       C:\inetpub\Akp-Staging\api           (a nested IIS Application aliased "backend", never "api" — §8.10)
+API app pool       akp-staging-api                      (its own pool, separate from the site's own — §8's "common mistake")
+Database           SAME shared dev DB as §10 (corex.itcoreapps.com / AISDB) — a schema/proc change deployed
+                    once is already live for staging; there is no separate staging database to update.
+```
+
+Four environment variables live on the `akp-staging-api` application pool (IIS Manager → Application
+Pools → that pool → Advanced Settings → Environment Variables) — never in any file:
+`ConnectionStrings__Akrho`, `Jwt__SigningKey`, `Push__VapidPrivateKey`, `Push__VapidPublicKey`. The
+API refuses to start at all without the latter three outside Development (`Program.cs`'s own
+placeholder guards) — see §8.10-14 for what actually goes wrong when any of this drifts.
+
+**Known problem, not yet fixed:** `src/Akrho.Api/appsettings.json`'s `ConnectionStrings:Akrho` is
+currently the real §10 password, committed in plain text — exactly what §10's own rule above
+forbids. Needs the password rotated and the committed value replaced with a placeholder; flagged
+here so it isn't lost.
+
+Deploy process: `scripts/build-for-staging.ps1` locally, then copy `publish\web\*` and
+`publish\api\*` onto the server (excluding `uploads/`/`logs/` from the API copy — §8.13), recycling
+the `akp-staging-api` pool around the API copy. No IIS reconfiguration needed for an ordinary code
+change — site bindings, the pool, the `backend` alias, and the four environment variables above are
+untouched by a redeploy.

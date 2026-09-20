@@ -262,7 +262,7 @@ public class EnrolmentIssueScopeTests
         var repo = BuildRepository(_fx.ConnectionString!);
 
         var before = DateTime.UtcNow;
-        var result = await repo.IssueAsync(_fx.ChapterAMemberId, _fx.ChapterAAdminId, RandomTokenHash(), CancellationToken.None);
+        var result = await repo.IssueAsync(_fx.ChapterAMemberId, _fx.ChapterAAdminId, RandomTokenHash(), null, CancellationToken.None);
 
         try
         {
@@ -301,7 +301,7 @@ public class EnrolmentIssueScopeTests
         try
         {
             var act = async () =>
-                created = await repo.IssueAsync(_fx.ChapterAMemberId, _fx.ChapterBAdminId, RandomTokenHash(), CancellationToken.None);
+                created = await repo.IssueAsync(_fx.ChapterAMemberId, _fx.ChapterBAdminId, RandomTokenHash(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<EnrolmentIssueException>(
                 "a chapter admin from a different chapter must never be able to issue an enrolment link " +
@@ -341,7 +341,7 @@ public class EnrolmentIssueScopeTests
         try
         {
             var act = async () =>
-                created = await repo.IssueAsync(targetMemberId, _fx.ChapterAMemberId, RandomTokenHash(), CancellationToken.None);
+                created = await repo.IssueAsync(targetMemberId, _fx.ChapterAMemberId, RandomTokenHash(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<EnrolmentIssueException>(
                 "only a ChapterAdmin may issue an enrolment link — an ordinary same-chapter member has no standing to");

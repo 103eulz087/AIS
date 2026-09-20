@@ -199,7 +199,7 @@ public static class MembershipApplicationsEndpoints
 
     private static async Task<Results<Ok<ApproveMembershipApplicationResponseDto>, ValidationProblem, NotFound, Conflict<string>, BadRequest<string>, ProblemHttpResult>> Approve(
         int id, ApproveMembershipApplicationRequest req, IConfiguration config,
-        IMembershipApplicationRepository repo, ICurrentUser caller,
+        IMembershipApplicationRepository repo, IPasswordHasherService hasher, ICurrentUser caller,
         IValidator<ApproveMembershipApplicationRequest> validator, CancellationToken ct)
     {
         var validation = await validator.ValidateAsync(req, ct);
@@ -213,9 +213,14 @@ public static class MembershipApplicationsEndpoints
         var rawToken = OpaqueToken.GenerateRaw();
         var tokenHash = OpaqueToken.Hash(rawToken);
 
+        // DRY-RUN ONLY — see Akrho.Infrastructure.Security.DryRunDefaults. Makes the new
+        // member sign-in-capable immediately, on this well-known password; the enrolment
+        // link above is untouched and still lets him set his own the moment he uses it.
+        var defaultPasswordHash = hasher.Hash(DryRunDefaults.InitialPassword);
+
         try
         {
-            var result = await repo.ApproveAsync(id, caller.MemberId, req.SeconderMemberId, tokenHash, null, ct);
+            var result = await repo.ApproveAsync(id, caller.MemberId, req.SeconderMemberId, tokenHash, null, defaultPasswordHash, ct);
 
             var webOrigin = (config["Web:Origin"] ?? "").TrimEnd('/');
             var enrolmentUrl = $"{webOrigin}/enrol/{rawToken}";

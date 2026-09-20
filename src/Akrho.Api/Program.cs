@@ -9,18 +9,21 @@ using Akrho.Api.Features.ChapterRegistrations;
 using Akrho.Api.Features.Chat;
 using Akrho.Api.Features.Communications;
 using Akrho.Api.Features.Conversations;
+using Akrho.Api.Features.CouncilStatistics;
 using Akrho.Api.Features.Credential;
 using Akrho.Api.Features.Dashboard;
 using Akrho.Api.Features.Discipline;
 using Akrho.Api.Features.Donations;
 using Akrho.Api.Features.Enrolment;
 using Akrho.Api.Features.Expenses;
+using Akrho.Api.Features.IdCardExport;
 using Akrho.Api.Features.Ledger;
 using Akrho.Api.Features.Meetings;
 using Akrho.Api.Features.Members;
 using Akrho.Api.Features.MembershipApplications;
 using Akrho.Api.Features.Notifications;
 using Akrho.Api.Features.Reference;
+using Akrho.Api.Features.Verification;
 using Akrho.Infrastructure;
 using Akrho.Infrastructure.Push;
 using Akrho.Infrastructure.Repositories;
@@ -83,6 +86,7 @@ builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<IDonationRepository, DonationRepository>();
 builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
+builder.Services.AddScoped<IChapterInviteLinkRepository, ChapterInviteLinkRepository>();
 builder.Services.AddScoped<IMembershipApplicationRepository, MembershipApplicationRepository>();
 builder.Services.AddScoped<IMemberProfileRepository, MemberProfileRepository>();
 builder.Services.AddScoped<IReferenceRepository, ReferenceRepository>();
@@ -92,6 +96,11 @@ builder.Services.AddScoped<ICredentialRepository, CredentialRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IPushRepository, PushRepository>();
 builder.Services.AddScoped<IChapterRegistrationRepository, ChapterRegistrationRepository>();
+builder.Services.AddScoped<IIdCardExportRepository, IdCardExportRepository>();
+builder.Services.AddScoped<IScanLogRepository, ScanLogRepository>();
+builder.Services.AddScoped<IPublicVerificationRepository, PublicVerificationRepository>();
+builder.Services.AddScoped<ICouncilStatisticsRepository, CouncilStatisticsRepository>();
+builder.Services.AddScoped<IMemberAccountActionRepository, MemberAccountActionRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -205,8 +214,13 @@ builder.Services.AddAuthorization(options =>
         p.RequireRole("ChapterAdmin"));
     options.AddPolicy(AuthorizationPolicies.ChapterMembershipApprove, p =>
         p.RequireRole("ChapterAdmin"));
+    // ChapterAdmin (the ordinary "forgot his password" case) OR CouncilSecretary/CouncilAdmin
+    // (a brand-new chapter's first President — no ChapterAdmin exists yet to reissue his own
+    // very first link). usp_Enrolment_Issue's own "Bounded Council Issuer" branch is what
+    // actually narrows the council case down further (first-credential-only, jurisdiction-
+    // scoped) — this policy only needed to stop being narrower than that procedure.
     options.AddPolicy(AuthorizationPolicies.ChapterMembersEnrolmentReissue, p =>
-        p.RequireRole("ChapterAdmin"));
+        p.RequireRole("ChapterAdmin", "CouncilSecretary", "CouncilAdmin"));
 
     // A new, narrow policy for the Public chat module — same role set as
     // usp_ChatMessage_Delete/_ResolveFlags/_GetFlagged's own checks. Not a reuse of
@@ -224,6 +238,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationVerify, p =>
         p.RequireRole("CouncilSecretary", "CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationApprove, p =>
+        p.RequireRole("CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.CouncilStatisticsRead, p =>
+        p.RequireRole("CouncilSecretary", "CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.NationalMemberAccountManage, p =>
         p.RequireRole("CouncilAdmin"));
 });
 builder.Services.AddEndpointsApiExplorer();
@@ -360,6 +378,17 @@ builder.Services.AddRateLimiter(o =>
             Window = TimeSpan.FromMinutes(1),
             QueueLimit = 0
         }));
+
+    // Public, unauthenticated credential scan/verify — no member id to partition by, same
+    // reasoning as MembershipApplicationStatus/ChapterRegistrationStatus above.
+    o.AddPolicy(RateLimiting.CredentialVerify, http => RateLimitPartition.GetFixedWindowLimiter(
+        http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 20,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        }));
 });
 
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
@@ -408,6 +437,9 @@ app.MapChat();
 app.MapConversations();
 app.MapNotifications();
 app.MapChapterRegistrations();
+app.MapCouncilStatistics();
+app.MapIdCardExport();
+app.MapVerification();
 
 // /?access_token= is honoured ONLY here (see the JwtBearerEvents.OnMessageReceived path
 // check above) — every other endpoint in this app still requires a real Authorization header.

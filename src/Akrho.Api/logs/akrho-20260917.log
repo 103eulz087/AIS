@@ -1,0 +1,458 @@
+2026-09-17 00:16:58.480 +08:00 [INF] HTTP GET /api/chapters responded 200 in 722.5391 ms
+2026-09-17 00:37:55.405 +08:00 [ERR] HTTP GET /api/chapters responded 500 in 36441.4965 ms
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - No such host is known.)
+ ---> System.ComponentModel.Win32Exception (11001): No such host is known.
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.ChapterRepository.ListPublicAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRepository.cs:line 24
+   at Akrho.Api.Features.Chapters.ChaptersEndpoints.List(IChapterRepository repo, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\Chapters\ChaptersEndpoints.cs:line 24
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:11001,State:0,Class:20
+2026-09-17 00:37:55.413 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - No such host is known.)
+ ---> System.ComponentModel.Win32Exception (11001): No such host is known.
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.ChapterRepository.ListPublicAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRepository.cs:line 24
+   at Akrho.Api.Features.Chapters.ChaptersEndpoints.List(IChapterRepository repo, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\Chapters\ChaptersEndpoints.cs:line 24
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:11001,State:0,Class:20
+2026-09-17 00:37:55.419 +08:00 [ERR] Unhandled error on /api/chapters
+Microsoft.Data.SqlClient.SqlException (0x80131904): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - No such host is known.)
+ ---> System.ComponentModel.Win32Exception (11001): No such host is known.
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Akrho.Infrastructure.SqlConnectionFactory.OpenAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\SqlConnectionFactory.cs:line 16
+   at Akrho.Infrastructure.Repositories.ChapterRepository.ListPublicAsync(CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Repositories\ChapterRepository.cs:line 24
+   at Akrho.Api.Features.Chapters.ChaptersEndpoints.List(IChapterRepository repo, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\Chapters\ChaptersEndpoints.cs:line 24
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+ClientConnectionId:00000000-0000-0000-0000-000000000000
+Error Number:11001,State:0,Class:20
+2026-09-17 00:38:04.662 +08:00 [INF] HTTP GET /api/chapters responded 200 in 854.8839 ms
+2026-09-17 10:48:39.727 +08:00 [INF] HTTP GET /api/chapters responded 200 in 824.6504 ms
+2026-09-17 17:20:42.752 +08:00 [DBG] Hosting starting
+2026-09-17 17:20:44.104 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-17 17:20:44.164 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-17 17:20:44.166 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-17 17:20:44.167 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-17 17:20:44.167 +08:00 [INF] Hosting environment: Development
+2026-09-17 17:20:44.167 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-17 17:20:44.172 +08:00 [DBG] Hosting started
+2026-09-17 17:21:23.247 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1688.5804 ms
+2026-09-17 17:21:23.247 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1688.7345 ms
+2026-09-17 17:21:54.354 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 5.8377 ms
+2026-09-17 17:21:54.354 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 5.8376 ms
+2026-09-17 17:22:22.308 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 2972.9778 ms
+2026-09-17 17:22:33.416 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 250.7471 ms
+2026-09-17 17:22:37.984 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 873.7920 ms
+2026-09-17 17:22:38.163 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 154.5241 ms
+2026-09-17 17:22:38.444 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 120.4810 ms
+2026-09-17 17:22:38.662 +08:00 [INF] HTTP GET /api/conversations responded 200 in 314.4970 ms
+2026-09-17 17:22:38.666 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 317.8251 ms
+2026-09-17 17:22:38.876 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 528.3429 ms
+2026-09-17 17:22:38.887 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 538.9211 ms
+2026-09-17 17:22:52.624 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 61.4222 ms
+2026-09-17 17:23:07.186 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.8639 ms
+2026-09-17 17:23:07.188 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2456 ms
+2026-09-17 17:23:18.028 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 692.7089 ms
+2026-09-17 17:23:18.102 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 50.1551 ms
+2026-09-17 17:23:18.311 +08:00 [INF] HTTP GET /api/chapters responded 200 in 123.9046 ms
+2026-09-17 17:23:27.267 +08:00 [INF] HTTP GET /api/id-card-exports responded 200 in 2072.7773 ms
+2026-09-17 17:23:31.978 +08:00 [ERR] HTTP GET /api/id-card-exports responded 500 in 146.3134 ms
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-17 17:23:31.987 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:23:31.997 +08:00 [ERR] Unhandled error on /api/id-card-exports
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:24:21.821 +08:00 [ERR] HTTP GET /api/id-card-exports responded 500 in 114.7645 ms
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-17 17:24:21.822 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:24:21.823 +08:00 [ERR] Unhandled error on /api/id-card-exports
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:24:39.906 +08:00 [ERR] HTTP GET /api/id-card-exports responded 500 in 121.4642 ms
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-17 17:24:39.910 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:24:39.913 +08:00 [ERR] Unhandled error on /api/id-card-exports
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\58bc226f3a384c98bd1aa0816f46b6cc.png'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:24:43.895 +08:00 [INF] HTTP GET /api/id-card-exports responded 200 in 203.6777 ms
+2026-09-17 17:31:02.752 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 409.6564 ms
+2026-09-17 17:31:06.907 +08:00 [INF] HTTP GET /api/chapter-registrations/50 responded 200 in 467.8976 ms
+2026-09-17 17:31:11.018 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 58.1094 ms
+2026-09-17 17:35:11.482 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 403.2575 ms
+2026-09-17 17:35:15.229 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 435.5832 ms
+2026-09-17 17:35:15.334 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 55.1336 ms
+2026-09-17 17:35:15.536 +08:00 [INF] HTTP GET /api/chapter-registrations/50 responded 200 in 62.2453 ms
+2026-09-17 17:35:18.516 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 65.8179 ms
+2026-09-17 17:35:19.008 +08:00 [INF] HTTP GET /api/chapters responded 200 in 55.7427 ms
+2026-09-17 17:35:21.590 +08:00 [ERR] HTTP GET /api/id-card-exports responded 500 in 118.0583 ms
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-17 17:35:21.593 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:35:21.595 +08:00 [ERR] Unhandled error on /api/id-card-exports
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:35:31.559 +08:00 [ERR] HTTP GET /api/id-card-exports responded 500 in 141.6020 ms
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-17 17:35:31.564 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:35:31.569 +08:00 [ERR] Unhandled error on /api/id-card-exports
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.AsyncWindowsFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 163
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 164
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.BuildZipAsync(IReadOnlyList`1 members, IFileStorage storage, String webOrigin, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 92
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.Export(Nullable`1 chapterId, IIdCardExportRepository repo, IFileStorage storage, IConfiguration config, ICurrentUser caller, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 61
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-17 17:40:54.649 +08:00 [DBG] Hosting starting
+2026-09-17 17:40:55.374 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-17 17:40:55.403 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-17 17:40:55.404 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-17 17:40:55.405 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-17 17:40:55.405 +08:00 [INF] Hosting environment: Development
+2026-09-17 17:40:55.405 +08:00 [INF] Content root path: D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api
+2026-09-17 17:40:55.407 +08:00 [DBG] Hosting started
+2026-09-17 17:41:19.239 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1152.7837 ms
+2026-09-17 17:41:19.383 +08:00 [INF] HTTP POST /api/auth/refresh responded 200 in 1300.1518 ms
+2026-09-17 17:41:32.466 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 802.2589 ms
+2026-09-17 17:41:32.629 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 112.1339 ms
+2026-09-17 17:41:32.888 +08:00 [INF] HTTP GET /api/chapters responded 200 in 86.7104 ms
+2026-09-17 17:41:38.110 +08:00 [WRN] ID card export: photo file for AKR-11-0014-001 is missing on this environment's disk — skipped, not failed
+System.IO.FileNotFoundException: Could not find file 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'.
+File name: 'D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\bin\Debug\net8.0\uploads\d9464d54dd1441fc8440f311cd320ebd.jpg'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Infrastructure\Storage\IFileStorage.cs:line 107
+   at Akrho.Api.Features.IdCardExport.IdCardExportEndpoints.WritePhotoEntriesAsync(ZipArchive archive, IReadOnlyList`1 members, IFileStorage storage, ILogger logger, CancellationToken ct) in D:\MYGDRIVE\PROJECTS\AIS\src\Akrho.Api\Features\IdCardExport\IdCardExportEndpoints.cs:line 171
+2026-09-17 17:41:38.126 +08:00 [INF] HTTP GET /api/id-card-exports responded 200 in 2681.9879 ms

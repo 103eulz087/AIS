@@ -45,7 +45,25 @@ async function toApiError(res: Response): Promise<ApiError> {
   let errors: ValidationErrors | undefined;
   try {
     const body = await res.json();
-    if (typeof body?.title === "string") message = body.title;
+    // A rejected proc/endpoint's own message reaches the client in one of three shapes,
+    // and all three need checking — TypedResults.BadRequest(string)/Conflict(string) (the
+    // most common one across this codebase) serializes the string DIRECTLY as the JSON
+    // body, not wrapped in an object, so body.title below would silently miss it (this
+    // was a real, live bug: every proc-authored rejection message anywhere in the app
+    // rendered as the generic "Something went wrong." instead of its own, specific text).
+    if (typeof body === "string" && body.length > 0) {
+      message = body;
+    } else if (typeof body?.title === "string" && body.title.length > 0) {
+      // FluentValidation's automatic ValidationProblem() shape ("One or more validation
+      // errors occurred.") — components that care about field-level detail already read
+      // body.errors separately below, so this generic title is an acceptable fallback.
+      message = body.title;
+    } else if (typeof body?.detail === "string" && body.detail.length > 0) {
+      // TypedResults.Problem(detail: "...") with no explicit title — this project never
+      // registers a ProblemDetails customizer, so Title stays null/absent and the real
+      // message sits in Detail instead.
+      message = body.detail;
+    }
     if (body?.errors) errors = body.errors as ValidationErrors;
   } catch { /* no JSON body, e.g. a bare 401 or 404 */ }
   return new ApiError(res.status, message, errors);

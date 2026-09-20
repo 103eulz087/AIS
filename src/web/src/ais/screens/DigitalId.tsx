@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toDataURL } from "qrcode";
 import { api, type DownloadedFile } from "@/shared/api";
@@ -141,9 +142,24 @@ export function DigitalId() {
 
   return (
     <div style={{ padding: "20px 16px 40px" }}>
-      <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em", marginBottom: 16 }}>
-        Your digital ID
-      </h1>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
+        <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em" }}>
+          Your digital ID
+        </h1>
+        {/* The only entry point to /scan today — checking a brother's card is something
+            you do FROM your own ID screen, not a 5th bottom-nav tab (AppShell.tsx's own
+            four-tab-limit reasoning). */}
+        <Link
+          to="/scan"
+          style={{
+            flex: "none", minHeight: "var(--tap)", padding: "0 14px", display: "flex",
+            alignItems: "center", borderRadius: 8, border: "1px solid var(--line)",
+            color: "var(--info)", textDecoration: "none", fontSize: 13, letterSpacing: ".02em",
+          }}
+        >
+          Scan a brother&rsquo;s ID
+        </Link>
+      </div>
 
       <div style={idStageStyle}>
         <button

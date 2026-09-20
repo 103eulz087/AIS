@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import {
-  CHAPTER_ACCENTS, type MunicipalityOption, type ProvinceOption, type RegionOption,
+  CHAPTER_ACCENTS, CHAPTER_OFFICES, type MunicipalityOption, type ProvinceOption, type RegionOption,
   type SubmitChapterRegistrationRequest, type SubmitChapterRegistrationResponse,
 } from "@/shared/types";
 import { ChapterMonogram } from "./ChapterMonogram";
 import {
-  CharterOfficerFieldset, emptyCharterOfficerRoster, toCharterOfficerInput,
-  validateCharterOfficerRoster, type CharterOfficerFormValues,
+  CharterOfficerFieldset, emptyCharterOfficerForm, emptyCharterOfficerRoster,
+  PRESIDENT_OFFICE_ID, toCharterOfficerInput, validateCharterOfficerRoster,
+  type CharterOfficerFormValues,
 } from "./ChapterOfficerFields";
 
 type FormStep = "chapter" | "officers" | "review";
@@ -77,6 +78,19 @@ export function RegisterChapter() {
 
   function updateOfficer<K extends keyof CharterOfficerFormValues>(index: number, field: K, value: CharterOfficerFormValues[K]) {
     setOfficers(prev => prev.map((o, i) => (i === index ? { ...o, [field]: value } : o)));
+  }
+
+  const availableOffices = CHAPTER_OFFICES.filter(o => !officers.some(added => added.officeId === o.officeId));
+  const [nextOfficeId, setNextOfficeId] = useState<string>("");
+
+  function addOfficer() {
+    if (!nextOfficeId) return;
+    setOfficers(prev => [...prev, emptyCharterOfficerForm(Number(nextOfficeId))]);
+    setNextOfficeId("");
+  }
+
+  function removeOfficer(index: number) {
+    setOfficers(prev => prev.filter((_, i) => i !== index));
   }
 
   function goToOfficers(e: FormEvent) {
@@ -269,16 +283,35 @@ export function RegisterChapter() {
       {step === "officers" && (
         <form onSubmit={goToReview} style={{ marginTop: 20 }}>
           <p style={bodyTextStyle}>
-            All eight offices, matching the paper form. A mobile number is required for every
-            officer, including the three Master Initiators, who receive no login.
+            The President is the only officer required to petition. Add the rest as your chapter
+            fills them — it's fine to leave a position vacant for now and add it later.
           </p>
 
           {officers.map((o, i) => (
             <CharterOfficerFieldset
               key={o.officeId} officeId={o.officeId} values={o}
               onChange={(field, value) => updateOfficer(i, field, value)}
+              onRemove={o.officeId === PRESIDENT_OFFICE_ID ? undefined : () => removeOfficer(i)}
             />
           ))}
+
+          {availableOffices.length > 0 && (
+            <div style={addOfficerRowStyle}>
+              <select
+                aria-label="Add a position" value={nextOfficeId}
+                onChange={e => setNextOfficeId(e.target.value)}
+                style={{ ...fieldStyle, flex: 1 }}
+              >
+                <option value="">Add a position…</option>
+                {availableOffices.map(o => (
+                  <option key={o.officeId} value={o.officeId}>{o.officeName}</option>
+                ))}
+              </select>
+              <button type="button" onClick={addOfficer} disabled={!nextOfficeId} style={addOfficerButtonStyle}>
+                Add
+              </button>
+            </div>
+          )}
 
           {error && <p role="alert" style={errorStyle}>{error}</p>}
 
@@ -308,7 +341,9 @@ export function RegisterChapter() {
             </div>
           </div>
 
-          <div style={sectionLabelStyle}>Officers ({officers.length} of 8)</div>
+          <div style={sectionLabelStyle}>
+            Officers ({officers.length} of 8 {officers.length === 1 ? "position" : "positions"} filled)
+          </div>
           <div style={reviewCardStyle}>
             {officers.map(o => (
               <div key={o.officeId} style={reviewOfficerRowStyle}>
@@ -428,3 +463,11 @@ const reviewCardStyle: CSSProperties = {
 };
 
 const reviewOfficerRowStyle: CSSProperties = { padding: "8px 0", borderBottom: "1px solid var(--line)" };
+
+const addOfficerRowStyle: CSSProperties = { display: "flex", gap: 8, marginTop: 8, marginBottom: 18 };
+
+const addOfficerButtonStyle: CSSProperties = {
+  minHeight: "var(--tap)", padding: "0 18px", borderRadius: 8,
+  border: "1px solid var(--line)", background: "var(--paper)", color: "var(--info)",
+  fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase",
+};

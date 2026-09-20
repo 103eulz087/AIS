@@ -44,7 +44,8 @@ export type Session = "loading" | "signed-in" | "signed-out";
 interface AuthContextValue {
   session: Session;
   claims: Claims | null;
-  signIn: (memberNumber: string, password: string) => Promise<void>;
+  /** identifier accepts either a member number or the mobile number on file. */
+  signIn: (identifier: string, password: string) => Promise<void>;
   completeEnrolment: (token: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -110,8 +111,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => { cancelled = true; };
   }, [attemptRefresh, loadClaims, settleSignedOut]);
 
-  const signIn = useCallback(async (memberNumber: string, password: string) => {
-    const res = await api.post<SignInResponse>("/api/auth/sign-in", { memberNumber, password });
+  const signIn = useCallback(async (identifier: string, password: string) => {
+    const res = await api.post<SignInResponse>("/api/auth/sign-in", { identifier, password });
     setAccessToken(res.accessToken);
     await loadClaims();
     setSession("signed-in");

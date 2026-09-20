@@ -199,7 +199,7 @@ public class EnrolmentIssueBoundedCouncilBranchTests
         try
         {
             var before = DateTime.UtcNow;
-            var result = await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), CancellationToken.None);
+            var result = await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), null, CancellationToken.None);
 
             result.LinkId.Should().BePositive();
             result.ExpiresOn.Should().BeCloseTo(before.AddHours(72), TimeSpan.FromMinutes(5));
@@ -228,7 +228,7 @@ public class EnrolmentIssueBoundedCouncilBranchTests
         var repo = BuildRepository(_fx.ConnectionString!);
         try
         {
-            var act = async () => await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), CancellationToken.None);
+            var act = async () => await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<EnrolmentIssueException>(
                 "the bounded council-issuer branch is FIRST-CREDENTIAL-ONLY — once an account exists, only the chapter's own admin may touch it");
@@ -255,7 +255,7 @@ public class EnrolmentIssueBoundedCouncilBranchTests
 
         try
         {
-            var firstLink = await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), CancellationToken.None);
+            var firstLink = await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), null, CancellationToken.None);
 
             // Simulate redemption directly (this suite is about usp_Enrolment_Issue's own
             // predicate, not usp_Enrolment_Redeem's) — mark the link redeemed without creating
@@ -265,7 +265,7 @@ public class EnrolmentIssueBoundedCouncilBranchTests
                 "UPDATE dbo.EnrolmentLink SET RedeemedOn = SYSUTCDATETIME() WHERE LinkId = @linkId",
                 new { linkId = firstLink.LinkId });
 
-            var act = async () => await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), CancellationToken.None);
+            var act = async () => await repo.IssueAsync(targetMemberId, _fx.JurisdictionOfficerMemberId, RandomHash(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<EnrolmentIssueException>();
             assertion.Which.Reason.Should().Be(EnrolmentIssueFailureReason.NotPermitted);
@@ -292,7 +292,7 @@ public class EnrolmentIssueBoundedCouncilBranchTests
         try
         {
             var act = async () =>
-                created = await repo.IssueAsync(targetMemberId, _fx.NoJurisdictionOfficerMemberId, RandomHash(), CancellationToken.None);
+                created = await repo.IssueAsync(targetMemberId, _fx.NoJurisdictionOfficerMemberId, RandomHash(), null, CancellationToken.None);
 
             var assertion = await act.Should().ThrowAsync<EnrolmentIssueException>(
                 "a council officer with no jurisdiction over this chapter must never be able to issue its members a link — CLAUDE.md invariant #4");

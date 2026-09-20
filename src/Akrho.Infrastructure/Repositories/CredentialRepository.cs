@@ -53,6 +53,19 @@ public sealed record MemberCredentialRow(
     DateTime? DateSurvive, string? BloodTypeName,
     string StatusName, DateTime? RenewedThrough);
 
+/// <summary>
+/// The single row usp_Credential_VerifyForMember returns — the in-app, signed-in counterpart to
+/// the public verification page's four facts, extended with FullName/MemberNumber/BloodTypeName
+/// when (and only when) the scanning member shares the scanned member's chapter. The procedure
+/// itself decides IsSameChapter and nulls the extra three fields when it is false (CLAUDE.md
+/// invariant #7) — never re-filter or second-guess that here. IsValid=false collapses
+/// Invalid/Revoked/Expired into identical NULLs, anti-enumeration, same shape as
+/// usp_Credential_VerifyPublic's own result — never branch on which failure it was.
+/// </summary>
+public sealed record CredentialVerifyForMemberRow(
+    string? GiftName, string? ChapterName, string? StatusName, DateTime? RenewedThrough,
+    bool IsSameChapter, string? FullName, string? MemberNumber, string? BloodTypeName, bool IsValid);
+
 public interface ICredentialRepository
 {
     /// <summary>
@@ -65,6 +78,16 @@ public interface ICredentialRepository
     /// (the caller IS the row), defence in depth only.
     /// </summary>
     Task<MemberCredentialRow> GetOrIssueForSelfAsync(int memberId, CancellationToken ct);
+
+    /// <summary>
+    /// dbo.usp_Credential_VerifyForMember — the in-app, signed-in scan. <paramref name="requestingMemberId"/>
+    /// is the CALLER's own id from the JWT (CLAUDE.md invariant #4/#11), never a value from the
+    /// request. Never throws for a bad/revoked/expired token — that is the IsValid=false case the
+    /// procedure itself returns as an ordinary row, not an error; only genuine infrastructure
+    /// failures (timeout, dropped connection) propagate as exceptions here.
+    /// </summary>
+    Task<CredentialVerifyForMemberRow> VerifyForMemberAsync(
+        Guid tokenSubject, int requestingMemberId, bool wasOffline, string? deviceHint, CancellationToken ct);
 }
 
 public sealed class CredentialRepository(ISqlConnectionFactory factory) : ICredentialRepository
@@ -85,5 +108,22 @@ public sealed class CredentialRepository(ISqlConnectionFactory factory) : ICrede
         {
             throw new CredentialException(ex.Number, ex.Message);
         }
+    }
+
+    public async Task<CredentialVerifyForMemberRow> VerifyForMemberAsync(
+        Guid tokenSubject, int requestingMemberId, bool wasOffline, string? deviceHint, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        return await conn.QuerySingleAsync<CredentialVerifyForMemberRow>(new CommandDefinition(
+            "dbo.usp_Credential_VerifyForMember",
+            new
+            {
+                TokenSubject = tokenSubject,
+                RequestingMemberId = requestingMemberId, // from the token, never the body
+                WasOffline = wasOffline,
+                DeviceHint = deviceHint
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: ct));
     }
 }

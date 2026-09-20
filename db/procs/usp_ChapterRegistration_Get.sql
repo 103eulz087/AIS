@@ -76,6 +76,12 @@ BEGIN
     WHERE   cr.RegistrationId = @RegistrationId;
 
     -- 2. The eight officers, in office order, with verification state and resolved identity.
+    --    HasAccount drives the "Resend enrolment link" action on an already-decided
+    --    registration (ChapterRegistrationDetail.tsx) -- an officer who already has a
+    --    dbo.UserAccount row is not offered that action; usp_Enrolment_Issue's own
+    --    "Bounded Council Issuer" branch would reject a council-officer-issued reissue
+    --    for him anyway (first-credential-only), so this is the UI-side mirror of that
+    --    same rule, not a new one.
     SELECT  o.RegistrationOfficerId, o.OfficeId, co.OfficeName, co.SortOrder, co.GrantsLogin,
             o.MemberId, m.MemberNumber,
             COALESCE(m.FirstName, o.FirstName) AS FirstName,
@@ -89,11 +95,13 @@ BEGIN
             COALESCE(m.PresidentDuringSurvive, o.PresidentDuringSurvive) AS PresidentDuringSurvive,
             COALESCE(m.MasterInitiatorDuringSurvive, o.MasterInitiatorDuringSurvive) AS MasterInitiatorDuringSurvive,
             o.VerifiedBy, vb.GiftName AS VerifiedByGiftName, o.VerifiedDate, o.VerifyNote,
-            o.CreatedMemberId
+            o.CreatedMemberId,
+            CAST(CASE WHEN ua.AccountId IS NULL THEN 0 ELSE 1 END AS BIT) AS HasAccount
     FROM    dbo.ChapterRegistrationOfficer o
             JOIN dbo.ChapterOffice co ON co.OfficeId = o.OfficeId
             LEFT JOIN dbo.Member m  ON m.MemberId  = o.MemberId
             LEFT JOIN dbo.Member vb ON vb.MemberId = o.VerifiedBy
+            LEFT JOIN dbo.UserAccount ua ON ua.MemberId = o.MemberId
     WHERE   o.RegistrationId = @RegistrationId
     ORDER BY co.SortOrder;
 

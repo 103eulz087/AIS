@@ -47,11 +47,15 @@ public sealed record MemberProfileDto(
 /// PATCH /api/members/me. RowVersion is whatever the last GET /api/members/me call returned —
 /// the concurrency guard lives in usp_Member_UpdateOwnProfile's own UPDATE WHERE clause, not
 /// here. CurrentPassword is optional at the DTO level; whether it is actually REQUIRED depends
-/// on whether MobileNo is really changing — see the handler for exactly how that is decided.
-/// BloodTypeConfirmed is never described as "verified" anywhere in this codebase — it is a
-/// self-report, confirmed on a date, full stop (docs §8).
+/// on whether MobileNo is really changing — see the handler for exactly how that is decided
+/// (GiftName/BirthDate/DateSurvive/PresidentDuringSurvive/MasterInitiatorDuringSurvive changes
+/// never require it — only MobileNo is security-relevant, since it is how the account is
+/// reached/recovered). BloodTypeConfirmed is never described as "verified" anywhere in this
+/// codebase — it is a self-report, confirmed on a date, full stop (docs §8).
 /// </summary>
 public sealed record UpdateMemberProfileRequest(
+    string GiftName, DateOnly? BirthDate, DateOnly? DateSurvive,
+    string? PresidentDuringSurvive, string? MasterInitiatorDuringSurvive,
     string MobileNo, string? Email, string? Address,
     int? BloodTypeId, bool BloodTypeConfirmed, string? Profession,
     IReadOnlyList<int> SkillIds,
@@ -88,3 +92,28 @@ public sealed record MemberSearchRequest(
 /// EnrolmentUrl's raw token. A lost link means the admin issues another fresh one.
 /// </summary>
 public sealed record ReissueMemberEnrolmentLinkResponseDto(int MemberId, string EnrolmentUrl, DateTime ExpiresOnUtc);
+
+/// <summary>POST /api/members/{memberId}/block and /unblock — National Council only.
+/// Reason is required and recorded in dbo.MemberAccountAction, kept out of
+/// dbo.CorrectiveAction (client decision 2026-09-21 — blocking a login is not the same
+/// act as disciplining a member).</summary>
+public sealed record MemberAccountActionRequest(string Reason);
+
+/// <summary>Response for both block and unblock — a plain acknowledgement, nothing to
+/// show-once here (unlike a reset, which hands back a link).</summary>
+public sealed record MemberAccountActionResultDto(int MemberId, string Action);
+
+/// <summary>
+/// POST /api/members/{memberId}/reset-password — National Council only. SHOW-ONCE, same
+/// convention as ReissueMemberEnrolmentLinkResponseDto: this is the only response that
+/// will ever carry EnrolmentUrl's raw token. Never a password — CLAUDE.md invariant #16.
+/// </summary>
+public sealed record MemberPasswordResetDto(int MemberId, string EnrolmentUrl, DateTime ExpiresOnUtc);
+
+/// <summary>GET /api/members/blocked — National Council only. One row per currently-
+/// blocked member (dbo.MemberAccountAction's own most-recent-action derivation, not
+/// dbo.UserAccount.IsDisabled directly — a member blocked before his first enrolment has
+/// no UserAccount row yet and must still appear here).</summary>
+public sealed record BlockedMemberDto(
+    int MemberId, string GiftName, string MemberNumber, string? ChapterName,
+    string Reason, DateTime PerformedDateUtc, string? BlockedByGiftName);

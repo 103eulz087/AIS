@@ -64,6 +64,11 @@ interface PhotoClaimedResponse { photoUrl: string }
  * must always start as a complete, faithful copy of what the server has on file.
  */
 interface FormState {
+  giftName: string;
+  birthdate: string;
+  dateSurvive: string;
+  presidentDuringSurvive: string;
+  masterInitiatorDuringSurvive: string;
   email: string;
   address: string;
   profession: string;
@@ -78,6 +83,11 @@ interface FormState {
 
 function buildForm(data: MemberProfileResponse): FormState {
   return {
+    giftName: data.giftName ?? "",
+    birthdate: data.birthdate ?? "",
+    dateSurvive: data.dateSurvive ?? "",
+    presidentDuringSurvive: data.presidentDuringSurvive ?? "",
+    masterInitiatorDuringSurvive: data.masterInitiatorDuringSurvive ?? "",
     email: data.email ?? "",
     address: data.address ?? "",
     profession: data.profession ?? "",
@@ -223,10 +233,17 @@ export function Profile() {
     setSaving(true);
 
     const payload: {
+      giftName: string; birthDate: string | null; dateSurvive: string | null;
+      presidentDuringSurvive: string | null; masterInitiatorDuringSurvive: string | null;
       mobileNo: string; email: string | null; address: string | null;
       bloodTypeId: number | null; bloodTypeConfirmed: boolean; profession: string | null;
       skillIds: number[]; rowVersion: string; currentPassword?: string;
     } = {
+      giftName: form.giftName.trim(),
+      birthDate: form.birthdate || null,
+      dateSurvive: form.dateSurvive || null,
+      presidentDuringSurvive: form.presidentDuringSurvive.trim() || null,
+      masterInitiatorDuringSurvive: form.masterInitiatorDuringSurvive.trim() || null,
       mobileNo: form.mobileNo.trim(),
       email: form.email.trim() || null,
       address: form.address.trim() || null,
@@ -306,19 +323,16 @@ export function Profile() {
         </div>
       )}
 
-      {/* "Your record" — read-only. No <input>/<select>/<textarea> anywhere in this
-          block, by design: these are organizational/historical facts, not something a
-          member edits himself (CLAUDE.md invariant #4). */}
+      {/* "Your record" — the parts still officer-only. Member number, legal name,
+          chapter, status and renewal are organizational/scoping state (CLAUDE.md
+          invariant #4) — never a member self-edit, no <input> here for any of them.
+          Gift name, birthdate and survive-history moved into the editable form below;
+          those are the member's own personal identity/history, not org state. */}
       <div data-testid="profile-readonly">
         <div style={sectionLabelStyle}>Your record</div>
         <div style={cardStyle}>
           <ReadRow label="Member number" value={data.memberNumber} mono />
-          <ReadRow label="Gift name" value={data.giftName} />
           <ReadRow label="Full name" value={fullName} />
-          <ReadRow label="Birthdate" value={shortDate(data.birthdate)} />
-          <ReadRow label="Date survive" value={shortDate(data.dateSurvive)} />
-          <ReadRow label="President during survive" value={data.presidentDuringSurvive ?? "—"} />
-          <ReadRow label="Master initiator" value={data.masterInitiatorDuringSurvive ?? "—"} />
           <ReadRow label="Chapter" value={data.chapterName ?? "—"} />
           <ReadRow label="Status" value={data.status ?? "—"} />
           <ReadRow label="Renewal" value={validThrough(data.renewedThrough)} />
@@ -329,6 +343,43 @@ export function Profile() {
       </div>
 
       <form onSubmit={e => { void handleSave(e); }}>
+        <div style={sectionLabelStyle}>Identity &amp; history</div>
+
+        <label htmlFor="giftName" style={labelStyle}>Gift name</label>
+        <input
+          id="giftName" value={form.giftName}
+          onChange={e => setForm(f => f && { ...f, giftName: e.target.value })}
+          style={fieldStyle}
+        />
+
+        <label htmlFor="birthdate" style={labelStyle}>Birthdate</label>
+        <input
+          id="birthdate" type="date" value={form.birthdate}
+          onChange={e => setForm(f => f && { ...f, birthdate: e.target.value })}
+          style={fieldStyle}
+        />
+
+        <label htmlFor="dateSurvive" style={labelStyle}>Date survive</label>
+        <input
+          id="dateSurvive" type="date" value={form.dateSurvive}
+          onChange={e => setForm(f => f && { ...f, dateSurvive: e.target.value })}
+          style={fieldStyle}
+        />
+
+        <label htmlFor="presidentDuringSurvive" style={labelStyle}>President during survive</label>
+        <input
+          id="presidentDuringSurvive" value={form.presidentDuringSurvive}
+          onChange={e => setForm(f => f && { ...f, presidentDuringSurvive: e.target.value })}
+          style={fieldStyle}
+        />
+
+        <label htmlFor="masterInitiatorDuringSurvive" style={labelStyle}>Master initiator</label>
+        <input
+          id="masterInitiatorDuringSurvive" value={form.masterInitiatorDuringSurvive}
+          onChange={e => setForm(f => f && { ...f, masterInitiatorDuringSurvive: e.target.value })}
+          style={fieldStyle}
+        />
+
         <div style={sectionLabelStyle}>Contact &amp; details</div>
 
         <label htmlFor="email" style={labelStyle}>Email</label>
@@ -473,7 +524,97 @@ export function Profile() {
         {photoUploadError && <p role="alert" style={{ ...errorTextStyle, textAlign: "center" }}>{photoUploadError}</p>}
       </div>
 
+      <ChangePasswordSection />
+
       <NotificationSettings />
+    </div>
+  );
+}
+
+/**
+ * POST /api/auth/change-password — a separate action from the profile PATCH above (a
+ * different endpoint, its own current-password check server-side). Deliberately its own
+ * small form with its own local state: a wrong current password or a too-short new one
+ * must never disturb whatever the member was mid-editing in the profile form above it.
+ */
+function ChangePasswordSection() {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setDone(false);
+
+    if (newPassword.length < 10) {
+      setError("Your new password must be at least 10 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Those two passwords don't match.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await api.post("/api/auth/change-password", { currentPassword, newPassword });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setDone(true);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setError("Your current password is incorrect.");
+      } else if (err instanceof ApiError && err.errors) {
+        setError(Object.values(err.errors).flat().join(" "));
+      } else {
+        setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div>
+      <div style={sectionLabelStyle}>Password</div>
+      <form onSubmit={e => { void handleSubmit(e); }}>
+        <label htmlFor="currentPassword2" style={labelStyle}>Current password</label>
+        <input
+          id="currentPassword2" type="password" autoComplete="current-password"
+          value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
+          style={fieldStyle}
+        />
+
+        <label htmlFor="newPassword" style={labelStyle}>New password</label>
+        <input
+          id="newPassword" type="password" autoComplete="new-password"
+          value={newPassword} onChange={e => setNewPassword(e.target.value)}
+          style={fieldStyle}
+        />
+        <p style={hintStyle}>At least 10 characters.</p>
+
+        <label htmlFor="confirmPassword" style={labelStyle}>Confirm new password</label>
+        <input
+          id="confirmPassword" type="password" autoComplete="new-password"
+          value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+          style={fieldStyle}
+        />
+
+        {error && <p role="alert" style={errorTextStyle}>{error}</p>}
+        {done && <p style={{ ...hintStyle, color: "var(--in)" }}>Password changed.</p>}
+
+        <button
+          type="submit" disabled={submitting}
+          style={{ ...buttonStyle, opacity: submitting ? 0.7 : 1 }}
+        >
+          {submitting ? "Changing…" : "Change password"}
+        </button>
+      </form>
     </div>
   );
 }

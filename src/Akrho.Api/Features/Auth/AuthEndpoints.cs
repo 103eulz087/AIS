@@ -16,6 +16,7 @@ public static class AuthEndpoints
         g.MapPost("/refresh", Refresh).WithName("RefreshToken");
         g.MapPost("/sign-out", SignOut).WithName("SignOut").RequireAuthorization();
         g.MapGet("/me", Me).WithName("Me").RequireAuthorization();
+        g.MapPost("/change-password", ChangePassword).WithName("ChangePassword").RequireAuthorization();
 
         return app;
     }
@@ -28,7 +29,7 @@ public static class AuthEndpoints
         if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
 
         var ip = http.Connection.RemoteIpAddress?.ToString();
-        var account = await repo.GetAccountForSignInAsync(req.MemberNumber, ct);
+        var account = await repo.GetAccountForSignInAsync(req.Identifier, ct);
 
         // No such account, disabled, locked out, or wrong password — every one of these
         // returns the same generic 401. Never let the response say which reason it was;
@@ -124,5 +125,34 @@ public static class AuthEndpoints
         // follow-up proc (extend usp_Auth_GetClaims, or a small usp_Chapter_GetName) —
         // until then the frontend keeps its AppShell hardcode.
         return TypedResults.Ok(new MeResponseDto(caller.MemberId, caller.ChapterId, null, giftName, roles));
+    }
+
+    private static async Task<Results<Ok, ValidationProblem, UnauthorizedHttpResult, NotFound>> ChangePassword(
+        ChangePasswordRequest req, IAuthRepository repo, IPasswordHasherService hasher,
+        ICurrentUser caller, IValidator<ChangePasswordRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        // Self-only — caller.MemberId comes from the JWT, never the request body
+        // (CLAUDE.md invariant #4/#11). Unreachable NotFound: an authenticated caller IS
+        // an existing account; defence in depth only, same posture as CredentialException.
+        var account = await repo.GetOwnAccountForPasswordChangeAsync(caller.MemberId, ct);
+        if (account is null) return TypedResults.NotFound();
+
+        // Wrong current password: same generic 401 posture SignIn uses for a bad
+        // credential — never distinguish "wrong password" from anything else here.
+        if (!hasher.Verify(account.PasswordHash, req.CurrentPassword))
+            return TypedResults.Unauthorized();
+
+        var newHash = hasher.Hash(req.NewPassword);
+        await repo.ChangePasswordAsync(caller.MemberId, newHash, ct);
+
+        // Every OTHER session's refresh token is revoked — a stolen/old refresh cookie
+        // must not survive a password change. This tab's own short-lived access token is
+        // untouched; it simply expires and re-authenticates normally on its own schedule.
+        await repo.RevokeRefreshTokenFamilyAsync(caller.AccountId, "password changed", ct);
+
+        return TypedResults.Ok();
     }
 }

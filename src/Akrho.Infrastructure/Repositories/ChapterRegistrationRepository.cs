@@ -53,11 +53,13 @@ public sealed class ChapterRegistrationException : Exception
             // A malformed payload: a bad proposed name/geography/accent, a wrong officer
             // count/unrecognized office, a missing mobile or impossible birthdate, an
             // incoming turnover officer who is not an existing approved/active chapter
-            // member, a too-short return reason, or (Approve/Turnover) a missing token hash
-            // for an incoming officer who needs a brand-new account.
+            // member, a too-short return reason, (Approve/Turnover) a missing token hash
+            // for an incoming officer who needs a brand-new account, or (Approve/Charter)
+            // two officers sharing a mobile number / one already registered to an existing
+            // member — correctable by fixing the registration, not a permission problem.
             51500 or 51501 or 51502 or 51503 or 51504 or 51505 or 51506 or 51507
                 or 51511 or 51512 or 51513
-                or 51550 or 51564
+                or 51550 or 51564 or 51565 or 51566
                 or 51570 or 51571 or 51572 or 51573 or 51574 or 51575 or 51576 or 51577
                 => ChapterRegistrationErrorCategory.BadRequest,
 
@@ -91,7 +93,7 @@ internal static class ChapterRegistrationErrors
         51530,
         51540, 51541, 51542,
         51550, 51551, 51552, 51553,
-        51560, 51561, 51562, 51563, 51564,
+        51560, 51561, 51562, 51563, 51564, 51565, 51566,
         51570, 51571, 51572, 51573, 51574, 51575, 51576, 51577, 51578, 51579,
         // Not raised by any usp_ChapterRegistration_* procedure itself — thrown by
         // usp_Approval_ResolveApprover (51090) and usp_Council_ResolveJurisdiction (51300),
@@ -148,7 +150,7 @@ public sealed record ChapterRegistrationOfficerRow(
     string MobileNo, string? Email, DateTime? DateSurvive,
     string? PresidentDuringSurvive, string? MasterInitiatorDuringSurvive,
     int? VerifiedBy, string? VerifiedByGiftName, DateTime? VerifiedDate, string? VerifyNote,
-    int? CreatedMemberId);
+    int? CreatedMemberId, bool HasAccount);
 
 /// <summary>One status change, oldest first.</summary>
 public sealed record ChapterRegistrationUpdateRow(
@@ -287,7 +289,7 @@ public interface IChapterRegistrationRepository
     Task<ChapterRegistrationApproveResult> ApproveAsync(
         int registrationId, string registrationType, int requestingMemberId,
         byte[]? tokenHash, DateTime? expiresOn,
-        IReadOnlyDictionary<int, byte[]> turnoverTokenHashes, CancellationToken ct);
+        IReadOnlyDictionary<int, byte[]> turnoverTokenHashes, string? defaultPasswordHash, CancellationToken ct);
 }
 
 public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory) : IChapterRegistrationRepository
@@ -525,7 +527,7 @@ public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory)
     public async Task<ChapterRegistrationApproveResult> ApproveAsync(
         int registrationId, string registrationType, int requestingMemberId,
         byte[]? tokenHash, DateTime? expiresOn,
-        IReadOnlyDictionary<int, byte[]> turnoverTokenHashes, CancellationToken ct)
+        IReadOnlyDictionary<int, byte[]> turnoverTokenHashes, string? defaultPasswordHash, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
@@ -538,7 +540,8 @@ public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory)
                     RequestingMemberId = requestingMemberId,
                     TokenHash = tokenHash,
                     ExpiresOn = expiresOn,
-                    TurnoverTokenHashes = MemberTokenHashTable(turnoverTokenHashes).AsTableValuedParameter("dbo.MemberTokenHashRow")
+                    TurnoverTokenHashes = MemberTokenHashTable(turnoverTokenHashes).AsTableValuedParameter("dbo.MemberTokenHashRow"),
+                    DefaultPasswordHash = defaultPasswordHash
                 },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
 

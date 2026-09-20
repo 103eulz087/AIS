@@ -46,8 +46,12 @@ public interface IEnrolmentRepository
     /// my password" recovery path (CLAUDE.md invariant #16: recovery is a new link, never a
     /// transmitted or admin-set password). Throws <see cref="EnrolmentIssueException"/> if the
     /// member is gone, holds no active role, or the caller is not that chapter's admin.
+    /// <paramref name="defaultPasswordHash"/> is DRY-RUN ONLY (see
+    /// Akrho.Infrastructure.Security.DryRunDefaults) — pass null to preserve the original,
+    /// hardened behaviour of never touching the account until the link is redeemed.
     /// </summary>
-    Task<EnrolmentIssueResultRow> IssueAsync(int memberId, int issuedBy, byte[] tokenHash, CancellationToken ct);
+    Task<EnrolmentIssueResultRow> IssueAsync(
+        int memberId, int issuedBy, byte[] tokenHash, string? defaultPasswordHash, CancellationToken ct);
 }
 
 public sealed class EnrolmentRepository(ISqlConnectionFactory factory) : IEnrolmentRepository
@@ -82,14 +86,19 @@ public sealed class EnrolmentRepository(ISqlConnectionFactory factory) : IEnrolm
         }
     }
 
-    public async Task<EnrolmentIssueResultRow> IssueAsync(int memberId, int issuedBy, byte[] tokenHash, CancellationToken ct)
+    public async Task<EnrolmentIssueResultRow> IssueAsync(
+        int memberId, int issuedBy, byte[] tokenHash, string? defaultPasswordHash, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
         {
             return await conn.QuerySingleAsync<EnrolmentIssueResultRow>(new CommandDefinition(
                 "dbo.usp_Enrolment_Issue",
-                new { MemberId = memberId, IssuedBy = issuedBy, TokenHash = tokenHash },
+                new
+                {
+                    MemberId = memberId, IssuedBy = issuedBy, TokenHash = tokenHash,
+                    DefaultPasswordHash = defaultPasswordHash,
+                },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
         }
         catch (SqlException ex) when (ex.Number == 51100)

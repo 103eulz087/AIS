@@ -27,6 +27,12 @@ export interface CharterOfficerFormValues {
   masterInitiatorDuringSurvive: string;
 }
 
+/** The one office every Charter petition must name — see usp_ChapterRegistration_Submit's
+ * own header for why: it stays hard-required even though every other office is now
+ * optional. Resolved by name from CHAPTER_OFFICES, matching the server's own
+ * name-based (never a hardcoded id) resolution. */
+export const PRESIDENT_OFFICE_ID = CHAPTER_OFFICES.find(o => o.officeName === "President")!.officeId;
+
 export function emptyCharterOfficerForm(officeId: number): CharterOfficerFormValues {
   return {
     officeId, firstName: "", middleName: "", lastName: "", giftName: "", birthDate: "",
@@ -34,17 +40,27 @@ export function emptyCharterOfficerForm(officeId: number): CharterOfficerFormVal
   };
 }
 
-/** One blank form row per office, in the same order CHAPTER_OFFICES declares them. */
+/** Only the President to start — every other office is genuinely optional at Charter
+ * time (real chapters petitioning today often don't have every seat filled yet), added
+ * one at a time via RegisterChapter.tsx's own "Add a position" control. Filling all
+ * eight up front used to produce dirty data: petitioners typed dummy names into vacant
+ * Master Initiator/Auditor slots just to satisfy an "exactly 8" rule that never
+ * reflected reality — see usp_ChapterRegistration_Submit's header for the same reasoning
+ * on the server side. */
 export function emptyCharterOfficerRoster(): CharterOfficerFormValues[] {
-  return CHAPTER_OFFICES.map(o => emptyCharterOfficerForm(o.officeId));
+  return [emptyCharterOfficerForm(PRESIDENT_OFFICE_ID)];
 }
 
 /** Client-side mirror of ChapterCharterOfficerInputValidator — first/last/gift name,
  * birthdate and a mobile number (in the same 09XXXXXXXXX / +639XXXXXXXXX shape the
- * server accepts) are required for EVERY officer, including the three Master Initiators.
- * A hint only — the server's own validation is authoritative and is surfaced verbatim on
- * rejection. */
+ * server accepts) are required for every officer ACTUALLY ADDED, including a Master
+ * Initiator if one is added — recorded offices with no login still need a real mobile
+ * number to be reached. A hint only — the server's own validation is authoritative and
+ * is surfaced verbatim on rejection. */
 export function validateCharterOfficerRoster(officers: readonly CharterOfficerFormValues[]): string | null {
+  if (!officers.some(o => o.officeId === PRESIDENT_OFFICE_ID)) {
+    return "A President is required to petition for a new chapter.";
+  }
   for (const o of officers) {
     const label = CHAPTER_OFFICES.find(x => x.officeId === o.officeId)?.officeName ?? "An officer";
     if (!o.firstName.trim() || !o.lastName.trim() || !o.giftName.trim() || !o.birthDate) {
@@ -73,10 +89,12 @@ export function toCharterOfficerInput(v: CharterOfficerFormValues): ChapterChart
   };
 }
 
-export function CharterOfficerFieldset({ officeId, values, onChange, disabled }: {
+export function CharterOfficerFieldset({ officeId, values, onChange, onRemove, disabled }: {
   officeId: number;
   values: CharterOfficerFormValues;
   onChange: <K extends keyof CharterOfficerFormValues>(field: K, value: CharterOfficerFormValues[K]) => void;
+  /** Omitted for the President — that office can never be removed, only filled in. */
+  onRemove?: () => void;
   disabled?: boolean;
 }) {
   const office = CHAPTER_OFFICES.find(o => o.officeId === officeId);
@@ -86,7 +104,14 @@ export function CharterOfficerFieldset({ officeId, values, onChange, disabled }:
     <div style={officerCardStyle}>
       <div style={officerHeaderStyle}>
         <span>{office?.officeName ?? "Officer"}</span>
-        {office && !office.grantsLogin && <span style={noLoginPillStyle}>Recorded — no login</span>}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {office && !office.grantsLogin && <span style={noLoginPillStyle}>Recorded — no login</span>}
+          {onRemove && (
+            <button type="button" onClick={onRemove} disabled={disabled} style={removeButtonStyle}>
+              Remove
+            </button>
+          )}
+        </div>
       </div>
       {office?.officeName === "President" && (
         <p style={hintStyle}>Receives the chapter's first account once this petition is approved.</p>
@@ -234,6 +259,10 @@ const officerHeaderStyle: CSSProperties = {
 const noLoginPillStyle: CSSProperties = {
   fontSize: 10, padding: "2px 8px", borderRadius: 10, whiteSpace: "nowrap",
   background: "var(--bond)", color: "var(--slate)", border: "1px solid var(--line)",
+};
+
+const removeButtonStyle: CSSProperties = {
+  fontSize: 11.5, color: "var(--out)", minHeight: 28, padding: "0 4px",
 };
 
 const labelStyle: CSSProperties = {

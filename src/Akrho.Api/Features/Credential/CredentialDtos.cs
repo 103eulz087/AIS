@@ -23,3 +23,15 @@ public sealed record MyCredentialDto(
     DateOnly? RenewedThrough,
     DateTime CredentialIssuedDateUtc, DateTime CredentialExpiryDateUtc,
     string VerificationUrl);
+
+/// <summary>
+/// POST /api/scans body — the in-app, signed-in scan. Same shape as
+/// Verification.VerifyTokenRequest (the anonymous counterpart); kept as its own record rather
+/// than shared across features, matching this codebase's convention of not cross-referencing
+/// DTOs between feature folders. Token is the opaque credential subject from the scanned QR
+/// (CLAUDE.md invariant #8), never a MemberId.
+/// </summary>
+public sealed record ScanRequest(Guid Token, bool WasOffline = false, string? DeviceHint = null);
+
+/// <summary>GET /api/members/me/scans query — paged, newest first.</summary>
+public sealed record ScanLogListQuery(int PageSize = 20, int PageNumber = 1);

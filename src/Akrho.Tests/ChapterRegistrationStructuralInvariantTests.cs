@@ -396,8 +396,39 @@ public class Turnover_officer_must_be_an_existing_member_of_the_SAME_chapter
 /// <summary>Small helpers shared by the DB-backed tests in this file.</summary>
 internal static class ChapterRegistrationTestHelpers
 {
-    public static async Task<(int RegionId, int ProvinceId, int MunicipalityId)> PickGeographyAsync(SqlConnection conn)
+    /// <summary>
+    /// Resolves geography that matches <paramref name="actingCouncilId"/>'s OWN branch —
+    /// reading that council's own RegionId/ProvinceId/MunicipalityId columns (set directly
+    /// on whichever level owns them; see 17_chapter_registration.sql's own backfill
+    /// comment) rather than an arbitrary geography row. usp_ChapterRegistration_Approve
+    /// now derives a Charter's new chapter's parent FROM the registration's OWN chosen
+    /// geography (auto-creating any missing council level in that chain), not from
+    /// ActingCouncilId directly — so a mismatched pick would silently build an unrelated
+    /// council chain that the test's own council officer (seated on actingCouncilId, and
+    /// nowhere else) has no jurisdiction over, exactly the failure this once produced.
+    /// </summary>
+    public static async Task<(int RegionId, int ProvinceId, int MunicipalityId)> PickGeographyAsync(
+        SqlConnection conn, int actingCouncilId)
     {
+        var council = await conn.QuerySingleAsync<(int? RegionId, int? ProvinceId, int? MunicipalityId)>(
+            "SELECT RegionId, ProvinceId, MunicipalityId FROM dbo.Council WHERE CouncilId = @actingCouncilId",
+            new { actingCouncilId });
+
+        if (council.MunicipalityId is { } municipalityId)
+        {
+            var (regionId, provinceId) = await conn.QuerySingleAsync<(int, int)>(
+                """
+                SELECT p.RegionId, m.ProvinceId
+                FROM   dbo.Municipality m JOIN dbo.Province p ON p.ProvinceId = m.ProvinceId
+                WHERE  m.MunicipalityId = @municipalityId
+                """,
+                new { municipalityId });
+            return (regionId, provinceId, municipalityId);
+        }
+
+        // No current caller passes a council above City/Municipal level (one with no
+        // MunicipalityId of its own) — kept only so this helper degrades to something
+        // sensible instead of throwing, if a future caller ever does.
         var row = await conn.QuerySingleAsync<(int RegionId, int ProvinceId, int MunicipalityId)>(
             """
             SELECT TOP (1) pr.RegionId, pr.ProvinceId, mu.MunicipalityId
@@ -469,7 +500,7 @@ internal static class ChapterRegistrationTestHelpers
     public static async Task<(int RegistrationId, string ReferenceNo, string Marker, string PresidentMobile)>
         InsertCharterRegistrationDirectAsync(SqlConnection conn, int actingCouncilId, int verifiedCount, int? verifiedBy)
     {
-        var (regionId, provinceId, municipalityId) = await PickGeographyAsync(conn);
+        var (regionId, provinceId, municipalityId) = await PickGeographyAsync(conn, actingCouncilId);
         var offices = await GetOfficesAsync(conn);
         offices.Should().HaveCount(8);
 

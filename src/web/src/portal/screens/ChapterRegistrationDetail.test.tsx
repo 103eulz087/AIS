@@ -96,7 +96,7 @@ function makeOfficer(officerId: number, officeName: string, verified: boolean): 
     presidentDuringSurvive: null, masterInitiatorDuringSurvive: null,
     verifiedBy: verified ? 5 : null, verifiedByGiftName: verified ? "SEKRETARYO" : null,
     verifiedDateUtc: verified ? "2026-09-01T00:00:00Z" : null, verifyNote: null,
-    createdMemberId: null,
+    createdMemberId: null, hasAccount: false,
   };
 }
 

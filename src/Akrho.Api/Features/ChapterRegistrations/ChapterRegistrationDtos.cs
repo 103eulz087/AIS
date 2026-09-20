@@ -85,7 +85,7 @@ public sealed record ChapterRegistrationOfficerDto(
     string MobileNo, string? Email, DateOnly? DateSurvive,
     string? PresidentDuringSurvive, string? MasterInitiatorDuringSurvive,
     int? VerifiedBy, string? VerifiedByGiftName, DateTime? VerifiedDateUtc, string? VerifyNote,
-    int? CreatedMemberId);
+    int? CreatedMemberId, bool HasAccount);
 
 public sealed record ChapterRegistrationUpdateDto(
     int ChapterRegistrationUpdateId, DateTime UpdateDateUtc, int? UpdatedBy, string StatusName, string? Notes);

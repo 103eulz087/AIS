@@ -97,4 +97,20 @@ public class ScopeGuardTests
         var act = () => _guard.EnsureCouncil(Member(1, 10), 5);
         act.Should().Throw<ScopeViolationException>();
     }
+
+    // Council Statistics module: a cheap existence-only pre-check, deliberately not
+    // subtree-aware (that lives entirely inside usp_CouncilStatistics_Get).
+    [Fact]
+    public void Caller_with_any_council_seat_may_attempt_a_council_only_action()
+    {
+        var act = () => _guard.EnsureAnyCouncilSeat(CouncilOfficer(1, 5));
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void Caller_with_no_council_seat_at_all_cannot_attempt_a_council_only_action()
+    {
+        var act = () => _guard.EnsureAnyCouncilSeat(Member(1, 10));
+        act.Should().Throw<ScopeViolationException>();
+    }
 }

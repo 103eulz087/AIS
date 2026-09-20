@@ -13,14 +13,17 @@ internal static class ChapterRegistrationPatterns
     public const string MobileNo = @"^(09\d{9}|\+639\d{9})$";
 
     /// <summary>
-    /// The eight chapter offices are a controlled, server-seeded list (dbo.ChapterOffice) whose
-    /// exact row count the stored procedures deliberately never hardcode (see
-    /// usp_ChapterRegistration_Submit's own header comment). EightOfficers is a client-side hint
-    /// only — it does not become the source of truth for "how many offices exist" the way the
-    /// procedure's own dynamic COUNT(*) is; if the seed ever changes, the procedure's own error
-    /// message is what the caller actually sees.
+    /// The eight chapter offices are a controlled, server-seeded list (dbo.ChapterOffice).
+    /// MaxOfficers bounds a Charter submission's officer count from above ONLY — a hint,
+    /// same posture as every other client-side mirror in this class. Deliberately NOT
+    /// mirroring "exactly one President must be included" here: that requires resolving
+    /// which OfficeId means President, which is server-seeded data this validator has no
+    /// business hardcoding (the whole reason the old "== 8" rule never hardcoded a
+    /// number either). usp_ChapterRegistration_Submit/_Resubmit resolve President by
+    /// NAME and remain the sole, authoritative check — their rejection is surfaced
+    /// verbatim to the caller either way.
     /// </summary>
-    public const int EightOfficers = 8;
+    public const int MaxOfficers = 8;
 }
 
 /// <summary>One typed-in Charter officer's own field rules — shared by Submit and Resubmit via
@@ -59,8 +62,11 @@ public sealed class SubmitChapterRegistrationRequestValidator : AbstractValidato
         RuleFor(x => x.MarkAccentId).GreaterThan(0).When(x => x.MarkAccentId is not null);
 
         RuleFor(x => x.Officers).NotEmpty()
-            .Must(o => o.Count == ChapterRegistrationPatterns.EightOfficers)
-            .WithMessage("Exactly one officer must be given for each of the eight chapter offices.");
+            .WithMessage("At least the President must be given.")
+            .Must(o => o.Count <= ChapterRegistrationPatterns.MaxOfficers)
+            .WithMessage("There are only eight chapter offices — remove a duplicate before submitting.")
+            .Must(o => o.Select(x => x.OfficeId).Distinct().Count() == o.Count)
+            .WithMessage("Each office may be given at most once.");
         RuleForEach(x => x.Officers).SetValidator(new ChapterCharterOfficerInputValidator());
     }
 }
@@ -86,8 +92,11 @@ public sealed class ResubmitChapterRegistrationRequestValidator : AbstractValida
         RuleFor(x => x.MarkAccentId).GreaterThan(0).When(x => x.MarkAccentId is not null);
 
         RuleFor(x => x.Officers).NotEmpty()
-            .Must(o => o.Count == ChapterRegistrationPatterns.EightOfficers)
-            .WithMessage("Exactly one officer must be given for each of the eight chapter offices.");
+            .WithMessage("At least the President must be given.")
+            .Must(o => o.Count <= ChapterRegistrationPatterns.MaxOfficers)
+            .WithMessage("There are only eight chapter offices — remove a duplicate before submitting.")
+            .Must(o => o.Select(x => x.OfficeId).Distinct().Count() == o.Count)
+            .WithMessage("Each office may be given at most once.");
         RuleForEach(x => x.Officers).SetValidator(new ChapterCharterOfficerInputValidator());
     }
 }
@@ -105,8 +114,11 @@ public sealed class SubmitChapterTurnoverRequestValidator : AbstractValidator<Su
 {
     public SubmitChapterTurnoverRequestValidator()
     {
+        // Turnover — unchanged by the Charter relaxation above (out of scope for this
+        // change; still every one of the eight offices, matching an existing chapter's
+        // full annual roster filing).
         RuleFor(x => x.Officers).NotEmpty()
-            .Must(o => o.Count == ChapterRegistrationPatterns.EightOfficers)
+            .Must(o => o.Count == ChapterRegistrationPatterns.MaxOfficers)
             .WithMessage("Exactly one officer must be given for each of the eight chapter offices.");
         RuleForEach(x => x.Officers).SetValidator(new ChapterTurnoverOfficerInputValidator());
     }

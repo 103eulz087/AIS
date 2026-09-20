@@ -37,7 +37,10 @@ CREATE OR ALTER PROCEDURE dbo.usp_MembershipApplication_Approve
     @RequestingMemberId INT,
     @SeconderMemberId INT = NULL,
     @TokenHash VARBINARY(32),
-    @ExpiresOn DATETIME2 = NULL
+    @ExpiresOn DATETIME2 = NULL,
+    -- DRY-RUN ONLY (Akrho.Infrastructure.Security.DryRunDefaults). Forwarded verbatim to
+    -- the usp_Enrolment_Issue call below — NULL preserves the original, hardened behaviour.
+    @DefaultPasswordHash NVARCHAR(200) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -80,6 +83,14 @@ BEGIN
     DECLARE @PendingApprovalId INT = (SELECT StatusId FROM dbo.MembershipApplicationStatus WHERE StatusName = 'PendingApproval');
     IF @StatusId <> @PendingApprovalId
         THROW 51225, 'This application has already been decided.', 1;
+
+    /* Mobile-number uniqueness guard — dry-run decision: mobile number now doubles as an
+       alternate sign-in identifier (usp_Auth_GetAccountForSignIn), so two members sharing
+       one would make sign-in-by-mobile ambiguous. Same check repeated in
+       usp_ChapterRegistration_Approve's Charter branch and usp_Member_UpdateOwnProfile
+       for the other two paths a Member row's MobileNo can come from. */
+    IF EXISTS (SELECT 1 FROM dbo.Member WHERE MobileNo = @MobileNo AND IsDeleted = 0)
+        THROW 51237, 'That mobile number is already registered to another member. Ask the applicant to confirm his own number before approving.', 1;
 
     /* @SeconderMemberId overrides whatever (if anything) was already recorded on the
        application — this is the admin's authenticated confirmation of who the free-text
@@ -149,7 +160,8 @@ BEGIN
             @TokenHash = @TokenHash,
             @ExpiresOn = @ExpiresOn,
             @LinkId = @LinkId OUTPUT,
-            @ExpiresOnOut = @ExpiresOnOut OUTPUT;
+            @ExpiresOnOut = @ExpiresOnOut OUTPUT,
+            @DefaultPasswordHash = @DefaultPasswordHash;
 
         UPDATE dbo.MembershipApplication
            SET StatusId = @ApprovedId, IsOpen = 0,

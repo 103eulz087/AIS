@@ -30,6 +30,13 @@ public sealed class UpdateMemberProfileRequestValidator : AbstractValidator<Upda
 
     public UpdateMemberProfileRequestValidator()
     {
+        RuleFor(x => x.GiftName)
+            .NotEmpty().WithMessage("A gift name is required. It cannot be blanked.")
+            .MaximumLength(60);
+
+        RuleFor(x => x.PresidentDuringSurvive).MaximumLength(120);
+        RuleFor(x => x.MasterInitiatorDuringSurvive).MaximumLength(120);
+
         RuleFor(x => x.MobileNo)
             .NotEmpty().WithMessage("A mobile number is required. It cannot be blanked once set.");
 
@@ -54,5 +61,16 @@ public sealed class ClaimMemberPhotoRequestValidator : AbstractValidator<ClaimMe
     public ClaimMemberPhotoRequestValidator()
     {
         RuleFor(x => x.AttachmentStagingId).GreaterThan(0);
+    }
+}
+
+/// <summary>Client-side mirror of usp_Member_Block/_Unblock/_ResetPassword's own "a
+/// reason is required" rule — a hint only, the procedure's own rejection is authoritative.</summary>
+public sealed class MemberAccountActionRequestValidator : AbstractValidator<MemberAccountActionRequest>
+{
+    public MemberAccountActionRequestValidator()
+    {
+        RuleFor(x => x.Reason).NotEmpty().MaximumLength(300)
+            .WithMessage("A reason is required.");
     }
 }

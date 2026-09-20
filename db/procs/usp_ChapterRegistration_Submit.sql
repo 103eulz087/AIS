@@ -2,14 +2,22 @@
    named on it — @PerformedBy on the audit row and @ActorMemberId on the routing row are
    both NULL by design, exactly like usp_MembershipApplication_Submit before it.
 
-   Validates: exactly the eight offices, each exactly once (dynamically checked against
-   dbo.ChapterOffice's own row count — never a hardcoded "8" — see design note 2 in
-   db/schema/10_membership_applications.sql for why this codebase resolves controlled
-   lists by name/row-count rather than baking in a number that could silently drift from
-   the seed); a mobile number for every officer, Master Initiators included (§7A.4: "An
-   officer with no number cannot be given access" — true for all eight, even the three
-   who receive no login, because they still become member records with their own
-   MobileNo); and a real past birthdate for everyone.
+   Validates: a President is the only mandatory office — every other office (Vice
+   President, Secretary, Treasurer, Auditor, the three Master Initiators) is genuinely
+   optional at Charter time. Real chapters petitioning today often do not have every
+   seat filled yet, and forcing all eight up front produced dirty data: petitioners
+   were typing dummy names/numbers into vacant slots just to satisfy an "exactly 8"
+   rule that never reflected reality. So: at least one officer row, EXACTLY one of them
+   the President (resolved by name, never a hardcoded office id), no office repeated
+   twice, and every OfficeId given must be a real dbo.ChapterOffice row. A mobile
+   number for every officer actually submitted, Master Initiators included (§7A.4: "An
+   officer with no number cannot be given access" — true for anyone given here, even
+   the three who receive no login, because they still become member records with their
+   own MobileNo); and a real past birthdate for everyone submitted.
+
+   President remains hard-required, not just a UI nicety: usp_ChapterRegistration_Approve
+   passes @PresidentMemberId straight into usp_Enrolment_Issue with no NULL guard — a
+   registration with no President could never be approved.
 
    Double-submit handling is byte-for-byte the same idiom as
    usp_MembershipApplication_Submit: TRY/CATCH around the insert, and on a unique-index
@@ -43,13 +51,16 @@ BEGIN
     IF @MarkAccentId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ChapterAccent WHERE AccentId = @MarkAccentId)
         THROW 51503, 'Unrecognized accent colour.', 1;
 
-    DECLARE @OfficeCount INT = (SELECT COUNT(*) FROM dbo.ChapterOffice);
+    DECLARE @PresidentOfficeId INT = (SELECT OfficeId FROM dbo.ChapterOffice WHERE OfficeName = 'President');
 
-    IF (SELECT COUNT(*) FROM @Officers) <> @OfficeCount
-        THROW 51504, 'Exactly one officer must be given for each of the eight chapter offices.', 1;
+    IF (SELECT COUNT(*) FROM @Officers) = 0
+        THROW 51504, 'At least the President must be given.', 1;
 
-    IF EXISTS (SELECT 1 FROM dbo.ChapterOffice co LEFT JOIN @Officers o ON o.OfficeId = co.OfficeId WHERE o.OfficeId IS NULL)
-        THROW 51504, 'Exactly one officer must be given for each of the eight chapter offices.', 1;
+    IF (SELECT COUNT(*) FROM @Officers WHERE OfficeId = @PresidentOfficeId) <> 1
+        THROW 51504, 'Exactly one President must be given.', 1;
+
+    IF EXISTS (SELECT OfficeId FROM @Officers GROUP BY OfficeId HAVING COUNT(*) > 1)
+        THROW 51504, 'Each office may be given at most once.', 1;
 
     IF EXISTS (SELECT 1 FROM @Officers o LEFT JOIN dbo.ChapterOffice co ON co.OfficeId = o.OfficeId WHERE co.OfficeId IS NULL)
         THROW 51505, 'Unrecognized office.', 1;

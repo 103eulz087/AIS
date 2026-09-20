@@ -84,4 +84,13 @@ public static class RateLimiting
     /// <see cref="MembershipApplicationSubmit"/> (a caller-supplied reference+mobile pair that
     /// must not be hammerable).</summary>
     public const string ChapterRegistrationStatus = "chapter-registration-status";
+
+    /// <summary>
+    /// Guards POST /api/verifications and GET /api/verifications/{token}/photo — the public,
+    /// unauthenticated credential scan/verify page and its photo lookup. Nobody is
+    /// authenticated, so this partitions by caller IP, same shape as
+    /// <see cref="MembershipApplicationStatus"/>/<see cref="ChapterRegistrationStatus"/> (a
+    /// caller-supplied token that must not be hammerable/enumerable).
+    /// </summary>
+    public const string CredentialVerify = "credential-verify";
 }

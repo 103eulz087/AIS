@@ -23,15 +23,20 @@ import { DonationDetail } from "@/ais/screens/DonationDetail";
 import { SignIn } from "@/ais/screens/SignIn";
 import { Enrol } from "@/ais/screens/Enrol";
 import { Apply } from "@/ais/screens/Apply";
+import { JoinChapter } from "@/ais/screens/JoinChapter";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
 import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
 import { RegisterChapter } from "@/ais/screens/RegisterChapter";
 import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
 import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { InviteMembers } from "@/ais/screens/InviteMembers";
 import { PortalShell } from "@/portal/PortalShell";
 import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
 import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
+import { IdCardExport } from "@/portal/screens/IdCardExport";
+import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
+import { BlockedMembers } from "@/portal/screens/BlockedMembers";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -41,6 +46,8 @@ import { ChatRoom } from "@/ais/screens/ChatRoom";
 import { ChatModeration } from "@/ais/screens/ChatModeration";
 import { Conversations } from "@/ais/screens/Conversations";
 import { Conversation } from "@/ais/screens/Conversation";
+import { Scan } from "@/ais/screens/Scan";
+import { VerifyCard } from "@/public/VerifyCard";
 import { AppShell } from "@/shared/AppShell";
 import { RequireAuth, useAuth } from "@/shared/auth";
 import { EmptyState } from "@/shared/states";
@@ -225,10 +232,18 @@ export const router = createBrowserRouter([
   { path: "/enrol/:token", element: <Enrol /> },
   { path: "/apply", element: <Apply /> },
   { path: "/apply/status", element: <ApplyStatus /> },
+  // Public, unauthenticated — the additive "join THIS chapter directly" landing page
+  // reached from a chapter's own generated link/QR code. Same "no chrome" reasoning as
+  // /apply: no identity, no chapter mark, exists yet.
+  { path: "/j/:token", element: <JoinChapter /> },
   // Public, unauthenticated, no chapter mark (docs §7A.3/§7A.4) — the chapter does not
   // exist yet when either of these is reached. Same "no chrome" reasoning as /apply above.
   { path: "/register-chapter", element: <RegisterChapter /> },
   { path: "/register-chapter/status", element: <RegisterChapterStatus /> },
+  // Public verification page (CLAUDE.md vocabulary: chapter mark is "absent from the
+  // public verification page") — a stranger's camera opens this directly, no login,
+  // no chrome. See VerifyCard.tsx's own header comment.
+  { path: "/verify/:token", element: <VerifyCard /> },
 
   {
     path: "/",
@@ -251,6 +266,11 @@ export const router = createBrowserRouter([
       // No chapterId anywhere — the API re-derives the filer's own chapter from his
       // ChapterAdmin seat (CLAUDE.md invariant #4/#11), same reasoning as /applications.
       { path: "officers", element: <OfficerRoster /> },
+      // ChapterAdmin-only (canManageChapterInviteLink); generate/regenerate the
+      // chapter's own permanent join link/QR code. No chapterId anywhere — the API
+      // re-derives the caller's own chapter from his ChapterAdmin seat, same reasoning
+      // as /applications and /officers above.
+      { path: "invite", element: <InviteMembers /> },
       { path: "ledger", element: <LedgerForCurrentChapter /> },
       { path: "meetings", element: <MeetingListForCurrentChapter /> },
       { path: "meetings/new", element: <MeetingNewForCurrentChapter /> },
@@ -284,7 +304,8 @@ export const router = createBrowserRouter([
       // neither needs a "ForCurrentChapter" wrapper.
       { path: "conversations", element: <Conversations /> },
       { path: "conversations/:roomId", element: <Conversation /> },
-      // TODO next: /scan, /seals
+      { path: "scan", element: <Scan /> },
+      // TODO next: /seals
     ],
   },
 
@@ -305,6 +326,17 @@ export const router = createBrowserRouter([
     children: [
       { path: "chapter-registrations", element: <ChapterRegistrationQueue /> },
       { path: "chapter-registrations/:registrationId", element: <ChapterRegistrationDetail /> },
+      // CouncilAdmin-only (canExportIdCards); the National ID card export. No chapterId
+      // in the route — the screen's own optional picker supplies it as a query param.
+      { path: "id-card-export", element: <IdCardExport /> },
+      // CouncilSecretary/CouncilAdmin (canViewCouncilStatistics); the rollup dashboard.
+      // No councilId in the route — the screen defaults to the caller's own seat and
+      // drills down via its own internal focus state, never a URL param.
+      { path: "statistics", element: <CouncilStatistics /> },
+      // CouncilAdmin (canManageMemberAccounts); the real National-only restriction is
+      // enforced server-side. No memberId in the route — block/unblock/reset happen
+      // from MemberDirectory (any member, org-wide) or from this review list itself.
+      { path: "blocked-members", element: <BlockedMembers /> },
     ],
   },
 ]);

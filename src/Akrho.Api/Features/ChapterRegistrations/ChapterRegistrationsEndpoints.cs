@@ -292,7 +292,8 @@ public static class ChapterRegistrationsEndpoints
     /// that outlives this method. There is no GET to re-fetch this response later.
     /// </summary>
     private static async Task<Results<Ok<ApproveChapterRegistrationResponseDto>, NotFound, Conflict<string>, BadRequest<string>, ProblemHttpResult>> Approve(
-        int id, IConfiguration config, IChapterRegistrationRepository repo, ICurrentUser caller, CancellationToken ct)
+        int id, IConfiguration config, IChapterRegistrationRepository repo,
+        IPasswordHasherService hasher, ICurrentUser caller, CancellationToken ct)
     {
         ChapterRegistrationDetailRows detail;
         try
@@ -336,11 +337,16 @@ public static class ChapterRegistrationsEndpoints
             }
         }
 
+        // DRY-RUN ONLY — see Akrho.Infrastructure.Security.DryRunDefaults. Makes every
+        // newly-enrolled officer sign-in-capable immediately, on this well-known password;
+        // the enrolment link(s) below are untouched and still let each of them set his own.
+        var defaultPasswordHash = hasher.Hash(DryRunDefaults.InitialPassword);
+
         try
         {
             var result = await repo.ApproveAsync(
                 id, detail.Header.RegistrationType, caller.MemberId,
-                charterTokenHash, null, turnoverTokenHashes, ct);
+                charterTokenHash, null, turnoverTokenHashes, defaultPasswordHash, ct);
 
             if (result.RegistrationType == "Charter")
             {
@@ -399,7 +405,7 @@ public static class ChapterRegistrationsEndpoints
             o.MobileNo, o.Email, o.DateSurvive is { } ds ? DateOnly.FromDateTime(ds) : null,
             o.PresidentDuringSurvive, o.MasterInitiatorDuringSurvive,
             o.VerifiedBy, o.VerifiedByGiftName, o.VerifiedDate, o.VerifyNote,
-            o.CreatedMemberId)).ToList();
+            o.CreatedMemberId, o.HasAccount)).ToList();
 
         var history = detail.History.Select(u => new ChapterRegistrationUpdateDto(
             u.ChapterRegistrationUpdateId, u.UpdateDate, u.UpdatedBy, u.StatusName, u.Notes)).ToList();

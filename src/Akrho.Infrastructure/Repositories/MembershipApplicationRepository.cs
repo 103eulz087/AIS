@@ -39,8 +39,9 @@ public sealed class MembershipApplicationException : Exception
                 => MembershipApplicationErrorCategory.Forbidden,
 
             // A malformed payload: a bad chapter, an impossible birthdate, an unresolved
-            // seconder, or a reason under 10 characters.
-            51216 or 51217 or 51220 or 51226 or 51229 or 51233
+            // seconder, a reason under 10 characters, or a mobile number already registered
+            // to another member (dry-run decision — see this proc's own header comment).
+            51216 or 51217 or 51220 or 51226 or 51229 or 51233 or 51237
                 => MembershipApplicationErrorCategory.BadRequest,
 
             _ => MembershipApplicationErrorCategory.BadRequest
@@ -59,7 +60,7 @@ internal static class MembershipApplicationErrors
     private static readonly HashSet<int> Known =
     [
         51216, 51217, 51218, 51219, 51220, 51221, 51222, 51223, 51224, 51225,
-        51226, 51227, 51228, 51229, 51230, 51231, 51232, 51233, 51234, 51235, 51236
+        51226, 51227, 51228, 51229, 51230, 51231, 51232, 51233, 51234, 51235, 51236, 51237
     ];
 
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
@@ -180,7 +181,7 @@ public interface IMembershipApplicationRepository
     /// </summary>
     Task<MembershipApplicationApproveResultRow> ApproveAsync(
         int applicationId, int requestingMemberId, int? seconderMemberId,
-        byte[] tokenHash, DateTime? expiresOn, CancellationToken ct);
+        byte[] tokenHash, DateTime? expiresOn, string? defaultPasswordHash, CancellationToken ct);
 
     /// <summary>ChapterAdmin only. Throws <see cref="MembershipApplicationException"/> (NotFound / Conflict / Forbidden / BadRequest).</summary>
     Task<MembershipApplicationDecisionResultRow> ReturnAsync(int applicationId, int requestingMemberId, string reason, CancellationToken ct);
@@ -325,7 +326,7 @@ public sealed class MembershipApplicationRepository(ISqlConnectionFactory factor
 
     public async Task<MembershipApplicationApproveResultRow> ApproveAsync(
         int applicationId, int requestingMemberId, int? seconderMemberId,
-        byte[] tokenHash, DateTime? expiresOn, CancellationToken ct)
+        byte[] tokenHash, DateTime? expiresOn, string? defaultPasswordHash, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
@@ -338,7 +339,8 @@ public sealed class MembershipApplicationRepository(ISqlConnectionFactory factor
                     RequestingMemberId = requestingMemberId,
                     SeconderMemberId = seconderMemberId,
                     TokenHash = tokenHash,
-                    ExpiresOn = expiresOn
+                    ExpiresOn = expiresOn,
+                    DefaultPasswordHash = defaultPasswordHash
                 },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
         }

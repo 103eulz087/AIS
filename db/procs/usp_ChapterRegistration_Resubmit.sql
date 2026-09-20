@@ -44,13 +44,18 @@ BEGIN
     IF @MarkAccentId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ChapterAccent WHERE AccentId = @MarkAccentId)
         THROW 51573, 'Unrecognized accent colour.', 1;
 
-    DECLARE @OfficeCount INT = (SELECT COUNT(*) FROM dbo.ChapterOffice);
+    DECLARE @PresidentOfficeId INT = (SELECT OfficeId FROM dbo.ChapterOffice WHERE OfficeName = 'President');
 
-    IF (SELECT COUNT(*) FROM @Officers) <> @OfficeCount
-        THROW 51574, 'Exactly one officer must be given for each of the eight chapter offices.', 1;
+    -- President is the only mandatory office — see usp_ChapterRegistration_Submit's own
+    -- header for why every other office is genuinely optional at Charter time.
+    IF (SELECT COUNT(*) FROM @Officers) = 0
+        THROW 51574, 'At least the President must be given.', 1;
 
-    IF EXISTS (SELECT 1 FROM dbo.ChapterOffice co LEFT JOIN @Officers o ON o.OfficeId = co.OfficeId WHERE o.OfficeId IS NULL)
-        THROW 51574, 'Exactly one officer must be given for each of the eight chapter offices.', 1;
+    IF (SELECT COUNT(*) FROM @Officers WHERE OfficeId = @PresidentOfficeId) <> 1
+        THROW 51574, 'Exactly one President must be given.', 1;
+
+    IF EXISTS (SELECT OfficeId FROM @Officers GROUP BY OfficeId HAVING COUNT(*) > 1)
+        THROW 51574, 'Each office may be given at most once.', 1;
 
     IF EXISTS (SELECT 1 FROM @Officers o LEFT JOIN dbo.ChapterOffice co ON co.OfficeId = o.OfficeId WHERE co.OfficeId IS NULL)
         THROW 51575, 'Unrecognized office.', 1;
