@@ -91,6 +91,10 @@ Host       On-premise Windows Server, IIS in front of Kestrel
 ```
 CLAUDE.md                  this file
 docs/                      the specification — read before building
+docs/SESSION-HANDOFF.md    if it exists and isn't empty: READ IT FIRST. A running note
+                           for continuity between sessions/machines — what's uncommitted,
+                           what's undeployed, open decisions. Not part of the permanent
+                           spec; trimmed back down once its contents are committed/shipped.
 .claude/agents/            the team (see §5)
 .claude/skills/            repeatable procedures
 .claude/commands/          slash commands
