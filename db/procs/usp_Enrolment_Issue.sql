@@ -44,7 +44,22 @@
       council is meant to hold over a chapter's own accounts (§7A.4's whole officer-roster
       model is chapter-administered). Once a member has an account, or has ever redeemed a
       link, this branch permanently stops applying to him; only his own chapter's admin may
-      touch his enrolment from then on, via branch 1. */
+      touch his enrolment from then on, via branch 1.
+
+      WIDENED (2026-09-21, council-registration module, client-approved): the ancestor set
+      branch 2 checks against now ALSO includes the ancestors (and self) of any council
+      @MemberId currently holds a seated Council-scoped role on — not just the ancestors of
+      his own chapter. This is what lets a council that has just seated a brand-new officer
+      (in usp_Council_SeatOfficer's own same transaction, which inserts that MemberRole row
+      BEFORE calling this proc) also hand him his very first enrolment link, including when
+      he was seated from OUTSIDE his home chapter's own jurisdiction — his chapter's council
+      ancestors would never reach the seating council in that case, but the council he was
+      JUST seated on always will (the seating council is always itself-or-an-ancestor of the
+      council it seated him on, by construction — see usp_Council_ResolveSeatingAuthority).
+      The first-credential-only bound below is completely unchanged: this only widens WHICH
+      councils count as "his", never loosens "has no account yet AND has never redeemed a
+      link" — the one condition that keeps branch 2 from becoming the standing power the
+      paragraph above refuses to grant. */
 CREATE OR ALTER PROCEDURE dbo.usp_Enrolment_Issue
     @MemberId  INT,
     @IssuedBy  INT,
@@ -105,6 +120,27 @@ BEGIN
         )
         INSERT INTO @AncestorCouncils (CouncilId)
         SELECT CouncilId FROM AncestorTree
+        OPTION (MAXRECURSION 20);
+
+        -- WIDENED per this file's own header: also the ancestors (and self) of any council
+        -- @MemberId currently holds a seated Council-scoped role on — covers a council
+        -- issuing the very first link for an officer it just seated, in-jurisdiction or not.
+        ;WITH SeatedCouncils AS (
+            SELECT DISTINCT mr.ScopeId AS CouncilId
+            FROM   dbo.MemberRole mr
+            WHERE  mr.MemberId = @MemberId AND mr.ScopeType = 'Council'
+              AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+        ),
+        SeatedAncestorTree AS (
+            SELECT c.CouncilId, c.ParentCouncilId FROM dbo.Council c
+            JOIN SeatedCouncils sc ON sc.CouncilId = c.CouncilId
+            UNION ALL
+            SELECT c.CouncilId, c.ParentCouncilId
+            FROM   dbo.Council c JOIN SeatedAncestorTree a ON c.CouncilId = a.ParentCouncilId
+        )
+        INSERT INTO @AncestorCouncils (CouncilId)
+        SELECT DISTINCT sat.CouncilId FROM SeatedAncestorTree sat
+        WHERE  sat.CouncilId NOT IN (SELECT CouncilId FROM @AncestorCouncils)
         OPTION (MAXRECURSION 20);
 
         IF EXISTS (

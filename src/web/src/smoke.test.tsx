@@ -56,6 +56,8 @@ import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationD
 import { IdCardExport } from "@/portal/screens/IdCardExport";
 import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
 import { BlockedMembers } from "@/portal/screens/BlockedMembers";
+import { CouncilRegistry } from "@/portal/screens/CouncilRegistry";
+import { CouncilRoster } from "@/portal/screens/CouncilRoster";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -145,6 +147,11 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // calling GET /api/members/blocked — same reasoning as every other role-gated Portal
   // screen above.
   ["/portal/blocked-members", <BlockedMembers key="pbm" />],
+  // No session in jsdom -> canViewCouncilRegistry(roles=[]) is false, so both
+  // deterministically exercise the "you don't have access" empty state — same
+  // reasoning as every other role-gated Portal screen above.
+  ["/portal/councils", <CouncilRegistry key="pcr" />],
+  ["/portal/councils/1", <CouncilRoster key="pcrost" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],

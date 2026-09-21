@@ -113,6 +113,30 @@ export function canManageMemberAccounts(roles: readonly string[]): boolean {
 }
 
 /**
+ * CouncilAdmin — create a council, seat/unseat an officer, browse or look up a seating
+ * candidate. Mirrors AuthorizationPolicies.CouncilSeatOfficer's own ROLE bar — the real
+ * restriction to the specific council actually authorized to act is enforced server-side
+ * (usp_Council_ResolveSeatingAuthority), same "coarse client check, real server check"
+ * posture as canManageMemberAccounts above.
+ */
+export function canSeatCouncilOfficers(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
+}
+
+/**
+ * Any real council office — read-only registry/roster viewing. Mirrors
+ * AuthorizationPolicies.CouncilRegistryRead: deliberately broader than
+ * canSeatCouncilOfficers, since a Secretary or Treasurer has legitimate reason to see
+ * who is seated where even though only a CouncilAdmin may change it. CouncilAuditor and
+ * the inert seeded role names (ProvincialOfficer/RegionalOfficer/NationalSecretariat/
+ * SystemAdmin) must NEVER be added here or to any helper in this file.
+ */
+export function canViewCouncilRegistry(roles: readonly string[]): boolean {
+  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin")
+      || roles.includes("CouncilTreasurer") || roles.includes("CouncilOfficer") || roles.includes("CouncilPIO");
+}
+
+/**
  * CouncilSecretary or CouncilAdmin — see a council's chapter-registration queue and
  * detail, tick officers off as verified, return a registration for correction. Mirrors
  * AuthorizationPolicies.CouncilChapterRegistrationVerify (Program.cs:

@@ -10,6 +10,7 @@ using Akrho.Api.Features.Chat;
 using Akrho.Api.Features.Communications;
 using Akrho.Api.Features.Conversations;
 using Akrho.Api.Features.CouncilStatistics;
+using Akrho.Api.Features.Councils;
 using Akrho.Api.Features.Credential;
 using Akrho.Api.Features.Dashboard;
 using Akrho.Api.Features.Discipline;
@@ -101,6 +102,7 @@ builder.Services.AddScoped<IScanLogRepository, ScanLogRepository>();
 builder.Services.AddScoped<IPublicVerificationRepository, PublicVerificationRepository>();
 builder.Services.AddScoped<ICouncilStatisticsRepository, CouncilStatisticsRepository>();
 builder.Services.AddScoped<IMemberAccountActionRepository, MemberAccountActionRepository>();
+builder.Services.AddScoped<ICouncilSeatingRepository, CouncilSeatingRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -243,6 +245,10 @@ builder.Services.AddAuthorization(options =>
         p.RequireRole("CouncilSecretary", "CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.NationalMemberAccountManage, p =>
         p.RequireRole("CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.CouncilSeatOfficer, p =>
+        p.RequireRole("CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.CouncilRegistryRead, p =>
+        p.RequireRole("CouncilSecretary", "CouncilAdmin", "CouncilTreasurer", "CouncilOfficer", "CouncilPIO"));
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -438,6 +444,7 @@ app.MapConversations();
 app.MapNotifications();
 app.MapChapterRegistrations();
 app.MapCouncilStatistics();
+app.MapCouncils();
 app.MapIdCardExport();
 app.MapVerification();
 

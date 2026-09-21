@@ -34,6 +34,7 @@ export function PortalShell() {
               <Link to="/portal/id-card-export" style={navLinkStyle}>ID card export</Link>
               <Link to="/portal/statistics" style={navLinkStyle}>Statistics</Link>
               <Link to="/portal/blocked-members" style={navLinkStyle}>Blocked members</Link>
+              <Link to="/portal/councils" style={navLinkStyle}>Councils</Link>
               <span style={{ fontSize: 13, color: "var(--brass-soft)" }}>{claims.giftName}</span>
               <button onClick={() => { void signOut(); }} style={signOutStyle}>Sign out</button>
             </div>

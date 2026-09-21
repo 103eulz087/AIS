@@ -1444,3 +1444,152 @@ export interface MunicipalityOption {
   municipalityName: string;
   zipCode: string | null;
 }
+
+/* ============================================================================
+ * Council registration and officer seating. Mirrors
+ * src/Akrho.Api/Features/Councils/CouncilsDtos.cs field-for-field — read that file
+ * first if either drifts.
+ * ========================================================================== */
+
+/** The six council offices, form order. Mirrors dbo.CouncilOffice — no GET endpoint
+ * exposes this list separately (same GAP as CHAPTER_OFFICES above); a hint only. */
+export interface CouncilOfficeOption { councilOfficeId: number; officeName: string }
+export const COUNCIL_OFFICES: readonly CouncilOfficeOption[] = [
+  { councilOfficeId: 1, officeName: "President" },
+  { councilOfficeId: 2, officeName: "Vice President" },
+  { councilOfficeId: 3, officeName: "Secretary" },
+  { councilOfficeId: 4, officeName: "Treasurer" },
+  { councilOfficeId: 5, officeName: "Auditor" },
+  { councilOfficeId: 6, officeName: "Public Information Officer" },
+];
+
+/**
+ * GET /api/councils?councilId= — one row per council in the requested subtree.
+ * Three no/low-officer states, deliberately NOT collapsed into one boolean:
+ *   - neverConstituted: no MemberRole row has EVER existed here (auto-created to give
+ *     a chapter a parent, or just created, nobody seated yet).
+ *   - isDormant: it HAD seated officers once; their terms have all ended.
+ *   - hasSeatedOfficers: currently has at least one seated officer.
+ * Render each as its own plain sentence — never a bare officer count standing in for
+ * "never constituted" vs "dormant", and never a green tick for either.
+ */
+export interface CouncilRegistry {
+  councilId: number;
+  councilName: string;
+  levelName: string;
+  parentCouncilId: number | null;
+  depth: number;
+  isActive: boolean;
+  isDissolved: boolean;
+  hasSeatedOfficers: boolean;
+  neverConstituted: boolean;
+  isDormant: boolean;
+  seatedOfficerCount: number;
+  directChildCouncilCount: number;
+  directChapterCount: number;
+  directMemberCount: number;
+}
+
+/** GET /api/councils/{councilId}/eligible-officers?search= — an in-jurisdiction
+ * candidate. Never contact details, blood type or anything outside invariant #7's
+ * cross-chapter shape. */
+export interface CouncilOfficerCandidate {
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  fullName: string;
+  chapterId: number;
+  chapterName: string;
+  renewedThrough: string | null;
+  isCurrent: boolean;
+  isLapsed: boolean;
+  noMobileNumber: boolean;
+}
+
+/** GET /api/councils/member-lookup?councilId=&memberNumber= — an out-of-jurisdiction
+ * nominee, found by exact number only, never a browsable list (invariant #7). */
+export interface CouncilMemberLookup {
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  chapterName: string | null;
+  statusName: string;
+  renewedThrough: string | null;
+  isCurrent: boolean;
+  isLapsed: boolean;
+  noMobileNumber: boolean;
+}
+
+/** POST /api/councils — geography-driven; exactly one of regionId/provinceId/
+ * municipalityId, matching the level this council will be created at. */
+export interface CreateCouncilRequest {
+  parentCouncilId: number;
+  councilName: string;
+  regionId: number | null;
+  provinceId: number | null;
+  municipalityId: number | null;
+}
+
+export interface CouncilCreated { councilId: number; wasCreated: boolean }
+
+/** POST /api/councils/{councilId}/officers. outsideJurisdictionReason is required by
+ * the server itself when the nominee is not from a chapter in this council's own
+ * subtree — never a waiver, always a permanent record (invariant #13b). */
+export interface SeatCouncilOfficerRequest {
+  memberId: number;
+  councilOfficeId: number;
+  termStart: string;
+  termEnd: string | null;
+  outsideJurisdictionReason: string | null;
+}
+
+/**
+ * SHOW-ONCE when enrolmentUrl is non-null — the nominee's very first enrolment link,
+ * issued in the same transaction as the seat itself, only when he had no account yet
+ * and had never redeemed one. A null enrolmentUrl means he already has a working login
+ * elsewhere and needs none — never a password either way (invariant #16).
+ */
+export interface CouncilSeatResult {
+  memberRoleId: number;
+  wasInJurisdiction: boolean;
+  enrolmentUrl: string | null;
+  expiresOnUtc: string | null;
+}
+
+/** One row of GET /api/councils/{councilId}/officers's seats array — current or ended. */
+export interface CouncilRosterSeat {
+  memberRoleId: number;
+  councilOfficeId: number | null;
+  officeName: string | null;
+  roleName: string;
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  fullName: string;
+  homeChapterName: string | null;
+  termStart: string;
+  termEnd: string | null;
+  isCurrent: boolean;
+  renewedThrough: string | null;
+  hasAccount: boolean;
+}
+
+/** One row of GET /api/councils/{councilId}/officers's overrides array — permanent,
+ * never filtered out (invariant #13b: "no waiver, no approval step, just a permanent
+ * record"). Render with a visible, permanent badge — never the words "approved",
+ * "waived" or "exception". */
+export interface CouncilSeatOverride {
+  seatOverrideId: number;
+  memberRoleId: number;
+  giftName: string;
+  memberNumber: string;
+  homeChapterName: string | null;
+  reason: string;
+  seatedOnUtc: string;
+  seatedByGiftName: string;
+}
+
+export interface CouncilRoster {
+  seats: CouncilRosterSeat[];
+  overrides: CouncilSeatOverride[];
+}

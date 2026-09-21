@@ -25,9 +25,19 @@ BEGIN
 END
 GO
 
-/* Resolves who actually approves something sitting under @ParentCouncilId. */
+/* Resolves who actually approves something sitting under @ParentCouncilId.
+
+   OUTPUT params (added for usp_Council_ResolveSeatingAuthority — council-registration
+   module): every EXISTING caller (usp_ChapterRegistration_Submit/_Resubmit) uses the
+   SELECT result set via INSERT...EXEC and is completely unaffected — these three params
+   default to NULL/unused unless a caller explicitly binds them. They exist so a caller
+   that is ITSELF already inside an INSERT...EXEC (which cannot nest a second one) can
+   still get this proc's answer via a plain EXEC + OUTPUT instead. */
 CREATE OR ALTER PROCEDURE dbo.usp_Approval_ResolveApprover
-    @ParentCouncilId INT          -- the council the subject SHOULD report to; may not exist
+    @ParentCouncilId INT,          -- the council the subject SHOULD report to; may not exist
+    @ActingCouncilIdOut INT = NULL OUTPUT,
+    @CouncilNameOut NVARCHAR(150) = NULL OUTPUT,
+    @RoutingReasonOut NVARCHAR(40) = NULL OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -58,6 +68,10 @@ BEGIN
     SELECT  c.CouncilId AS ActingCouncilId, c.CouncilName,
             @ParentCouncilId AS IntendedCouncilId,
             CASE WHEN c.CouncilId = @ParentCouncilId THEN 'Parent' ELSE @Reason END AS RoutingReason
+    FROM    dbo.Council c WHERE c.CouncilId = @Current;
+
+    SELECT  @ActingCouncilIdOut = c.CouncilId, @CouncilNameOut = c.CouncilName,
+            @RoutingReasonOut = CASE WHEN c.CouncilId = @ParentCouncilId THEN 'Parent' ELSE @Reason END
     FROM    dbo.Council c WHERE c.CouncilId = @Current;
 END
 GO

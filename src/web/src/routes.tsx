@@ -37,6 +37,8 @@ import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationD
 import { IdCardExport } from "@/portal/screens/IdCardExport";
 import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
 import { BlockedMembers } from "@/portal/screens/BlockedMembers";
+import { CouncilRegistry } from "@/portal/screens/CouncilRegistry";
+import { CouncilRoster } from "@/portal/screens/CouncilRoster";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -337,6 +339,11 @@ export const router = createBrowserRouter([
       // enforced server-side. No memberId in the route — block/unblock/reset happen
       // from MemberDirectory (any member, org-wide) or from this review list itself.
       { path: "blocked-members", element: <BlockedMembers /> },
+      // canViewCouncilRegistry (any real council office); creating a council and
+      // seating/unseating officers is further gated by canSeatCouncilOfficers
+      // (CouncilAdmin) within the screens themselves.
+      { path: "councils", element: <CouncilRegistry /> },
+      { path: "councils/:councilId", element: <CouncilRoster /> },
     ],
   },
 ]);

@@ -131,4 +131,30 @@ public static class AuthorizationPolicies
     /// standing power this codebase has consistently refused to grant more broadly.
     /// </summary>
     public const string NationalMemberAccountManage = "NationalMemberAccountManage";
+
+    /// <summary>
+    /// CouncilAdmin — create a council, seat/unseat an officer, browse or look up a
+    /// seating candidate. The ROLE bar here is coarse (any CouncilAdmin seat, at any
+    /// level) — the actual restriction to the specific council authorized to act (the
+    /// nearest ancestor with seated officers, per invariant #13a) is enforced inside
+    /// usp_Council_Create/_SeatOfficer/_UnseatOfficer/_EligibleOfficers/_MemberLookup
+    /// themselves, same defence-in-depth posture as every other council-facing policy
+    /// in this file. Do NOT add CouncilSecretary/CouncilTreasurer here — seating and
+    /// creation are consequential, irreversible-in-effect actions (a seated officer
+    /// gets a real login), same two-person-integrity reasoning as
+    /// <see cref="CouncilChapterRegistrationApprove"/> narrowing
+    /// <see cref="CouncilChapterRegistrationVerify"/>.
+    /// </summary>
+    public const string CouncilSeatOfficer = "CouncilSeatOfficer";
+
+    /// <summary>
+    /// Any real council office — read-only. Council registry/roster viewing is
+    /// deliberately broader than <see cref="CouncilSeatOfficer"/>: a Secretary or
+    /// Treasurer has legitimate reason to see who is seated where, even though only a
+    /// CouncilAdmin may change it. usp_Council_GetRegistry/_GetRoster re-scope this to
+    /// the caller's own dbo.fn_MemberCouncilScope regardless of role. <c>CouncilAuditor</c>
+    /// and the inert seeded role names (ProvincialOfficer/RegionalOfficer/
+    /// NationalSecretariat/SystemAdmin) must NEVER be added here or to any policy.
+    /// </summary>
+    public const string CouncilRegistryRead = "CouncilRegistryRead";
 }
