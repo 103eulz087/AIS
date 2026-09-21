@@ -103,6 +103,7 @@ builder.Services.AddScoped<IPublicVerificationRepository, PublicVerificationRepo
 builder.Services.AddScoped<ICouncilStatisticsRepository, CouncilStatisticsRepository>();
 builder.Services.AddScoped<IMemberAccountActionRepository, MemberAccountActionRepository>();
 builder.Services.AddScoped<ICouncilSeatingRepository, CouncilSeatingRepository>();
+builder.Services.AddScoped<IChapterOfficerRepository, ChapterOfficerRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -249,6 +250,10 @@ builder.Services.AddAuthorization(options =>
         p.RequireRole("CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.CouncilRegistryRead, p =>
         p.RequireRole("CouncilSecretary", "CouncilAdmin", "CouncilTreasurer", "CouncilOfficer", "CouncilPIO"));
+    options.AddPolicy(AuthorizationPolicies.ChapterOfficerSeat, p =>
+        p.RequireRole("ChapterAdmin", "CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.ChapterMemberIdentityEdit, p =>
+        p.RequireRole("ChapterAdmin"));
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

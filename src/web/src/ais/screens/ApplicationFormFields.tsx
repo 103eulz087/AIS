@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 
 /**
- * The short-form registration fields shared by the initial submission (Apply.tsx) and
- * a resubmission after ReturnedForCorrection (ApplyStatus.tsx). MobileNo and the target
+ * The short-form registration fields shared by the initial submission (JoinChapter.tsx)
+ * and a resubmission after ReturnedForCorrection (ApplyStatus.tsx). MobileNo and the target
  * chapter are deliberately NOT here: mobileNo is half of the lookup identity a
  * resubmission is keyed by and cannot change on resubmit, and re-chaptering an
  * application is out of scope for this slice (see ResubmitMembershipApplicationRequest's

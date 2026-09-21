@@ -1,5 +1,4 @@
 import { useState, type CSSProperties, type FormEvent } from "react";
-import { Link } from "react-router-dom";
 import { api, ApiError } from "@/shared/api";
 import type { MembershipApplicationStatus } from "@/shared/types";
 import {
@@ -159,10 +158,6 @@ export function ApplyStatus() {
             {looking ? "Checking…" : "Check status"}
           </button>
         </form>
-
-        <p style={{ marginTop: 24, fontSize: 12.5, color: "var(--mute)", textAlign: "center" }}>
-          <Link to="/apply" style={{ color: "var(--info)" }}>Apply to join a chapter</Link>
-        </p>
       </div>
     );
   }
@@ -190,7 +185,7 @@ export function ApplyStatus() {
           <p style={statusBodyStyle}>Your application was not approved.</p>
           {a.decisionReason && <p style={reasonBoxStyle}>{a.decisionReason}</p>}
           <p style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 16, lineHeight: 1.6 }}>
-            You are welcome to <Link to="/apply" style={{ color: "var(--info)" }}>submit a new application</Link>.
+            You are welcome to apply again — ask the chapter for their join link.
           </p>
         </>
       )}

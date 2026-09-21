@@ -22,7 +22,6 @@ import { DonationNew } from "@/ais/screens/DonationNew";
 import { DonationDetail } from "@/ais/screens/DonationDetail";
 import { SignIn } from "@/ais/screens/SignIn";
 import { Enrol } from "@/ais/screens/Enrol";
-import { Apply } from "@/ais/screens/Apply";
 import { JoinChapter } from "@/ais/screens/JoinChapter";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
@@ -30,6 +29,7 @@ import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
 import { RegisterChapter } from "@/ais/screens/RegisterChapter";
 import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
 import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { ChapterOfficers } from "@/ais/screens/ChapterOfficers";
 import { InviteMembers } from "@/ais/screens/InviteMembers";
 import { PortalShell } from "@/portal/PortalShell";
 import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
@@ -232,14 +232,17 @@ export const router = createBrowserRouter([
   // Public: identity is not known yet, so no chapter mark and no app chrome.
   { path: "/sign-in", element: <SignIn /> },
   { path: "/enrol/:token", element: <Enrol /> },
-  { path: "/apply", element: <Apply /> },
+  // Public, unauthenticated, no chapter mark — an applicant checking status may not
+  // have redeemed anything yet, so no identity exists to carry chrome.
   { path: "/apply/status", element: <ApplyStatus /> },
-  // Public, unauthenticated — the additive "join THIS chapter directly" landing page
-  // reached from a chapter's own generated link/QR code. Same "no chrome" reasoning as
-  // /apply: no identity, no chapter mark, exists yet.
+  // The ONLY way to apply: a chapter's own generated link/QR code. The plain
+  // Region -> Province -> City -> Chapter picker that used to live at /apply was
+  // removed deliberately — every applicant now comes through a chapter's own
+  // invite link, matching the org's seconder-based joining model and avoiding the
+  // whole class of council-chain-resolution bugs that picker was exposed to.
   { path: "/j/:token", element: <JoinChapter /> },
   // Public, unauthenticated, no chapter mark (docs §7A.3/§7A.4) — the chapter does not
-  // exist yet when either of these is reached. Same "no chrome" reasoning as /apply above.
+  // exist yet when either of these is reached.
   { path: "/register-chapter", element: <RegisterChapter /> },
   { path: "/register-chapter/status", element: <RegisterChapterStatus /> },
   // Public verification page (CLAUDE.md vocabulary: chapter mark is "absent from the
@@ -268,6 +271,11 @@ export const router = createBrowserRouter([
       // No chapterId anywhere — the API re-derives the filer's own chapter from his
       // ChapterAdmin seat (CLAUDE.md invariant #4/#11), same reasoning as /applications.
       { path: "officers", element: <OfficerRoster /> },
+      // ChapterAdmin OR CouncilAdmin (canSeatChapterOfficers); immediate per-officer
+      // seat/unseat, distinct from /officers above (the annual full-roster Turnover
+      // petition). No chapterId in the route for the self-service case — ChapterOfficers.tsx
+      // reads its own chapterId from the caller's JWT claims, same reasoning as /officers.
+      { path: "officers/manage", element: <ChapterOfficers /> },
       // ChapterAdmin-only (canManageChapterInviteLink); generate/regenerate the
       // chapter's own permanent join link/QR code. No chapterId anywhere — the API
       // re-derives the caller's own chapter from his ChapterAdmin seat, same reasoning

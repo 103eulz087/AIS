@@ -93,7 +93,7 @@ export function SignIn() {
         </p>
 
         <p style={{ marginTop: 14, fontSize: 12.5, textAlign: "center", lineHeight: 1.6 }}>
-          New here? <Link to="/apply" style={{ color: "var(--info)" }}>Apply to join a chapter</Link>.
+          New here? Ask the chapter recruiting you for their join link.
         </p>
         <p style={{ marginTop: 6, fontSize: 12.5, textAlign: "center", lineHeight: 1.6 }}>
           Starting a new chapter? <Link to="/register-chapter" style={{ color: "var(--info)" }}>Register it here</Link>.

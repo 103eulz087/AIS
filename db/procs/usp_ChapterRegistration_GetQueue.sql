@@ -6,10 +6,22 @@
        may verify officers, return it, or (if he holds the approver role) approve it.
      - CanAct = 0: the registration is acting at a council somewhere in the SUBTREE of
        one the caller is seated on — read-only visibility (a provincial officer seeing
-       what its city councils are handling), via usp_Council_GetSubtree, exactly as
-       specified. The action procs (Verify/Return/Approve) each re-check ActingCouncilId
-       against the caller's OWN seat independently — this queue's CanAct flag is a
-       display convenience only, never itself a permission boundary. */
+       what its city councils are handling). The action procs (Verify/Return/Approve)
+       each re-check ActingCouncilId against the caller's OWN seat independently — this
+       queue's CanAct flag is a display convenience only, never itself a permission
+       boundary.
+
+   The subtree walk is done here directly over dbo.Council(ParentCouncilId) — the mirror
+   image of usp_ChapterRegistration_Get's own ANCESTOR walk — rather than by calling
+   usp_Council_GetSubtree. That proc answers a different question ("which chapters sit
+   under this council") and, as a side effect of joining to dbo.Chapter, silently omits
+   any intermediate council that carries no chapter directly (e.g. a Regional council
+   whose chapters all sit one level deeper, under its Provincial/City councils). An
+   ActingCouncilId can legitimately land on exactly such a council — §13a routing stops
+   at the nearest SEATED ancestor, which has nothing to do with whether that council
+   holds a chapter of its own — so a caller seated above it must still see it. Found
+   live: a registration routed to a Regional council with zero chapters of its own
+   never appeared in the seated National officer's queue. */
 CREATE OR ALTER PROCEDURE dbo.usp_ChapterRegistration_GetQueue
     @RequestingMemberId INT,
     @StatusId INT = NULL,
@@ -33,30 +45,15 @@ BEGIN
         THROW 51520, 'You do not currently hold a council office, so there is no registration queue to show.', 1;
 
     DECLARE @VisibleCouncils TABLE (CouncilId INT PRIMARY KEY);
-    INSERT INTO @VisibleCouncils (CouncilId) SELECT CouncilId FROM @SeatedCouncils;
-
-    /* usp_Council_GetSubtree, once per seated council — a council officer typically
-       holds one seat, occasionally two; this is never a hot path (a queue screen, not a
-       per-request scoping check), so a small loop over an existing, already-scoped
-       proc is preferred here over duplicating its recursive CTE. */
-    DECLARE @SubtreeChapters TABLE (ChapterId INT, ChapterName NVARCHAR(150), CouncilId INT, CouncilName NVARCHAR(150), Depth INT);
-    DECLARE @SeatedCouncilId INT;
-    DECLARE seat_cursor CURSOR LOCAL FAST_FORWARD FOR SELECT CouncilId FROM @SeatedCouncils;
-    OPEN seat_cursor;
-    FETCH NEXT FROM seat_cursor INTO @SeatedCouncilId;
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        INSERT INTO @SubtreeChapters (ChapterId, ChapterName, CouncilId, CouncilName, Depth)
-        EXEC dbo.usp_Council_GetSubtree @RootCouncilId = @SeatedCouncilId;
-        FETCH NEXT FROM seat_cursor INTO @SeatedCouncilId;
-    END
-    CLOSE seat_cursor;
-    DEALLOCATE seat_cursor;
-
+    ;WITH DescendantTree AS (
+        SELECT CouncilId, ParentCouncilId FROM dbo.Council WHERE CouncilId IN (SELECT CouncilId FROM @SeatedCouncils)
+        UNION ALL
+        SELECT c.CouncilId, c.ParentCouncilId
+        FROM   dbo.Council c JOIN DescendantTree dt ON c.ParentCouncilId = dt.CouncilId
+    )
     INSERT INTO @VisibleCouncils (CouncilId)
-    SELECT DISTINCT sc.CouncilId
-    FROM   @SubtreeChapters sc
-    WHERE  NOT EXISTS (SELECT 1 FROM @VisibleCouncils vc WHERE vc.CouncilId = sc.CouncilId);
+    SELECT DISTINCT CouncilId FROM DescendantTree
+    OPTION (MAXRECURSION 20);
 
     SELECT  cr.RegistrationId, cr.ReferenceNo, cr.RegistrationType, cr.ProposedChapterName,
             cr.ChapterId, ch.ChapterName, cr.StatusId, s.StatusName, cr.SubmittedDate,

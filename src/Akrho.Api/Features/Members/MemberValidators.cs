@@ -74,3 +74,17 @@ public sealed class MemberAccountActionRequestValidator : AbstractValidator<Memb
             .WithMessage("A reason is required.");
     }
 }
+
+/// <summary>Client-side mirror of usp_Member_UpdateByOfficer's own required-field
+/// rules — a hint only, the procedure's own rejection is authoritative.</summary>
+public sealed class UpdateMemberIdentityRequestValidator : AbstractValidator<UpdateMemberIdentityRequest>
+{
+    public UpdateMemberIdentityRequestValidator()
+    {
+        RuleFor(x => x.FirstName).NotEmpty().MaximumLength(60);
+        RuleFor(x => x.MiddleName).MaximumLength(60);
+        RuleFor(x => x.LastName).NotEmpty().MaximumLength(60);
+        RuleFor(x => x.MobileNo).NotEmpty().MaximumLength(30);
+        RuleFor(x => x.RowVersion).NotEmpty();
+    }
+}

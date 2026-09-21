@@ -19,9 +19,8 @@ import type { ChapterPublic } from "@/shared/types";
  * member credentials) but is fully idempotent and safe to run more than once — see the
  * endpoint's own header comment (IdCardExportEndpoints.cs).
  *
- * GET /api/chapters — the same public, unauthenticated chapter list Apply.tsx already
- * uses for its own picker (ChapterPublic[]). Reused here as a flat, alphabetical list
- * rather than Apply's cascading Region -> Province -> City picker: this screen only
+ * GET /api/chapters — the public, unauthenticated chapter list (ChapterPublic[],
+ * usp_Chapter_ListPublic). Consumed here as a flat, alphabetical list: this screen only
  * needs "pick one chapter or all of them," not a multi-step narrowing flow.
  *
  * Access gating: canExportIdCards (CouncilAdmin) is the same coarse, UI-only check

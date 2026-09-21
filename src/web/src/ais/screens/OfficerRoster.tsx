@@ -36,7 +36,11 @@ export function OfficerRoster() {
 
   const members = useQuery({
     queryKey: ["own-chapter-members-for-roster"],
-    queryFn: () => api.get<Paged<DirectoryRow>>("/api/members?take=500"),
+    // usp_Member_Search's own validator caps Take at 200 (MemberSearchRequestValidator) —
+    // the repository clamps to the same 200 regardless, so this is the real ceiling, not
+    // an arbitrary round number. A chapter with more active members than that is not a
+    // case this picker needs to handle today.
+    queryFn: () => api.get<Paged<DirectoryRow>>("/api/members?take=200"),
     enabled: canFile,
   });
 
@@ -129,6 +133,10 @@ export function OfficerRoster() {
         offices. Outgoing officers keep their member records and their history; only the office
         ends. Incoming officers each get their own enrolment link, never a password, and an
         account is never handed over.
+      </p>
+      <p style={{ ...bodyTextStyle, marginTop: 8 }}>
+        Replacing just one officer, not the whole roster?{" "}
+        <Link to="/officers/manage" style={{ color: "var(--info)" }}>Seat or unseat one officer directly</Link> instead.
       </p>
 
       <form onSubmit={e => { void handleSubmit(e); }} style={{ marginTop: 20 }}>

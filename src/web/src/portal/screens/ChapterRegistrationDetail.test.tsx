@@ -105,6 +105,7 @@ function makeRegistration(officers: ChapterRegistrationOfficer[]): ChapterRegist
     registrationId: 1, referenceNo: "CHR-2026-0001", registrationType: "Charter",
     chapterId: null, chapterName: null, proposedChapterName: "Brgy. Test Chapter",
     barangay: "Test", regionId: 4, provinceId: 41, municipalityId: 411,
+    regionName: "Region IV-A CALABARZON", provinceName: "Laguna Provincial Council", municipalityName: "Sta. Rosa City",
     markAccentId: 1, accentName: "Brass", hexValue: "#C39A3E",
     intendedCouncilId: 10, intendedCouncilName: "Sta. Rosa City Council",
     actingCouncilId: 10, actingCouncilName: "Sta. Rosa City Council", routingReason: "Parent",

@@ -9,9 +9,18 @@
       "authenticationType": "SqlLogin",
       "user": "sa",
       "trustServerCertificate": true,
-      "profileName": "Akrho (local)"
+      "profileName": "Akrho (local)",
+      "groupId": "ROOT",
+      "id": "724a1486-47f2-4306-9852-23e3354446c2"
     }
   ],
-  "search.exclude": { "**/node_modules": true, "**/bin": true, "**/obj": true, "**/dist": true },
-  "[sql]": { "editor.defaultFormatter": "ms-mssql.mssql" }
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/dist": true
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "ms-mssql.mssql"
+  }
 }

@@ -157,4 +157,34 @@ public static class AuthorizationPolicies
     /// NationalSecretariat/SystemAdmin) must NEVER be added here or to any policy.
     /// </summary>
     public const string CouncilRegistryRead = "CouncilRegistryRead";
+
+    /// <summary>
+    /// ChapterAdmin OR CouncilAdmin — view a chapter's own officer roster, seat/replace an
+    /// officer, or unseat one. Deliberately BOTH roles on one policy, not split the way
+    /// CouncilSeatOfficer/CouncilRegistryRead are: usp_Chapter_SeatOfficer/_UnseatOfficer
+    /// themselves enforce the real, narrower split (client decision 2026-09-22) — a
+    /// ChapterAdmin may act on every office EXCEPT President; only a CouncilAdmin seated at
+    /// the chapter's own resolved seating authority may act on the President seat. This
+    /// policy is only the coarse "is this caller either kind of officer at all" pre-check;
+    /// same defence-in-depth posture as every other policy in this file. Do NOT add
+    /// ChapterOfficer/ChapterTreasurer/ChapterAuditor or CouncilSecretary here — seating is
+    /// consequential (installs or removes a real standing office), same two-person-
+    /// integrity reasoning as <see cref="CouncilSeatOfficer"/>.
+    /// </summary>
+    public const string ChapterOfficerSeat = "ChapterOfficerSeat";
+
+    /// <summary>
+    /// ChapterAdmin only — correct a same-chapter member's typo'd FirstName/MiddleName/
+    /// LastName/MobileNo (PUT /api/members/{memberId}/identity). Mirrors the ROLE bar
+    /// usp_Member_UpdateOwnProfile's own header comment anticipates for this exact
+    /// capability ("editable only by an officer, through a future module") — this is
+    /// that module. usp_Member_UpdateByOfficer re-derives the real restriction (same
+    /// chapter as the caller's own ChapterAdmin seat) server-side regardless of this
+    /// coarse role check, same "coarse client check, real server check" posture as
+    /// every other policy in this file. <c>ChapterOfficer</c>/<c>ChapterTreasurer</c>/
+    /// <c>ChapterAuditor</c> must never be added here — a member's own legal name and
+    /// contact number are organizational-identity facts, same two-person-integrity
+    /// bar as <see cref="ChapterMoneyVoid"/> and <see cref="ChapterDisciplineWrite"/>.
+    /// </summary>
+    public const string ChapterMemberIdentityEdit = "ChapterMemberIdentityEdit";
 }

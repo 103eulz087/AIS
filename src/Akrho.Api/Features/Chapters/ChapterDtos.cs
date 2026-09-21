@@ -23,3 +23,23 @@ public sealed record ChapterInviteLinkIssuedDto(string JoinUrl, DateTime Created
 /// that has since gone inactive — all three read identically, on purpose (anti-
 /// enumeration, see the procedure's own header comment).</summary>
 public sealed record ChapterInviteLinkResolvedDto(bool IsValid, int? ChapterId, string? ChapterName);
+
+/// <summary>One row of GET /api/chapters/{chapterId}/officers — a chapter office seat,
+/// current or ended. No SeatOverride equivalent here (unlike councils): a chapter
+/// officer is always a member of that same chapter, never seated from outside.</summary>
+public sealed record ChapterOfficerRosterSeatDto(
+    int MemberRoleId, int OfficeId, string OfficeName, int SortOrder, bool GrantsLogin, string RoleName,
+    int MemberId, string GiftName, string MemberNumber, string FullName,
+    DateOnly TermStart, DateOnly? TermEnd, bool IsCurrent, DateOnly? RenewedThrough, bool HasAccount);
+
+/// <summary>POST /api/chapters/{chapterId}/officers. Seating the President needs the
+/// council above this chapter; every other office needs only the chapter's own seated
+/// President — usp_Chapter_SeatOfficer's own split (client decision 2026-09-22).</summary>
+public sealed record SeatChapterOfficerRequest(int MemberId, int OfficeId, DateOnly TermStart);
+
+public sealed record ChapterOfficerSeatResultDto(int MemberRoleId);
+
+/// <summary>DELETE /api/chapters/{chapterId}/officers/{memberRoleId} — "unseat," not
+/// delete; the row survives with TermEnd set (invariant #15's logic extended to
+/// MemberRole).</summary>
+public sealed record UnseatChapterOfficerRequest(string Reason);

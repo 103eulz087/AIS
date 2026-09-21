@@ -182,6 +182,30 @@ export function canFileOfficerRoster(roles: readonly string[]): boolean {
 }
 
 /**
+ * ChapterAdmin OR CouncilAdmin — view a chapter's own officer roster, seat/replace an
+ * officer, or unseat one. Mirrors AuthorizationPolicies.ChapterOfficerSeat's own ROLE
+ * bar — deliberately coarse: the real, narrower split (a ChapterAdmin may act on every
+ * office except President; only a CouncilAdmin at the chapter's resolved seating
+ * authority may act on the President seat) is enforced server-side inside
+ * usp_Chapter_SeatOfficer/_UnseatOfficer themselves, same "coarse client check, real
+ * server check" posture as canSeatCouncilOfficers above.
+ */
+export function canSeatChapterOfficers(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin") || roles.includes("CouncilAdmin");
+}
+
+/**
+ * ChapterAdmin only — correct a same-chapter member's typo'd first/middle/last name or
+ * mobile number. Mirrors AuthorizationPolicies.ChapterMemberIdentityEdit's own ROLE bar
+ * (Program.cs: RequireRole("ChapterAdmin")). ChapterOfficer/ChapterTreasurer/
+ * ChapterAuditor must never be added here — same two-person-integrity bar as
+ * canFileOfficerRoster above.
+ */
+export function canEditMemberIdentity(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin");
+}
+
+/**
  * CouncilAdmin only — run the National ID card export. Mirrors
  * AuthorizationPolicies.CouncilChapterRegistrationApprove, which IdCardExportEndpoints.cs
  * deliberately reuses server-side rather than adding a new policy (RequireRole

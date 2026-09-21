@@ -1,10 +1,16 @@
 namespace Akrho.Api.Features.Members;
 
-/// <summary>Full member record. Returned only to members of the SAME chapter.</summary>
+/// <summary>Full member record. Returned only to members of the SAME chapter.
+/// OfficeName/IsBlocked/RowVersion (client decision 2026-09-22): the directory's own
+/// officer tag/color and blocked badge, plus the concurrency token
+/// usp_Member_UpdateByOfficer's own edit form needs — no separate round trip to fetch
+/// one before opening it.</summary>
 public sealed record MemberDto(
     int MemberId, string GiftName, string MemberNumber, int ChapterId, string ChapterName,
     string Status, string? FullName, string? MobileNo, string? Profession,
-    string? BloodType, string? PhotoUrl, DateOnly? RenewedThrough, bool IsCurrent);
+    string? BloodType, string? PhotoUrl, DateOnly? RenewedThrough, bool IsCurrent,
+    string? OfficeName, bool IsBlocked, byte[] RowVersion,
+    string? FirstName, string? MiddleName, string? LastName);
 
 /// <summary>
 /// Cross-chapter shape. Client decision: name, chapter and status ONLY.
@@ -64,6 +70,19 @@ public sealed record UpdateMemberProfileRequest(
 
 /// <summary>The new RowVersion, so the client can keep editing without a refetch.</summary>
 public sealed record MemberProfileUpdatedDto(byte[] RowVersion);
+
+/// <summary>
+/// PUT /api/members/{memberId}/identity — a Chapter Admin correcting a same-chapter
+/// member's own typo'd name or mobile number. RowVersion is whatever the directory's
+/// own GET /api/members last returned for this member (MemberDto.RowVersion) — the
+/// concurrency guard lives in usp_Member_UpdateByOfficer's own UPDATE WHERE clause, not
+/// here, same posture as UpdateMemberProfileRequest above.
+/// </summary>
+public sealed record UpdateMemberIdentityRequest(
+    string FirstName, string? MiddleName, string LastName, string MobileNo, byte[] RowVersion);
+
+/// <summary>The new RowVersion, so the client can keep editing without a refetch.</summary>
+public sealed record MemberIdentityUpdatedDto(byte[] RowVersion);
 
 /// <summary>POST /api/members/me/photo — claims an already-staged upload as the caller's own photo.</summary>
 public sealed record ClaimMemberPhotoRequest(int AttachmentStagingId);

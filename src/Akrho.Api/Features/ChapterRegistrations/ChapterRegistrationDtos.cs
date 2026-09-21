@@ -101,6 +101,7 @@ public sealed record ChapterRegistrationRoutingDto(
 public sealed record ChapterRegistrationDetailDto(
     int RegistrationId, string ReferenceNo, string RegistrationType, int? ChapterId, string? ChapterName,
     string? ProposedChapterName, string? Barangay, int? RegionId, int? ProvinceId, int? MunicipalityId,
+    string? RegionName, string? ProvinceName, string? MunicipalityName,
     int? MarkAccentId, string? AccentName, string? HexValue,
     int? IntendedCouncilId, string? IntendedCouncilName,
     int ActingCouncilId, string ActingCouncilName, string RoutingReason,

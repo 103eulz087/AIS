@@ -1,4 +1,7 @@
-/** Member as returned to someone in the SAME chapter. */
+/** Member as returned to someone in the SAME chapter. officeName/isBlocked (client
+ * decision 2026-09-22): the directory's own officer tag/color and blocked badge.
+ * rowVersion (base64) and first/middle/lastName back the identity-edit form
+ * (PUT /api/members/{memberId}/identity) — no separate round trip to fetch either. */
 export interface Member {
   memberId: number;
   giftName: string;
@@ -13,6 +16,12 @@ export interface Member {
   photoUrl?: string;
   renewedThrough?: string;
   isCurrent?: boolean;
+  officeName?: string | null;
+  isBlocked?: boolean;
+  rowVersion?: string;
+  firstName?: string | null;
+  middleName?: string | null;
+  lastName?: string | null;
 }
 
 /**
@@ -29,6 +38,21 @@ export interface MemberCrossChapter {
 }
 
 export type DirectoryRow = Member | MemberCrossChapter;
+
+/** PUT /api/members/{memberId}/identity — a Chapter Admin correcting a same-chapter
+ * brother's typo'd name or mobile number. rowVersion is whatever the directory's own
+ * GET /api/members last returned for this member (Member.rowVersion). */
+export interface UpdateMemberIdentityRequest {
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  mobileNo: string;
+  rowVersion: string;
+}
+
+export interface MemberIdentityUpdated {
+  rowVersion: string;
+}
 
 export function isSameChapter(row: DirectoryRow): row is Member {
   return "memberNumber" in row;
@@ -1313,6 +1337,9 @@ export interface ChapterRegistrationDetail {
   regionId: number | null;
   provinceId: number | null;
   municipalityId: number | null;
+  regionName: string | null;
+  provinceName: string | null;
+  municipalityName: string | null;
   markAccentId: number | null;
   accentName: string | null;
   hexValue: string | null;
@@ -1592,4 +1619,37 @@ export interface CouncilSeatOverride {
 export interface CouncilRoster {
   seats: CouncilRosterSeat[];
   overrides: CouncilSeatOverride[];
+}
+
+/** One row of GET /api/chapters/{chapterId}/officers — current or ended. No override
+ * equivalent (unlike councils): a chapter officer is always a member of that chapter. */
+export interface ChapterOfficerRosterSeat {
+  memberRoleId: number;
+  officeId: number;
+  officeName: string;
+  sortOrder: number;
+  grantsLogin: boolean;
+  roleName: string;
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  fullName: string;
+  termStart: string;
+  termEnd: string | null;
+  isCurrent: boolean;
+  renewedThrough: string | null;
+  hasAccount: boolean;
+}
+
+/** POST /api/chapters/{chapterId}/officers. Seating the President needs the council
+ * above this chapter; every other office needs only the chapter's own seated President
+ * (usp_Chapter_SeatOfficer's own split, client decision 2026-09-22). */
+export interface SeatChapterOfficerRequest {
+  memberId: number;
+  officeId: number;
+  termStart: string;
+}
+
+export interface ChapterOfficerSeatResult {
+  memberRoleId: number;
 }

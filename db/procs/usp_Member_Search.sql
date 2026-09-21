@@ -7,7 +7,13 @@
    number. NULL/omitted leaves every existing caller's behavior unchanged. Note this
    only ADDS to the @IncludeInactive gate above, it does not replace it — a caller
    drilling into a non-Approved/Active status (e.g. Suspended, Pending, Rejected)
-   must still pass @IncludeInactive = 1 alongside @StatusId, same as today. */
+   must still pass @IncludeInactive = 1 alongside @StatusId, same as today.
+
+   OfficeName/IsBlocked/RowVersion (client decision 2026-09-22): same-chapter-only, same
+   restraint as every other column here — a currently-held chapter office and a blocked
+   login are not cross-chapter-visible facts either. RowVersion rides along so the
+   directory's own edit action (usp_Member_UpdateByOfficer) needs no separate round trip
+   to fetch a concurrency token before opening its form. */
 CREATE OR ALTER PROCEDURE dbo.usp_Member_Search
     @RequestingMemberId INT,
     @ChapterId   INT           = NULL,
@@ -36,6 +42,8 @@ BEGIN
     IF @ChapterId IS NULL SET @ChapterId = @CallerChapterId;
     IF @CallerChapterId IS NOT NULL AND @ChapterId = @CallerChapterId SET @SameChapter = 1;
 
+    DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
+
     SELECT  m.MemberId, m.GiftName, m.MemberNumber, m.ChapterId, ch.ChapterName,
             ms.StatusName, m.RenewedThrough,
             CASE WHEN @SameChapter = 1 THEN m.FirstName  END AS FirstName,
@@ -45,12 +53,31 @@ BEGIN
             CASE WHEN @SameChapter = 1 THEN m.Profession END AS Profession,
             CASE WHEN @SameChapter = 1 THEN bt.BloodTypeName END AS BloodType,
             CASE WHEN @SameChapter = 1 THEN m.PhotoPath  END AS PhotoPath,
+            CASE WHEN @SameChapter = 1 THEN co.OfficeName END AS OfficeName,
+            CASE WHEN @SameChapter = 1
+                 THEN CAST(CASE WHEN ua.IsDisabled = 1 THEN 1 ELSE 0 END AS BIT) END AS IsBlocked,
+            CASE WHEN @SameChapter = 1 THEN m.RowVersion END AS RowVersion,
             @SameChapter AS IsSameChapter,
             COUNT(*) OVER() AS TotalCount
     FROM    dbo.Member m
             JOIN dbo.Chapter ch      ON ch.ChapterId = m.ChapterId
             JOIN dbo.MemberStatus ms ON ms.StatusId  = m.StatusId
             LEFT JOIN dbo.BloodType bt ON bt.BloodTypeId = m.BloodTypeId
+            LEFT JOIN dbo.UserAccount ua ON ua.MemberId = m.MemberId
+            -- The one CURRENT chapter office this member holds, if any. SortOrder as the
+            -- tiebreaker is academic today (at most one live holder per office/chapter,
+            -- UX_MemberRole_ChapterOffice_Live-style — see usp_Chapter_SeatOfficer's own
+            -- "already held" check), kept only so a future multi-office member reads
+            -- deterministically as his most senior office.
+            OUTER APPLY (
+                SELECT TOP (1) co2.OfficeName
+                FROM   dbo.MemberRole mr
+                       JOIN dbo.ChapterOffice co2 ON co2.OfficeId = mr.OfficeId
+                WHERE  mr.MemberId = m.MemberId AND mr.ScopeType = 'Chapter' AND mr.ScopeId = m.ChapterId
+                  AND  mr.OfficeId IS NOT NULL
+                  AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+                ORDER BY co2.SortOrder
+            ) co
     WHERE   m.ChapterId = @ChapterId
       AND   m.IsDeleted = 0
       AND   (@IncludeInactive = 1 OR ms.StatusName IN ('Approved','Active'))

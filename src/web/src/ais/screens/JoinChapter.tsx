@@ -13,18 +13,19 @@ interface SubmitResponse { referenceNo: string }
 
 /**
  * The public "join this chapter" landing page reached from a chapter's own join
- * link/QR code (GET /api/chapters/invite/{token}), the additive companion to Apply.tsx's
- * manual Region -> Province -> City -> Chapter cascade — the chapter is already fixed
- * by the token, so this form skips straight to "about you." Someone without a link, or
- * wanting to join a different chapter, still has the plain /apply picker (unchanged).
+ * link/QR code (GET /api/chapters/invite/{token}) — the chapter is already fixed by
+ * the token, so this form skips straight to "about you." This is now the ONLY way to
+ * apply (the generic Region -> Province -> City -> Chapter picker that used to live at
+ * /apply was removed deliberately — every applicant comes through a chapter's own
+ * invite link, matching the org's seconder-based joining model).
  *
  * An invalid, regenerated, or inactive-chapter token all read as isValid=false, reading
  * identically on purpose (anti-enumeration — same posture as VerifyCard.tsx's own
  * unknown-token case): this page never distinguishes "wrong token" from "old token" from
  * "chapter no longer active."
  *
- * POST /api/membership-applications is the exact same endpoint Apply.tsx submits to,
- * with chapterId supplied from the resolved token rather than a picker.
+ * POST /api/membership-applications is the same endpoint the old /apply picker used to
+ * submit to, with chapterId supplied from the resolved token rather than a picker.
  */
 export function JoinChapter() {
   const { token } = useParams<{ token: string }>();
@@ -90,8 +91,7 @@ export function JoinChapter() {
     return (
       <EmptyState
         title="This join link isn't valid"
-        body="It may have been replaced with a newer one. Ask your chapter for the current link, or apply directly instead."
-        action={<Link to="/apply" style={ghostLinkStyle}>Apply without a link</Link>}
+        body="It may have been replaced with a newer one. Ask your chapter for their current join link."
       />
     );
   }

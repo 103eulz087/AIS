@@ -78,6 +78,15 @@ public static class MembersEndpoints
         g.MapPost("/{memberId:int}/reset-password", ResetMemberPassword).WithName("ResetMemberPassword")
             .RequireAuthorization(AuthorizationPolicies.NationalMemberAccountManage);
 
+        // Chapter Admin only, same chapter — correcting a same-chapter brother's own
+        // typo'd name or mobile number (usp_Member_UpdateOwnProfile's own guardrail
+        // deliberately keeps these off self-service; this is that "future module").
+        // The route carries memberId, but the procedure never trusts it as
+        // authorization — it re-derives the requester's own ChapterAdmin seat and
+        // compares chapters itself (CLAUDE.md invariant #4).
+        g.MapPut("/{memberId:int}/identity", UpdateIdentity).WithName("UpdateMemberIdentity")
+            .RequireAuthorization(AuthorizationPolicies.ChapterMemberIdentityEdit);
+
         return app;
     }
 
@@ -110,7 +119,9 @@ public static class MembersEndpoints
                 PhotoUrl: r.PhotoPath is null ? null : $"/api/members/{r.MemberId}/photo",
                 RenewedThrough: r.RenewedThrough is { } d ? DateOnly.FromDateTime(d) : null,
                 IsCurrent: MembershipYear.IsCurrent(
-                    r.RenewedThrough is { } dd ? DateOnly.FromDateTime(dd) : null, today))
+                    r.RenewedThrough is { } dd ? DateOnly.FromDateTime(dd) : null, today),
+                OfficeName: r.OfficeName, IsBlocked: r.IsBlocked ?? false, RowVersion: r.RowVersion ?? [],
+                FirstName: r.FirstName, MiddleName: r.MiddleName, LastName: r.LastName)
             : new MemberCrossChapterDto(
                 r.MemberId, r.GiftName, r.ChapterId, r.ChapterName, r.StatusName))
             .ToList();
@@ -427,6 +438,34 @@ public static class MembersEndpoints
                 MemberAccountActionErrorCategory.NotFound => TypedResults.NotFound(),
                 MemberAccountActionErrorCategory.Forbidden =>
                     TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<MemberIdentityUpdatedDto>, ValidationProblem, NotFound, ProblemHttpResult>> UpdateIdentity(
+        int memberId, UpdateMemberIdentityRequest req,
+        IMemberRepository repo, ICurrentUser caller,
+        IValidator<UpdateMemberIdentityRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            var result = await repo.UpdateIdentityByOfficerAsync(
+                caller.MemberId, memberId, req.FirstName, req.MiddleName, req.LastName, req.MobileNo, req.RowVersion, ct);
+            return TypedResults.Ok(new MemberIdentityUpdatedDto(result.RowVersion));
+        }
+        catch (MemberIdentityException ex)
+        {
+            return ex.Category switch
+            {
+                MemberIdentityErrorCategory.NotFound => TypedResults.NotFound(),
+                MemberIdentityErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                MemberIdentityErrorCategory.Conflict =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
                 _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
             };
         }

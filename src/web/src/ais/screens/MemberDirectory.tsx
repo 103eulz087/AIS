@@ -3,11 +3,13 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
-import { canManageChapterInviteLink, canManageMemberAccounts, canReissueEnrolmentLink } from "@/shared/roles";
+import {
+  canEditMemberIdentity, canManageChapterInviteLink, canManageMemberAccounts, canReissueEnrolmentLink,
+} from "@/shared/roles";
 import {
   isSameChapter, MEMBER_STATUSES,
-  type ConversationStarted, type DirectoryRow, type MemberPasswordReset,
-  type ReissueMemberEnrolmentLinkResponse,
+  type ConversationStarted, type DirectoryRow, type MemberIdentityUpdated, type MemberPasswordReset,
+  type ReissueMemberEnrolmentLinkResponse, type UpdateMemberIdentityRequest,
 } from "@/shared/types";
 import { useState, type CSSProperties } from "react";
 
@@ -26,6 +28,9 @@ export function MemberDirectory() {
   // is only "should the button be offered at all", same posture as every other role
   // helper in this file. Never gated by isSameChapter — National acts org-wide.
   const canManageAccounts = canManageMemberAccounts(claims?.roles ?? []);
+  // ChapterAdmin only, same-chapter — correcting a typo'd name/mobile number
+  // (usp_Member_UpdateOwnProfile's own guardrail keeps these off self-service).
+  const canEditIdentity = canEditMemberIdentity(claims?.roles ?? []);
 
   // "Forgot my password" recovery — a fresh one-time enrolment link, never a password
   // (CLAUDE.md invariant #16). SHOW-ONCE, same pattern as ApplicationDetail's approve
@@ -61,6 +66,50 @@ export function MemberDirectory() {
   const [accountActionError, setAccountActionError] = useState<string | null>(null);
   const [resetResult, setResetResult] = useState<MemberPasswordReset | null>(null);
   const [resetLinkCopied, setResetLinkCopied] = useState(false);
+
+  // Identity edit (name/mobile typo correction) — ChapterAdmin, same chapter.
+  // rowVersion travels with the row itself (Member.rowVersion), so opening this form
+  // needs no separate fetch.
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ firstName: "", middleName: "", lastName: "", mobileNo: "" });
+  const [editBusy, setEditBusy] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  function openEdit(row: DirectoryRow) {
+    if (!isSameChapter(row)) return;
+    setEditError(null);
+    setEditForm({
+      firstName: row.firstName ?? "", middleName: row.middleName ?? "",
+      lastName: row.lastName ?? "", mobileNo: row.mobileNo ?? "",
+    });
+    setEditingId(row.memberId);
+  }
+
+  async function confirmEdit(row: DirectoryRow) {
+    if (!isSameChapter(row) || !row.rowVersion) return;
+    if (!editForm.firstName.trim() || !editForm.lastName.trim() || !editForm.mobileNo.trim()) {
+      setEditError("First name, last name and mobile number are all required.");
+      return;
+    }
+    setEditBusy(true);
+    setEditError(null);
+    try {
+      const req: UpdateMemberIdentityRequest = {
+        firstName: editForm.firstName.trim(),
+        middleName: editForm.middleName.trim() || null,
+        lastName: editForm.lastName.trim(),
+        mobileNo: editForm.mobileNo.trim(),
+        rowVersion: row.rowVersion,
+      };
+      await api.put<MemberIdentityUpdated>(`/api/members/${row.memberId}/identity`, req);
+      setEditingId(null);
+      await refetch();
+    } catch (err) {
+      setEditError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setEditBusy(false);
+    }
+  }
 
   function openPrompt(memberId: number, kind: "block" | "reset") {
     setAccountActionError(null);
@@ -313,7 +362,15 @@ export function MemberDirectory() {
             }}>{row.giftName.slice(0, 2)}</div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{row.giftName}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 14, fontWeight: 600 }}>{row.giftName}</span>
+                {isSameChapter(row) && row.officeName && (
+                  <span style={officeBadgeStyle(row.officeName)}>{row.officeName}</span>
+                )}
+                {isSameChapter(row) && row.isBlocked && (
+                  <span style={blockedBadgeStyle}>Blocked</span>
+                )}
+              </div>
               {/* Cross-chapter rows carry chapter and status only — render exactly what arrived. */}
               <div style={{ fontSize: 12, color: "var(--mute)", marginTop: 2 }}>
                 {isSameChapter(row)
@@ -339,6 +396,14 @@ export function MemberDirectory() {
                 style={messageButtonStyle}
               >
                 {startingId === row.memberId ? "…" : "Message"}
+              </button>
+            )}
+
+            {/* ChapterAdmin only, same-chapter only — typo correction on a name or
+                mobile number a member typed in himself. */}
+            {isSameChapter(row) && canEditIdentity && (
+              <button type="button" onClick={() => openEdit(row)} style={messageButtonStyle}>
+                Edit
               </button>
             )}
 
@@ -375,6 +440,48 @@ export function MemberDirectory() {
               </>
             )}
           </div>
+
+          {editingId === row.memberId && isSameChapter(row) && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <p style={{ fontSize: 12.5, color: "var(--slate)", marginBottom: 8 }}>
+                Correcting {row.giftName}'s name or mobile number. This does not change his gift name,
+                member number or chapter.
+              </p>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <input
+                  value={editForm.firstName} onChange={e => setEditForm(f => ({ ...f, firstName: e.target.value }))}
+                  placeholder="First name" style={{ ...promptInputStyle, flex: "1 1 140px" }} autoFocus
+                />
+                <input
+                  value={editForm.middleName} onChange={e => setEditForm(f => ({ ...f, middleName: e.target.value }))}
+                  placeholder="Middle name (optional)" style={{ ...promptInputStyle, flex: "1 1 140px" }}
+                />
+                <input
+                  value={editForm.lastName} onChange={e => setEditForm(f => ({ ...f, lastName: e.target.value }))}
+                  placeholder="Last name" style={{ ...promptInputStyle, flex: "1 1 140px" }}
+                />
+              </div>
+              <input
+                value={editForm.mobileNo} onChange={e => setEditForm(f => ({ ...f, mobileNo: e.target.value }))}
+                placeholder="Mobile number" inputMode="tel" style={{ ...promptInputStyle, marginTop: 8 }}
+              />
+              {editError && <p role="alert" style={{ ...startErrorStyle, margin: "8px 0 0" }}>{editError}</p>}
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <button
+                  type="button" onClick={() => { void confirmEdit(row); }} disabled={editBusy}
+                  style={{ ...messageButtonStyle, background: "var(--deep)", color: "var(--brass-soft)" }}
+                >
+                  {editBusy ? "…" : "Save"}
+                </button>
+                <button
+                  type="button" onClick={() => setEditingId(null)} disabled={editBusy}
+                  style={messageButtonStyle}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
 
           {promptFor?.memberId === row.memberId && (
             <div style={{ padding: "0 12px 12px" }}>
@@ -449,6 +556,25 @@ function InviteMembersLink() {
     </Link>
   );
 }
+
+/** President reads distinctly from every other office — the one seat the chapter
+ * itself cannot fill or vacate on its own (see ChapterOfficers.tsx). Every other
+ * office shares one color; the office NAME is what actually distinguishes them,
+ * the color only separates "runs the chapter" from "holds a position in it". */
+function officeBadgeStyle(officeName: string): CSSProperties {
+  const isPresident = officeName === "President";
+  return {
+    fontSize: 10.5, padding: "2px 7px", borderRadius: 10, fontWeight: 600, whiteSpace: "nowrap",
+    color: isPresident ? "var(--brass-dk)" : "var(--info)",
+    background: isPresident ? "var(--brass-soft)" : "#EAF1F7",
+    border: `1px solid ${isPresident ? "var(--brass)" : "#C9DBEA"}`,
+  };
+}
+
+const blockedBadgeStyle: CSSProperties = {
+  fontSize: 10.5, padding: "2px 7px", borderRadius: 10, fontWeight: 600, whiteSpace: "nowrap",
+  color: "var(--out)", border: "1px solid #E4C4C0", background: "#FBF0EF",
+};
 
 const messageButtonStyle: CSSProperties = {
   flex: "none", minHeight: 34, padding: "0 12px", borderRadius: 8,

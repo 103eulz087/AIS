@@ -18,17 +18,15 @@ type FormStep = "chapter" | "officers" | "review";
 
 /**
  * GET /api/regions, GET /api/provinces?regionId=, GET /api/municipalities?provinceId= —
- * all public and unauthenticated (ReferenceEndpoints.cs). A server-side cascade, UNLIKE
- * Apply.tsx's own Region -> Province -> City picker: that screen builds its cascade
- * client-side from existing chapters' own denormalised names (GET /api/chapters), because
- * a chapter must already exist to be applied to. Here there is no chapter yet — the
- * petition IS the location — so this is raw PH geography, fetched one level at a time as
- * the petitioner narrows in.
+ * all public and unauthenticated (ReferenceEndpoints.cs). A server-side cascade, because
+ * there is no chapter yet — the petition IS the location — so this is raw PH geography,
+ * fetched one level at a time as the petitioner narrows in.
  *
  * POST /api/chapter-registrations — the public, rate-limited Charter submission. A
  * double-submit is not specially handled client-side: the procedure itself resolves a
  * genuine concurrent duplicate (same proposed name + municipality) and hands back the
- * SAME reference number, same idiom as Apply.tsx's own membership-application submit.
+ * SAME reference number, same idiom as JoinChapter.tsx's own membership-application
+ * submit.
  *
  * No chapter mark anywhere in the chrome around this screen (docs §7A.3) — the chapter
  * does not exist yet. The ONLY mark on screen is the live monogram preview the

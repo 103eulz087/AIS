@@ -58,6 +58,7 @@ BEGIN
     --    exist at filing); CreatedChapterId is where an approved Charter's chapter lives.
     SELECT  cr.RegistrationId, cr.ReferenceNo, cr.RegistrationType, cr.ChapterId, ch.ChapterName,
             cr.ProposedChapterName, cr.Barangay, cr.RegionId, cr.ProvinceId, cr.MunicipalityId,
+            r.RegionName, p.ProvinceName, mu.MunicipalityName,
             cr.MarkAccentId, ca.AccentName, ca.HexValue,
             cr.IntendedCouncilId, ic.CouncilName AS IntendedCouncilName,
             cr.ActingCouncilId, ac.CouncilName AS ActingCouncilName, cr.RoutingReason,
@@ -73,6 +74,12 @@ BEGIN
             LEFT JOIN dbo.ChapterAccent ca ON ca.AccentId = cr.MarkAccentId
             LEFT JOIN dbo.Member sm ON sm.MemberId = cr.SubmittedByMemberId
             LEFT JOIN dbo.Member db ON db.MemberId = cr.DecidedBy
+            -- Charter-only geography (NULL for Turnover — CK_ChapterRegistration_Type):
+            -- shown alongside Barangay so a reviewer can tell apart barangays that share a
+            -- name across different municipalities, without opening a second screen.
+            LEFT JOIN dbo.Region r ON r.RegionId = cr.RegionId
+            LEFT JOIN dbo.Province p ON p.ProvinceId = cr.ProvinceId
+            LEFT JOIN dbo.Municipality mu ON mu.MunicipalityId = cr.MunicipalityId
     WHERE   cr.RegistrationId = @RegistrationId;
 
     -- 2. The eight officers, in office order, with verification state and resolved identity.

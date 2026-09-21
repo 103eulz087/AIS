@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api, type Paged } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
-import { canApproveApplications } from "@/shared/roles";
+import { canApproveApplications, canFileOfficerRoster } from "@/shared/roles";
 import type { MembershipApplicationQueueItem } from "@/shared/types";
 
 /**
@@ -36,6 +36,11 @@ export function AppShell() {
   const location = useLocation();
   const roles = claims?.roles ?? [];
   const canApprove = canApproveApplications(roles);
+  // ChapterAdmin only — same bar as /officers itself (the annual filing) and
+  // /officers/manage (immediate seat/unseat) it links onward to; a member who
+  // isn't the President never sees this tab at all, not just an access-denied
+  // screen if he guesses the URL.
+  const canFileRoster = canFileOfficerRoster(roles);
 
   // GET /api/membership-applications?statusId=1&take=1 — statusId=1 is PendingApproval
   // (see shared/types.ts's MEMBERSHIP_APPLICATION_STATUSES, the same reference-data GAP
@@ -48,9 +53,15 @@ export function AppShell() {
     staleTime: 60_000,
   });
 
-  const tabs = canApprove
-    ? [...BASE_TABS, { to: "/applications", label: "Applications", icon: "📝" }]
-    : BASE_TABS;
+  const tabs = [
+    ...BASE_TABS,
+    ...(canApprove ? [{ to: "/applications", label: "Applications", icon: "📝" }] : []),
+    // Goes straight to the immediate seat/unseat screen, not the annual Turnover
+    // filing at /officers — that page is deliberately hidden from navigation for now
+    // (client decision 2026-09-22), reachable only by a direct link/URL until it's
+    // wanted again. The route and screen are untouched; only this entry point changed.
+    ...(canFileRoster ? [{ to: "/officers/manage", label: "Officers", icon: "🎖" }] : []),
+  ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>

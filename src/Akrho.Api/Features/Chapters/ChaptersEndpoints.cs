@@ -1,7 +1,9 @@
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Akrho.Api.Features.Chapters;
 
@@ -31,6 +33,19 @@ public static class ChaptersEndpoints
         // invariant #4/#11.
         g.MapGet("/me/invite-link", GetOwnInviteLink).WithName("GetOwnChapterInviteLink").RequireAuthorization();
         g.MapPost("/me/invite-link/regenerate", RegenerateOwnInviteLink).WithName("RegenerateOwnChapterInviteLink").RequireAuthorization();
+
+        // Officer seat/unseat — a chapter's own President manages every office except his
+        // own; only the council above the chapter can act on the President seat itself.
+        // The route carries chapterId, but the procedure never trusts it as authorization
+        // (CLAUDE.md invariant #4) — usp_Chapter_SeatOfficer/_UnseatOfficer re-derive the
+        // caller's own real standing every time. ChapterOfficerSeat is only the coarse,
+        // ROLE-only pre-check (see that policy's own header comment).
+        g.MapGet("/{chapterId:int}/officers", GetOfficerRoster).WithName("GetChapterOfficerRoster")
+            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
+        g.MapPost("/{chapterId:int}/officers", SeatOfficer).WithName("SeatChapterOfficer")
+            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
+        g.MapDelete("/{chapterId:int}/officers/{memberRoleId:int}", UnseatOfficer).WithName("UnseatChapterOfficer")
+            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
 
         return app;
     }
@@ -88,6 +103,78 @@ public static class ChaptersEndpoints
         catch (ChapterInviteLinkException ex)
         {
             return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+    }
+
+    private static async Task<Results<Ok<IReadOnlyList<ChapterOfficerRosterSeatDto>>, ProblemHttpResult>> GetOfficerRoster(
+        int chapterId, IChapterOfficerRepository repo, CancellationToken ct)
+    {
+        try
+        {
+            var rows = await repo.GetRosterAsync(chapterId, ct);
+            IReadOnlyList<ChapterOfficerRosterSeatDto> items = rows.Select(r => new ChapterOfficerRosterSeatDto(
+                r.MemberRoleId, r.OfficeId, r.OfficeName, r.SortOrder, r.GrantsLogin, r.RoleName,
+                r.MemberId, r.GiftName, r.MemberNumber, r.FullName,
+                DateOnly.FromDateTime(r.TermStart), r.TermEnd is { } te ? DateOnly.FromDateTime(te) : null,
+                r.IsCurrent, r.RenewedThrough is { } rt ? DateOnly.FromDateTime(rt) : null, r.HasAccount)).ToList();
+            return TypedResults.Ok(items);
+        }
+        catch (ChapterOfficerException ex)
+        {
+            return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status404NotFound);
+        }
+    }
+
+    private static async Task<Results<Ok<ChapterOfficerSeatResultDto>, ValidationProblem, NotFound, ProblemHttpResult>> SeatOfficer(
+        int chapterId, SeatChapterOfficerRequest req,
+        IChapterOfficerRepository repo, ICurrentUser caller,
+        IValidator<SeatChapterOfficerRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            var result = await repo.SeatOfficerAsync(caller.MemberId, chapterId, req.MemberId, req.OfficeId, req.TermStart, ct);
+            return TypedResults.Ok(new ChapterOfficerSeatResultDto(result.MemberRoleId));
+        }
+        catch (ChapterOfficerException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterOfficerErrorCategory.NotFound => TypedResults.NotFound(),
+                ChapterOfficerErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                ChapterOfficerErrorCategory.Conflict =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok, ValidationProblem, NotFound, ProblemHttpResult>> UnseatOfficer(
+        int chapterId, int memberRoleId, [FromBody] UnseatChapterOfficerRequest req,
+        IChapterOfficerRepository repo, ICurrentUser caller,
+        IValidator<UnseatChapterOfficerRequest> validator, CancellationToken ct)
+    {
+        _ = chapterId; // the procedure re-derives the seat's own chapter from memberRoleId itself
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.UnseatOfficerAsync(caller.MemberId, memberRoleId, req.Reason, ct);
+            return TypedResults.Ok();
+        }
+        catch (ChapterOfficerException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterOfficerErrorCategory.NotFound => TypedResults.NotFound(),
+                ChapterOfficerErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
         }
     }
 }

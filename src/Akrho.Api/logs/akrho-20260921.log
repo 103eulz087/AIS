@@ -233,3 +233,29 @@ System.InvalidOperationException: A parameterless default constructor or one mat
 2026-09-21 11:12:05.497 +08:00 [INF] HTTP GET /api/councils/member-lookup responded 200 in 96.1260 ms
 2026-09-21 11:12:16.882 +08:00 [INF] HTTP DELETE /api/councils/19/officers/904 responded 200 in 99.0384 ms
 2026-09-21 11:12:17.104 +08:00 [INF] HTTP POST /api/councils responded 200 in 162.2155 ms
+2026-09-21 23:36:02.936 +08:00 [DBG] Hosting starting
+2026-09-21 23:36:03.310 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-21 23:36:03.315 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-21 23:36:03.315 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-21 23:36:03.315 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-21 23:36:03.316 +08:00 [INF] Hosting environment: Development
+2026-09-21 23:36:03.316 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-21 23:36:03.316 +08:00 [DBG] Hosting started
+2026-09-21 23:36:58.208 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 17.0105 ms
+2026-09-21 23:36:58.208 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 17.0152 ms
+2026-09-21 23:37:01.182 +08:00 [INF] HTTP POST /api/auth/sign-in responded 401 in 621.9413 ms
+2026-09-21 23:37:10.483 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 376.1342 ms
+2026-09-21 23:37:10.600 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 91.0793 ms
+2026-09-21 23:37:11.041 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 88.0055 ms
+2026-09-21 23:37:11.362 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 394.2767 ms
+2026-09-21 23:37:11.383 +08:00 [INF] HTTP GET /api/conversations responded 200 in 396.1113 ms
+2026-09-21 23:37:11.727 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 739.2776 ms
+2026-09-21 23:37:11.733 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 737.0532 ms
+2026-09-21 23:37:19.546 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3441 ms
+2026-09-21 23:37:19.557 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2643 ms
+2026-09-21 23:37:28.686 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 327.5645 ms
+2026-09-21 23:37:28.786 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 68.3968 ms
+2026-09-21 23:37:32.609 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 112.4226 ms
+2026-09-21 23:37:33.775 +08:00 [INF] HTTP GET /api/chapter-registrations/135 responded 200 in 110.6991 ms
+2026-09-21 23:37:50.686 +08:00 [INF] HTTP GET /api/chapters responded 200 in 87.4439 ms
+2026-09-21 23:37:52.143 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 187.4229 ms

@@ -42,7 +42,6 @@ import { DonationNew } from "@/ais/screens/DonationNew";
 import { DonationDetail } from "@/ais/screens/DonationDetail";
 import { SignIn } from "@/ais/screens/SignIn";
 import { Enrol } from "@/ais/screens/Enrol";
-import { Apply } from "@/ais/screens/Apply";
 import { JoinChapter } from "@/ais/screens/JoinChapter";
 import { ApplyStatus } from "@/ais/screens/ApplyStatus";
 import { ApplicationQueue } from "@/ais/screens/ApplicationQueue";
@@ -50,6 +49,7 @@ import { ApplicationDetail } from "@/ais/screens/ApplicationDetail";
 import { RegisterChapter } from "@/ais/screens/RegisterChapter";
 import { RegisterChapterStatus } from "@/ais/screens/RegisterChapterStatus";
 import { OfficerRoster } from "@/ais/screens/OfficerRoster";
+import { ChapterOfficers } from "@/ais/screens/ChapterOfficers";
 import { InviteMembers } from "@/ais/screens/InviteMembers";
 import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQueue";
 import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
@@ -125,7 +125,6 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/donations/some-donation-id", <DonationDetail key="dod" chapterId={1} />],
   ["/sign-in", <SignIn key="si" />],
   ["/enrol/some-token", <Enrol key="e" />],
-  ["/apply", <Apply key="ap" />],
   ["/apply/status", <ApplyStatus key="aps" />],
   ["/j/some-invite-token", <JoinChapter key="jc" />],
   ["/applications", <ApplicationQueue key="aq" />],
@@ -133,6 +132,7 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/register-chapter", <RegisterChapter key="rc" />],
   ["/register-chapter/status", <RegisterChapterStatus key="rcs" />],
   ["/officers", <OfficerRoster key="or" />],
+  ["/officers/manage", <ChapterOfficers key="com" />],
   ["/invite", <InviteMembers key="inv" />],
   ["/portal/chapter-registrations", <ChapterRegistrationQueue key="prq" />],
   ["/portal/chapter-registrations/some-registration-id", <ChapterRegistrationDetail key="prd" />],

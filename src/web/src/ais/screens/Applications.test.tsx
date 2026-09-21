@@ -2,11 +2,11 @@
  * Member self-registration + Chapter Admin approval (CLAUDE.md invariant #13 — a
  * member is created by his chapter, and this module IS that path).
  *
- * Covers: Apply's chapter cascade and no-chapter-mark rule (docs §7A.3), client-side
- * required-field validation, ApplyStatus's uniform 404 message (never distinguishing
- * a wrong reference from a wrong mobile number), ChapterAdmin-only access to the
- * review queue/detail, the seconder's honest "Not yet confirmed" wording, and the
- * show-once enrolment link panel.
+ * Covers: JoinChapter's client-side required-field validation (the only way to apply
+ * now that the generic /apply picker has been removed), ApplyStatus's uniform 404
+ * message (never distinguishing a wrong reference from a wrong mobile number),
+ * ChapterAdmin-only access to the review queue/detail, the seconder's honest "Not yet
+ * confirmed" wording, and the show-once enrolment link panel.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act } from "react";
@@ -14,12 +14,12 @@ import { createRoot, type Root } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/shared/auth";
-import { Apply } from "./Apply";
+import { JoinChapter } from "./JoinChapter";
 import { ApplyStatus } from "./ApplyStatus";
 import { ApplicationQueue } from "./ApplicationQueue";
 import { ApplicationDetail } from "./ApplicationDetail";
 import type {
-  ApproveMembershipApplicationResponse, ChapterPublic, MembershipApplicationDetail as ApplicationDetailModel,
+  ApproveMembershipApplicationResponse, MembershipApplicationDetail as ApplicationDetailModel,
 } from "@/shared/types";
 
 let container: HTMLDivElement;
@@ -98,12 +98,6 @@ function setInputValue(el: HTMLInputElement | HTMLTextAreaElement, value: string
   el.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-function setSelectValue(el: HTMLSelectElement, value: string) {
-  const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value")!.set!;
-  setter.call(el, value);
-  el.dispatchEvent(new Event("change", { bubbles: true }));
-}
-
 beforeEach(() => {
   container = document.createElement("div");
   document.body.appendChild(container);
@@ -117,77 +111,15 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const CHAPTERS_FIXTURE: ChapterPublic[] = [
-  { chapterId: 1, chapterName: "Brgy. San Isidro Chapter", regionName: "Region IV-A CALABARZON",
-    provinceName: "Laguna Provincial Council", cityName: "Sta. Rosa City Council" },
-  { chapterId: 2, chapterName: "Brgy. Poblacion Chapter", regionName: "Region IV-A CALABARZON",
-    provinceName: "Laguna Provincial Council", cityName: "Calamba City Council" },
-  { chapterId: 3, chapterName: "Brgy. Malolos Chapter", regionName: "Region III Central Luzon",
-    provinceName: "Bulacan Provincial Council", cityName: "Malolos City Council" },
-];
-
-describe("Apply", () => {
-  it("renders with no chapter mark/logo", async () => {
-    stubFetch(null, [["GET /api/chapters", { status: 200, body: CHAPTERS_FIXTURE }]]);
-    await renderAt("/apply", "/apply", <Apply />);
-
-    expect(container.textContent).toContain("Apply to join a chapter");
-    expect(container.querySelector("img")).toBeNull();
-  });
-
-  it("cascades Region -> Province -> City -> Chapter from the flat fixture list", async () => {
-    stubFetch(null, [["GET /api/chapters", { status: 200, body: CHAPTERS_FIXTURE }]]);
-    await renderAt("/apply", "/apply", <Apply />);
-
-    const region = container.querySelector("#region") as HTMLSelectElement;
-    const province = container.querySelector("#province") as HTMLSelectElement;
-    const city = container.querySelector("#city") as HTMLSelectElement;
-    const chapter = container.querySelector("#chapter") as HTMLSelectElement;
-
-    // Both regions are offered up front.
-    expect(Array.from(region.options).map(o => o.value)).toEqual(
-      expect.arrayContaining(["Region IV-A CALABARZON", "Region III Central Luzon"]),
-    );
-    // Nothing downstream is chosen yet.
-    expect(province.disabled).toBe(true);
-
-    await act(async () => { setSelectValue(region, "Region IV-A CALABARZON"); });
-    await settle();
-    expect(province.disabled).toBe(false);
-    expect(Array.from(province.options).map(o => o.value)).toEqual(["", "Laguna Provincial Council"]);
-
-    await act(async () => { setSelectValue(province, "Laguna Provincial Council"); });
-    await settle();
-    expect(Array.from(city.options).map(o => o.value).sort()).toEqual(
-      ["", "Calamba City Council", "Sta. Rosa City Council"].sort(),
-    );
-
-    await act(async () => { setSelectValue(city, "Sta. Rosa City Council"); });
-    await settle();
-    // Only the one chapter in that exact region/province/city combination is offered.
-    expect(Array.from(chapter.options).map(o => o.textContent)).toEqual(
-      expect.arrayContaining(["Brgy. San Isidro Chapter"]),
-    );
-    expect(Array.from(chapter.options).map(o => o.textContent)).not.toContain("Brgy. Poblacion Chapter");
-  });
-
+describe("JoinChapter", () => {
   it("fires client-side required-field validation before any submission round trip", async () => {
-    stubFetch(null, [["GET /api/chapters", { status: 200, body: CHAPTERS_FIXTURE }]]);
-    await renderAt("/apply", "/apply", <Apply />);
+    stubFetch(null, [
+      ["GET /api/chapters/invite/", { status: 200, body: { isValid: true, chapterId: 1, chapterName: "Brgy. San Isidro Chapter" } }],
+    ]);
+    await renderAt("/j/some-invite-token", "/j/:token", <JoinChapter />);
+    await settle();
 
-    const region = container.querySelector("#region") as HTMLSelectElement;
-    const province = container.querySelector("#province") as HTMLSelectElement;
-    const city = container.querySelector("#city") as HTMLSelectElement;
-    const chapter = container.querySelector("#chapter") as HTMLSelectElement;
     const mobileNo = container.querySelector("#mobileNo") as HTMLInputElement;
-
-    await act(async () => { setSelectValue(region, "Region IV-A CALABARZON"); });
-    await settle();
-    await act(async () => { setSelectValue(province, "Laguna Provincial Council"); });
-    await settle();
-    await act(async () => { setSelectValue(city, "Sta. Rosa City Council"); });
-    await settle();
-    await act(async () => { setSelectValue(chapter, "1"); });
     await act(async () => { setInputValue(mobileNo, "09171234567"); });
 
     // First name, gift name, birthdate, seconder are all still blank.
@@ -198,6 +130,18 @@ describe("Apply", () => {
     expect(container.textContent).toContain(
       "First name, last name, gift name, birthdate and a seconder's name are required.",
     );
+  });
+
+  it("shows a plain message for an invalid or superseded join link, with no picker fallback", async () => {
+    stubFetch(null, [
+      ["GET /api/chapters/invite/", { status: 200, body: { isValid: false, chapterId: null, chapterName: null } }],
+    ]);
+    await renderAt("/j/some-invite-token", "/j/:token", <JoinChapter />);
+    await settle();
+
+    expect(container.textContent).toContain("This join link isn't valid");
+    // No fallback to a generic picker — that path was removed deliberately.
+    expect(container.querySelector('a[href="/apply"]')).toBeNull();
   });
 });
 

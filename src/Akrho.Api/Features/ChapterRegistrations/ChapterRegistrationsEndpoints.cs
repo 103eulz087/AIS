@@ -417,6 +417,7 @@ public static class ChapterRegistrationsEndpoints
         return new ChapterRegistrationDetailDto(
             h.RegistrationId, h.ReferenceNo, h.RegistrationType, h.ChapterId, h.ChapterName,
             h.ProposedChapterName, h.Barangay, h.RegionId, h.ProvinceId, h.MunicipalityId,
+            h.RegionName, h.ProvinceName, h.MunicipalityName,
             h.MarkAccentId, h.AccentName, h.HexValue,
             h.IntendedCouncilId, h.IntendedCouncilName,
             h.ActingCouncilId, h.ActingCouncilName, h.RoutingReason,

@@ -244,6 +244,10 @@ export function ChapterRegistrationDetail() {
           <div style={sectionLabelStyle}>Location</div>
           <div style={cardStyle}>
             <Field label="Barangay" value={data.barangay ?? "—"} />
+            <Field
+              label="Municipality / City"
+              value={[data.municipalityName, data.provinceName, data.regionName].filter(Boolean).join(", ") || "—"}
+            />
             {data.accentName && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
                 <span style={{

@@ -36,7 +36,9 @@ export function CaseNew({ chapterId }: { chapterId: number }) {
 
   const members = useQuery({
     queryKey: ["members-for-new-case", chapterId],
-    queryFn: () => api.get<Paged<DirectoryRow>>("/api/members?take=500"),
+    // usp_Member_Search's own validator caps Take at 200 (MemberSearchRequestValidator) —
+    // the repository clamps to the same 200 regardless, so this is the real ceiling.
+    queryFn: () => api.get<Paged<DirectoryRow>>("/api/members?take=200"),
   });
 
   const [subjectMemberId, setSubjectMemberId] = useState("");
