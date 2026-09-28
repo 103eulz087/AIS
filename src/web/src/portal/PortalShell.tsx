@@ -31,9 +31,11 @@ export function PortalShell() {
           {claims && (
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <Link to="/portal/chapter-registrations" style={navLinkStyle}>Chapter registrations</Link>
+              <Link to="/portal/members" style={navLinkStyle}>Members</Link>
               <Link to="/portal/id-card-export" style={navLinkStyle}>ID card export</Link>
               <Link to="/portal/statistics" style={navLinkStyle}>Statistics</Link>
-              <Link to="/portal/blocked-members" style={navLinkStyle}>Blocked members</Link>
+              <Link to="/portal/chapter-holds" style={navLinkStyle}>Chapter holds</Link>
+              <Link to="/portal/announcements" style={navLinkStyle}>Announcements</Link>
               <Link to="/portal/councils" style={navLinkStyle}>Councils</Link>
               <span style={{ fontSize: 13, color: "var(--brass-soft)" }}>{claims.giftName}</span>
               <button onClick={() => { void signOut(); }} style={signOutStyle}>Sign out</button>

@@ -10,7 +10,7 @@ public sealed record PushSubscriptionRow(
     string? DeviceHint, DateTime CreatedOn, DateTime? LastSuccessOn, int FailureCount);
 
 /// <summary>usp_NotificationPreference_Get's row shape — always exactly one row (defaults to true/true).</summary>
-public sealed record NotificationPreferenceRow(bool PrivateMessagePush, bool MentionPush);
+public sealed record NotificationPreferenceRow(bool PrivateMessagePush, bool MentionPush, bool AnnouncementPush);
 
 /// <summary>
 /// Push subscriptions and notification preferences. A separate repository from
@@ -56,7 +56,15 @@ public interface IPushRepository
     Task<NotificationPreferenceRow> GetNotificationPreferenceAsync(int memberId, CancellationToken ct);
 
     Task SetNotificationPreferenceAsync(
-        int memberId, bool privateMessagePush, bool mentionPush, CancellationToken ct);
+        int memberId, bool privateMessagePush, bool mentionPush, bool announcementPush, CancellationToken ct);
+
+    /// <summary>INTERNAL — the push-dispatch worker's own use only (usp_Document_HasRead).
+    /// Lets an Announcement push job skip a member who already opened it in-app before the
+    /// dispatch delay elapsed, the same way a chat push already skips a room the recipient
+    /// has read past (see PushDispatchHostedService's own header comment) — Announcement has
+    /// no "room"/"last read message id" of its own, so this is the read-receipt-based
+    /// equivalent used only for that job kind.</summary>
+    Task<bool> HasReadDocumentAsync(string documentType, int documentId, int memberId, CancellationToken ct);
 }
 
 public sealed class PushRepository(ISqlConnectionFactory factory) : IPushRepository
@@ -132,12 +140,25 @@ public sealed class PushRepository(ISqlConnectionFactory factory) : IPushReposit
     }
 
     public async Task SetNotificationPreferenceAsync(
-        int memberId, bool privateMessagePush, bool mentionPush, CancellationToken ct)
+        int memberId, bool privateMessagePush, bool mentionPush, bool announcementPush, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         await conn.ExecuteAsync(new CommandDefinition(
             "dbo.usp_NotificationPreference_Set",
-            new { MemberId = memberId, PrivateMessagePush = privateMessagePush, MentionPush = mentionPush },
+            new
+            {
+                MemberId = memberId, PrivateMessagePush = privateMessagePush,
+                MentionPush = mentionPush, AnnouncementPush = announcementPush
+            },
+            commandType: CommandType.StoredProcedure, cancellationToken: ct));
+    }
+
+    public async Task<bool> HasReadDocumentAsync(string documentType, int documentId, int memberId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        return await conn.ExecuteScalarAsync<bool>(new CommandDefinition(
+            "dbo.usp_Document_HasRead",
+            new { DocumentType = documentType, DocumentId = documentId, MemberId = memberId },
             commandType: CommandType.StoredProcedure, cancellationToken: ct));
     }
 }

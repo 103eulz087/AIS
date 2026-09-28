@@ -1,0 +1,61 @@
+2026-09-23 10:57:02.459 +08:00 [INF] HTTP GET /api/membership-applications responded 401 in 13.6286 ms
+2026-09-23 10:57:02.459 +08:00 [INF] HTTP GET /api/members responded 401 in 16.3642 ms
+2026-09-23 10:57:02.490 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4786 ms
+2026-09-23 10:57:02.499 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0959 ms
+2026-09-23 11:35:36.636 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 4.4111 ms
+2026-09-23 11:35:36.636 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 4.4112 ms
+2026-09-23 11:35:37.969 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3250 ms
+2026-09-23 11:35:37.969 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1989 ms
+2026-09-23 11:35:41.581 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1007.0283 ms
+2026-09-23 11:35:41.662 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 58.8075 ms
+2026-09-23 11:35:41.832 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 109.6896 ms
+2026-09-23 11:35:42.747 +08:00 [INF] HTTP GET /api/members responded 200 in 1024.9321 ms
+2026-09-23 11:35:47.472 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2993 ms
+2026-09-23 11:35:47.486 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3360 ms
+2026-09-23 11:36:01.619 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2822 ms
+2026-09-23 11:36:01.632 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1841 ms
+2026-09-23 11:36:02.567 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1755 ms
+2026-09-23 11:36:02.581 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2719 ms
+2026-09-23 11:36:04.360 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2752 ms
+2026-09-23 11:36:04.373 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1351 ms
+2026-09-23 11:36:05.337 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2457 ms
+2026-09-23 11:36:05.337 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1552 ms
+2026-09-23 11:36:05.765 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1978 ms
+2026-09-23 11:36:05.776 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1475 ms
+2026-09-23 11:36:06.610 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2959 ms
+2026-09-23 11:36:06.622 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1559 ms
+2026-09-23 11:36:10.464 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 500.7387 ms
+2026-09-23 11:36:10.555 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 54.6453 ms
+2026-09-23 11:36:10.858 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 262.9466 ms
+2026-09-23 11:36:21.751 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 735.6712 ms
+2026-09-23 11:36:25.984 +08:00 [INF] HTTP GET /api/members/842 responded 200 in 115.5494 ms
+2026-09-23 11:36:29.484 +08:00 [INF] HTTP GET /api/members/blocked responded 200 in 202.8210 ms
+2026-09-23 11:36:44.308 +08:00 [INF] HTTP GET /api/members/1105 responded 200 in 112.7170 ms
+2026-09-23 11:36:51.255 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 123.5888 ms
+2026-09-23 11:36:55.518 +08:00 [INF] HTTP GET /api/councils responded 200 in 87.8980 ms
+2026-09-23 11:37:02.359 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 130.2704 ms
+2026-09-23 11:37:03.012 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 82.4940 ms
+2026-09-23 11:37:10.787 +08:00 [INF] HTTP POST /api/chapters/258/release responded 200 in 211.0940 ms
+2026-09-23 11:37:10.890 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 71.1705 ms
+2026-09-23 11:37:16.892 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 89.3635 ms
+2026-09-23 12:26:47.543 +08:00 [INF] HTTP GET /api/councils/statistics responded 401 in 5.7981 ms
+2026-09-23 12:26:47.566 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2548 ms
+2026-09-23 14:59:02.693 +08:00 [INF] Application is shutting down...
+2026-09-23 14:59:02.694 +08:00 [DBG] Hosting stopping
+2026-09-23 14:59:02.701 +08:00 [DBG] Hosting stopped
+2026-09-23 17:51:11.330 +08:00 [DBG] Hosting starting
+2026-09-23 17:51:11.669 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-23 17:51:11.674 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-23 17:51:11.674 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-23 17:51:11.674 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-23 17:51:11.674 +08:00 [INF] Hosting environment: Development
+2026-09-23 17:51:11.674 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-23 17:51:11.675 +08:00 [DBG] Hosting started
+2026-09-23 17:51:28.445 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 22.1231 ms
+2026-09-23 17:51:28.445 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 22.1167 ms
+2026-09-23 17:51:32.190 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1353.9574 ms
+2026-09-23 17:51:32.481 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 261.9748 ms
+2026-09-23 17:51:32.750 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 219.4413 ms
+2026-09-23 17:51:37.324 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 508.9092 ms
+2026-09-23 17:51:37.603 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 76.4865 ms
+2026-09-23 17:51:51.377 +08:00 [INF] HTTP GET /api/members/758 responded 200 in 122.6788 ms

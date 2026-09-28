@@ -6,7 +6,7 @@ namespace Akrho.Infrastructure.Repositories;
 
 public sealed record SignInAccountRow(
     int AccountId, string PasswordHash, int FailedAttempts, DateTime? LockedUntil,
-    bool IsDisabled, int MemberId, int ChapterId);
+    bool IsDisabled, int MemberId, int ChapterId, bool IsChapterOnHold);
 
 /// <summary>One row per the member's currently active role; RoleName is NULL if he holds none.</summary>
 public sealed record MemberClaimRow(

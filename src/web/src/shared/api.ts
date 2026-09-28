@@ -86,7 +86,34 @@ async function request<T>(path: string, init: RequestInit = {}, isRetry = false)
   }
 
   if (!res.ok) throw await toApiError(res);
-  return res.status === 204 ? (undefined as T) : ((await res.json()) as T);
+  return parseOkBody<T>(res);
+}
+
+/**
+ * TypedResults.Ok() with no generic payload (an action confirmation with nothing to
+ * return — council/chapter officer unseat, member block, meeting attendance clear,
+ * etc.) sends HTTP 200 with an EMPTY body, not 204 — only 204 is guaranteed bodyless,
+ * so checking status alone missed this real, live case: res.json() on an empty body
+ * throws a plain SyntaxError (not an ApiError), which every caller's own
+ * `err instanceof ApiError` check then falls through as a generic "Something went
+ * wrong" — even though the request had already succeeded server-side. Confirmed live:
+ * a chapter President's own unseat-an-officer action audited successfully on the
+ * FIRST try, every time, while the screen kept reporting failure, so he retried it
+ * three more times for the same officer.
+ *
+ * Deliberately still calls res.json() (never res.text()) — every test in this codebase
+ * stubs fetch with a plain object exposing only `json`, matching what this function
+ * always called; switching to text-first would silently require every one of those
+ * stubs to grow a `text` method too. Catching the empty-body parse failure here fixes
+ * every bodyless-200 endpoint at once without changing that contract.
+ */
+async function parseOkBody<T>(res: Response): Promise<T> {
+  if (res.status === 204) return undefined as T;
+  try {
+    return (await res.json()) as T;
+  } catch {
+    return undefined as T;
+  }
 }
 
 /**
@@ -110,7 +137,7 @@ async function uploadRequest<T>(path: string, form: FormData, isRetry = false): 
   }
 
   if (!res.ok) throw await toApiError(res);
-  return res.status === 204 ? (undefined as T) : ((await res.json()) as T);
+  return parseOkBody<T>(res);
 }
 
 export interface DownloadedFile { blob: Blob; fileName: string }

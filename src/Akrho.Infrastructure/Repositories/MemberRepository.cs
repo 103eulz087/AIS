@@ -16,6 +16,19 @@ public sealed record MemberListRow(
 /// <summary>usp_Member_UpdateByOfficer's own result — the new RowVersion only.</summary>
 public sealed record MemberIdentityUpdateResultRow(byte[] RowVersion);
 
+/// <summary>usp_Member_SearchByJurisdiction's own row shape — full contact detail for
+/// every result, by design (see that procedure's own header comment on why this is a
+/// different visibility rule from MemberListRow's cross-chapter restriction).</summary>
+public sealed record MemberJurisdictionSearchRow(
+    int MemberId, string GiftName, string MemberNumber,
+    string FirstName, string? MiddleName, string LastName,
+    string? MobileNo, string? Email,
+    int? ChapterId, string? ChapterName,
+    int? HomeCouncilId, string? HomeCouncilName,
+    string StatusName, DateTime? RenewedThrough, bool IsBlocked,
+    string? RegionName, string? ProvinceName, string? CityName,
+    int TotalCount);
+
 public interface IMemberRepository
 {
     /// <summary>
@@ -31,6 +44,12 @@ public interface IMemberRepository
     Task<MemberIdentityUpdateResultRow> UpdateIdentityByOfficerAsync(
         int requestingMemberId, int memberId, string firstName, string? middleName, string lastName,
         string mobileNo, byte[] rowVersion, CancellationToken ct);
+
+    /// <summary>Council Portal's own global member search, scoped to the requesting
+    /// officer's dbo.fn_MemberCouncilScope. Throws <see cref="MemberJurisdictionSearchException"/>
+    /// (Forbidden: no seated council office / BadRequest: search text under 2 characters).</summary>
+    Task<IReadOnlyList<MemberJurisdictionSearchRow>> SearchByJurisdictionAsync(
+        int requestingMemberId, string search, int skip, int take, CancellationToken ct);
 }
 
 /// <summary>How the endpoint layer decides which HTTP status a rejected
@@ -59,6 +78,30 @@ public sealed class MemberIdentityException : Exception
 internal static class MemberIdentityErrors
 {
     private static readonly HashSet<int> Known = [51260, 51261, 51262, 51263, 51264, 51265, 51266, 51267];
+    public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
+}
+
+/// <summary>How the endpoint layer decides which HTTP status a rejected
+/// usp_Member_SearchByJurisdiction call becomes.</summary>
+public enum MemberJurisdictionSearchErrorCategory { Forbidden, BadRequest }
+
+public sealed class MemberJurisdictionSearchException : Exception
+{
+    public MemberJurisdictionSearchErrorCategory Category { get; }
+
+    public MemberJurisdictionSearchException(int sqlErrorNumber, string message) : base(message)
+    {
+        Category = sqlErrorNumber switch
+        {
+            51830 => MemberJurisdictionSearchErrorCategory.Forbidden,
+            _ => MemberJurisdictionSearchErrorCategory.BadRequest   // 51831
+        };
+    }
+}
+
+internal static class MemberJurisdictionSearchErrors
+{
+    private static readonly HashSet<int> Known = [51830, 51831];
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
 }
 
@@ -112,6 +155,31 @@ public sealed class MemberRepository(ISqlConnectionFactory factory) : IMemberRep
         catch (SqlException ex) when (MemberIdentityErrors.IsKnown(ex.Number))
         {
             throw new MemberIdentityException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<IReadOnlyList<MemberJurisdictionSearchRow>> SearchByJurisdictionAsync(
+        int requestingMemberId, string search, int skip, int take, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            var rows = await conn.QueryAsync<MemberJurisdictionSearchRow>(new CommandDefinition(
+                "dbo.usp_Member_SearchByJurisdiction",
+                new
+                {
+                    RequestingMemberId = requestingMemberId,   // from the token, never the body
+                    Search = search,
+                    Skip = skip,
+                    Take = Math.Clamp(take, 1, 200)
+                },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+
+            return rows.ToList();
+        }
+        catch (SqlException ex) when (MemberJurisdictionSearchErrors.IsKnown(ex.Number))
+        {
+            throw new MemberJurisdictionSearchException(ex.Number, ex.Message);
         }
     }
 }

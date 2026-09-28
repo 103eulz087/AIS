@@ -46,10 +46,18 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
     });
   }, [announcementId]);
 
+  // National announcements have no chapter officer above them at all — only the
+  // National Council Admin can edit/withdraw one (from the Portal), and
+  // usp_Document_GetReadReceipts has no National-scope branch (it was never asked
+  // for at that scale — see that procedure's own header). Every officer-only control
+  // below is gated on !isNational for exactly this reason, not merely to hide a
+  // button: the underlying chapter-scoped endpoints would reject a National id.
+  const isNational = announcement?.isNational ?? false;
+
   const receipts = useQuery({
     queryKey: ["announcement-read-receipts", announcementId],
     queryFn: () => api.get<ReadReceipt[]>(`/api/documents/Announcement/${announcementId}/read-receipts`),
-    enabled: isOfficer && Number.isFinite(announcementId),
+    enabled: isOfficer && !isNational && Number.isFinite(announcementId),
   });
 
   const [withdrawOpen, setWithdrawOpen] = useState(false);
@@ -105,6 +113,7 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
         )}
 
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.2, marginTop: isLiveUrgent ? 10 : 0 }}>
+          {announcement.isNational && <span style={nationalPillStyle}>National</span>}
           {announcement.title}
         </div>
         <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 8 }}>
@@ -127,7 +136,7 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
         {readNotice && <p style={noticeStyle}>{readNotice}</p>}
       </div>
 
-      {isOfficer && !announcement.isWithdrawn && (
+      {isOfficer && !isNational && !announcement.isWithdrawn && (
         <div style={{ display: "flex", gap: 10, padding: "0 16px 16px" }}>
           <Link to={`/announcements/${announcementId}/edit`} style={ghostButtonStyle}>Edit</Link>
           {!withdrawOpen && (
@@ -138,7 +147,7 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
         </div>
       )}
 
-      {isOfficer && withdrawOpen && (
+      {isOfficer && !isNational && withdrawOpen && (
         <div style={{ padding: "0 16px 16px" }}>
           <form onSubmit={e => { void handleWithdraw(e); }}>
             <label htmlFor="withdrawReason" style={labelStyle}>Reason for withdrawing</label>
@@ -169,7 +178,7 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
         </div>
       )}
 
-      {isOfficer && (
+      {isOfficer && !isNational && (
         <div style={{ padding: "0 16px 16px" }}>
           <div style={sectionLabelStyle}>Who's read this</div>
           {receipts.isLoading && <ScreenSkeleton rows={2} />}
@@ -200,6 +209,11 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
 const urgentPillStyle: CSSProperties = {
   display: "inline-block", fontSize: 11, padding: "3px 10px", borderRadius: 12,
   background: "#FBF4E4", color: "var(--warn)", border: "1px solid #E7D6A8",
+};
+
+const nationalPillStyle: CSSProperties = {
+  display: "inline-block", marginRight: 8, fontSize: 11, padding: "2px 8px", borderRadius: 10,
+  background: "var(--deep)", color: "var(--brass-soft)", letterSpacing: ".03em", verticalAlign: "middle",
 };
 
 const withdrawnBannerStyle: CSSProperties = {

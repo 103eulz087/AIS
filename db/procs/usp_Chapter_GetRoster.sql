@@ -21,7 +21,18 @@ BEGIN
             m.MemberId, m.GiftName, m.MemberNumber,
             m.FirstName + N' ' + m.LastName AS FullName,
             mr.TermStart, mr.TermEnd,
-            CAST(CASE WHEN mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+            -- "Current" here means the same thing usp_Chapter_SeatOfficer's own
+            -- "office already held" check means: TermEnd IS NULL, full stop — never
+            -- TermEnd >= @Today. That inclusive-of-today form (used elsewhere in this
+            -- codebase for read-only historical reporting, where "he served through
+            -- today" is the right answer) is wrong HERE: this roster's IsCurrent also
+            -- decides whether this screen offers "Seat someone" or "Unseat" for an
+            -- office, so a same-day unseat must be reflected immediately, not at
+            -- midnight — otherwise a President who unseats an officer to replace him
+            -- has no way to seat the replacement until the next day. Found live
+            -- 2026-09-22: an unseat audited successfully every time, but the screen
+            -- kept showing the outgoing officer as still seated for the rest of the day.
+            CAST(CASE WHEN mr.TermStart <= @Today AND mr.TermEnd IS NULL
                       THEN 1 ELSE 0 END AS BIT) AS IsCurrent,
             m.RenewedThrough,
             CAST(CASE WHEN ua.AccountId IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS HasAccount

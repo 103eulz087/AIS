@@ -43,3 +43,16 @@ public sealed record ChapterOfficerSeatResultDto(int MemberRoleId);
 /// delete; the row survives with TermEnd set (invariant #15's logic extended to
 /// MemberRole).</summary>
 public sealed record UnseatChapterOfficerRequest(string Reason);
+
+/// <summary>GET /api/chapters/search-jurisdiction — the settings screen's chapter
+/// picker for hold/release. See usp_Chapter_SearchByJurisdiction.sql for the scoping
+/// rationale (mirrors MemberJurisdictionSearchRequest exactly).</summary>
+public sealed record ChapterJurisdictionSearchRequest(string Search = "", int Skip = 0, int Take = 50);
+
+public sealed record ChapterJurisdictionResultDto(
+    int ChapterId, string ChapterName, bool IsOnHold, int MemberCount,
+    string? RegionName, string? ProvinceName, string? CityName);
+
+/// <summary>POST /api/chapters/{chapterId}/hold and /release — a reason is required and
+/// recorded in dbo.ChapterHoldAction, same discipline as MemberAccountActionRequest.</summary>
+public sealed record ChapterHoldRequest(string Reason);

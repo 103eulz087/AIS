@@ -187,4 +187,51 @@ public static class AuthorizationPolicies
     /// bar as <see cref="ChapterMoneyVoid"/> and <see cref="ChapterDisciplineWrite"/>.
     /// </summary>
     public const string ChapterMemberIdentityEdit = "ChapterMemberIdentityEdit";
+
+    /// <summary>
+    /// Any real council office — read-only global member search (GET
+    /// /api/members/search-jurisdiction), by name, member number, or mobile number. Same
+    /// ROLE bar as <see cref="CouncilRegistryRead"/> (a Secretary or Treasurer has as much
+    /// legitimate reason to look a member up as an Admin does), kept as its own named
+    /// policy rather than reused because it gates a different capability — mirrors
+    /// canReviewChapterRegistrations/canViewCouncilStatistics in shared/roles.ts, which
+    /// share an identical role bar for the same reason. usp_Member_SearchByJurisdiction
+    /// re-derives the caller's own dbo.fn_MemberCouncilScope regardless of role — a
+    /// National officer's own scope happens to be the whole tree, a Regional/Provincial/
+    /// City officer's is only his own subtree; this policy never knows or checks which.
+    /// <c>CouncilAuditor</c> and the inert seeded role names must NEVER be added here.
+    /// </summary>
+    public const string CouncilMemberSearchRead = "CouncilMemberSearchRead";
+
+    /// <summary>
+    /// CouncilAdmin only — place a chapter on hold, release one, or search chapters to
+    /// find one (GET /api/chapters/search-jurisdiction, POST .../hold, POST .../release).
+    /// Client decision 2026-09-22, made with a documented prior precedent in front of it:
+    /// usp_Member_Block's own header records a deliberate earlier decision to keep
+    /// account-management narrowed to National Council alone ("a standing power to
+    /// manage any member's account anywhere beneath a council is the thing this codebase
+    /// has consistently refused to build"). This policy's coarse ROLE bar can't express
+    /// the real per-chapter split (National, OR the chapter's own resolved governing
+    /// council — see usp_Chapter_Hold.sql) — that is re-derived entirely server-side by
+    /// usp_Chapter_Hold/_Release via usp_Approval_ResolveApprover, same "coarse client
+    /// check, real server check" posture as every other policy in this file. Do NOT add
+    /// CouncilSecretary/CouncilTreasurer/CouncilOfficer/CouncilPIO here — freezing an
+    /// entire chapter's logins at once is at least as consequential as blocking one
+    /// member, which is CouncilAdmin-only for the same reason.
+    /// </summary>
+    public const string ChapterHoldManage = "ChapterHoldManage";
+
+    /// <summary>
+    /// CouncilAdmin only — post or withdraw a National announcement (visible in every
+    /// chapter's own feed, POST /api/announcements/national and its /withdraw). Same
+    /// coarse ROLE bar as <see cref="ChapterHoldManage"/>/<see cref="CouncilSeatOfficer"/>
+    /// — the real "specifically the National Council's own Admin, not a CouncilAdmin
+    /// seated elsewhere" restriction is re-derived entirely server-side by
+    /// usp_Announcement_CreateNational/_WithdrawNational, same "coarse client check, real
+    /// server check" posture as every other policy in this file. Do NOT add
+    /// CouncilSecretary/CouncilTreasurer/CouncilOfficer/CouncilPIO here — broadcasting to
+    /// every chapter AIS user in the organization is at least as consequential as placing
+    /// one chapter on hold, which is CouncilAdmin-only for the same reason.
+    /// </summary>
+    public const string NationalAnnouncementManage = "NationalAnnouncementManage";
 }

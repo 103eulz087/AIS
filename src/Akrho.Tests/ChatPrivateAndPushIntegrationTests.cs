@@ -206,14 +206,14 @@ public class ChatPrivateAndPushIntegrationTests
 
             var before = await pushRepo.GetNotificationPreferenceAsync(_fx.ChapterAOfficerId, CancellationToken.None);
 
-            await pushRepo.SetNotificationPreferenceAsync(_fx.ChapterAOfficerId, false, true, CancellationToken.None);
+            await pushRepo.SetNotificationPreferenceAsync(_fx.ChapterAOfficerId, false, true, true, CancellationToken.None);
             var after = await pushRepo.GetNotificationPreferenceAsync(_fx.ChapterAOfficerId, CancellationToken.None);
             after.PrivateMessagePush.Should().BeFalse();
             after.MentionPush.Should().BeTrue();
 
             // Restore whatever was there before this test touched it.
             await pushRepo.SetNotificationPreferenceAsync(
-                _fx.ChapterAOfficerId, before.PrivateMessagePush, before.MentionPush, CancellationToken.None);
+                _fx.ChapterAOfficerId, before.PrivateMessagePush, before.MentionPush, before.AnnouncementPush, CancellationToken.None);
         }
         finally
         {

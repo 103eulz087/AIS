@@ -53,20 +53,35 @@ public sealed class PushDispatchHostedService(
             await Task.Delay(TimeSpan.FromSeconds(delaySeconds), ct);
 
             using var scope = scopeFactory.CreateScope();
-            var chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
             var pushRepository = scope.ServiceProvider.GetRequiredService<IPushRepository>();
 
-            var state = await chatRepository.GetParticipantStateAsync(job.RoomId, job.RecipientMemberId, ct);
-            if (state.LastReadMessageId is { } lastRead && lastRead >= job.MessageId)
-                return; // Already seen it in-app — the whole point of the delay above.
-            if (state.IsMuted)
-                return;
+            if (job.Kind == PushJobKind.Announcement)
+            {
+                // No room, no mute state — an Announcement's own "already seen this in-app"
+                // check is the read receipt itself (usp_Document_HasRead), same reasoning as
+                // usp_Document_MarkRead's own header comment on why ReadReceipt IS the audit
+                // trail here.
+                var alreadyRead = await pushRepository.HasReadDocumentAsync(
+                    "Announcement", job.AnnouncementId!.Value, job.RecipientMemberId, ct);
+                if (alreadyRead)
+                    return;
+            }
+            else
+            {
+                var chatRepository = scope.ServiceProvider.GetRequiredService<IChatRepository>();
+                var state = await chatRepository.GetParticipantStateAsync(job.RoomId!.Value, job.RecipientMemberId, ct);
+                if (state.LastReadMessageId is { } lastRead && lastRead >= job.MessageId)
+                    return; // Already seen it in-app — the whole point of the delay above.
+                if (state.IsMuted)
+                    return;
+            }
 
             var preferences = await pushRepository.GetNotificationPreferenceAsync(job.RecipientMemberId, ct);
             var enabled = job.Kind switch
             {
                 PushJobKind.PrivateMessage => preferences.PrivateMessagePush,
                 PushJobKind.Mention => preferences.MentionPush,
+                PushJobKind.Announcement => preferences.AnnouncementPush,
                 _ => false
             };
             if (!enabled)
@@ -76,9 +91,10 @@ public sealed class PushDispatchHostedService(
             if (subscriptions.Count == 0)
                 return;
 
-            // Fixed templates. The ONLY thing ever interpolated is the sender's gift name —
-            // never the message body (this record has no such field to interpolate — see
-            // PushJob's own header comment), never a legal name, never a mobile number.
+            // Fixed templates. The ONLY thing ever interpolated is the sender's gift name, or
+            // (Announcement only — see PushJob's own header comment on why this one field is a
+            // deliberate exception) the announcement's own title — never a chat message body,
+            // never a legal name, never a mobile number.
             var (title, body, data) = job.Kind switch
             {
                 PushJobKind.PrivateMessage => (
@@ -89,6 +105,10 @@ public sealed class PushDispatchHostedService(
                     "AKRHO",
                     $"{job.SenderGiftName} mentioned you in the chapter chat",
                     (object)new { type = "mention", chapterId = job.ChapterId }),
+                PushJobKind.Announcement => (
+                    "AKRHO National Council",
+                    job.AnnouncementTitle ?? "New announcement",
+                    (object)new { type = "announcement", announcementId = job.AnnouncementId }),
                 _ => throw new InvalidOperationException($"Unknown push job kind: {job.Kind}")
             };
 

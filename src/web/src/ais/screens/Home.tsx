@@ -246,7 +246,10 @@ function AnnouncementsPreview({ items, isLoading, isError, onRetry }: {
               {isLiveUrgent ? "!" : "📣"}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13.5, fontWeight: 600 }}>{a.title}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 600 }}>
+                {a.isNational && <span style={nationalPillStyle}>National</span>}
+                {a.title}
+              </div>
               <div style={{ fontSize: 11.5, color: "var(--mute)", marginTop: 2 }}>
                 {shortDate(a.publishDateUtc)}
                 {!a.hasRead && !a.isWithdrawn && <span style={newPillStyle}>New</span>}
@@ -390,6 +393,11 @@ const previewRowStyle: CSSProperties = {
 const newPillStyle: CSSProperties = {
   marginLeft: 6, fontSize: 10, padding: "1px 6px", borderRadius: 8,
   background: "var(--brass-soft)", color: "var(--brass-dk)",
+};
+
+const nationalPillStyle: CSSProperties = {
+  marginRight: 6, fontSize: 10, padding: "1px 6px", borderRadius: 8,
+  background: "var(--deep)", color: "var(--brass-soft)", letterSpacing: ".03em",
 };
 
 const emptyActionStyle: CSSProperties = {

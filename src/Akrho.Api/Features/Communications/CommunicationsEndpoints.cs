@@ -1,4 +1,5 @@
 using Akrho.Api.Common;
+using Akrho.Infrastructure.Push;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
 using FluentValidation;
@@ -23,6 +24,20 @@ public static class CommunicationsEndpoints
 
         announcements.MapPost("/{announcementId:int}/withdraw", WithdrawAnnouncement).WithName("WithdrawAnnouncement")
             .RequireAuthorization(AuthorizationPolicies.ChapterCommsWrite);
+
+        // National — visible in every chapter's own feed via usp_Announcement_GetForMember's
+        // own UNION (no {chapterId} in the route at all: there is no single chapter to scope
+        // against, same reasoning as the /api/documents group's own header comment). Policy is
+        // only the coarse "holds CouncilAdmin somewhere" pre-check; usp_Announcement_
+        // CreateNational/_WithdrawNational re-derive the real "specifically the National
+        // Council's own Admin" restriction themselves (defence in depth, same posture as every
+        // other policy in this codebase).
+        var national = app.MapGroup("/api/announcements/national")
+                           .WithTags("Announcements").RequireAuthorization(AuthorizationPolicies.NationalAnnouncementManage);
+
+        national.MapGet("", ListNationalAnnouncements).WithName("ListNationalAnnouncements");
+        national.MapPost("", CreateNationalAnnouncement).WithName("CreateNationalAnnouncement");
+        national.MapPost("/{announcementId:int}/withdraw", WithdrawNationalAnnouncement).WithName("WithdrawNationalAnnouncement");
 
         var memos = app.MapGroup("/api/chapters/{chapterId:int}/memos")
                         .WithTags("Memos").RequireAuthorization();
@@ -69,7 +84,7 @@ public static class CommunicationsEndpoints
                 r.PublishDate, r.ExpiryDate is { } e ? DateOnly.FromDateTime(e) : null, r.CreatedBy,
                 r.EditedBy, r.EditedDate,
                 r.IsWithdrawn, r.WithdrawnBy, r.WithdrawnDate, r.WithdrawnReason,
-                r.HasRead)).ToList();
+                r.IsNational, r.HasRead)).ToList();
 
             var total = rows.Count > 0 ? rows[0].TotalCount : 0;
             return TypedResults.Ok(new PagedResult<AnnouncementDto>(items, total, req.Skip, req.Take));
@@ -106,6 +121,101 @@ public static class CommunicationsEndpoints
             // Only ever a role check (51168) — the policy already blocked this for anyone
             // but a ChapterOfficer/ChapterAdmin, so this is the procedure's own layer.
             return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+    }
+
+    private static async Task<Results<Ok<PagedResult<AnnouncementDto>>, ProblemHttpResult>> ListNationalAnnouncements(
+        [AsParameters] AnnouncementListRequest req,
+        IAnnouncementRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        try
+        {
+            var rows = await repo.ListNationalAsync(caller.MemberId, req.Skip, req.Take == 0 ? 50 : req.Take, ct);
+
+            var items = rows.Select(r => new AnnouncementDto(
+                r.AnnouncementId, r.Title, r.Body, r.IsUrgent,
+                r.UrgentTypeId, r.UrgentTypeName, r.BloodTypeId, r.BloodTypeName,
+                r.PublishDate, r.ExpiryDate is { } e ? DateOnly.FromDateTime(e) : null, r.CreatedBy,
+                r.EditedBy, r.EditedDate,
+                r.IsWithdrawn, r.WithdrawnBy, r.WithdrawnDate, r.WithdrawnReason,
+                r.IsNational, r.HasRead)).ToList();
+
+            var total = rows.Count > 0 ? rows[0].TotalCount : 0;
+            return TypedResults.Ok(new PagedResult<AnnouncementDto>(items, total, req.Skip, req.Take));
+        }
+        catch (CommsException ex)
+        {
+            return ex.Category switch
+            {
+                CommsErrorCategory.Conflict => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<AnnouncementCreatedDto>, ValidationProblem, ProblemHttpResult>> CreateNationalAnnouncement(
+        CreateNationalAnnouncementRequest req,
+        IAnnouncementRepository repo, IPushJobEnqueuer pushJobs, ICurrentUser caller,
+        IValidator<CreateNationalAnnouncementRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            var announcementId = await repo.CreateNationalAsync(
+                caller.MemberId, req.Title, req.Body, req.IsUrgent, req.ExpiryDate, ct);
+
+            // Enqueued AFTER the write committed, never before (IPushJobEnqueuer's own
+            // contract) — one job per active, chapter-homed member in the entire
+            // organization. The dispatch worker's own per-job delay/read-receipt/preference
+            // checks (PushDispatchHostedService) decide, later, whether each one actually
+            // fires — this loop only ever decides WHO is even in scope to be asked.
+            var recipientMemberIds = await repo.GetNationalRecipientMemberIdsAsync(ct);
+            foreach (var memberId in recipientMemberIds)
+            {
+                pushJobs.Enqueue(new PushJob(
+                    RoomId: null, RecipientMemberId: memberId, SenderGiftName: "National Council",
+                    MessageId: null, Kind: PushJobKind.Announcement,
+                    AnnouncementId: announcementId, AnnouncementTitle: req.Title));
+            }
+
+            return TypedResults.Ok(new AnnouncementCreatedDto(announcementId));
+        }
+        catch (CommsException ex)
+        {
+            return ex.Category switch
+            {
+                CommsErrorCategory.Conflict => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
+                // Only ever a role check (51901) otherwise — the policy already blocked this
+                // for anyone but a CouncilAdmin; the procedure's own tighter,
+                // National-specific check is what actually rejects a non-National one.
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok, ValidationProblem, NotFound, Conflict<string>, ProblemHttpResult>> WithdrawNationalAnnouncement(
+        int announcementId, WithdrawAnnouncementRequest req,
+        IAnnouncementRepository repo, ICurrentUser caller,
+        IValidator<WithdrawAnnouncementRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.WithdrawNationalAsync(announcementId, req.Reason, caller.MemberId, ct);
+            return TypedResults.Ok();
+        }
+        catch (CommsException ex)
+        {
+            return ex.Category switch
+            {
+                CommsErrorCategory.NotFound => TypedResults.NotFound(),
+                CommsErrorCategory.Conflict => TypedResults.Conflict(ex.Message),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden)
+            };
         }
     }
 

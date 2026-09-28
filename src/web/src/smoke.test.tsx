@@ -55,9 +55,11 @@ import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQu
 import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
 import { IdCardExport } from "@/portal/screens/IdCardExport";
 import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
-import { BlockedMembers } from "@/portal/screens/BlockedMembers";
 import { CouncilRegistry } from "@/portal/screens/CouncilRegistry";
 import { CouncilRoster } from "@/portal/screens/CouncilRoster";
+import { MemberSearch } from "@/portal/screens/MemberSearch";
+import { ChapterHolds } from "@/portal/screens/ChapterHolds";
+import { NationalAnnouncements } from "@/portal/screens/NationalAnnouncements";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -142,16 +144,26 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // calling GET /api/councils/statistics — same reasoning as every other role-gated
   // Portal screen above.
   ["/portal/statistics", <CouncilStatistics key="pcs" />],
-  // No session in jsdom -> canManageMemberAccounts(roles=[]) is false, so this
-  // deterministically exercises the "you don't have access" empty state without ever
-  // calling GET /api/members/blocked — same reasoning as every other role-gated Portal
-  // screen above.
-  ["/portal/blocked-members", <BlockedMembers key="pbm" />],
   // No session in jsdom -> canViewCouncilRegistry(roles=[]) is false, so both
   // deterministically exercise the "you don't have access" empty state — same
   // reasoning as every other role-gated Portal screen above.
   ["/portal/councils", <CouncilRegistry key="pcr" />],
   ["/portal/councils/1", <CouncilRoster key="pcrost" />],
+  // No session in jsdom -> canSearchMembersByJurisdiction(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/members/search-jurisdiction — same reasoning as every other
+  // role-gated Portal screen above.
+  ["/portal/members", <MemberSearch key="pms" />],
+  // No session in jsdom -> canManageChapterHolds(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/chapters/search-jurisdiction — same reasoning as every other
+  // role-gated Portal screen above.
+  ["/portal/chapter-holds", <ChapterHolds key="pch" />],
+  // No session in jsdom -> canPostNationalAnnouncements(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/announcements/national — same reasoning as every other
+  // role-gated Portal screen above.
+  ["/portal/announcements", <NationalAnnouncements key="pna" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],

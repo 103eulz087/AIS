@@ -233,6 +233,7 @@ export interface Announcement {
   withdrawnBy: number | null;
   withdrawnDateUtc: string | null;
   withdrawnReason: string | null;
+  isNational: boolean;
   hasRead: boolean;
 }
 
@@ -626,6 +627,49 @@ export interface BlockedMember {
   reason: string;
   performedDateUtc: string;
   blockedByGiftName: string | null;
+}
+
+/**
+ * GET /api/members/search-jurisdiction — the Council Portal's global member search.
+ * Mirrors MemberJurisdictionResultDto. Full contact detail on every row by design (this
+ * is a seated council officer's own oversight tool, not the peer-facing member
+ * Directory) — see usp_Member_SearchByJurisdiction.sql's own header comment. Scope
+ * (which members even appear) is entirely server-derived from the caller's own council
+ * seat; a National officer sees the whole organization, anyone seated lower sees only
+ * his own region/province/city subtree — this shape carries no field that says which.
+ */
+/**
+ * GET /api/chapters/search-jurisdiction — the chapter picker for the hold/release
+ * settings screen. Mirrors ChapterJurisdictionResultDto and, in shape and reasoning,
+ * MemberJurisdictionResult above (same fn_MemberCouncilScope-based scoping).
+ */
+export interface ChapterJurisdictionResult {
+  chapterId: number;
+  chapterName: string;
+  isOnHold: boolean;
+  memberCount: number;
+  regionName: string | null;
+  provinceName: string | null;
+  cityName: string | null;
+}
+
+export interface MemberJurisdictionResult {
+  memberId: number;
+  giftName: string;
+  memberNumber: string;
+  fullName: string;
+  mobileNo: string | null;
+  email: string | null;
+  chapterId: number | null;
+  chapterName: string | null;
+  homeCouncilId: number | null;
+  homeCouncilName: string | null;
+  statusName: string;
+  renewedThrough: string | null;
+  isBlocked: boolean;
+  regionName: string | null;
+  provinceName: string | null;
+  cityName: string | null;
 }
 
 /**
@@ -1063,6 +1107,7 @@ export interface ConversationStarted {
 export interface NotificationPreference {
   privateMessagePush: boolean;
   mentionPush: boolean;
+  announcementPush: boolean;
 }
 
 /** GET /api/notifications/vapid-key result. The VAPID key is public; never a secret. */

@@ -87,6 +87,21 @@ public static class MembersEndpoints
         g.MapPut("/{memberId:int}/identity", UpdateIdentity).WithName("UpdateMemberIdentity")
             .RequireAuthorization(AuthorizationPolicies.ChapterMemberIdentityEdit);
 
+        // Council Portal's own global search — name, member number, or mobile number,
+        // scoped to the caller's own council jurisdiction (never a value from the
+        // request; see usp_Member_SearchByJurisdiction.sql). A distinct route from the
+        // chapter directory's GET "" above rather than an extra mode flag on it: the two
+        // searches have different scope sources (one chapter id vs. an entire council
+        // subtree) and different result shapes (full contact detail here, by design).
+        g.MapGet("/search-jurisdiction", SearchByJurisdiction).WithName("SearchMembersByJurisdiction")
+            .RequireAuthorization(AuthorizationPolicies.CouncilMemberSearchRead);
+
+        // "View details" behind one search-jurisdiction row — same policy as the search
+        // itself (a caller who may search may drill into a result), same scope re-derived
+        // independently inside usp_Member_GetByJurisdiction (CLAUDE.md invariant #4).
+        g.MapGet("/{memberId:int}", GetByJurisdiction).WithName("GetMemberByJurisdiction")
+            .RequireAuthorization(AuthorizationPolicies.CouncilMemberSearchRead);
+
         return app;
     }
 
@@ -467,6 +482,87 @@ public static class MembersEndpoints
                 MemberIdentityErrorCategory.Conflict =>
                     TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
                 _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<PagedResult<MemberJurisdictionResultDto>>, ValidationProblem, ProblemHttpResult>> SearchByJurisdiction(
+        [AsParameters] MemberJurisdictionSearchRequest req,
+        IMemberRepository repo, ICurrentUser caller,
+        IValidator<MemberJurisdictionSearchRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            var rows = await repo.SearchByJurisdictionAsync(caller.MemberId, req.Search, req.Skip, req.Take, ct);
+
+            var items = rows.Select(r => new MemberJurisdictionResultDto(
+                r.MemberId, r.GiftName, r.MemberNumber,
+                FullName: string.Join(' ', new[] { r.FirstName, r.MiddleName, r.LastName }
+                                              .Where(s => !string.IsNullOrWhiteSpace(s))),
+                r.MobileNo, r.Email,
+                r.ChapterId, r.ChapterName, r.HomeCouncilId, r.HomeCouncilName,
+                r.StatusName, r.RenewedThrough is { } d ? DateOnly.FromDateTime(d) : null, r.IsBlocked,
+                r.RegionName, r.ProvinceName, r.CityName))
+                .ToList();
+
+            var total = rows.Count > 0 ? rows[0].TotalCount : 0;
+            return TypedResults.Ok(new PagedResult<MemberJurisdictionResultDto>(items, total, req.Skip, req.Take));
+        }
+        catch (MemberJurisdictionSearchException ex)
+        {
+            return ex.Category switch
+            {
+                MemberJurisdictionSearchErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<MemberJurisdictionDetailDto>, ProblemHttpResult>> GetByJurisdiction(
+        int memberId, IMemberProfileRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        try
+        {
+            var result = await repo.GetByJurisdictionAsync(caller.MemberId, memberId, ct);
+            var p = result.Profile;
+            return TypedResults.Ok(new MemberJurisdictionDetailDto(
+                p.MemberId, p.MemberNumber,
+                p.FirstName, p.MiddleName, p.LastName, p.GiftName,
+                p.Birthdate is { } bd ? DateOnly.FromDateTime(bd) : null,
+                p.DateSurvive is { } ds ? DateOnly.FromDateTime(ds) : null,
+                p.PresidentDuringSurvive, p.MasterInitiatorDuringSurvive,
+                p.ChapterId, p.ChapterName,
+                p.HomeCouncilId, p.CouncilName,
+                p.ChapterOfRecord,
+                p.StatusName,
+                p.RenewedThrough is { } rt ? DateOnly.FromDateTime(rt) : null,
+                p.SeconderMemberId, p.ApprovedBy, p.ApprovedDate,
+                p.Address, p.MobileNo, p.Email,
+                p.BloodTypeId, p.BloodTypeName, p.BloodTypeConfirmedDate,
+                p.Profession,
+                p.PhotoPath is null ? null : $"/api/members/{p.MemberId}/photo",
+                result.SkillIds,
+                p.RowVersion,
+                p.RegionName, p.ProvinceName, p.CityName));
+        }
+        catch (MemberJurisdictionDetailException ex)
+        {
+            // TypedResults.NotFound() (no value) sends an empty body — the exact class of
+            // bug already found and fixed once this session (api.ts's parseOkBody, for the
+            // 200 case): the client's toApiError() can only surface a body it can parse,
+            // so a bodyless 404 here fell through to the generic "Something went wrong."
+            // instead of this procedure's own "Member not found." Problem() with a
+            // status code, not NotFound(), so the real message actually reaches the
+            // screen — same fix shape, applied to the error-response side this time.
+            return ex.Category switch
+            {
+                MemberJurisdictionDetailErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status404NotFound)
             };
         }
     }

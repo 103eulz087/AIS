@@ -45,6 +45,17 @@ public sealed class CommsException : Exception
             // unlike GetReadReceipts's merged 51182 above).
             51173 or 51178 or 51180 => CommsErrorCategory.BadRequest,
 
+            // National announcement THROWs (usp_Announcement_CreateNational/_WithdrawNational,
+            // 51900-51905) — a separate range, own procedures, but the same exception type:
+            // this is still "an Announcement stored procedure rejected a call." 51900 (the
+            // National Council itself isn't seeded) mirrors usp_Credential_BulkIssueForExport's
+            // own 51580 — a system-configuration state, not a malformed request, so Conflict
+            // rather than BadRequest.
+            51901 or 51902 => CommsErrorCategory.Forbidden,
+            51903 => CommsErrorCategory.NotFound,
+            51900 or 51904 => CommsErrorCategory.Conflict,
+            51905 => CommsErrorCategory.BadRequest,
+
             _ => CommsErrorCategory.BadRequest
         };
     }
@@ -64,7 +75,8 @@ internal static class CommsErrors
     private static readonly HashSet<int> Known =
     [
         51168, 51169, 51170, 51171, 51172, 51173, 51174, 51175, 51176,
-        51177, 51178, 51179, 51180, 51181, 51182, 51183
+        51177, 51178, 51179, 51180, 51181, 51182, 51183,
+        51900, 51901, 51902, 51903, 51904, 51905
     ];
 
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
@@ -81,7 +93,7 @@ public sealed record AnnouncementRow(
     DateTime PublishDate, DateTime? ExpiryDate, int CreatedBy,
     int? EditedBy, DateTime? EditedDate,
     bool IsWithdrawn, int? WithdrawnBy, DateTime? WithdrawnDate, string? WithdrawnReason,
-    bool HasRead, int TotalCount);
+    bool IsNational, bool HasRead, int TotalCount);
 
 /// <summary>
 /// One memo row. IsSuperseded/SupersededByMemoId/SupersededByMemoNumber are computed by the
@@ -115,6 +127,27 @@ public interface IAnnouncementRepository
     /// <summary>Throws <see cref="CommsException"/> (Forbidden) if the caller isn't an active member of the chapter.</summary>
     Task<IReadOnlyList<AnnouncementRow>> GetForMemberAsync(
         int chapterId, int requestingMemberId, int skip, int take, bool includeWithdrawn, CancellationToken ct);
+
+    /// <summary>Throws <see cref="CommsException"/> (Conflict: National Council not seeded /
+    /// Forbidden: caller isn't the National Council Admin).</summary>
+    Task<int> CreateNationalAsync(
+        int requestingMemberId, string title, string body, bool isUrgent, DateOnly? expiryDate, CancellationToken ct);
+
+    /// <summary>Throws <see cref="CommsException"/> (NotFound / Conflict / Forbidden / BadRequest).</summary>
+    Task WithdrawNationalAsync(int announcementId, string reason, int requestingMemberId, CancellationToken ct);
+
+    /// <summary>Every active, chapter-homed member's id — the push fan-out list for a just-
+    /// created National announcement. Called only right after <see cref="CreateNationalAsync"/>
+    /// has already succeeded; never its own endpoint (usp_Announcement_GetRecipientMemberIds's
+    /// own header comment).</summary>
+    Task<IReadOnlyList<int>> GetNationalRecipientMemberIdsAsync(CancellationToken ct);
+
+    /// <summary>The National Council Admin's own management list — every National
+    /// announcement ever posted, withdrawn included. Throws <see cref="CommsException"/>
+    /// (Conflict: National Council not seeded / Forbidden: caller isn't the National
+    /// Council Admin).</summary>
+    Task<IReadOnlyList<AnnouncementRow>> ListNationalAsync(
+        int requestingMemberId, int skip, int take, CancellationToken ct);
 }
 
 /// <summary>
@@ -243,6 +276,73 @@ public sealed class AnnouncementRepository(ISqlConnectionFactory factory) : IAnn
                     Take = Math.Clamp(take, 1, 500),
                     IncludeWithdrawn = includeWithdrawn
                 },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+            return rows.ToList();
+        }
+        catch (SqlException ex) when (CommsErrors.IsKnown(ex.Number))
+        {
+            throw new CommsException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<int> CreateNationalAsync(
+        int requestingMemberId, string title, string body, bool isUrgent, DateOnly? expiryDate, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            return await conn.ExecuteScalarAsync<int>(new CommandDefinition(
+                "dbo.usp_Announcement_CreateNational",
+                new
+                {
+                    RequestingMemberId = requestingMemberId,
+                    Title = title,
+                    Body = body,
+                    IsUrgent = isUrgent,
+                    ExpiryDate = expiryDate?.ToDateTime(TimeOnly.MinValue)
+                },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+        }
+        catch (SqlException ex) when (CommsErrors.IsKnown(ex.Number))
+        {
+            throw new CommsException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task WithdrawNationalAsync(int announcementId, string reason, int requestingMemberId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            await conn.ExecuteAsync(new CommandDefinition(
+                "dbo.usp_Announcement_WithdrawNational",
+                new { AnnouncementId = announcementId, Reason = reason, RequestingMemberId = requestingMemberId },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+        }
+        catch (SqlException ex) when (CommsErrors.IsKnown(ex.Number))
+        {
+            throw new CommsException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<IReadOnlyList<int>> GetNationalRecipientMemberIdsAsync(CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        var ids = await conn.QueryAsync<int>(new CommandDefinition(
+            "dbo.usp_Announcement_GetRecipientMemberIds",
+            commandType: CommandType.StoredProcedure, cancellationToken: ct));
+        return ids.ToList();
+    }
+
+    public async Task<IReadOnlyList<AnnouncementRow>> ListNationalAsync(
+        int requestingMemberId, int skip, int take, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            var rows = await conn.QueryAsync<AnnouncementRow>(new CommandDefinition(
+                "dbo.usp_Announcement_ListNational",
+                new { RequestingMemberId = requestingMemberId, Skip = skip, Take = Math.Clamp(take, 1, 200) },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
             return rows.ToList();
         }

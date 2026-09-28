@@ -3,8 +3,9 @@ using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
 using Akrho.Infrastructure.Storage;
-using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http.HttpResults;
+using NPOI.HSSF.UserModel;
+using SkiaSharp;
 
 namespace Akrho.Api.Features.IdCardExport;
 
@@ -93,31 +94,42 @@ public static class IdCardExportEndpoints
 
         using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, leaveOpen: true))
         {
-            WriteWorkbookEntry(archive, members, storage, webOrigin);
+            WriteWorkbookEntry(archive, members, webOrigin);
             await WritePhotoEntriesAsync(archive, members, storage, logger, ct);
         }
 
         return zipStream.ToArray();
     }
 
+    // NPOI's HSSFWorkbook, not ClosedXML — client decision 2026-09-26: the Magicard
+    // Enduro's own bundled card-design software looks up its data source by a plain
+    // file lookup and only understands the legacy binary .xls (BIFF) format, not the
+    // OOXML .xlsx ClosedXML produces (that library has no .xls writer at all — a
+    // different library was the only way to honour this). Every downstream mail-merge
+    // field on the printer's own template stays keyed to these exact column headers;
+    // do not reorder or rename them without checking that template first.
     private static void WriteWorkbookEntry(
-        ZipArchive archive, IReadOnlyList<IdCardExportMemberRow> members, IFileStorage storage, string webOrigin)
+        ZipArchive archive, IReadOnlyList<IdCardExportMemberRow> members, string webOrigin)
     {
-        using var workbook = new XLWorkbook();
-        var sheet = workbook.Worksheets.Add("Members");
+        using var workbook = new HSSFWorkbook();
+        var sheet = workbook.CreateSheet("Members");
 
         string[] headers =
         [
             "MemberNumber", "FirstName", "MiddleName", "LastName", "GiftName", "BloodTypeName",
             "ChapterName", "ChapterCode", "StatusName", "PhotoFileName", "VerificationUrl"
         ];
+        var headerRow = sheet.CreateRow(0);
         for (var col = 0; col < headers.Length; col++)
-            sheet.Cell(1, col + 1).Value = headers[col];
+            headerRow.CreateCell(col).SetCellValue(headers[col]);
 
-        var row = 2;
+        var rowIndex = 1;
         foreach (var m in members)
         {
-            var photoFileName = PhotoFileName(m, storage);
+            // Always ".jpg" — never the source upload's own extension. See
+            // WritePhotoEntriesAsync's own header comment for why every photo entry is
+            // re-encoded to match, not just renamed.
+            var photoFileName = PhotoFileName(m);
 
             // Built EXACTLY the way CredentialEndpoints.ToDto builds the self-service Digital
             // ID's own VerificationUrl — a relative "/verify/{tokenSubject:D}" path, resolved
@@ -129,27 +141,37 @@ public static class IdCardExportEndpoints
                 ? $"{webOrigin}/verify/{subject:D}"
                 : null;
 
-            sheet.Cell(row, 1).Value = m.MemberNumber;
-            sheet.Cell(row, 2).Value = m.FirstName;
-            sheet.Cell(row, 3).Value = m.MiddleName ?? string.Empty;
-            sheet.Cell(row, 4).Value = m.LastName;
-            sheet.Cell(row, 5).Value = m.GiftName;
-            sheet.Cell(row, 6).Value = m.BloodTypeName ?? string.Empty;
-            sheet.Cell(row, 7).Value = m.ChapterName;
-            sheet.Cell(row, 8).Value = m.ChapterCode ?? string.Empty;
-            sheet.Cell(row, 9).Value = m.StatusName;
-            sheet.Cell(row, 10).Value = photoFileName ?? string.Empty;
-            sheet.Cell(row, 11).Value = verificationUrl ?? string.Empty;
-            row++;
+            var row = sheet.CreateRow(rowIndex);
+            row.CreateCell(0).SetCellValue(m.MemberNumber);
+            row.CreateCell(1).SetCellValue(m.FirstName);
+            row.CreateCell(2).SetCellValue(m.MiddleName ?? string.Empty);
+            row.CreateCell(3).SetCellValue(m.LastName);
+            row.CreateCell(4).SetCellValue(m.GiftName);
+            row.CreateCell(5).SetCellValue(m.BloodTypeName ?? string.Empty);
+            row.CreateCell(6).SetCellValue(m.ChapterName);
+            row.CreateCell(7).SetCellValue(m.ChapterCode ?? string.Empty);
+            row.CreateCell(8).SetCellValue(m.StatusName);
+            row.CreateCell(9).SetCellValue(photoFileName ?? string.Empty);
+            row.CreateCell(10).SetCellValue(verificationUrl ?? string.Empty);
+            rowIndex++;
         }
 
-        sheet.Columns().AdjustToContents();
+        for (var col = 0; col < headers.Length; col++)
+            sheet.AutoSizeColumn(col);
 
-        var entry = archive.CreateEntry("members.xlsx", CompressionLevel.Optimal);
+        var entry = archive.CreateEntry("members.xls", CompressionLevel.Optimal);
         using var entryStream = entry.Open();
-        workbook.SaveAs(entryStream);
+        workbook.Write(entryStream, leaveOpen: true);
     }
 
+    // Every photo entry is re-encoded to JPEG here, regardless of what format the member's
+    // photo was actually uploaded/stored as (a phone upload can just as easily be .png or
+    // .heic — see MembersEndpoints.AllowedPhotoContentTypes). Client decision 2026-09-26:
+    // the Magicard Enduro's own card-design software looks up each member's photo by a
+    // plain filename match against the workbook, with no way to also match against mixed
+    // extensions — every entry under photos/ must be a REAL .jpg, not just a renamed copy
+    // of whatever the original bytes were (a renamed .png would still be PNG-encoded on
+    // disk and either fail that lookup or render as a broken image).
     private static async Task WritePhotoEntriesAsync(
         ZipArchive archive, IReadOnlyList<IdCardExportMemberRow> members, IFileStorage storage,
         ILogger logger, CancellationToken ct)
@@ -178,23 +200,92 @@ public static class IdCardExportEndpoints
                 continue;
             }
 
-            // A renamed COPY for this export only. The actual stored file keeps its own
-            // server-generated GUID name (LocalFileStorage's path-traversal/enumeration
-            // defence) — this never touches or renames dbo.Member.PhotoPath or the file on
-            // disk it points to.
             await using (source)
             {
-                var fileName = PhotoFileName(m, storage)!;
+                byte[] jpegBytes;
+                try
+                {
+                    jpegBytes = ReencodeToJpeg(source);
+                }
+                catch (Exception ex)
+                {
+                    // A corrupt/unrecognisable source file (or a format this build's Skia
+                    // can't decode, e.g. some HEIC variants without the platform's own codec)
+                    // — same "skip, don't fail the whole export" posture as a missing file.
+                    logger.LogWarning(ex,
+                        "ID card export: photo file for {MemberNumber} could not be re-encoded to JPEG — skipped, not failed",
+                        m.MemberNumber);
+                    continue;
+                }
+
+                var fileName = PhotoFileName(m)!;
                 var entry = archive.CreateEntry($"photos/{fileName}", CompressionLevel.Optimal);
                 await using var entryStream = entry.Open();
-                await source.CopyToAsync(entryStream, ct);
+                await entryStream.WriteAsync(jpegBytes, ct);
             }
         }
     }
 
-    // Same extension table LocalFileStorage.SaveAsync already uses internally
-    // (IFileStorage.ResolveExtension) — never a second, independently-maintained jpg/png/heic
-    // mapping.
-    private static string? PhotoFileName(IdCardExportMemberRow m, IFileStorage storage) =>
-        m.PhotoPath is null ? null : $"{m.MemberNumber}{storage.ResolveExtension(m.PhotoContentType)}";
+    /// <summary>
+    /// Decodes via SKCodec (not the simpler SKBitmap.Decode) specifically so
+    /// EncodedOrigin — the source file's own EXIF rotation flag — can be read and baked
+    /// into the actual pixel data before re-encoding. A phone photo is very often stored
+    /// "sideways" with only an EXIF tag telling a viewer to rotate it on display; the
+    /// Magicard software reads raw pixels off a plain file, the same way this method's own
+    /// caller does, with no EXIF interpretation of its own, so a straight re-encode
+    /// without correcting orientation first would print a sideways/upside-down photo on
+    /// every card whose source happened to need it.
+    /// </summary>
+    private static byte[] ReencodeToJpeg(Stream source)
+    {
+        using var data = SKData.Create(source);
+        using var codec = SKCodec.Create(data) ?? throw new InvalidOperationException("Not a recognisable image format.");
+
+        using var raw = new SKBitmap(codec.Info.Width, codec.Info.Height);
+        var result = codec.GetPixels(raw.Info, raw.GetPixels());
+        if (result is not (SKCodecResult.Success or SKCodecResult.IncompleteInput))
+            throw new InvalidOperationException($"Could not decode image pixels ({result}).");
+
+        using var oriented = ApplyExifOrientation(raw, codec.EncodedOrigin);
+        using var image = SKImage.FromBitmap(oriented);
+        using var jpeg = image.Encode(SKEncodedImageFormat.Jpeg, 90);
+        return jpeg.ToArray();
+    }
+
+    /// <summary>The 8 standard EXIF orientation values, each as the rotation/mirror it
+    /// asks a viewer to apply. TopLeft (the common case — no tag, or "already upright")
+    /// returns the same bitmap untouched.</summary>
+    private static SKBitmap ApplyExifOrientation(SKBitmap source, SKEncodedOrigin origin)
+    {
+        if (origin == SKEncodedOrigin.TopLeft) return source.Copy();
+
+        var swapsDimensions = origin is SKEncodedOrigin.LeftTop or SKEncodedOrigin.RightTop
+            or SKEncodedOrigin.RightBottom or SKEncodedOrigin.LeftBottom;
+        var width = swapsDimensions ? source.Height : source.Width;
+        var height = swapsDimensions ? source.Width : source.Height;
+
+        var oriented = new SKBitmap(width, height);
+        using var canvas = new SKCanvas(oriented);
+        var matrix = origin switch
+        {
+            SKEncodedOrigin.TopRight => SKMatrix.CreateScale(-1, 1).PostConcat(SKMatrix.CreateTranslation(width, 0)),
+            SKEncodedOrigin.BottomRight => SKMatrix.CreateRotationDegrees(180, width / 2f, height / 2f),
+            SKEncodedOrigin.BottomLeft => SKMatrix.CreateScale(1, -1).PostConcat(SKMatrix.CreateTranslation(0, height)),
+            SKEncodedOrigin.LeftTop => SKMatrix.Concat(
+                SKMatrix.CreateRotationDegrees(90), SKMatrix.CreateScale(1, -1)),
+            SKEncodedOrigin.RightTop => SKMatrix.CreateRotationDegrees(90, width / 2f, height / 2f)
+                .PostConcat(SKMatrix.CreateTranslation((width - height) / 2f, (height - width) / 2f)),
+            SKEncodedOrigin.RightBottom => SKMatrix.Concat(
+                SKMatrix.CreateRotationDegrees(270), SKMatrix.CreateScale(1, -1)),
+            SKEncodedOrigin.LeftBottom => SKMatrix.CreateRotationDegrees(270, width / 2f, height / 2f)
+                .PostConcat(SKMatrix.CreateTranslation((width - height) / 2f, (height - width) / 2f)),
+            _ => SKMatrix.Identity,
+        };
+        canvas.SetMatrix(matrix);
+        canvas.DrawBitmap(source, 0, 0, new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None), paint: null);
+        return oriented;
+    }
+
+    private static string? PhotoFileName(IdCardExportMemberRow m) =>
+        m.PhotoPath is null ? null : $"{m.MemberNumber}.jpg";
 }

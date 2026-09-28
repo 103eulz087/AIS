@@ -218,3 +218,41 @@ export function canEditMemberIdentity(roles: readonly string[]): boolean {
 export function canExportIdCards(roles: readonly string[]): boolean {
   return roles.includes("CouncilAdmin");
 }
+
+/**
+ * Any real council office — the Council Portal's global member search. Mirrors
+ * AuthorizationPolicies.CouncilMemberSearchRead's own ROLE bar, same broad "any seated
+ * council officer" posture as canViewCouncilRegistry above (a Secretary or Treasurer has
+ * as much legitimate reason to look a member up as an Admin does). Which members the
+ * search actually returns is scoped server-side to the caller's own jurisdiction
+ * (usp_Member_SearchByJurisdiction) — this helper only decides whether to show the
+ * screen at all. CouncilAuditor and the inert seeded role names must never be added here.
+ */
+export function canSearchMembersByJurisdiction(roles: readonly string[]): boolean {
+  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin")
+      || roles.includes("CouncilTreasurer") || roles.includes("CouncilOfficer") || roles.includes("CouncilPIO");
+}
+
+/**
+ * CouncilAdmin only — place a chapter on hold (freezing every one of its members'
+ * logins at once) or release one. Mirrors AuthorizationPolicies.ChapterHoldManage's own
+ * ROLE bar; the real "National, or this chapter's own governing council" split is
+ * re-derived entirely server-side (usp_Chapter_Hold/_Release), same "coarse client
+ * check, real server check" posture as every other helper in this file. A CouncilAdmin
+ * seated somewhere with no standing over a given chapter still sees this screen and is
+ * turned away by the real 403 those procedures return.
+ */
+export function canManageChapterHolds(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
+}
+
+/**
+ * CouncilAdmin only — post or withdraw a National announcement (visible in every
+ * chapter's own dashboard). Mirrors AuthorizationPolicies.NationalAnnouncementManage's
+ * own ROLE bar; the real "specifically the National Council's own Admin" restriction
+ * is re-derived entirely server-side (usp_Announcement_CreateNational/_WithdrawNational),
+ * same "coarse client check, real server check" posture as every other helper here.
+ */
+export function canPostNationalAnnouncements(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
+}

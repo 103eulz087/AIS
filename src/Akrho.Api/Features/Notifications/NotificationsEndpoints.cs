@@ -67,13 +67,14 @@ public static class NotificationsEndpoints
         IPushRepository repo, ICurrentUser caller, CancellationToken ct)
     {
         var row = await repo.GetNotificationPreferenceAsync(caller.MemberId, ct);
-        return TypedResults.Ok(new NotificationPreferenceDto(row.PrivateMessagePush, row.MentionPush));
+        return TypedResults.Ok(new NotificationPreferenceDto(row.PrivateMessagePush, row.MentionPush, row.AnnouncementPush));
     }
 
     private static async Task<Ok> SetPreferences(
         SetNotificationPreferenceRequest req, IPushRepository repo, ICurrentUser caller, CancellationToken ct)
     {
-        await repo.SetNotificationPreferenceAsync(caller.MemberId, req.PrivateMessagePush, req.MentionPush, ct);
+        await repo.SetNotificationPreferenceAsync(
+            caller.MemberId, req.PrivateMessagePush, req.MentionPush, req.AnnouncementPush, ct);
         return TypedResults.Ok();
     }
 }

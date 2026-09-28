@@ -37,11 +37,22 @@ public static class AuthEndpoints
         if (account is null)
             return TypedResults.Unauthorized();
 
-        if (account.IsDisabled || (account.LockedUntil is { } lockedUntil && lockedUntil > DateTime.UtcNow))
-        {
-            await repo.RecordSignInResultAsync(account.AccountId, success: false, ip, ct);
+        // Disabled, chapter on hold, or locked out from a PRIOR run of failures: reject
+        // without touching FailedAttempts/LockedUntil again. Recording another failure
+        // here was the bug — it kept resetting LockedUntil to another 15 minutes from
+        // now on every retry, so a lockout never actually expired as long as someone (or
+        // an impatient retry loop) kept trying, even with the correct password. Confirmed
+        // live 2026-09-22: AccountId 86 accumulated 19 recorded failures over 33 minutes,
+        // each one re-extending its own lock, despite its PasswordHash verifying
+        // correctly against the account's actual password the whole time.
+        //
+        // IsChapterOnHold (23_chapter_hold.sql): same generic 401 as every other reason —
+        // never tell an attacker his chapter is on hold. This is deliberately NOT counted
+        // as a failed attempt either; a chapter hold is an administrative state, not a
+        // credential mismatch, so it must not contribute to (or reset) the lockout clock.
+        if (account.IsDisabled || account.IsChapterOnHold
+            || (account.LockedUntil is { } lockedUntil && lockedUntil > DateTime.UtcNow))
             return TypedResults.Unauthorized();
-        }
 
         if (!hasher.Verify(account.PasswordHash, req.Password))
         {

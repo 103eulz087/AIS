@@ -17,6 +17,6 @@ public sealed record RegisterPushSubscriptionRequest(
 public sealed record PushSubscriptionRegisteredDto(int SubscriptionId);
 
 /// <summary>GET/PUT /api/notifications/preferences — the caller's own notification preferences.</summary>
-public sealed record NotificationPreferenceDto(bool PrivateMessagePush, bool MentionPush);
+public sealed record NotificationPreferenceDto(bool PrivateMessagePush, bool MentionPush, bool AnnouncementPush);
 
-public sealed record SetNotificationPreferenceRequest(bool PrivateMessagePush, bool MentionPush);
+public sealed record SetNotificationPreferenceRequest(bool PrivateMessagePush, bool MentionPush, bool AnnouncementPush);

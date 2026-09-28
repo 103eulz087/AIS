@@ -80,7 +80,8 @@ export function NotificationSettings() {
   }
 
   async function setPreference(patch: Partial<NotificationPreference>) {
-    const current = preferencesQuery.data ?? { privateMessagePush: true, mentionPush: true };
+    const current = preferencesQuery.data
+      ?? { privateMessagePush: true, mentionPush: true, announcementPush: true };
     const next = { ...current, ...patch };
     try {
       await api.put("/api/notifications/preferences", next);
@@ -119,6 +120,13 @@ export function NotificationSettings() {
           checked={preferencesQuery.data?.mentionPush ?? true}
           disabled={preferencesQuery.isLoading}
           onChange={checked => { void setPreference({ mentionPush: checked }); }}
+        />
+        <ToggleRow
+          label="National announcements"
+          hint="Get an alert when National Council posts an announcement."
+          checked={preferencesQuery.data?.announcementPush ?? true}
+          disabled={preferencesQuery.isLoading}
+          onChange={checked => { void setPreference({ announcementPush: checked }); }}
           last
         />
       </div>

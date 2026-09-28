@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError, type DownloadedFile } from "@/shared/api";
 import { shortDate, validThrough } from "@/shared/format";
 import { ErrorState, ScreenSkeleton } from "@/shared/states";
+import { PasswordInput } from "@/shared/PasswordInput";
 import type { BloodTypeOption, SkillOption } from "@/shared/types";
 import { NotificationSettings } from "@/ais/screens/NotificationSettings";
 
@@ -440,8 +441,8 @@ export function Profile() {
         {mobileChanged && (
           <>
             <label htmlFor="currentPassword" style={labelStyle}>Current password</label>
-            <input
-              id="currentPassword" type="password" autoComplete="current-password"
+            <PasswordInput
+              id="currentPassword" autoComplete="current-password"
               value={form.currentPassword}
               onChange={e => setForm(f => f && { ...f, currentPassword: e.target.value })}
               style={fieldStyle}
@@ -584,23 +585,23 @@ function ChangePasswordSection() {
       <div style={sectionLabelStyle}>Password</div>
       <form onSubmit={e => { void handleSubmit(e); }}>
         <label htmlFor="currentPassword2" style={labelStyle}>Current password</label>
-        <input
-          id="currentPassword2" type="password" autoComplete="current-password"
+        <PasswordInput
+          id="currentPassword2" autoComplete="current-password"
           value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
           style={fieldStyle}
         />
 
         <label htmlFor="newPassword" style={labelStyle}>New password</label>
-        <input
-          id="newPassword" type="password" autoComplete="new-password"
+        <PasswordInput
+          id="newPassword" autoComplete="new-password"
           value={newPassword} onChange={e => setNewPassword(e.target.value)}
           style={fieldStyle}
         />
         <p style={hintStyle}>At least 10 characters.</p>
 
         <label htmlFor="confirmPassword" style={labelStyle}>Confirm new password</label>
-        <input
-          id="confirmPassword" type="password" autoComplete="new-password"
+        <PasswordInput
+          id="confirmPassword" autoComplete="new-password"
           value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
           style={fieldStyle}
         />

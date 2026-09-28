@@ -122,6 +122,48 @@ public sealed record MemberAccountActionRequest(string Reason);
 /// show-once here (unlike a reset, which hands back a link).</summary>
 public sealed record MemberAccountActionResultDto(int MemberId, string Action);
 
+/// <summary>GET /api/members/search-jurisdiction — the Council Portal's global member
+/// search. No ChapterId/CouncilId parameter here, deliberately: scope comes entirely from
+/// the caller's own token (CLAUDE.md invariant #4), never a value the client could
+/// substitute. See usp_Member_SearchByJurisdiction.sql for the full scoping rationale.</summary>
+public sealed record MemberJurisdictionSearchRequest(string Search = "", int Skip = 0, int Take = 50);
+
+/// <summary>One row of a jurisdiction search result. Full contact detail by design (see
+/// usp_Member_SearchByJurisdiction.sql's own header comment on why this differs from
+/// MemberCrossChapterDto's restricted shape) — this is a seated council officer's own
+/// oversight tool, not the peer-facing member Directory.</summary>
+public sealed record MemberJurisdictionResultDto(
+    int MemberId, string GiftName, string MemberNumber, string FullName,
+    string? MobileNo, string? Email,
+    int? ChapterId, string? ChapterName, int? HomeCouncilId, string? HomeCouncilName,
+    string StatusName, DateOnly? RenewedThrough, bool IsBlocked,
+    string? RegionName, string? ProvinceName, string? CityName);
+
+/// <summary>GET /api/members/{memberId} — "View details" behind one jurisdiction search
+/// row. Same field set as <see cref="MemberProfileDto"/> (the self-profile shape) plus
+/// RegionName/ProvinceName/CityName — a separate record rather than reusing
+/// MemberProfileDto because that DTO's own contract is "never any id but the caller's
+/// own" (see its doc comment); mixing this jurisdiction-scoped path into it would blur
+/// that guarantee for every future reader.</summary>
+public sealed record MemberJurisdictionDetailDto(
+    int MemberId, string MemberNumber,
+    string FirstName, string? MiddleName, string LastName, string GiftName,
+    DateOnly? Birthdate,
+    DateOnly? DateSurvive, string? PresidentDuringSurvive, string? MasterInitiatorDuringSurvive,
+    int? ChapterId, string? ChapterName,
+    int? HomeCouncilId, string? CouncilName,
+    string? ChapterOfRecord,
+    string Status,
+    DateOnly? RenewedThrough,
+    int? SeconderMemberId, int? ApprovedBy, DateTime? ApprovedDateUtc,
+    string? Address, string? MobileNo, string? Email,
+    int? BloodTypeId, string? BloodTypeName, DateTime? BloodTypeConfirmedDateUtc,
+    string? Profession,
+    string? PhotoUrl,
+    IReadOnlyList<int> SkillIds,
+    byte[] RowVersion,
+    string? RegionName, string? ProvinceName, string? CityName);
+
 /// <summary>
 /// POST /api/members/{memberId}/reset-password — National Council only. SHOW-ONCE, same
 /// convention as ReissueMemberEnrolmentLinkResponseDto: this is the only response that

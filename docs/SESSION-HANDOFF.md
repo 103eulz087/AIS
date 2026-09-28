@@ -1,5 +1,22 @@
 # Session Handoff
 
+## ⚠️ TEMPORARY, must revert: account lockout is disabled (2026-09-28)
+
+`usp_Auth_RecordSignInResult` normally locks an account for 15 minutes after 5 failed
+sign-in attempts. **That lock is currently commented out** — deployed live to the shared
+dev/staging DB on 2026-09-28, client decision, because so many chapters are enrolling
+and signing in for the first time right now that first-login typos were tripping the
+lock and generating support requests.
+
+**This is a real, deliberate weakening of brute-force resistance and is meant to be
+short-lived.** Failed attempts are still counted and audited exactly as before — only
+the lock itself is off. To re-enable: uncomment the `IF @NewAttempts >= 5 ...` block in
+`db/procs/usp_Auth_RecordSignInResult.sql` and redeploy that one proc. Do this once the
+current enrollment rush settles down — don't leave it off indefinitely, and don't let a
+future session re-discover this by surprise.
+
+---
+
 **Read this file first if you are picking this project back up in a new Claude Code
 session** — especially on a different machine (e.g. switching from Windows to a Mac).
 This is not part of the permanent spec; it's a running note for continuity between

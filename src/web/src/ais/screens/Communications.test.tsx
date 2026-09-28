@@ -91,7 +91,8 @@ const ACTIVE_ANNOUNCEMENT: Announcement = {
   isUrgent: false, urgentTypeId: null, urgentTypeName: null, bloodTypeId: null, bloodTypeName: null,
   publishDateUtc: "2026-09-01T08:00:00Z", expiryDate: null, createdBy: 2,
   editedBy: null, editedDateUtc: null,
-  isWithdrawn: false, withdrawnBy: null, withdrawnDateUtc: null, withdrawnReason: null, hasRead: true,
+  isWithdrawn: false, withdrawnBy: null, withdrawnDateUtc: null, withdrawnReason: null,
+  isNational: false, hasRead: true,
 };
 
 const WITHDRAWN_ANNOUNCEMENT: Announcement = {
@@ -101,7 +102,8 @@ const WITHDRAWN_ANNOUNCEMENT: Announcement = {
   publishDateUtc: "2026-07-30T10:00:00Z", expiryDate: null, createdBy: 2,
   editedBy: null, editedDateUtc: null,
   isWithdrawn: true, withdrawnBy: 2, withdrawnDateUtc: "2026-08-02T09:00:00Z",
-  withdrawnReason: "A donor was found — thank you to everyone who responded.", hasRead: false,
+  withdrawnReason: "A donor was found — thank you to everyone who responded.",
+  isNational: false, hasRead: false,
 };
 
 const MEMO_1: Memo = {

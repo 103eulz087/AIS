@@ -20,6 +20,15 @@ public sealed class EditAnnouncementRequestValidator : AbstractValidator<EditAnn
     }
 }
 
+public sealed class CreateNationalAnnouncementRequestValidator : AbstractValidator<CreateNationalAnnouncementRequest>
+{
+    public CreateNationalAnnouncementRequestValidator()
+    {
+        RuleFor(x => x.Title).NotEmpty().MaximumLength(250);
+        RuleFor(x => x.Body).NotEmpty();
+    }
+}
+
 public sealed class WithdrawAnnouncementRequestValidator : AbstractValidator<WithdrawAnnouncementRequest>
 {
     public WithdrawAnnouncementRequestValidator()

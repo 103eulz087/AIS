@@ -88,3 +88,16 @@ public sealed class UpdateMemberIdentityRequestValidator : AbstractValidator<Upd
         RuleFor(x => x.RowVersion).NotEmpty();
     }
 }
+
+/// <summary>Client-side mirror of usp_Member_SearchByJurisdiction's own required-search
+/// rule — a hint only, the procedure's own rejection is authoritative.</summary>
+public sealed class MemberJurisdictionSearchRequestValidator : AbstractValidator<MemberJurisdictionSearchRequest>
+{
+    public MemberJurisdictionSearchRequestValidator()
+    {
+        RuleFor(x => x.Search).NotEmpty().MinimumLength(2).MaximumLength(100)
+            .WithMessage("Enter at least 2 characters of a name, member number, or mobile number.");
+        RuleFor(x => x.Take).InclusiveBetween(1, 200);
+        RuleFor(x => x.Skip).GreaterThanOrEqualTo(0);
+    }
+}

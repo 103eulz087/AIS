@@ -47,6 +47,18 @@ public static class ChaptersEndpoints
         g.MapDelete("/{chapterId:int}/officers/{memberRoleId:int}", UnseatOfficer).WithName("UnseatChapterOfficer")
             .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
 
+        // Chapter hold — the settings screen's chapter picker, plus the hold/release
+        // actions themselves. All three ChapterHoldManage (CouncilAdmin ROLE bar only);
+        // the real "National, or this chapter's own governing council" split lives
+        // entirely in usp_Chapter_Hold/_Release (CLAUDE.md invariant #4 — the route
+        // carries chapterId, the procedure never trusts it as authorization).
+        g.MapGet("/search-jurisdiction", SearchByJurisdiction).WithName("SearchChaptersByJurisdiction")
+            .RequireAuthorization(AuthorizationPolicies.ChapterHoldManage);
+        g.MapPost("/{chapterId:int}/hold", HoldChapter).WithName("HoldChapter")
+            .RequireAuthorization(AuthorizationPolicies.ChapterHoldManage);
+        g.MapPost("/{chapterId:int}/release", ReleaseChapter).WithName("ReleaseChapter")
+            .RequireAuthorization(AuthorizationPolicies.ChapterHoldManage);
+
         return app;
     }
 
@@ -173,6 +185,90 @@ public static class ChaptersEndpoints
                 ChapterOfficerErrorCategory.NotFound => TypedResults.NotFound(),
                 ChapterOfficerErrorCategory.Forbidden =>
                     TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok<PagedResult<ChapterJurisdictionResultDto>>, ValidationProblem, ProblemHttpResult>> SearchByJurisdiction(
+        [AsParameters] ChapterJurisdictionSearchRequest req,
+        IChapterHoldRepository repo, ICurrentUser caller,
+        IValidator<ChapterJurisdictionSearchRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            var rows = await repo.SearchByJurisdictionAsync(caller.MemberId, req.Search, req.Skip, req.Take, ct);
+            var items = rows.Select(r => new ChapterJurisdictionResultDto(
+                r.ChapterId, r.ChapterName, r.IsOnHold, r.MemberCount,
+                r.RegionName, r.ProvinceName, r.CityName)).ToList();
+            var total = rows.Count > 0 ? rows[0].TotalCount : 0;
+            return TypedResults.Ok(new PagedResult<ChapterJurisdictionResultDto>(items, total, req.Skip, req.Take));
+        }
+        catch (ChapterJurisdictionSearchException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterJurisdictionSearchErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok, ValidationProblem, ProblemHttpResult>> HoldChapter(
+        int chapterId, ChapterHoldRequest req,
+        IChapterHoldRepository repo, ICurrentUser caller,
+        IValidator<ChapterHoldRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.HoldAsync(caller.MemberId, chapterId, req.Reason, ct);
+            return TypedResults.Ok();
+        }
+        catch (ChapterHoldException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterHoldErrorCategory.NotFound =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status404NotFound),
+                ChapterHoldErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                ChapterHoldErrorCategory.Conflict =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<Ok, ValidationProblem, ProblemHttpResult>> ReleaseChapter(
+        int chapterId, ChapterHoldRequest req,
+        IChapterHoldRepository repo, ICurrentUser caller,
+        IValidator<ChapterHoldRequest> validator, CancellationToken ct)
+    {
+        var validation = await validator.ValidateAsync(req, ct);
+        if (!validation.IsValid) return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        try
+        {
+            await repo.ReleaseAsync(caller.MemberId, chapterId, req.Reason, ct);
+            return TypedResults.Ok();
+        }
+        catch (ChapterHoldException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterHoldErrorCategory.NotFound =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status404NotFound),
+                ChapterHoldErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                ChapterHoldErrorCategory.Conflict =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status409Conflict),
                 _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
             };
         }

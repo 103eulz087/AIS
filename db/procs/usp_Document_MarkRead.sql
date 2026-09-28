@@ -12,7 +12,14 @@
    read-receipt trail (dbo.ReadReceipt itself, plus usp_Document_GetReadReceipts) IS
    the audit trail for this fact. Writing one AuditLog row per tap of every
    announcement/memo by every member would flood the log with rows nobody will ever
-   query through it, since the real answer already lives in ReadReceipt. */
+   query through it, since the real answer already lives in ReadReceipt.
+
+   National scope (added 2026-09-27, Announcement only — dbo.Memo never gets a
+   National row in this slice): there is no single chapter to check membership
+   against, so the gate becomes "is this caller an active, chapter-homed member at
+   all" — the same set usp_Announcement_GetRecipientMemberIds already broadcasts to.
+   A detached, council-homed member (invariant #14) has no chapter AIS session this
+   is relevant to, same reasoning as that procedure's own header comment. */
 CREATE OR ALTER PROCEDURE dbo.usp_Document_MarkRead
     @DocumentType NVARCHAR(20),
     @DocumentId   INT,
@@ -25,21 +32,30 @@ BEGIN
     IF @DocumentType NOT IN ('Announcement', 'Memo')
         THROW 51180, 'Unrecognized document type.', 1;
 
-    DECLARE @ChapterId INT;
+    DECLARE @ScopeType NVARCHAR(20), @ScopeId INT;
 
     IF @DocumentType = 'Announcement'
-        SELECT @ChapterId = ScopeId FROM dbo.Announcement
-        WHERE AnnouncementId = @DocumentId AND ScopeType = 'Chapter';
+        SELECT @ScopeType = ScopeType, @ScopeId = ScopeId FROM dbo.Announcement WHERE AnnouncementId = @DocumentId;
     ELSE
-        SELECT @ChapterId = ScopeId FROM dbo.Memo
-        WHERE MemoId = @DocumentId AND ScopeType = 'Chapter';
+        SELECT @ScopeType = ScopeType, @ScopeId = ScopeId FROM dbo.Memo WHERE MemoId = @DocumentId;
 
-    IF @ChapterId IS NULL
+    IF @ScopeType IS NULL
         THROW 51181, 'Document not found.', 1;
 
-    /* Scoping (invariant #4): a member may only mark read what his own chapter published. */
-    IF NOT EXISTS (SELECT 1 FROM dbo.Member
-                   WHERE MemberId = @RequestingMemberId AND ChapterId = @ChapterId AND IsDeleted = 0)
+    IF @ScopeType = 'Chapter'
+    BEGIN
+        /* Scoping (invariant #4): a member may only mark read what his own chapter published. */
+        IF NOT EXISTS (SELECT 1 FROM dbo.Member
+                       WHERE MemberId = @RequestingMemberId AND ChapterId = @ScopeId AND IsDeleted = 0)
+            THROW 51181, 'Document not found.', 1;
+    END
+    ELSE IF @DocumentType = 'Announcement' AND @ScopeType = 'National'
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM dbo.Member
+                       WHERE MemberId = @RequestingMemberId AND IsDeleted = 0 AND ChapterId IS NOT NULL)
+            THROW 51181, 'Document not found.', 1;
+    END
+    ELSE
         THROW 51181, 'Document not found.', 1;
 
     IF NOT EXISTS (SELECT 1 FROM dbo.ReadReceipt

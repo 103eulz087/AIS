@@ -109,7 +109,10 @@ function AnnouncementRow({ announcement: a }: { announcement: Announcement }) {
       </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600 }}>{a.title}</div>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>
+          {a.isNational && <span style={nationalPillStyle}>National</span>}
+          {a.title}
+        </div>
         <div style={{ fontSize: 12, color: "var(--mute)", marginTop: 2 }}>
           {shortDate(a.publishDateUtc)}
           {a.editedDateUtc && " · Edited"}
@@ -144,6 +147,11 @@ const rowStyle: CSSProperties = {
 
 const excerptStyle: CSSProperties = {
   fontSize: 12.5, color: "var(--slate)", marginTop: 4, lineHeight: 1.5,
+};
+
+const nationalPillStyle: CSSProperties = {
+  display: "inline-block", marginRight: 6, fontSize: 10, padding: "1px 6px", borderRadius: 8,
+  background: "var(--deep)", color: "var(--brass-soft)", letterSpacing: ".03em",
 };
 
 const urgentPillStyle: CSSProperties = {

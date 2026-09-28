@@ -2,6 +2,7 @@ import { useState, type CSSProperties, type FormEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ApiError } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
+import { PasswordInput } from "@/shared/PasswordInput";
 
 /**
  * The login page is identical for every chapter — before sign-in the system does not
@@ -69,11 +70,10 @@ export function SignIn() {
         <p style={hintStyle}>Your member number is on your ID card — or just use your mobile number.</p>
 
         <label htmlFor="password" style={labelStyle}>Password</label>
-        <input
+        <PasswordInput
           id="password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          type="password"
           autoComplete="current-password"
           style={fieldStyle}
         />

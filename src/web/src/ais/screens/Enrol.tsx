@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
+import { PasswordInput } from "@/shared/PasswordInput";
 
 interface EnrolmentLink {
   firstName: string;
@@ -81,11 +82,10 @@ export function Enrol() {
 
       <form onSubmit={handleSubmit} style={{ marginTop: 26 }}>
         <label htmlFor="newPassword" style={labelStyle}>Choose a password</label>
-        <input
+        <PasswordInput
           id="newPassword"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          type="password"
           autoComplete="new-password"
           style={fieldStyle}
         />

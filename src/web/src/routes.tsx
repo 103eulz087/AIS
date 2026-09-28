@@ -36,9 +36,11 @@ import { ChapterRegistrationQueue } from "@/portal/screens/ChapterRegistrationQu
 import { ChapterRegistrationDetail } from "@/portal/screens/ChapterRegistrationDetail";
 import { IdCardExport } from "@/portal/screens/IdCardExport";
 import { CouncilStatistics } from "@/portal/screens/CouncilStatistics";
-import { BlockedMembers } from "@/portal/screens/BlockedMembers";
 import { CouncilRegistry } from "@/portal/screens/CouncilRegistry";
 import { CouncilRoster } from "@/portal/screens/CouncilRoster";
+import { MemberSearch } from "@/portal/screens/MemberSearch";
+import { ChapterHolds } from "@/portal/screens/ChapterHolds";
+import { NationalAnnouncements } from "@/portal/screens/NationalAnnouncements";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -343,15 +345,28 @@ export const router = createBrowserRouter([
       // No councilId in the route — the screen defaults to the caller's own seat and
       // drills down via its own internal focus state, never a URL param.
       { path: "statistics", element: <CouncilStatistics /> },
-      // CouncilAdmin (canManageMemberAccounts); the real National-only restriction is
-      // enforced server-side. No memberId in the route — block/unblock/reset happen
-      // from MemberDirectory (any member, org-wide) or from this review list itself.
-      { path: "blocked-members", element: <BlockedMembers /> },
       // canViewCouncilRegistry (any real council office); creating a council and
       // seating/unseating officers is further gated by canSeatCouncilOfficers
       // (CouncilAdmin) within the screens themselves.
       { path: "councils", element: <CouncilRegistry /> },
       { path: "councils/:councilId", element: <CouncilRoster /> },
+      // The Portal's one member screen — search (canSearchMembersByJurisdiction, any
+      // real council office; scoped server-side to the caller's own council
+      // jurisdiction — National's own scope happens to be the whole organization,
+      // everyone else sees only his subtree), plus block/unblock/reset-password
+      // (canManageMemberAccounts, CouncilAdmin/National only). Consolidated
+      // 2026-09-23 — see MemberSearch.tsx's own header comment.
+      { path: "members", element: <MemberSearch /> },
+      // canManageChapterHolds (CouncilAdmin); freezes/restores every login in a chapter
+      // at once. Real per-chapter authority (National, or the chapter's own resolved
+      // governing council) is re-derived server-side — see ChapterHolds.tsx's own
+      // header comment.
+      { path: "chapter-holds", element: <ChapterHolds /> },
+      // canPostNationalAnnouncements (CouncilAdmin); posts to every chapter AIS
+      // user's own dashboard at once. Real "specifically the National Council's own
+      // Admin" authority is re-derived server-side — see NationalAnnouncements.tsx's
+      // own header comment.
+      { path: "announcements", element: <NationalAnnouncements /> },
     ],
   },
 ]);

@@ -46,6 +46,62 @@ internal static class MemberProfileErrors
     public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
 }
 
+/// <summary>How the endpoint layer decides which HTTP status a rejected
+/// usp_Member_GetByJurisdiction call becomes.</summary>
+public enum MemberJurisdictionDetailErrorCategory { Forbidden, NotFound }
+
+public sealed class MemberJurisdictionDetailException : Exception
+{
+    public MemberJurisdictionDetailErrorCategory Category { get; }
+
+    public MemberJurisdictionDetailException(int sqlErrorNumber, string message) : base(message)
+    {
+        Category = sqlErrorNumber switch
+        {
+            51832 => MemberJurisdictionDetailErrorCategory.Forbidden,
+            _ => MemberJurisdictionDetailErrorCategory.NotFound   // 51833 — collapses "outside
+                                                                    // your jurisdiction" and
+                                                                    // "doesn't exist" on purpose,
+                                                                    // same as usp_Member_GetPhoto.
+        };
+    }
+}
+
+internal static class MemberJurisdictionDetailErrors
+{
+    private static readonly HashSet<int> Known = [51832, 51833];
+    public static bool IsKnown(int sqlErrorNumber) => Known.Contains(sqlErrorNumber);
+}
+
+/// <summary>usp_Member_GetByJurisdiction's own result set 1 — the same column set as
+/// MemberOwnProfileRow plus RegionName/ProvinceName/CityName (client decision
+/// 2026-09-22 — same barangay-name-collision reasoning as ChapterRegistrationDetail's own
+/// location panel). A DEDICATED row type, not MemberOwnProfileRow: that shape is shared
+/// with the self-profile screen, which never asked for location columns, and Dapper
+/// silently drops any SELECT column with no matching constructor parameter rather than
+/// erroring — reusing the narrower type here would have thrown these three away with no
+/// visible failure.</summary>
+public sealed record MemberJurisdictionDetailRow(
+    int MemberId, string MemberNumber,
+    string FirstName, string? MiddleName, string LastName, string GiftName,
+    DateTime? Birthdate,
+    DateTime? DateSurvive, string? PresidentDuringSurvive, string? MasterInitiatorDuringSurvive,
+    int? ChapterId, string? ChapterName,
+    int? HomeCouncilId, string? CouncilName,
+    string? ChapterOfRecord,
+    int StatusId, string StatusName,
+    DateTime? RenewedThrough,
+    int? SeconderMemberId, int? ApprovedBy, DateTime? ApprovedDate,
+    string? Address,
+    int? BloodTypeId, string? BloodTypeName, DateTime? BloodTypeConfirmedDate,
+    string? Profession,
+    string? PhotoPath, string? PhotoContentType,
+    string? MobileNo, string? Email,
+    byte[] RowVersion,
+    string? RegionName, string? ProvinceName, string? CityName);
+
+public sealed record MemberJurisdictionDetailResult(MemberJurisdictionDetailRow Profile, IReadOnlyList<int> SkillIds);
+
 /// <summary>
 /// Result set 1 of usp_Member_GetOwnProfile — the THIRD read shape (see the header comment on
 /// the procedure itself and the note in MemberDtos.cs next to MemberDto/MemberCrossChapterDto):
@@ -111,6 +167,12 @@ public interface IMemberProfileRepository
     /// <summary>Throws <see cref="MemberProfileException"/> (NotFound) — a nonexistent member,
     /// a wrong-chapter caller, and a member with no photo all collapse to the same message.</summary>
     Task<MemberPhotoRow> GetPhotoAsync(int memberId, int requestingMemberId, CancellationToken ct);
+
+    /// <summary>Council Portal's "View details" — the full record behind one
+    /// usp_Member_SearchByJurisdiction row. Throws <see cref="MemberJurisdictionDetailException"/>
+    /// (Forbidden: no seated council office / NotFound: nonexistent or outside jurisdiction,
+    /// deliberately indistinguishable).</summary>
+    Task<MemberJurisdictionDetailResult> GetByJurisdictionAsync(int requestingMemberId, int memberId, CancellationToken ct);
 }
 
 public sealed class MemberProfileRepository(ISqlConnectionFactory factory) : IMemberProfileRepository
@@ -214,6 +276,27 @@ public sealed class MemberProfileRepository(ISqlConnectionFactory factory) : IMe
         catch (SqlException ex) when (MemberProfileErrors.IsKnown(ex.Number))
         {
             throw new MemberProfileException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<MemberJurisdictionDetailResult> GetByJurisdictionAsync(int requestingMemberId, int memberId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            using var multi = await conn.QueryMultipleAsync(new CommandDefinition(
+                "dbo.usp_Member_GetByJurisdiction",
+                new { RequestingMemberId = requestingMemberId, MemberId = memberId },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+
+            var profile = await multi.ReadSingleAsync<MemberJurisdictionDetailRow>();
+            var skillIds = (await multi.ReadAsync<int>()).ToList();
+
+            return new MemberJurisdictionDetailResult(profile, skillIds);
+        }
+        catch (SqlException ex) when (MemberJurisdictionDetailErrors.IsKnown(ex.Number))
+        {
+            throw new MemberJurisdictionDetailException(ex.Number, ex.Message);
         }
     }
 }

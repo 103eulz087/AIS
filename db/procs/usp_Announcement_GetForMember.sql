@@ -16,7 +16,16 @@
    HasRead reflects @RequestingMemberId's OWN read receipt only — never another
    member's, which would leak who-read-what into a list endpoint that has no business
    answering that (that's what usp_Document_GetReadReceipts is for, and it is
-   officer-gated). */
+   officer-gated).
+
+   IsNational (added 2026-09-27): every member's own feed now also includes every
+   currently-live National announcement (usp_Announcement_CreateNational), alongside
+   his own chapter's — the exact "future council-cascade read path"
+   usp_Announcement_Create's own header comment already called out. One caller, one
+   feed, one ORDER BY — a member never has to know these came from two different
+   places. IsNational is the only way the caller (Home.tsx's Notices preview,
+   AnnouncementList) can tell which is which, since ScopeType/ScopeId themselves are
+   never otherwise exposed on this DTO. */
 CREATE OR ALTER PROCEDURE dbo.usp_Announcement_GetForMember
     @ChapterId INT,
     @RequestingMemberId INT,
@@ -31,6 +40,13 @@ BEGIN
                    WHERE MemberId = @RequestingMemberId AND ChapterId = @ChapterId AND IsDeleted = 0)
         THROW 51176, 'Not permitted to read this chapter''s announcements.', 1;
 
+    DECLARE @NationalCouncilId INT;
+    SELECT TOP (1) @NationalCouncilId = c.CouncilId
+    FROM   dbo.Council c
+           JOIN dbo.CouncilLevel cl ON cl.CouncilLevelId = c.CouncilLevelId
+    WHERE  c.ParentCouncilId IS NULL
+      AND  cl.LevelName = 'National';
+
     -- a.UrgentType (the legacy free-text column) is deliberately NOT selected here: it's
     -- kept populated for backward compatibility by usp_Announcement_Create/_Edit, but
     -- ut.TypeName already gives the display-ready name from UrgentTypeId, and nothing in
@@ -41,6 +57,7 @@ BEGIN
             a.PublishDate, a.ExpiryDate, a.CreatedBy,
             a.EditedBy, a.EditedDate,
             a.IsWithdrawn, a.WithdrawnBy, a.WithdrawnDate, a.WithdrawnReason,
+            CAST(CASE WHEN a.ScopeType = 'National' THEN 1 ELSE 0 END AS BIT) AS IsNational,
             CASE WHEN rr.ReadReceiptId IS NULL THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS HasRead,
             COUNT(*) OVER() AS TotalCount
     FROM    dbo.Announcement a
@@ -50,8 +67,10 @@ BEGIN
                    ON rr.DocumentType = 'Announcement'
                   AND rr.DocumentId   = a.AnnouncementId
                   AND rr.MemberId     = @RequestingMemberId
-    WHERE   a.ScopeType = 'Chapter'
-      AND   a.ScopeId   = @ChapterId
+    WHERE   (
+                (a.ScopeType = 'Chapter'  AND a.ScopeId = @ChapterId)
+             OR (a.ScopeType = 'National' AND a.ScopeId = @NationalCouncilId)
+            )
       AND   (@IncludeWithdrawn = 1 OR a.IsWithdrawn = 0)
     ORDER BY a.PublishDate DESC, a.AnnouncementId DESC
     OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;

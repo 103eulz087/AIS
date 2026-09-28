@@ -812,18 +812,24 @@ public class PushJobShapeTests
     }
 
     /// <summary>
-    /// Stronger than the name check above: the ONLY string-typed property PushJob has at all is
-    /// SenderGiftName — there is nowhere else free text could hide even under an innocuous name.
+    /// Stronger than the name check above: PushJob has exactly TWO string-typed properties,
+    /// and both are named, deliberate exceptions — SenderGiftName (every job kind), and
+    /// AnnouncementTitle (Announcement jobs only, added 2026-09-27: an announcement's title
+    /// is public to the whole chapter/org by design — AnnouncementDto's own header comment —
+    /// so it carries no more lock-screen sensitivity than a gift name does). Nowhere else
+    /// could free text hide even under an innocuous name. A THIRD string property showing up
+    /// here — one this test doesn't already know about and approve by name — must fail loudly,
+    /// not be waved through.
     /// </summary>
     [Fact]
-    public void PushJob_has_exactly_one_string_property_and_it_is_the_sender_gift_name()
+    public void PushJob_has_only_the_two_approved_string_properties()
     {
         var stringProperties = typeof(PushJob).GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.PropertyType == typeof(string))
             .Select(p => p.Name)
             .ToList();
 
-        stringProperties.Should().Equal("SenderGiftName");
+        stringProperties.Should().BeEquivalentTo(["SenderGiftName", "AnnouncementTitle"]);
     }
 }
 

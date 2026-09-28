@@ -5,12 +5,14 @@ using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Storage;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
+using SkiaSharp;
 using Xunit;
 
 namespace Akrho.Tests;
 
 /*
- * IdCardExportEndpoints's ZIP construction (members.xlsx + photos/*) is pure, DB-free glue
+ * IdCardExportEndpoints's ZIP construction (members.xls + photos/*) is pure, DB-free glue
  * code — given a list of IdCardExportMemberRow and a real IFileStorage, it either finds a
  * PhotoPath and copies that file into the archive under a renamed entry, or it doesn't (no
  * error, no placeholder — see that file's own WritePhotoEntriesAsync comment). No stored
@@ -59,8 +61,23 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
         method.Should().NotBeNull("IdCardExportEndpoints.BuildZipAsync must still exist under that exact name/signature");
 
         var task = (Task<byte[]>)method!.Invoke(
-            null, [members, storage, webOrigin, CancellationToken.None])!;
+            null, [members, storage, webOrigin, NullLogger.Instance, CancellationToken.None])!;
         return await task;
+    }
+
+    /// <summary>A minimal but genuinely valid, decodable image — unlike a hand-rolled
+    /// byte sequence, this survives the export's own SKCodec decode + re-encode step
+    /// (WritePhotoEntriesAsync now re-encodes every photo to JPEG regardless of its
+    /// source format, so a fixture has to be a real image, not just bytes starting with
+    /// a format's magic number).</summary>
+    private static byte[] MakeTinyPng()
+    {
+        using var bitmap = new SKBitmap(4, 4);
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.CornflowerBlue);
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        return data.ToArray();
     }
 
     private static ZipArchive OpenZip(byte[] zipBytes) =>
@@ -78,24 +95,30 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
         var zipBytes = await InvokeBuildZipAsync(members, _storage, "https://portal.example");
 
         using var archive = OpenZip(zipBytes);
-        archive.GetEntry("members.xlsx").Should().NotBeNull();
+        // .xls (NPOI/HSSF), not .xlsx (ClosedXML) — client decision 2026-09-26: the
+        // Magicard Enduro's own card-design software only understands the legacy
+        // binary .xls format. See IdCardExportEndpoints.WriteWorkbookEntry's own header.
+        archive.GetEntry("members.xls").Should().NotBeNull();
     }
 
     /// <summary>
     /// Covers "a member with no uploaded photo doesn't break the export": PhotoPath null must
     /// produce zero entries under photos/ for that member — no error, no empty/placeholder
-    /// file — while a member who DOES have one still gets a real, renamed copy of it.
+    /// file — while a member who DOES have one still gets a real, re-encoded JPEG copy of
+    /// it, even though the source file was uploaded and stored as a PNG. Client decision
+    /// 2026-09-26: the exported entry must always be an actual .jpg (real JPEG bytes, not
+    /// just a renamed copy) — the printer's own lookup can't handle mixed formats.
     /// </summary>
     [Fact]
-    public async Task Member_without_a_photo_gets_no_zip_entry_while_a_member_with_one_gets_a_renamed_copy()
+    public async Task Member_without_a_photo_gets_no_zip_entry_while_a_member_with_one_gets_reencoded_to_jpeg()
     {
         var stored = await _storage.SaveAsync(
-            new MemoryStream([0xFF, 0xD8, 0xFF, 0xD9]), "whatever-the-phone-called-it.jpg",
-            "image/jpeg", CancellationToken.None);
+            new MemoryStream(MakeTinyPng()), "whatever-the-phone-called-it.png",
+            "image/png", CancellationToken.None);
 
         var withPhoto = new IdCardExportMemberRow(
             1, "ZZTEST-001", "Juan", null, "Dela Cruz", "TESTGIFT", "O+",
-            1, "ZZTEST Chapter", "ZZT", "Active", stored.RelativePath, "image/jpeg", Guid.NewGuid());
+            1, "ZZTEST Chapter", "ZZT", "Active", stored.RelativePath, "image/png", Guid.NewGuid());
         var withoutPhoto = new IdCardExportMemberRow(
             2, "ZZTEST-002", "Pedro", null, "Reyes", "TESTGIFT2", null,
             1, "ZZTEST Chapter", "ZZT", "Active", null, null, Guid.NewGuid());
@@ -105,9 +128,18 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
         using var archive = OpenZip(zipBytes);
         var photoEntries = archive.Entries.Where(e => e.FullName.StartsWith("photos/", StringComparison.Ordinal)).ToList();
 
-        photoEntries.Should().ContainSingle().Which.FullName.Should().Be("photos/ZZTEST-001.jpg");
+        var entry = photoEntries.Should().ContainSingle().Which;
+        entry.FullName.Should().Be("photos/ZZTEST-001.jpg", "the PNG source must be renamed AND re-encoded to .jpg");
         photoEntries.Should().NotContain(e => e.FullName.Contains("ZZTEST-002"),
             "a member with no PhotoPath must produce no file at all, not an empty or placeholder one");
+
+        await using var entryStream = entry.Open();
+        using var exported = new MemoryStream();
+        await entryStream.CopyToAsync(exported);
+        var bytes = exported.ToArray();
+        bytes.Take(2).Should().Equal([0xFF, 0xD8], "the exported bytes must be real JPEG data, not the original PNG renamed");
+        using var decoded = SKBitmap.Decode(bytes);
+        decoded.Should().NotBeNull("the exported entry must be a genuinely decodable JPEG");
     }
 
     [Fact]
@@ -116,6 +148,6 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
         var zipBytes = await InvokeBuildZipAsync([], _storage, "https://portal.example");
 
         using var archive = OpenZip(zipBytes);
-        archive.Entries.Should().ContainSingle().Which.FullName.Should().Be("members.xlsx");
+        archive.Entries.Should().ContainSingle().Which.FullName.Should().Be("members.xls");
     }
 }

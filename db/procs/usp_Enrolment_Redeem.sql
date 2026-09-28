@@ -26,6 +26,15 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.Member WHERE MemberId = @MemberId AND IsDeleted = 0)
         THROW 51111, 'Member not found. An account cannot be created for a member that does not exist.', 1;
 
+    -- 23_chapter_hold.sql: a chapter on hold blocks a first-time signup too, not just an
+    -- existing sign-in — otherwise the ELSE branch below (an existing account row)
+    -- resetting IsDisabled = 0 would let a re-enrolment quietly defeat the hold.
+    IF EXISTS (
+        SELECT 1 FROM dbo.Member m JOIN dbo.Chapter ch ON ch.ChapterId = m.ChapterId
+        WHERE  m.MemberId = @MemberId AND ch.IsOnHold = 1
+    )
+        THROW 51112, 'This chapter is currently on hold. Contact your chapter or council for details.', 1;
+
     DECLARE @AccountId INT;
 
     BEGIN TRAN;

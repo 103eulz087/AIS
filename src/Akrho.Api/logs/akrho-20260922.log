@@ -312,3 +312,252 @@
 2026-09-22 01:18:54.498 +08:00 [INF] HTTP GET /api/skills responded 200 in 63.7515 ms
 2026-09-22 01:18:54.588 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 62.4072 ms
 2026-09-22 01:20:35.614 +08:00 [INF] HTTP GET /api/members responded 200 in 56.2645 ms
+2026-09-22 01:22:32.336 +08:00 [INF] Application is shutting down...
+2026-09-22 01:22:32.336 +08:00 [DBG] Hosting stopping
+2026-09-22 01:22:32.342 +08:00 [DBG] Hosting stopped
+2026-09-22 15:42:59.828 +08:00 [DBG] Hosting starting
+2026-09-22 15:43:00.191 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-22 15:43:00.196 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-22 15:43:00.196 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-22 15:43:00.197 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-22 15:43:00.197 +08:00 [INF] Hosting environment: Development
+2026-09-22 15:43:00.197 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-22 15:43:00.197 +08:00 [DBG] Hosting started
+2026-09-22 15:43:19.532 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 21.3775 ms
+2026-09-22 15:43:19.532 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 21.3717 ms
+2026-09-22 15:43:19.684 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.2648 ms
+2026-09-22 15:43:19.684 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.2648 ms
+2026-09-22 15:43:23.136 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 918.7676 ms
+2026-09-22 15:43:23.243 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 83.7835 ms
+2026-09-22 15:43:23.463 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 79.8790 ms
+2026-09-22 15:43:23.825 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 412.0493 ms
+2026-09-22 15:43:23.825 +08:00 [INF] HTTP GET /api/conversations responded 200 in 413.2346 ms
+2026-09-22 15:43:24.408 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 995.2698 ms
+2026-09-22 15:43:24.423 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 1002.0609 ms
+2026-09-22 15:43:28.798 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4981 ms
+2026-09-22 15:43:28.812 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4466 ms
+2026-09-22 15:43:30.114 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3631 ms
+2026-09-22 15:43:30.114 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3643 ms
+2026-09-22 15:43:32.617 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 312.5449 ms
+2026-09-22 15:43:32.705 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 55.0678 ms
+2026-09-22 15:43:35.601 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 171.0431 ms
+2026-09-22 15:43:43.387 +08:00 [INF] HTTP GET /api/councils responded 200 in 124.7194 ms
+2026-09-22 15:43:46.827 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 127.4210 ms
+2026-09-22 15:44:10.156 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 74.7588 ms
+2026-09-22 15:44:10.166 +08:00 [INF] HTTP GET /api/members responded 200 in 84.2018 ms
+2026-09-22 15:44:13.389 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 52.8692 ms
+2026-09-22 15:44:13.414 +08:00 [INF] HTTP GET /api/conversations responded 200 in 57.2146 ms
+2026-09-22 15:44:13.414 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 67.4980 ms
+2026-09-22 15:44:14.032 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 666.4362 ms
+2026-09-22 15:44:17.962 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 100.6235 ms
+2026-09-22 15:44:20.925 +08:00 [INF] HTTP GET /api/councils responded 200 in 133.3750 ms
+2026-09-22 15:44:25.247 +08:00 [INF] HTTP GET /api/councils/19/statistics responded 200 in 151.4785 ms
+2026-09-22 15:44:27.876 +08:00 [INF] HTTP GET /api/councils/20/statistics responded 200 in 109.9835 ms
+2026-09-22 15:44:30.700 +08:00 [INF] HTTP GET /api/councils/23/statistics responded 200 in 96.0188 ms
+2026-09-22 15:44:36.170 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4620 ms
+2026-09-22 15:44:36.181 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2429 ms
+2026-09-22 15:44:38.594 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 332.0394 ms
+2026-09-22 15:44:38.681 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 54.4646 ms
+2026-09-22 15:44:38.843 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 126.0615 ms
+2026-09-22 15:45:24.251 +08:00 [INF] Application is shutting down...
+2026-09-22 15:45:24.252 +08:00 [DBG] Hosting stopping
+2026-09-22 15:45:24.260 +08:00 [DBG] Hosting stopped
+2026-09-22 15:47:57.136 +08:00 [DBG] Hosting starting
+2026-09-22 15:47:57.448 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-22 15:47:57.455 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-22 15:47:57.456 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-22 15:47:57.456 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-22 15:47:57.456 +08:00 [INF] Hosting environment: Development
+2026-09-22 15:47:57.456 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-22 15:47:57.458 +08:00 [DBG] Hosting started
+2026-09-22 15:48:07.393 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 17.4246 ms
+2026-09-22 15:48:07.393 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 17.4208 ms
+2026-09-22 15:48:10.677 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 781.8500 ms
+2026-09-22 15:48:10.798 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 89.3074 ms
+2026-09-22 15:48:11.033 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 192.6262 ms
+2026-09-22 15:48:33.957 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 133.4170 ms
+2026-09-22 15:55:17.027 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 2.2016 ms
+2026-09-22 15:55:17.027 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 2.1996 ms
+2026-09-22 15:55:20.013 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1011.9396 ms
+2026-09-22 15:55:20.100 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 57.4375 ms
+2026-09-22 15:55:22.735 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 64.0942 ms
+2026-09-22 15:55:30.932 +08:00 [INF] HTTP GET /api/members/841 responded 404 in 0.7876 ms
+2026-09-22 15:55:34.011 +08:00 [INF] HTTP GET /api/members/841 responded 404 in 0.7125 ms
+2026-09-22 15:55:35.900 +08:00 [INF] HTTP GET /api/members/841 responded 404 in 0.4673 ms
+2026-09-22 15:55:36.713 +08:00 [INF] HTTP GET /api/members/841 responded 404 in 0.6543 ms
+2026-09-22 15:56:07.241 +08:00 [INF] Application is shutting down...
+2026-09-22 15:56:07.241 +08:00 [DBG] Hosting stopping
+2026-09-22 15:56:07.249 +08:00 [DBG] Hosting stopped
+2026-09-22 15:56:10.337 +08:00 [DBG] Hosting starting
+2026-09-22 15:56:10.654 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-22 15:56:10.659 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-22 15:56:10.659 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-22 15:56:10.659 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-22 15:56:10.659 +08:00 [INF] Hosting environment: Development
+2026-09-22 15:56:10.659 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-22 15:56:10.659 +08:00 [DBG] Hosting started
+2026-09-22 15:56:15.886 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 13.1330 ms
+2026-09-22 15:56:15.886 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 13.1270 ms
+2026-09-22 15:56:18.425 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 791.5956 ms
+2026-09-22 15:56:18.525 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 74.6856 ms
+2026-09-22 15:56:21.770 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 109.0862 ms
+2026-09-22 15:56:23.059 +08:00 [INF] HTTP GET /api/members/1105 responded 200 in 85.2544 ms
+2026-09-22 15:56:32.850 +08:00 [INF] HTTP GET /api/members/841 responded 200 in 190.7918 ms
+2026-09-22 16:05:06.533 +08:00 [INF] Application is shutting down...
+2026-09-22 16:05:06.533 +08:00 [DBG] Hosting stopping
+2026-09-22 16:05:06.541 +08:00 [DBG] Hosting stopped
+2026-09-22 16:05:10.067 +08:00 [DBG] Hosting starting
+2026-09-22 16:05:10.356 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-22 16:05:10.361 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-22 16:05:10.361 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-22 16:05:10.361 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-22 16:05:10.361 +08:00 [INF] Hosting environment: Development
+2026-09-22 16:05:10.361 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-22 16:05:10.362 +08:00 [DBG] Hosting started
+2026-09-22 16:05:16.871 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 519.4494 ms
+2026-09-22 16:05:17.142 +08:00 [INF] HTTP GET /api/members/841 responded 200 in 790.5745 ms
+2026-09-22 16:05:35.517 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 88.2238 ms
+2026-09-22 16:05:38.097 +08:00 [INF] HTTP GET /api/members/1476 responded 200 in 58.6692 ms
+2026-09-22 16:05:57.240 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 58.6865 ms
+2026-09-22 16:06:01.962 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 212.7255 ms
+2026-09-22 16:06:07.545 +08:00 [INF] HTTP GET /api/chapters responded 200 in 4349.7655 ms
+2026-09-22 16:06:07.619 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 3825.8803 ms
+2026-09-22 16:06:11.347 +08:00 [INF] HTTP GET /api/members responded 200 in 67.9355 ms
+2026-09-22 16:06:11.350 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 59.8177 ms
+2026-09-22 16:06:25.073 +08:00 [INF] HTTP GET /api/members responded 200 in 81.0741 ms
+2026-09-22 16:06:28.092 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 64.5814 ms
+2026-09-22 16:06:30.689 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 53.9146 ms
+2026-09-22 16:06:30.720 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 60.4365 ms
+2026-09-22 16:06:31.022 +08:00 [INF] HTTP GET /api/conversations responded 200 in 353.5434 ms
+2026-09-22 16:06:31.022 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 363.5071 ms
+2026-09-22 16:06:41.905 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 105.7677 ms
+2026-09-22 16:22:51.221 +08:00 [INF] HTTP GET /api/councils/statistics responded 401 in 4.1870 ms
+2026-09-22 16:22:51.269 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.0438 ms
+2026-09-22 16:22:51.626 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2708 ms
+2026-09-22 16:22:51.626 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2828 ms
+2026-09-22 16:22:56.652 +08:00 [ERR] HTTP POST /api/auth/sign-in responded 500 in 543.9512 ms
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AccountId, System.String PasswordHash, System.Int32 FailedAttempts, System.DateTime LockedUntil, System.Boolean IsDisabled, System.Int32 MemberId, System.Int32 ChapterId, System.Boolean IsChapterOnHold) is required for Akrho.Infrastructure.Repositories.SignInAccountRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String identifier, CancellationToken ct)
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-22 16:22:56.704 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AccountId, System.String PasswordHash, System.Int32 FailedAttempts, System.DateTime LockedUntil, System.Boolean IsDisabled, System.Int32 MemberId, System.Int32 ChapterId, System.Boolean IsChapterOnHold) is required for Akrho.Infrastructure.Repositories.SignInAccountRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String identifier, CancellationToken ct)
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-22 16:22:56.707 +08:00 [ERR] Unhandled error on /api/auth/sign-in
+System.InvalidOperationException: A parameterless default constructor or one matching signature (System.Int32 AccountId, System.String PasswordHash, System.Int32 FailedAttempts, System.DateTime LockedUntil, System.Boolean IsDisabled, System.Int32 MemberId, System.Int32 ChapterId, System.Boolean IsChapterOnHold) is required for Akrho.Infrastructure.Repositories.SignInAccountRow materialization
+   at Dapper.SqlMapper.GenerateDeserializerFromMap(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing, ILGenerator il) in /_/Dapper/SqlMapper.cs:line 3473
+   at Dapper.SqlMapper.GetTypeDeserializerImpl(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3304
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 151
+   at Dapper.SqlMapper.TypeDeserializerCache.GetReader(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.TypeDeserializerCache.cs:line 50
+   at Dapper.SqlMapper.GetTypeDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 3258
+   at Dapper.SqlMapper.GetDeserializer(Type type, DbDataReader reader, Int32 startBound, Int32 length, Boolean returnNullIfFirstMissing) in /_/Dapper/SqlMapper.cs:line 1945
+   at Dapper.SqlMapper.QueryRowAsync[T](IDbConnection cnn, Row row, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 496
+   at Akrho.Infrastructure.Repositories.AuthRepository.GetAccountForSignInAsync(String identifier, CancellationToken ct)
+   at Akrho.Api.Features.Auth.AuthEndpoints.SignIn(SignInRequest req, HttpContext http, IAuthRepository repo, IPasswordHasherService hasher, IAccessTokenService tokens, IValidator`1 validator, CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-22 16:23:12.401 +08:00 [INF] Application is shutting down...
+2026-09-22 16:23:12.402 +08:00 [DBG] Hosting stopping
+2026-09-22 16:23:12.409 +08:00 [DBG] Hosting stopped
+2026-09-22 16:23:15.570 +08:00 [DBG] Hosting starting
+2026-09-22 16:23:15.899 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-22 16:23:15.904 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-22 16:23:15.905 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-22 16:23:15.905 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-22 16:23:15.905 +08:00 [INF] Hosting environment: Development
+2026-09-22 16:23:15.905 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-22 16:23:15.905 +08:00 [DBG] Hosting started
+2026-09-22 16:23:29.578 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 16.7625 ms
+2026-09-22 16:23:29.578 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 16.7669 ms
+2026-09-22 16:23:32.819 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1223.7973 ms
+2026-09-22 16:23:32.942 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 91.8817 ms
+2026-09-22 16:23:33.402 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 418.3440 ms
+2026-09-22 16:23:42.327 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 251.8906 ms
+2026-09-22 16:23:49.846 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 66.7642 ms
+2026-09-22 16:24:02.627 +08:00 [INF] HTTP POST /api/chapters/258/hold responded 200 in 70.0628 ms
+2026-09-22 16:24:02.723 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 59.2472 ms
+2026-09-22 16:24:11.078 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 138.5465 ms
+2026-09-22 16:24:19.364 +08:00 [INF] HTTP GET /api/chapter-registrations/138 responded 200 in 169.3072 ms
+2026-09-22 16:25:00.410 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 399.8853 ms
+2026-09-22 16:25:06.520 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 121.6139 ms
+2026-09-22 16:25:11.593 +08:00 [INF] HTTP GET /api/councils/19/statistics responded 200 in 93.9641 ms
+2026-09-22 16:33:52.132 +08:00 [INF] HTTP GET /api/members responded 200 in 492.6921 ms
+2026-09-22 16:33:52.350 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 699.9402 ms
+2026-09-22 16:33:58.468 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 72.4365 ms
+2026-09-22 16:33:58.486 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 60.3335 ms
+2026-09-22 16:33:59.177 +08:00 [INF] HTTP GET /api/conversations responded 200 in 750.8170 ms
+2026-09-22 16:33:59.177 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 750.5873 ms
+2026-09-22 16:34:02.793 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 445.2985 ms
+2026-09-22 16:47:45.505 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 753.1069 ms
+2026-09-22 16:47:45.592 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 56.7254 ms
+2026-09-22 16:47:45.714 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 55.7717 ms
+2026-09-22 16:47:46.301 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 631.4508 ms
+2026-09-22 16:47:46.306 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 616.9782 ms
+2026-09-22 16:47:46.588 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 899.2754 ms
+2026-09-22 16:47:46.588 +08:00 [INF] HTTP GET /api/conversations responded 200 in 889.5935 ms
+2026-09-22 16:47:50.709 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2870 ms
+2026-09-22 16:47:50.709 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.7173 ms
+2026-09-22 16:47:51.544 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1555 ms
+2026-09-22 16:47:51.544 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1229 ms
+2026-09-22 16:47:53.630 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 289.5211 ms
+2026-09-22 16:47:53.717 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 56.0252 ms
+2026-09-22 16:47:53.926 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 164.5268 ms
+2026-09-22 16:48:06.016 +08:00 [INF] HTTP GET /api/councils/19/statistics responded 200 in 157.8219 ms
+2026-09-22 16:48:09.362 +08:00 [INF] HTTP GET /api/councils/20/statistics responded 200 in 106.7186 ms
+2026-09-22 16:48:17.263 +08:00 [INF] HTTP GET /api/members/search-jurisdiction responded 200 in 195.5090 ms
+2026-09-22 16:48:22.453 +08:00 [INF] HTTP GET /api/members/849 responded 200 in 381.3590 ms
+2026-09-22 16:48:35.944 +08:00 [INF] HTTP GET /api/councils responded 200 in 165.9375 ms
+2026-09-22 16:48:37.910 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 64.9644 ms
+2026-09-22 16:48:42.319 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 84.4419 ms
+2026-09-22 16:48:49.231 +08:00 [INF] HTTP GET /api/councils/19/statistics responded 200 in 124.5849 ms
+2026-09-22 16:48:51.037 +08:00 [INF] HTTP GET /api/councils/20/statistics responded 200 in 83.4471 ms
+2026-09-22 16:48:52.146 +08:00 [INF] HTTP GET /api/councils/23/statistics responded 200 in 149.2721 ms
+2026-09-22 16:48:55.165 +08:00 [INF] HTTP GET /api/members responded 200 in 69.1711 ms
+2026-09-22 16:48:55.165 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 69.0035 ms
+2026-09-22 16:49:10.743 +08:00 [INF] HTTP POST /api/members/849/reset-password responded 200 in 215.5829 ms
+2026-09-22 16:51:18.220 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 91.0559 ms
+2026-09-22 17:37:48.206 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 10936.2754 ms
+2026-09-22 17:37:48.863 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 624.0023 ms
+2026-09-22 17:37:49.454 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 464.4869 ms
+2026-09-22 17:37:50.242 +08:00 [INF] HTTP GET /api/members responded 200 in 1252.1650 ms

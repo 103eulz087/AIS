@@ -21,7 +21,14 @@ BEGIN
             m.FirstName + N' ' + m.LastName AS FullName,
             ch.ChapterName AS HomeChapterName,
             mr.TermStart, mr.TermEnd,
-            CAST(CASE WHEN mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+            -- "Current" here means the same thing usp_Council_SeatOfficer's own "office
+            -- already held" check means: TermEnd IS NULL, full stop — never the
+            -- inclusive-of-today TermEnd >= @Today form. This roster's IsCurrent also
+            -- decides whether this screen offers "Seat someone" or "Unseat," so a
+            -- same-day unseat must be reflected immediately, not at midnight (same bug,
+            -- same fix, as usp_Chapter_GetRoster — found live 2026-09-22 on the chapter
+            -- side first).
+            CAST(CASE WHEN mr.TermStart <= @Today AND mr.TermEnd IS NULL
                       THEN 1 ELSE 0 END AS BIT) AS IsCurrent,
             m.RenewedThrough,
             CAST(CASE WHEN ua.AccountId IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS HasAccount

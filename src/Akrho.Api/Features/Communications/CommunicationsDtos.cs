@@ -11,7 +11,7 @@ public sealed record AnnouncementDto(
     DateTime PublishDateUtc, DateOnly? ExpiryDate, int CreatedBy,
     int? EditedBy, DateTime? EditedDateUtc,
     bool IsWithdrawn, int? WithdrawnBy, DateTime? WithdrawnDateUtc, string? WithdrawnReason,
-    bool HasRead);
+    bool IsNational, bool HasRead);
 
 public sealed record CreateAnnouncementRequest(
     string Title, string Body, bool IsUrgent, int? UrgentTypeId, int? BloodTypeId, DateOnly? ExpiryDate);
@@ -22,6 +22,14 @@ public sealed record EditAnnouncementRequest(
 public sealed record WithdrawAnnouncementRequest(string Reason);
 
 public sealed record AnnouncementCreatedDto(int AnnouncementId);
+
+/// <summary>POST /api/announcements/national — National Council Admin only. No
+/// UrgentTypeId/BloodTypeId here, unlike the chapter shape above (client decision
+/// 2026-09-27): those are a chapter-level blood/assistance request concept, out of
+/// scope for a national broadcast. IsUrgent alone still renders with the same urgent
+/// styling everywhere the merged feed already does — see
+/// usp_Announcement_CreateNational.sql's own header comment.</summary>
+public sealed record CreateNationalAnnouncementRequest(string Title, string Body, bool IsUrgent, DateOnly? ExpiryDate);
 
 /// <summary>
 /// IncludeWithdrawn defaults to false — the ordinary member feed. An officer view that wants
