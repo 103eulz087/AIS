@@ -189,7 +189,7 @@ public static class ChapterRegistrationsEndpoints
         try
         {
             var rows = await repo.GetQueueAsync(
-                caller.MemberId, req.StatusId, req.Skip, req.Take == 0 ? 50 : req.Take, ct);
+                caller.MemberId, req.StatusId, req.Search, req.Skip, req.Take == 0 ? 50 : req.Take, ct);
 
             var items = rows.Select(r => new ChapterRegistrationQueueItemDto(
                 r.RegistrationId, r.ReferenceNo, r.RegistrationType, r.ProposedChapterName,

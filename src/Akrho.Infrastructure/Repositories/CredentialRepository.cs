@@ -51,7 +51,8 @@ public sealed record MemberCredentialRow(
     int? ChapterId, string? ChapterName, string? ChapterCode,
     string? NationalCouncilName, string? RegionName, string? ProvinceName, string? CityName,
     DateTime? DateSurvive, string? BloodTypeName,
-    string StatusName, DateTime? RenewedThrough);
+    string StatusName, DateTime? RenewedThrough,
+    string? OfficePosition, string? OfficeBody);
 
 /// <summary>
 /// The single row usp_Credential_VerifyForMember returns — the in-app, signed-in counterpart to

@@ -22,7 +22,10 @@ public sealed record MyCredentialDto(
     // not this DTO, decides how to word that; nothing here coerces it into a fake status.
     DateOnly? RenewedThrough,
     DateTime CredentialIssuedDateUtc, DateTime CredentialExpiryDateUtc,
-    string VerificationUrl);
+    string VerificationUrl,
+    // The office he currently holds (e.g. "President") and the chapter or council he holds
+    // it in. Both NULL for a plain member. Non-null switches the card to the officer design.
+    string? OfficePosition, string? OfficeBody);
 
 /// <summary>
 /// POST /api/scans body — the in-app, signed-in scan. Same shape as

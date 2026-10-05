@@ -21,10 +21,16 @@
    at the nearest SEATED ancestor, which has nothing to do with whether that council
    holds a chapter of its own — so a caller seated above it must still see it. Found
    live: a registration routed to a Regional council with zero chapters of its own
-   never appeared in the seated National officer's queue. */
+   never appeared in the seated National officer's queue.
+
+   @Search (optional) narrows the SAME scoped set — it never widens it. Matches the
+   reference number, the chapter (existing or proposed name), or any officer named on
+   the filing (gift name, first/last name, or member number of a linked member). Only
+   registration rows come back; no officer contact detail is ever returned here. */
 CREATE OR ALTER PROCEDURE dbo.usp_ChapterRegistration_GetQueue
     @RequestingMemberId INT,
     @StatusId INT = NULL,
+    @Search NVARCHAR(100) = NULL,
     @Skip INT = 0,
     @Take INT = 50
 AS
@@ -32,6 +38,11 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
+
+    -- Wildcards in what the officer typed are matched literally, never as patterns.
+    SET @Search = NULLIF(LTRIM(RTRIM(@Search)), N'');
+    DECLARE @Pattern NVARCHAR(320) = CASE WHEN @Search IS NULL THEN NULL ELSE
+        N'%' + REPLACE(REPLACE(REPLACE(REPLACE(@Search, N'\', N'\\'), N'%', N'\%'), N'_', N'\_'), N'[', N'\[') + N'%' END;
 
     DECLARE @SeatedCouncils TABLE (CouncilId INT PRIMARY KEY);
     INSERT INTO @SeatedCouncils (CouncilId)
@@ -70,6 +81,23 @@ BEGIN
             LEFT JOIN dbo.Chapter ch ON ch.ChapterId = COALESCE(cr.ChapterId, cr.CreatedChapterId)
     WHERE   cr.ActingCouncilId IN (SELECT CouncilId FROM @VisibleCouncils)
       AND   (@StatusId IS NULL OR cr.StatusId = @StatusId)
+      AND   (@Pattern IS NULL
+             OR cr.ReferenceNo         LIKE @Pattern ESCAPE N'\'
+             OR cr.ProposedChapterName LIKE @Pattern ESCAPE N'\'
+             OR ch.ChapterName         LIKE @Pattern ESCAPE N'\'
+             OR EXISTS (
+                    SELECT 1
+                    FROM   dbo.ChapterRegistrationOfficer o
+                           LEFT JOIN dbo.Member om ON om.MemberId = o.MemberId
+                    WHERE  o.RegistrationId = cr.RegistrationId
+                      AND (   o.GiftName      LIKE @Pattern ESCAPE N'\'
+                           OR o.FirstName     LIKE @Pattern ESCAPE N'\'
+                           OR o.LastName      LIKE @Pattern ESCAPE N'\'
+                           OR om.GiftName     LIKE @Pattern ESCAPE N'\'
+                           OR om.FirstName    LIKE @Pattern ESCAPE N'\'
+                           OR om.LastName     LIKE @Pattern ESCAPE N'\'
+                           OR om.MemberNumber LIKE @Pattern ESCAPE N'\'
+                           OR CONCAT(COALESCE(om.FirstName, o.FirstName), N' ', COALESCE(om.LastName, o.LastName)) LIKE @Pattern ESCAPE N'\')))
     ORDER BY cr.SubmittedDate DESC
     OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;
 END

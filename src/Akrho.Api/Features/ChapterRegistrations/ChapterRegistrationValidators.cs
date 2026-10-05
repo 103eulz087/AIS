@@ -129,6 +129,7 @@ public sealed class ChapterRegistrationQueueRequestValidator : AbstractValidator
     public ChapterRegistrationQueueRequestValidator()
     {
         RuleFor(x => x.StatusId).GreaterThan(0).When(x => x.StatusId is not null);
+        RuleFor(x => x.Search).MaximumLength(100);
         RuleFor(x => x.Skip).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Take).InclusiveBetween(0, 500);
     }

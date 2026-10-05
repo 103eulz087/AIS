@@ -244,6 +244,7 @@ beforeEach(() => {
           statusName: "Active", renewedThrough: "2027-08-08",
           credentialIssuedDateUtc: "2026-08-09T00:00:00Z", credentialExpiryDateUtc: "2027-08-08T00:00:00Z",
           verificationUrl: "/verify/3f2a1c9e-0000-0000-0000-000000000000",
+          officePosition: "Secretary", officeBody: "San Isidro",
         }),
       };
     }

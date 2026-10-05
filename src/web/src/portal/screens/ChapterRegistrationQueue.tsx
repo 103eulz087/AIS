@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api, type Paged } from "@/shared/api";
@@ -26,7 +26,7 @@ function typeLabel(name: string): string {
 }
 
 /**
- * GET /api/chapter-registrations?statusId=&skip=&take= — a council officer's own review
+ * GET /api/chapter-registrations?statusId=&search=&skip=&take= — a council officer's own review
  * queue. NO councilId anywhere in the route: scoped entirely to the councils the caller
  * is seated on, server-side (ICurrentUser.CouncilIds via
  * usp_ChapterRegistration_GetQueue's own @RequestingMemberId derivation, never anything
@@ -35,6 +35,11 @@ function typeLabel(name: string): string {
  * canReviewChapterRegistrations (CouncilSecretary or CouncilAdmin) gates the whole
  * screen — anyone else sees a plain "you don't have access" state, same pattern as
  * ApplicationQueue's own canApproveApplications gate.
+ *
+ * The search box narrows the SAME scoped queue by chapter name, reference number, or an
+ * officer named on the filing (gift name, name, member number) — matched server-side in
+ * usp_ChapterRegistration_GetQueue. It never widens what the caller can see. Kept in the
+ * URL (?q=) so a filtered view survives a refresh or a back-navigation from a detail page.
  */
 export function ChapterRegistrationQueue() {
   const { claims } = useAuth();
@@ -43,15 +48,32 @@ export function ChapterRegistrationQueue() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const statusId = searchParams.get("statusId") ?? "";
+  const search = searchParams.get("q") ?? "";
+  const [searchInput, setSearchInput] = useState(search);
   const [skip, setSkip] = useState(0);
+
+  // Wait for a short pause in typing before querying — one request per thought, not per
+  // keystroke, on a slow mobile connection.
+  useEffect(() => {
+    const trimmed = searchInput.trim();
+    if (trimmed === search) return;
+    const t = window.setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      if (trimmed) next.set("q", trimmed); else next.delete("q");
+      setSearchParams(next, { replace: true });
+      setSkip(0);
+    }, 350);
+    return () => window.clearTimeout(t);
+  }, [searchInput, search, searchParams, setSearchParams]);
 
   const qs = new URLSearchParams();
   qs.set("skip", String(skip));
   qs.set("take", String(TAKE));
   if (statusId) qs.set("statusId", statusId);
+  if (search) qs.set("search", search);
 
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["chapter-registrations", statusId, skip],
+    queryKey: ["chapter-registrations", statusId, search, skip],
     queryFn: () => api.get<Paged<ChapterRegistrationQueueItem>>(`/api/chapter-registrations?${qs.toString()}`),
     enabled: canReview,
   });
@@ -64,9 +86,6 @@ export function ChapterRegistrationQueue() {
       />
     );
   }
-
-  if (isLoading) return <ScreenSkeleton rows={6} />;
-  if (error) return <ErrorState message={(error as Error).message} onRetry={() => refetch()} />;
 
   const items = data?.items ?? [];
 
@@ -87,6 +106,12 @@ export function ChapterRegistrationQueue() {
       </p>
 
       <div style={filterRowStyle}>
+        <input
+          type="search" aria-label="Search chapter or member"
+          placeholder="Search chapter, member or reference no."
+          value={searchInput} onChange={e => setSearchInput(e.target.value)}
+          maxLength={100} style={searchFieldStyle}
+        />
         <select
           aria-label="Filter by status" value={statusId}
           onChange={e => updateStatusFilter(e.target.value)} style={filterFieldStyle}
@@ -98,11 +123,22 @@ export function ChapterRegistrationQueue() {
         </select>
       </div>
 
-      {items.length === 0 ? (
-        <EmptyState
-          title="Nothing to review right now"
-          body="Once a chapter petitions or files its annual officer update, it appears here."
-        />
+      {isLoading ? (
+        <ScreenSkeleton rows={6} />
+      ) : error ? (
+        <ErrorState message={(error as Error).message} onRetry={() => refetch()} />
+      ) : items.length === 0 ? (
+        search ? (
+          <EmptyState
+            title="No matches"
+            body={`No chapter or member matching "${search}" in your council's registrations. Check the spelling, or try a gift name or member number.`}
+          />
+        ) : (
+          <EmptyState
+            title="Nothing to review right now"
+            body="Once a chapter petitions or files its annual officer update, it appears here."
+          />
+        )
       ) : (
         <div style={{ overflowX: "auto" }}>
           <table style={tableStyle}>
@@ -161,7 +197,12 @@ function statusPillStyle(statusName: string): CSSProperties {
   }
 }
 
-const filterRowStyle: CSSProperties = { display: "flex", gap: 8, margin: "16px 0" };
+const filterRowStyle: CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8, margin: "16px 0" };
+
+const searchFieldStyle: CSSProperties = {
+  flex: "1 1 260px", minHeight: 40, padding: "0 12px", borderRadius: 8, fontSize: 13.5,
+  border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
+};
 
 const filterFieldStyle: CSSProperties = {
   minWidth: 220, minHeight: 40, padding: "0 10px", borderRadius: 8, fontSize: 13,

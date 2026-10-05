@@ -95,6 +95,7 @@ public static class CredentialEndpoints
             // Opaque credential id only — never MemberId, never a name (CLAUDE.md invariant
             // #8). Relative path so the frontend resolves it against its own origin, not a
             // hardcoded domain. Lowercase, hyphenated ("D") format.
-            $"/verify/{r.TokenSubject.ToString("D").ToLowerInvariant()}");
+            $"/verify/{r.TokenSubject.ToString("D").ToLowerInvariant()}",
+            r.OfficePosition, r.OfficeBody);
     }
 }

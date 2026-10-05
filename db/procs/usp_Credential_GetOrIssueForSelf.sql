@@ -60,6 +60,7 @@ BEGIN
 
     DECLARE @CredentialId INT, @TokenSubject UNIQUEIDENTIFIER, @KeyVersion INT, @IssuedNew BIT = 0;
     DECLARE @ExistingExpiry DATETIME2;
+    DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
 
     BEGIN TRAN;
         -- At most one row can ever match (UX_MemberCredential_Member_Live) — locked here
@@ -139,17 +140,48 @@ BEGIN
             m.DateSurvive,
             bt.BloodTypeName,
             ms.StatusName,
-            m.RenewedThrough        -- raw, nullable, never transformed here
+            m.RenewedThrough,       -- raw, nullable, never transformed here
+            -- The office he currently holds, if any — drives the officer card (red/black
+            -- instead of the member card's green/black) and the position line on its
+            -- front. NULL for a plain member. One office only: a council seat outranks a
+            -- chapter seat (higher council first), then chapter offices by SortOrder.
+            -- Shown on his OWN card only — never added to the public verification page or
+            -- the QR (invariant #8).
+            pos.OfficeName          AS OfficePosition,
+            pos.OfficeBody          AS OfficeBody
     FROM    dbo.Member m
             JOIN StartPoint sp           ON sp.MemberId = m.MemberId
             JOIN dbo.MemberCredential mc  ON mc.CredentialId = @CredentialId
             JOIN dbo.MemberStatus ms      ON ms.StatusId = m.StatusId
             LEFT JOIN dbo.BloodType bt    ON bt.BloodTypeId = m.BloodTypeId
             LEFT JOIN CouncilChain cc     ON cc.MemberId = m.MemberId
+            OUTER APPLY (
+                SELECT TOP (1) x.OfficeName, x.OfficeBody
+                FROM (
+                    SELECT  co.OfficeName, c.CouncilName AS OfficeBody,
+                            0 AS ScopeRank, cl.LevelOrder AS SortKey
+                    FROM    dbo.MemberRole mr
+                            JOIN dbo.CouncilOffice co ON co.CouncilOfficeId = mr.CouncilOfficeId
+                            JOIN dbo.Council c        ON c.CouncilId = mr.ScopeId
+                            JOIN dbo.CouncilLevel cl  ON cl.CouncilLevelId = c.CouncilLevelId
+                    WHERE   mr.MemberId = m.MemberId AND mr.ScopeType = 'Council'
+                      AND   mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+                    UNION ALL
+                    SELECT  o.OfficeName, ch.ChapterName,
+                            1, o.SortOrder
+                    FROM    dbo.MemberRole mr
+                            JOIN dbo.ChapterOffice o ON o.OfficeId = mr.OfficeId
+                            JOIN dbo.Chapter ch      ON ch.ChapterId = mr.ScopeId
+                    WHERE   mr.MemberId = m.MemberId AND mr.ScopeType = 'Chapter'
+                      AND   mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+                ) x
+                ORDER BY x.ScopeRank, x.SortKey
+            ) pos
     WHERE   m.MemberId = @RequestingMemberId
     GROUP BY mc.IssuedDate, mc.ExpiryDate, m.GiftName, m.FirstName, m.MiddleName, m.LastName,
              m.MemberNumber, sp.ChapterId, sp.ChapterName, sp.ChapterCode, m.DateSurvive,
-             bt.BloodTypeName, ms.StatusName, m.RenewedThrough
+             bt.BloodTypeName, ms.StatusName, m.RenewedThrough,
+             pos.OfficeName, pos.OfficeBody
     OPTION (MAXRECURSION 20);
 END
 GO

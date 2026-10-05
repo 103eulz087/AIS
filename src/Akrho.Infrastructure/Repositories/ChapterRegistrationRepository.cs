@@ -254,7 +254,7 @@ public interface IChapterRegistrationRepository
     /// holds no council seat at all.
     /// </summary>
     Task<IReadOnlyList<ChapterRegistrationQueueRow>> GetQueueAsync(
-        int requestingMemberId, int? statusId, int skip, int take, CancellationToken ct);
+        int requestingMemberId, int? statusId, string? search, int skip, int take, CancellationToken ct);
 
     /// <summary>
     /// Scoped to the registration's ActingCouncilId or any of its ancestors. Throws
@@ -439,7 +439,7 @@ public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory)
     }
 
     public async Task<IReadOnlyList<ChapterRegistrationQueueRow>> GetQueueAsync(
-        int requestingMemberId, int? statusId, int skip, int take, CancellationToken ct)
+        int requestingMemberId, int? statusId, string? search, int skip, int take, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
@@ -450,6 +450,7 @@ public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory)
                 {
                     RequestingMemberId = requestingMemberId,
                     StatusId = statusId,
+                    Search = string.IsNullOrWhiteSpace(search) ? null : search.Trim(),
                     Skip = skip,
                     Take = Math.Clamp(take, 1, 500)
                 },

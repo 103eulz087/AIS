@@ -64,7 +64,9 @@ public sealed record SubmitChapterTurnoverRequest(IReadOnlyList<ChapterTurnoverO
 
 public sealed record SubmitChapterTurnoverResponseDto(string ReferenceNo);
 
-public sealed record ChapterRegistrationQueueRequest(int? StatusId = null, int Skip = 0, int Take = 50);
+/// <summary>Search (optional) narrows the caller's own scoped queue by chapter, reference number or
+/// an officer named on the filing — it never widens what the caller can see.</summary>
+public sealed record ChapterRegistrationQueueRequest(int? StatusId = null, string? Search = null, int Skip = 0, int Take = 50);
 
 /// <summary>One row of a council officer's own registration queue. NO councilId anywhere in the
 /// request — scoped entirely from ICurrentUser.CouncilIds server-side (via

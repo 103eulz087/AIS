@@ -47,6 +47,13 @@ interface MyPhotoLookup {
  * first view — so this screen only has loading/error/loaded states, the same shape as
  * Profile.tsx.
  *
+ * Two card designs, chosen by credential.officePosition (usp_Credential_GetOrIssueForSelf):
+ *   - Member  — green and black outline.
+ *   - Officer — red and black outline, plus his position (and the chapter or council he
+ *               holds it in) on the front, so a seated officer is identifiable at a glance.
+ * The position lives on the card face only — never in the QR or on the public
+ * verification page (CLAUDE.md invariant #8).
+ *
  * This is a read-only self-view: no edit, no delete, no officer-only action of any kind —
  * every member sees his own, in full.
  */
@@ -140,6 +147,11 @@ export function DigitalId() {
     ?? credential.nationalCouncilName
     ?? null;
 
+  const isOfficer = !!credential.officePosition;
+  const theme = isOfficer ? OFFICER_THEME : MEMBER_THEME;
+  const faceStyle: CSSProperties = { ...idFaceStyle, border: `2px solid ${theme.accent}` };
+  const strip: CSSProperties = { ...stripStyle, background: theme.stripBg, borderTop: `1px solid ${theme.accent}`, color: theme.soft };
+
   return (
     <div style={{ padding: "20px 16px 40px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
@@ -171,11 +183,11 @@ export function DigitalId() {
         >
           <div style={{ ...idCardStyle, transform: flipped ? "rotateY(180deg)" : undefined }}>
             {/* Front */}
-            <div style={idFaceStyle}>
+            <div style={faceStyle}>
               <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-                <div style={sealStyle}>ΑΚΡ</div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".2em", color: "var(--brass)" }}>
+                <div style={{ ...sealStyle, borderColor: theme.accent, color: theme.accent }}>ΑΚΡ</div>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".2em", color: theme.accent }}>
                     ALPHA KAPPA RHO
                   </div>
                   {home && (
@@ -184,10 +196,13 @@ export function DigitalId() {
                     </div>
                   )}
                 </div>
+                <div style={{ ...roleTagStyle, background: theme.accent }}>
+                  {isOfficer ? "Officer" : "Member"}
+                </div>
               </div>
 
               <div style={{ display: "flex", gap: 14 }}>
-                <Photo objectUrl={photoObjectUrl} loading={photoLoading} giftName={credential.giftName} />
+                <Photo objectUrl={photoObjectUrl} loading={photoLoading} giftName={credential.giftName} accent={theme.accent} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
                     fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".04em",
@@ -196,24 +211,32 @@ export function DigitalId() {
                     {credential.giftName}
                   </div>
                   <div style={{ fontSize: 12, color: "#98A2B0", marginTop: 4 }}>{credential.fullName}</div>
+                  {isOfficer && (
+                    <div style={{ ...positionStyle, color: theme.accent }}>
+                      {credential.officePosition}
+                      {credential.officeBody && (
+                        <span style={{ color: theme.soft, fontWeight: 400 }}> · {credential.officeBody}</span>
+                      )}
+                    </div>
+                  )}
 
                   <div style={metaGridStyle}>
-                    <Meta label="Member no." value={credential.memberNumber} mono />
-                    {credential.bloodTypeName && <Meta label="Blood" value={credential.bloodTypeName} mono />}
-                    {credential.dateSurvive && <Meta label="Date survive" value={shortDate(credential.dateSurvive)} />}
-                    <Meta label="Status" value={credential.statusName} />
+                    <Meta label="Member no." value={credential.memberNumber} mono color={theme.soft} />
+                    {credential.bloodTypeName && <Meta label="Blood" value={credential.bloodTypeName} mono color={theme.soft} />}
+                    {credential.dateSurvive && <Meta label="Date survive" value={shortDate(credential.dateSurvive)} color={theme.soft} />}
+                    <Meta label="Status" value={credential.statusName} color={theme.soft} />
                   </div>
                 </div>
               </div>
 
-              <div style={stripStyle}>
+              <div style={strip}>
                 <span>{home ?? ""}</span>
                 {credential.renewedThrough && <span>Renewed through {shortDate(credential.renewedThrough)}</span>}
               </div>
             </div>
 
             {/* Back */}
-            <div style={{ ...idFaceStyle, ...idFaceBackStyle }}>
+            <div style={{ ...faceStyle, ...idFaceBackStyle }}>
               <div style={{ display: "flex", gap: 12, padding: "16px 16px 0" }}>
                 {qrDataUrl ? (
                   <img src={qrDataUrl} alt="Verification QR code" width={92} height={92} style={{ flex: "none", borderRadius: 6 }} />
@@ -228,7 +251,7 @@ export function DigitalId() {
                 <div style={{ fontSize: 10.5, lineHeight: 1.55, color: "#98A2B0" }}>
                   <b style={{
                     display: "block", fontFamily: "var(--f-disp)", fontSize: 12, letterSpacing: ".16em",
-                    color: "var(--brass)", textTransform: "uppercase", marginBottom: 5,
+                    color: theme.accent, textTransform: "uppercase", marginBottom: 5,
                   }}>
                     Verify this ID
                   </b>
@@ -241,7 +264,7 @@ export function DigitalId() {
                 </div>
               </div>
 
-              <div style={stripStyle}>
+              <div style={strip}>
                 <span>Issued {shortDate(credential.credentialIssuedDateUtc)}</span>
                 <span>{home ? `${home.toUpperCase()} · AIS` : "AIS DIGITAL ID"}</span>
               </div>
@@ -260,26 +283,27 @@ export function DigitalId() {
   );
 }
 
-function Photo({ objectUrl, loading, giftName }: {
-  objectUrl: string | null; loading: boolean; giftName: string;
+function Photo({ objectUrl, loading, giftName, accent }: {
+  objectUrl: string | null; loading: boolean; giftName: string; accent: string;
 }) {
-  if (loading) return <div style={photoStyle} aria-busy="true" />;
-  if (objectUrl) return <img src={objectUrl} alt="" style={{ ...photoStyle, objectFit: "cover" }} />;
+  const framed: CSSProperties = { ...photoStyle, border: `1.5px solid ${accent}` };
+  if (loading) return <div style={framed} aria-busy="true" />;
+  if (objectUrl) return <img src={objectUrl} alt="" style={{ ...framed, objectFit: "cover" }} />;
   return (
     <div style={{
-      ...photoStyle, display: "grid", placeItems: "center",
-      fontFamily: "var(--f-disp)", fontSize: 22, color: "var(--brass-soft)",
+      ...framed, display: "grid", placeItems: "center",
+      fontFamily: "var(--f-disp)", fontSize: 22, color: accent,
     }}>
       {(giftName || "—").slice(0, 2).toUpperCase()}
     </div>
   );
 }
 
-function Meta({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function Meta({ label, value, mono, color }: { label: string; value: string; mono?: boolean; color: string }) {
   return (
     <div>
       <div style={metaLabelStyle}>{label}</div>
-      <div className={mono ? "num" : undefined} style={metaValueStyle}>{value}</div>
+      <div className={mono ? "num" : undefined} style={{ ...metaValueStyle, color }}>{value}</div>
     </div>
   );
 }
@@ -296,16 +320,35 @@ const idCardButtonStyle: CSSProperties = {
 };
 
 const idCardStyle: CSSProperties = {
-  position: "relative", minHeight: 240, transformStyle: "preserve-3d",
+  position: "relative", minHeight: 262, transformStyle: "preserve-3d",
   transition: "transform .6s cubic-bezier(.4,.1,.2,1)",
+};
+
+// Member = green and black, officer = red and black. The card body is black for both;
+// the accent (outline, seal, strip, photo frame, labels) is what tells them apart.
+const MEMBER_THEME = {
+  accent: "var(--id-member)", soft: "var(--id-member-soft)", stripBg: "rgba(47,165,98,.16)",
+};
+const OFFICER_THEME = {
+  accent: "var(--id-officer)", soft: "var(--id-officer-soft)", stripBg: "rgba(211,48,47,.16)",
 };
 
 const idFaceStyle: CSSProperties = {
   position: "absolute", inset: 0, backfaceVisibility: "hidden", borderRadius: 14,
   overflow: "hidden", padding: "16px 16px 32px",
-  background: "linear-gradient(160deg, #232B39 0%, #171D28 55%, #0E1116 100%)",
-  border: "1px solid #333C4A", color: "var(--bond)",
+  background: "linear-gradient(160deg, #1C1F1E 0%, #121413 55%, var(--id-black) 100%)",
+  color: "var(--bond)",
   boxShadow: "0 14px 34px rgba(0,0,0,.35)",
+};
+
+const roleTagStyle: CSSProperties = {
+  flex: "none", padding: "3px 8px", borderRadius: 4, color: "#FFFFFF",
+  fontFamily: "var(--f-disp)", fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase",
+};
+
+const positionStyle: CSSProperties = {
+  fontFamily: "var(--f-disp)", fontSize: 13, fontWeight: 600, letterSpacing: ".1em",
+  textTransform: "uppercase", marginTop: 6,
 };
 
 const idFaceBackStyle: CSSProperties = { transform: "rotateY(180deg)" };
@@ -315,14 +358,14 @@ const flipHintStyle: CSSProperties = {
 };
 
 const sealStyle: CSSProperties = {
-  width: 30, height: 30, borderRadius: "50%", border: "1.5px solid var(--brass)",
+  width: 30, height: 30, borderRadius: "50%", border: "1.5px solid",
   display: "grid", placeItems: "center", fontFamily: "var(--f-disp)", fontSize: 12,
-  color: "var(--brass)", fontWeight: 700, flex: "none",
+  fontWeight: 700, flex: "none",
 };
 
 const photoStyle: CSSProperties = {
   width: 72, height: 88, borderRadius: 8, flex: "none",
-  background: "#2A323F", border: "1px solid #3A4453",
+  background: "#1E2220",
 };
 
 const metaGridStyle: CSSProperties = {
@@ -334,13 +377,9 @@ const metaLabelStyle: CSSProperties = {
   color: "#6F7A88",
 };
 
-const metaValueStyle: CSSProperties = {
-  fontSize: 12, color: "var(--brass-soft)", marginTop: 2,
-};
+const metaValueStyle: CSSProperties = { fontSize: 12, marginTop: 2 };
 
 const stripStyle: CSSProperties = {
   position: "absolute", left: 0, right: 0, bottom: 0, padding: "8px 16px",
-  background: "rgba(195,154,62,.13)", borderTop: "1px solid rgba(195,154,62,.3)",
   display: "flex", justifyContent: "space-between", gap: 10, fontSize: 10.5, letterSpacing: ".05em",
-  color: "var(--brass)",
 };

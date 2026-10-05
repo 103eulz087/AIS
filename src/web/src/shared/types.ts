@@ -120,6 +120,11 @@ export interface MyCredential {
   credentialIssuedDateUtc: string;
   credentialExpiryDateUtc: string;
   verificationUrl: string;
+  /** The office he currently holds ("President", "Secretary"...) — null for a plain member.
+   *  Non-null switches the card to the officer design (red/black instead of green/black). */
+  officePosition: string | null;
+  /** The chapter or council he holds that office in. Null whenever officePosition is. */
+  officeBody: string | null;
 }
 
 /**

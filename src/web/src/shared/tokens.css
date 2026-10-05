@@ -6,6 +6,13 @@
   --bond: #EFEEEA;  --paper: #FFFFFF; --line: #DCDAD3;
   --in: #2E6B52;    --out: #A6392E;   --warn: #B4801E;  --info: #2C5C8A;
 
+  /* Digital ID card outline. Green/black = member, red/black = officer — the colour
+     alone tells a scanner at a glance whether the holder is a seated officer. Kept
+     separate from --in/--out, which mean money in/out and must not be reused here. */
+  --id-black: #0B0D0C;
+  --id-member: #2FA562;  --id-member-soft: #BFE8CF;
+  --id-officer: #D3302F; --id-officer-soft: #F5C6C4;
+
   --f-disp: "Barlow Condensed", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", system-ui, sans-serif;
   --f-num:  "IBM Plex Mono", ui-monospace, monospace;
