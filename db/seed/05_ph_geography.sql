@@ -2,7 +2,11 @@
    already-imported geography dataset (see db/schema/16_geography.sql header) -
    not hand-authored. Region 17, Province 94,
    Municipality 1979 rows, Philippines only (source COUNTRY_CODE='63').
-   Idempotent via MERGE...WHEN NOT MATCHED, same convention as 01_reference.sql. */
+   Idempotent via MERGE...WHEN NOT MATCHED, same convention as 01_reference.sql.
+
+   The source dataset predates Zamboanga Sibugay (created from Zamboanga del Sur in 2001)
+   and filed its 16 municipalities under Zamboanga del Sur. Those 16 rows are removed from
+   this file and seeded under the correct province by 06_zamboanga_sibugay.sql instead. */
 SET NOCOUNT ON;
 
 MERGE dbo.Region AS t USING (VALUES
@@ -2074,48 +2078,32 @@ MERGE dbo.Municipality AS t USING (
      (1718,'Siocon','7120',93),
      (1722,'Siraway','7121',93),
      (1829,'Tampilisan','7116',93),
-     (40,'Alicia','7040',94),
      (96,'Aurora','7020',94),
      (241,'Bayog','7011',94),
-     (333,'Buug','7009',94),
      (534,'Dimataling','7032',94),
      (540,'Dinas','7030',94),
-     (546,'Diplahan','7039',94),
      (556,'Don Mariano Marcos','7022',94),
      (568,'Dumalinao','7015',94),
      (574,'Dumingag','7028',94),
      (673,'Guipos','7042',94),
-     (707,'Imelda','7007',94),
-     (722,'Ipil','7001',94),
      (760,'Josefina','7027',94),
-     (767,'Kabasalan','7005',94),
      (822,'Kumalarang','7013',94),
      (837,'Labangan','7017',94),
      (848,'Lakewood','7014',94),
      (867,'Lapuyan','7037',94),
-     (969,'Mabuhay','7010',94),
      (1004,'Mahayag','7026',94),
-     (1020,'Malangas','7038',94),
      (1081,'Margo Sa Tubig','7035',94),
      (1138,'Midsalip','7021',94),
      (1152,'Molave','7023',94),
-     (1176,'Naga','7004',94),
-     (1222,'Olutanga','7041',94),
      (1241,'Pagadian City','7016',94),
-     (1313,'Payao','7008',94),
      (1354,'Pitogo','7033',94),
      (1419,'Ramon Magsaysay','7024',94),
-     (1429,'Reseller Lim','7002',94),
      (1579,'San Miguel','7029',94),
      (1591,'San Pablo','7031',94),
-     (1694,'Siay','7006',94),
      (1783,'Tabina','7034',94),
-     (1824,'Talusan','7012',94),
      (1826,'Tambulig','7025',94),
      (1866,'Tigbad','7043',94),
-     (1875,'Titay','7003',94),
      (1908,'Tukuran','7019',94),
-     (1913,'Tungawan','7018',94),
      (1947,'Vicencio Sagun','7036',94),
      (1975,'Zamboanga City','7000',94)
     ) AS s(MunicipalityCode,MunicipalityName,ZipCode,ProvinceCode)
