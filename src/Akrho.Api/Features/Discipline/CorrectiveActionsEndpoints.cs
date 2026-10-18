@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -20,7 +21,8 @@ public static class CorrectiveActionsEndpoints
     public static IEndpointRouteBuilder MapCorrectiveActions(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/chapters/{chapterId:int}/corrective-actions")
-                   .WithTags("Discipline").RequireAuthorization();
+                   .WithTags("Discipline").RequireAuthorization()
+                   .RequireFeature(AppFeatures.CorrectiveActions);
 
         g.MapGet("", List).WithName("ListCorrectiveActions");
         g.MapGet("/{caseId:int}", Get).WithName("GetCorrectiveAction");

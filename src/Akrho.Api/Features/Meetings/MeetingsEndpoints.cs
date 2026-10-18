@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -12,7 +13,8 @@ public static class MeetingsEndpoints
     public static IEndpointRouteBuilder MapMeetings(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/chapters/{chapterId:int}/meetings")
-                   .WithTags("Meetings").RequireAuthorization();
+                   .WithTags("Meetings").RequireAuthorization()
+                   .RequireFeature(AppFeatures.Meetings);
 
         g.MapGet("", List).WithName("ListMeetings");
         g.MapGet("/{meetingId:int}", Get).WithName("GetMeeting");

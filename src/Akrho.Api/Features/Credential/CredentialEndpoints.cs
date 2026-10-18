@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Features.Verification;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -10,7 +11,8 @@ public static class CredentialEndpoints
 {
     public static IEndpointRouteBuilder MapCredential(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/members/me").WithTags("Credential").RequireAuthorization();
+        var g = app.MapGroup("/api/members/me").WithTags("Credential").RequireAuthorization()
+            .RequireFeature(AppFeatures.DigitalId);
 
         // Self-service, same posture as GET /api/members/me — no memberId anywhere in the
         // route or the request. The caller's own identity comes from ICurrentUser (the JWT)
@@ -25,7 +27,8 @@ public static class CredentialEndpoints
         // signed-in SCAN action (the caller scanning someone else's card), not a read of the
         // caller's own resource, even though it still lives in this feature folder (same
         // domain as usp_Credential_VerifyForMember/usp_ScanLog_ListForSelf above).
-        app.MapPost("/api/scans", Scan).WithTags("Credential").RequireAuthorization().WithName("ScanCredential");
+        app.MapPost("/api/scans", Scan).WithTags("Credential").RequireAuthorization()
+            .RequireFeature(AppFeatures.DigitalId).WithName("ScanCredential");
 
         return app;
     }

@@ -830,7 +830,7 @@ public class ChatHubGroupIsolationTests
     private static async Task<FakeGroupManager> ConnectAsync(ClaimsPrincipal user)
     {
         var groups = new FakeGroupManager();
-        using var hub = new ChatHub { Context = new FakeHubCallerContext(user), Groups = groups };
+        using var hub = new ChatHub(new FakeMemberAccessService()) { Context = new FakeHubCallerContext(user), Groups = groups };
         await hub.OnConnectedAsync();
         return groups;
     }

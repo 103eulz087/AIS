@@ -58,6 +58,8 @@ import { VerifyCard } from "@/public/VerifyCard";
 import { AppShell } from "@/shared/AppShell";
 import { RequireAuth, useAuth } from "@/shared/auth";
 import { EmptyState } from "@/shared/states";
+import { FeatureGate } from "@/shared/FeatureGate";
+import { AppSettings } from "@/portal/screens/AppSettings";
 
 function HomeForCurrentChapter() {
   const { claims } = useAuth();
@@ -260,66 +262,66 @@ export const router = createBrowserRouter([
     element: <RequireAuth><AppShell /></RequireAuth>,
     children: [
       { index: true, element: <HomeForCurrentChapter /> },
-      { path: "dashboard", element: <DashboardForCurrentChapter /> },
-      { path: "members", element: <MemberDirectory /> },
+      { path: "dashboard", element: <FeatureGate featureKey="Dashboard"><DashboardForCurrentChapter /></FeatureGate> },
+      { path: "members", element: <FeatureGate featureKey="Members"><MemberDirectory /></FeatureGate> },
       // Self-scoped: no chapterId anywhere, the caller's own identity comes from the
       // JWT alone (ICurrentUser), so no "ForCurrentChapter" wrapper is needed here.
       { path: "profile", element: <Profile /> },
-      { path: "digital-id", element: <DigitalId /> },
+      { path: "digital-id", element: <FeatureGate featureKey="DigitalId"><DigitalId /></FeatureGate> },
       // ChapterAdmin-only; the screens themselves gate on canApproveApplications and
       // render a plain "you don't have access" state for anyone else, same pattern
       // as ExpenseNew's own role check — no chapterId in the route, the API scopes
       // this to the caller's own chapter from the JWT.
-      { path: "applications", element: <ApplicationQueue /> },
-      { path: "applications/:applicationId", element: <ApplicationDetail /> },
+      { path: "applications", element: <FeatureGate featureKey="ChapterAdmin"><ApplicationQueue /></FeatureGate> },
+      { path: "applications/:applicationId", element: <FeatureGate featureKey="ChapterAdmin"><ApplicationDetail /></FeatureGate> },
       // ChapterAdmin-only (canFileOfficerRoster); the annual officer-turnover filing.
       // No chapterId anywhere — the API re-derives the filer's own chapter from his
       // ChapterAdmin seat (CLAUDE.md invariant #4/#11), same reasoning as /applications.
-      { path: "officers", element: <OfficerRoster /> },
+      { path: "officers", element: <FeatureGate featureKey="Members"><OfficerRoster /></FeatureGate> },
       // ChapterAdmin OR CouncilAdmin (canSeatChapterOfficers); immediate per-officer
       // seat/unseat, distinct from /officers above (the annual full-roster Turnover
       // petition). No chapterId in the route for the self-service case — ChapterOfficers.tsx
       // reads its own chapterId from the caller's JWT claims, same reasoning as /officers.
-      { path: "officers/manage", element: <ChapterOfficers /> },
+      { path: "officers/manage", element: <FeatureGate featureKey="ChapterAdmin"><ChapterOfficers /></FeatureGate> },
       // ChapterAdmin-only (canManageChapterInviteLink); generate/regenerate the
       // chapter's own permanent join link/QR code. No chapterId anywhere — the API
       // re-derives the caller's own chapter from his ChapterAdmin seat, same reasoning
       // as /applications and /officers above.
-      { path: "invite", element: <InviteMembers /> },
-      { path: "ledger", element: <LedgerForCurrentChapter /> },
-      { path: "meetings", element: <MeetingListForCurrentChapter /> },
-      { path: "meetings/new", element: <MeetingNewForCurrentChapter /> },
-      { path: "meetings/:meetingId", element: <MeetingDetailForCurrentChapter /> },
+      { path: "invite", element: <FeatureGate featureKey="ChapterAdmin"><InviteMembers /></FeatureGate> },
+      { path: "ledger", element: <FeatureGate featureKey="Funds"><LedgerForCurrentChapter /></FeatureGate> },
+      { path: "meetings", element: <FeatureGate featureKey="Meetings"><MeetingListForCurrentChapter /></FeatureGate> },
+      { path: "meetings/new", element: <FeatureGate featureKey="Meetings"><MeetingNewForCurrentChapter /></FeatureGate> },
+      { path: "meetings/:meetingId", element: <FeatureGate featureKey="Meetings"><MeetingDetailForCurrentChapter /></FeatureGate> },
       { path: "announcements", element: <AnnouncementListForCurrentChapter /> },
       { path: "announcements/new", element: <AnnouncementNewForCurrentChapter /> },
       { path: "announcements/:announcementId/edit", element: <AnnouncementNewForCurrentChapter /> },
       { path: "announcements/:announcementId", element: <AnnouncementDetailForCurrentChapter /> },
-      { path: "memos", element: <MemoListForCurrentChapter /> },
-      { path: "memos/new", element: <MemoNewForCurrentChapter /> },
-      { path: "memos/:memoId/supersede", element: <MemoNewForCurrentChapter /> },
-      { path: "memos/:memoId", element: <MemoDetailForCurrentChapter /> },
-      { path: "activities", element: <ActivityListForCurrentChapter /> },
-      { path: "activities/new", element: <ActivityNewForCurrentChapter /> },
-      { path: "expenses", element: <ExpenseListForCurrentChapter /> },
-      { path: "expenses/new", element: <ExpenseNewForCurrentChapter /> },
-      { path: "expenses/:expenseId", element: <ExpenseDetailForCurrentChapter /> },
-      { path: "donations", element: <DonationListForCurrentChapter /> },
-      { path: "donations/new", element: <DonationNewForCurrentChapter /> },
-      { path: "donations/:donationId", element: <DonationDetailForCurrentChapter /> },
+      { path: "memos", element: <FeatureGate featureKey="Memos"><MemoListForCurrentChapter /></FeatureGate> },
+      { path: "memos/new", element: <FeatureGate featureKey="Memos"><MemoNewForCurrentChapter /></FeatureGate> },
+      { path: "memos/:memoId/supersede", element: <FeatureGate featureKey="Memos"><MemoNewForCurrentChapter /></FeatureGate> },
+      { path: "memos/:memoId", element: <FeatureGate featureKey="Memos"><MemoDetailForCurrentChapter /></FeatureGate> },
+      { path: "activities", element: <FeatureGate featureKey="Funds"><ActivityListForCurrentChapter /></FeatureGate> },
+      { path: "activities/new", element: <FeatureGate featureKey="Funds"><ActivityNewForCurrentChapter /></FeatureGate> },
+      { path: "expenses", element: <FeatureGate featureKey="Funds"><ExpenseListForCurrentChapter /></FeatureGate> },
+      { path: "expenses/new", element: <FeatureGate featureKey="Funds"><ExpenseNewForCurrentChapter /></FeatureGate> },
+      { path: "expenses/:expenseId", element: <FeatureGate featureKey="Funds"><ExpenseDetailForCurrentChapter /></FeatureGate> },
+      { path: "donations", element: <FeatureGate featureKey="Funds"><DonationListForCurrentChapter /></FeatureGate> },
+      { path: "donations/new", element: <FeatureGate featureKey="Funds"><DonationNewForCurrentChapter /></FeatureGate> },
+      { path: "donations/:donationId", element: <FeatureGate featureKey="Funds"><DonationDetailForCurrentChapter /></FeatureGate> },
       // Reading the list/detail is open to every chapter member; canWriteDiscipline
       // (ChapterAdmin only) gates filing/status-updates within the screens themselves,
       // same pattern as ApplicationQueue/ApplicationDetail's canApproveApplications gate.
-      { path: "corrective-actions", element: <CaseListForCurrentChapter /> },
-      { path: "corrective-actions/new", element: <CaseNewForCurrentChapter /> },
-      { path: "corrective-actions/:caseId", element: <CaseDetailForCurrentChapter /> },
-      { path: "chat", element: <ChatRoomForCurrentChapter /> },
-      { path: "chat/moderation", element: <ChatModerationForCurrentChapter /> },
+      { path: "corrective-actions", element: <FeatureGate featureKey="CorrectiveActions"><CaseListForCurrentChapter /></FeatureGate> },
+      { path: "corrective-actions/new", element: <FeatureGate featureKey="CorrectiveActions"><CaseNewForCurrentChapter /></FeatureGate> },
+      { path: "corrective-actions/:caseId", element: <FeatureGate featureKey="CorrectiveActions"><CaseDetailForCurrentChapter /></FeatureGate> },
+      { path: "chat", element: <FeatureGate featureKey="ChapterChat"><ChatRoomForCurrentChapter /></FeatureGate> },
+      { path: "chat/moderation", element: <FeatureGate featureKey="ChapterChat"><ChatModerationForCurrentChapter /></FeatureGate> },
       // Private (1:1) messages — self-scoped, no chapterId anywhere (a private room
       // isn't chapter-scoped; see Features/Conversations' own header comment), so
       // neither needs a "ForCurrentChapter" wrapper.
-      { path: "conversations", element: <Conversations /> },
-      { path: "conversations/:roomId", element: <Conversation /> },
-      { path: "scan", element: <Scan /> },
+      { path: "conversations", element: <FeatureGate featureKey="PrivateMessages"><Conversations /></FeatureGate> },
+      { path: "conversations/:roomId", element: <FeatureGate featureKey="PrivateMessages"><Conversation /></FeatureGate> },
+      { path: "scan", element: <FeatureGate featureKey="DigitalId"><Scan /></FeatureGate> },
       // TODO next: /seals
     ],
   },
@@ -388,6 +390,9 @@ export const router = createBrowserRouter([
       // response itself. No councilId in the route — the screen's own picker supplies it
       // from claims.councilSeats, never a URL param.
       { path: "council-permissions", element: <CouncilPermissions /> },
+      // canManageAppSettings (AppSettings.Manage, National only); the free-trial switch for
+      // every member. The screen shows a plain "no access" state to anyone else.
+      { path: "settings", element: <AppSettings /> },
     ],
   },
 ]);

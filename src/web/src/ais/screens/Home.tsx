@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { api, type Paged } from "@/shared/api";
 import { peso, shortDate } from "@/shared/format";
 import { useAuth } from "@/shared/auth";
+import { useMemberAccess } from "@/shared/memberAccess";
+import { TrialEndedNotice } from "@/shared/FeatureGate";
 import {
   canWriteComms, canWriteDonations, canWriteExpenses, canWriteMeetings,
 } from "@/shared/roles";
@@ -40,10 +42,25 @@ export function Home({ chapterId }: { chapterId: number }) {
   const canComms = canWriteComms(roles);
   const isOfficer = canMeetings || canExpenses || canDonations || canComms;
 
+  // Free trial. While access is still loading every feature counts as open, so nothing
+  // flashes locked; a closed feature's panel and link are left out here instead of
+  // being shown with an error (its API would refuse the call anyway).
+  const { access, isFeatureOpen } = useMemberAccess();
+  const trialOver = access?.isLocked === true;
+  const showTrialBanner = !!access && access.isTrialEnabled && !access.isPaid && !access.isLocked;
+  const meetingsOpen = isFeatureOpen("Meetings");
+  const fundsOpen = isFeatureOpen("Funds");
+  const dashboardOpen = isFeatureOpen("Dashboard");
+  const digitalIdOpen = isFeatureOpen("DigitalId");
+  const chatOpen = isFeatureOpen("ChapterChat");
+  const messagesOpen = isFeatureOpen("PrivateMessages");
+  const membersOpen = isFeatureOpen("Members");
+
   const meetings = useQuery({
     queryKey: ["meetings", chapterId, "home"],
     queryFn: () => api.get<Paged<MeetingListItem>>(
       `/api/chapters/${chapterId}/meetings?skip=0&take=${PREVIEW_TAKE}`),
+    enabled: meetingsOpen,
   });
 
   const announcements = useQuery({
@@ -57,7 +74,7 @@ export function Home({ chapterId }: { chapterId: number }) {
   const ledgerSummary = useQuery({
     queryKey: ["ledger-summary", chapterId],
     queryFn: () => api.get<LedgerSummary>(`/api/chapters/${chapterId}/ledger/summary`),
-    enabled: isOfficer,
+    enabled: isOfficer && fundsOpen,
   });
 
   // A small, free unread badge — summed client-side from data this screen is already
@@ -67,6 +84,7 @@ export function Home({ chapterId }: { chapterId: number }) {
   const conversations = useQuery({
     queryKey: ["conversations", "home"],
     queryFn: () => api.get<Paged<ConversationSummary>>("/api/conversations?skip=0&take=20"),
+    enabled: messagesOpen,
   });
   const unreadMessages = conversations.data?.items.reduce((sum, c) => sum + c.unreadCount, 0) ?? 0;
 
@@ -84,21 +102,35 @@ export function Home({ chapterId }: { chapterId: number }) {
       {/* The Chapter Dashboard is a separate screen (how the chapter is doing over a
           period) from this one (what needs your attention right now) — every member
           reaches it from this single link, never officers-only. */}
-      <div style={{ padding: "0 16px 4px" }}>
-        <Link to="/dashboard" style={dashboardLinkStyle}>
-          <span>See how your chapter is doing</span>
-          <span style={{ color: "var(--brass-soft)" }}>›</span>
-        </Link>
-      </div>
+      {showTrialBanner && (
+        <div role="status" style={trialBannerStyle}>
+          Free trial: {access.trialDaysLeft} {access.trialDaysLeft === 1 ? "day" : "days"} left
+          <span style={{ display: "block", fontWeight: 400, fontSize: 12, marginTop: 2 }}>
+            Everything is open to you for now. Announcements always stay open.
+          </span>
+        </div>
+      )}
+      {trialOver && <TrialEndedNotice compact />}
+
+      {dashboardOpen && (
+        <div style={{ padding: "0 16px 4px" }}>
+          <Link to="/dashboard" style={dashboardLinkStyle}>
+            <span>See how your chapter is doing</span>
+            <span style={{ color: "var(--brass-soft)" }}>›</span>
+          </Link>
+        </div>
+      )}
 
       {/* Every member has his own Digital ID, not just officers — same reasoning as the
           dashboard link above, so this is never gated on isOfficer. */}
-      <div style={{ padding: "8px 16px 4px" }}>
-        <Link to="/digital-id" style={directoryLinkStyle}>
-          <span>View your Digital ID</span>
-          <span style={{ color: "var(--mute)" }}>›</span>
-        </Link>
-      </div>
+      {digitalIdOpen && (
+        <div style={{ padding: "8px 16px 4px" }}>
+          <Link to="/digital-id" style={directoryLinkStyle}>
+            <span>View your Digital ID</span>
+            <span style={{ color: "var(--mute)" }}>›</span>
+          </Link>
+        </div>
+      )}
 
       {/* Public chat (docs/AIS-Project-Documentation.md §4.8) belongs on the landing
           page, not a 6th bottom-nav tab — AppShell.tsx is already at its documented
@@ -109,7 +141,7 @@ export function Home({ chapterId }: { chapterId: number }) {
           chapter went dormant, his home of record is now a council) has no chapter
           chat room to open, so he isn't invited into a room that doesn't exist for
           him. See routes.tsx's ChatRoomForCurrentChapter for the matching /chat guard. */}
-      {chapterId ? (
+      {chapterId && chatOpen ? (
         <div style={{ padding: "8px 16px 4px" }}>
           <Link to="/chat" style={directoryLinkStyle}>
             <span>Open the chapter chat</span>
@@ -121,20 +153,24 @@ export function Home({ chapterId }: { chapterId: number }) {
       {/* Private messages — never gated on chapterId/isOfficer: a private conversation
           isn't chapter-scoped, so even a detached member (CLAUDE.md invariant #14)
           can still see and reply to his own. */}
-      <div style={{ padding: "8px 16px 4px" }}>
-        <Link to="/conversations" style={directoryLinkStyle}>
-          <span>Messages{unreadMessages > 0 ? ` (${unreadMessages})` : ""}</span>
-          <span style={{ color: "var(--mute)" }}>›</span>
-        </Link>
-      </div>
+      {messagesOpen && (
+        <div style={{ padding: "8px 16px 4px" }}>
+          <Link to="/conversations" style={directoryLinkStyle}>
+            <span>Messages{unreadMessages > 0 ? ` (${unreadMessages})` : ""}</span>
+            <span style={{ color: "var(--mute)" }}>›</span>
+          </Link>
+        </div>
+      )}
 
       {isOfficer && (
         <>
           <QuickActions
-            canMeetings={canMeetings} canExpenses={canExpenses}
-            canDonations={canDonations} canComms={canComms}
+            canMeetings={canMeetings && meetingsOpen} canExpenses={canExpenses && fundsOpen}
+            canDonations={canDonations && fundsOpen} canComms={canComms}
           />
-          <FundBalanceCard summary={ledgerSummary.data} isLoading={ledgerSummary.isLoading} isError={ledgerSummary.isError} />
+          {fundsOpen && (
+            <FundBalanceCard summary={ledgerSummary.data} isLoading={ledgerSummary.isLoading} isError={ledgerSummary.isError} />
+          )}
         </>
       )}
 
@@ -144,13 +180,17 @@ export function Home({ chapterId }: { chapterId: number }) {
         onRetry={() => announcements.refetch()}
       />
 
-      <SectionLabel to="/meetings">Meetings</SectionLabel>
-      <MeetingsPreview
-        items={meetings.data?.items} isLoading={meetings.isLoading} isError={meetings.isError}
-        onRetry={() => meetings.refetch()} canCreate={canMeetings}
-      />
+      {meetingsOpen && (
+        <>
+          <SectionLabel to="/meetings">Meetings</SectionLabel>
+          <MeetingsPreview
+            items={meetings.data?.items} isLoading={meetings.isLoading} isError={meetings.isError}
+            onRetry={() => meetings.refetch()} canCreate={canMeetings}
+          />
+        </>
+      )}
 
-      {!isOfficer && (
+      {!isOfficer && membersOpen && (
         <div style={{ padding: "16px 16px 4px" }}>
           <Link to="/members" style={directoryLinkStyle}>
             <span>Look up a brother in the member directory</span>
@@ -335,6 +375,11 @@ function PreviewEmpty({ text, action }: { text: string; action?: ReactNode }) {
     </div>
   );
 }
+
+const trialBannerStyle: CSSProperties = {
+  margin: "10px 16px 6px", padding: "10px 14px", borderRadius: 8,
+  background: "var(--brass-soft)", color: "var(--brass-dk)", fontSize: 13.5, fontWeight: 600,
+};
 
 const greetingStyle: CSSProperties = {
   padding: "20px 16px 6px",

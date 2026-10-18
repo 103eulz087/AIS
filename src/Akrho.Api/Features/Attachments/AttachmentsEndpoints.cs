@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -27,7 +28,8 @@ public static class AttachmentsEndpoints
 
     public static IEndpointRouteBuilder MapAttachments(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/attachments").WithTags("Attachments").RequireAuthorization();
+        var g = app.MapGroup("/api/attachments").WithTags("Attachments").RequireAuthorization()
+            .RequireFeature(AppFeatures.Funds);
 
         // Staging is gated at the same bar as the one thing a staged attachment can ever
         // become — an expense's receipt (ChapterTreasurer/ChapterAdmin, docs §3.1, §4.6:

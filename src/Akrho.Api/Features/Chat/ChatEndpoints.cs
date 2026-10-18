@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Push;
 using Akrho.Infrastructure.Repositories;
@@ -12,7 +13,8 @@ public static class ChatEndpoints
 {
     public static IEndpointRouteBuilder MapChat(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/chapters/{chapterId:int}/chat").WithTags("Chat").RequireAuthorization();
+        var g = app.MapGroup("/api/chapters/{chapterId:int}/chat").WithTags("Chat").RequireAuthorization()
+            .RequireFeature(AppFeatures.ChapterChat);
 
         g.MapGet("/room", GetRoom).WithName("GetChatRoom");
 

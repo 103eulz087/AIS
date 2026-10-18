@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Push;
 using Akrho.Infrastructure.Repositories;
@@ -40,7 +41,8 @@ public static class CommunicationsEndpoints
         national.MapPost("/{announcementId:int}/withdraw", WithdrawNationalAnnouncement).WithName("WithdrawNationalAnnouncement");
 
         var memos = app.MapGroup("/api/chapters/{chapterId:int}/memos")
-                        .WithTags("Memos").RequireAuthorization();
+                        .WithTags("Memos").RequireAuthorization()
+                        .RequireFeature(AppFeatures.Memos);
 
         memos.MapGet("", ListMemos).WithName("ListMemos");
 

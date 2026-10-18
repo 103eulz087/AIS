@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, type Paged } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
 import { canApproveApplications, canFileOfficerRoster } from "@/shared/roles";
+import { useMemberAccess, useTrialEndedSync } from "@/shared/memberAccess";
 import type { MembershipApplicationQueueItem } from "@/shared/types";
 
 /**
@@ -15,25 +16,27 @@ import type { MembershipApplicationQueueItem } from "@/shared/types";
 const BASE_TABS = [
   // Home was reachable only via the "AIS" wordmark in the header — not discoverable
   // enough (members didn't realise it was a link), so it gets an explicit tab too.
-  { to: "/", label: "Home", icon: "⌂" },
+  { to: "/", label: "Home", icon: "⌂", featureKey: null as string | null },
   // Corrective actions is reached from within the Members tab (see MemberDirectory's
   // own entry point), not a bottom-tab item of its own — discipline records are about
   // members. alsoMatch keeps the tab visually active while the member is on
   // /corrective-actions/*. Reading the list is open to every member — this entry is
   // NEVER gated on canWriteDiscipline, only the "file a new case" action within the
   // screen itself is.
-  { to: "/members", label: "Members", icon: "☰", alsoMatch: ["/corrective-actions"] },
-  { to: "/meetings", label: "Meetings", icon: "▤" },
+  { to: "/members", label: "Members", icon: "☰", alsoMatch: ["/corrective-actions"], featureKey: "Members" },
+  { to: "/meetings", label: "Meetings", icon: "▤", featureKey: "Meetings" },
   // Ledger is the tab's landing screen; Activities/Expenses/Donations are reached from
   // the chip switcher on that screen (and on each other), the same "Funds" grouping
   // Notices uses for Announcements/Memos below.
-  { to: "/ledger", label: "Funds", icon: "₱", alsoMatch: ["/activities", "/expenses", "/donations"] },
-  { to: "/announcements", label: "Notices", icon: "🔔", alsoMatch: ["/memos"] },
+  { to: "/ledger", label: "Funds", icon: "₱", alsoMatch: ["/activities", "/expenses", "/donations"], featureKey: "Funds" },
+  { to: "/announcements", label: "Notices", icon: "🔔", alsoMatch: ["/memos"], featureKey: "Announcements" },
 ];
 
 export function AppShell() {
   const { claims, signOut } = useAuth();
   const location = useLocation();
+  const { isFeatureOpen } = useMemberAccess();
+  useTrialEndedSync();
   const roles = claims?.roles ?? [];
   const canApprove = canApproveApplications(roles);
   // ChapterAdmin only — same bar as /officers itself (the annual filing) and
@@ -55,12 +58,12 @@ export function AppShell() {
 
   const tabs = [
     ...BASE_TABS,
-    ...(canApprove ? [{ to: "/applications", label: "Applications", icon: "📝" }] : []),
+    ...(canApprove ? [{ to: "/applications", label: "Applications", icon: "📝", featureKey: "ChapterAdmin" }] : []),
     // Goes straight to the immediate seat/unseat screen, not the annual Turnover
     // filing at /officers — that page is deliberately hidden from navigation for now
     // (client decision 2026-09-22), reachable only by a direct link/URL until it's
     // wanted again. The route and screen are untouched; only this entry point changed.
-    ...(canFileRoster ? [{ to: "/officers/manage", label: "Officers", icon: "🎖" }] : []),
+    ...(canFileRoster ? [{ to: "/officers/manage", label: "Officers", icon: "🎖", featureKey: "ChapterAdmin" }] : []),
   ];
 
   return (
@@ -117,15 +120,21 @@ export function AppShell() {
         {tabs.map(t => {
           const alsoActive = ("alsoMatch" in t ? t.alsoMatch : undefined)
             ?.some(p => location.pathname.startsWith(p)) ?? false;
+          // A closed feature keeps its tab (still tappable — it opens the plain "free
+          // trial has ended" page) with a small lock, so nothing silently vanishes on a
+          // phone and the member can see why. Notices is never closed.
+          const isLocked = t.featureKey ? !isFeatureOpen(t.featureKey) : false;
           const showBadge = t.to === "/applications" && (pendingCount.data?.total ?? 0) > 0;
           return (
             <NavLink key={t.to} to={t.to} end={t.to === "/"} style={({ isActive }) => ({
               display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
               textDecoration: "none", minHeight: "var(--tap)", justifyContent: "center",
               color: isActive || alsoActive ? "var(--ink)" : "var(--mute)", position: "relative",
-            })}>
+              opacity: isLocked ? 0.65 : 1,
+            })} aria-label={isLocked ? `${t.label} (locked while your free trial is over)` : undefined}>
               <span style={{ fontSize: 17, position: "relative" }}>
                 {t.icon}
+                {isLocked && <span aria-hidden="true" style={lockStyle}>🔒</span>}
                 {showBadge && <span style={badgeStyle}>{pendingCount.data?.total}</span>}
               </span>
               <span style={{ fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
@@ -143,4 +152,8 @@ const badgeStyle: CSSProperties = {
   background: "var(--out)", color: "var(--paper)", fontSize: 9.5, fontWeight: 700,
   display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px",
   fontFamily: "var(--f-num)",
+};
+
+const lockStyle: CSSProperties = {
+  position: "absolute", top: -5, right: -11, fontSize: 9, lineHeight: 1,
 };

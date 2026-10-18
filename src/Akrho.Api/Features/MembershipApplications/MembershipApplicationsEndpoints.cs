@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -27,19 +28,24 @@ public static class MembershipApplicationsEndpoints
         // below — the chapter comes ONLY from ICurrentUser.ChapterId (the JWT), never from
         // anything the caller supplies (CLAUDE.md invariant #4 / #11).
         g.MapGet("", GetQueue).WithName("GetMembershipApplicationQueue")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         g.MapGet("/{id:int}", GetOne).WithName("GetMembershipApplication")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         g.MapPost("/{id:int}/approve", Approve).WithName("ApproveMembershipApplication")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         g.MapPost("/{id:int}/return", Return).WithName("ReturnMembershipApplication")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         g.MapPost("/{id:int}/reject", Reject).WithName("RejectMembershipApplication")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembershipApprove)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         return app;
     }

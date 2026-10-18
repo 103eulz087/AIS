@@ -63,6 +63,7 @@ import { NationalAnnouncements } from "@/portal/screens/NationalAnnouncements";
 import { MemberPaymentTags } from "@/portal/screens/MemberPaymentTags";
 import { MemberPaymentTagStats } from "@/portal/screens/MemberPaymentTagStats";
 import { CouncilPermissions } from "@/portal/screens/CouncilPermissions";
+import { AppSettings } from "@/portal/screens/AppSettings";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -180,6 +181,9 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // /api/councils/{councilId}/permissions — same reasoning as every other permission/
   // role-gated Portal screen above.
   ["/portal/council-permissions", <CouncilPermissions key="pcp" />],
+  // No session in jsdom -> canManageAppSettings(seats=[]) is false, so this deterministically
+  // exercises the "you don't have access" empty state without ever calling GET /api/app-settings.
+  ["/portal/settings", <AppSettings key="pset" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],

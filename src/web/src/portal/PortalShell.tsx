@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/shared/auth";
-import { canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
+import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
 
 /**
  * Council Portal chrome. Desktop-first, but usable on a phone browser per CLAUDE.md's own
@@ -99,6 +99,12 @@ export function PortalShell() {
         { to: "/portal/announcements", label: "Announcements", show: !secretaryOnly, icon: "bell" },
       ],
     },
+    {
+      heading: "Settings",
+      links: [
+        { to: "/portal/settings", label: "App settings", show: canManageAppSettings(seats), icon: "gear" },
+      ],
+    },
   ];
 
   const close = () => setOpen(false);
@@ -165,7 +171,7 @@ export function PortalShell() {
 interface NavLinkDef { to: string; label: string; show: boolean; icon: IconName; end?: boolean }
 interface NavGroup { heading: string; links: NavLinkDef[] }
 
-type IconName = "menu" | "close" | "doc" | "pause" | "people" | "card" | "tag" | "chart" | "building" | "key" | "bell";
+type IconName = "menu" | "close" | "doc" | "pause" | "people" | "card" | "tag" | "chart" | "building" | "key" | "bell" | "gear";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
@@ -179,6 +185,7 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
   building: <path d="M4 21h16M6 21V9l6-5 6 5v12M10 21v-5h4v5M9 12h1M14 12h1" />,
   key: <><circle cx="8" cy="15" r="4" /><path d="M11 12l9-9M16 7l3 3" /></>,
   bell: <path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4" />,
+  gear: <><circle cx="12" cy="12" r="3" /><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" /></>,
 };
 
 function Icon({ name }: { name: IconName }) {

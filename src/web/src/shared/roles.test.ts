@@ -7,7 +7,7 @@
  */
 import { describe, expect, it } from "vitest";
 import {
-  canApproveChapterRegistrations, canManageCouncilPermissions, canReviewChapterRegistrations,
+  canApproveChapterRegistrations, canManageAppSettings, canManageCouncilPermissions, canReviewChapterRegistrations,
   canSearchMembersByJurisdiction, canSetPaymentTags, canViewCouncilStatistics, canViewPaymentTags, COUNCIL_PERMISSION, hasCouncilPermission,
 } from "./roles";
 import type { CouncilSeatPermissions } from "./types";
@@ -127,5 +127,13 @@ describe("canViewPaymentTags / canSetPaymentTags", () => {
     expect(canViewPaymentTags([seat(), seat({ permissions: [read] })])).toBe(true);
     expect(canViewPaymentTags([])).toBe(false);
     expect(canSetPaymentTags([])).toBe(false);
+  });
+});
+
+describe("canManageAppSettings", () => {
+  it("is driven by AppSettings.Manage alone", () => {
+    expect(canManageAppSettings([seat({ permissions: ["AppSettings.Manage"] })])).toBe(true);
+    expect(canManageAppSettings([seat({ permissions: [COUNCIL_PERMISSION.MemberPaymentTagSet] })])).toBe(false);
+    expect(canManageAppSettings([])).toBe(false);
   });
 });

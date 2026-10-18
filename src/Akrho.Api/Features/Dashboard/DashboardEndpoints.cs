@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Domain;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -10,7 +11,8 @@ public static class DashboardEndpoints
     public static IEndpointRouteBuilder MapDashboard(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/chapters/{chapterId:int}/dashboard")
-                   .WithTags("Dashboard").RequireAuthorization();
+                   .WithTags("Dashboard").RequireAuthorization()
+                   .RequireFeature(AppFeatures.Dashboard);
 
         // No policy beyond authentication — every member of the chapter, not just
         // officers, sees the same books (CLAUDE.md §1 / docs §4.7).

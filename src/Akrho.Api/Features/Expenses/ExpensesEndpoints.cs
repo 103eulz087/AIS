@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -12,7 +13,8 @@ public static class ExpensesEndpoints
     public static IEndpointRouteBuilder MapExpenses(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/chapters/{chapterId:int}/expenses")
-                   .WithTags("Expenses").RequireAuthorization();
+                   .WithTags("Expenses").RequireAuthorization()
+                   .RequireFeature(AppFeatures.Funds);
 
         g.MapGet("", List).WithName("ListExpenses");
         g.MapGet("/{expenseId:int}", Get).WithName("GetExpense");

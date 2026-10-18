@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Akrho.Api.Features.Chat;
@@ -43,17 +44,28 @@ public static class ChatGroups
 /// "MessageRemoved", "MessageFlagged" (Public — see <see cref="ChatEndpoints"/> for the payload
 /// shape of each), and "PrivateMessagePosted" (Private — see <c>ConversationsEndpoints</c>).
 /// </summary>
-public sealed class ChatHub : Hub
+public sealed class ChatHub(IMemberAccessService accessService) : Hub
 {
     public override async Task OnConnectedAsync()
     {
+        // Free trial (AppFeatures): a member whose trial has ended must not receive chapter chat
+        // or private messages through this hub either, exactly as the REST routes refuse him.
+        // Decided per feature on connect; the two feature checks are independent, so a member
+        // locked out of chat but with private messages left open still gets his own group.
+        // A connection that was already open when the trial ended keeps its groups until it
+        // next reconnects (the app reconnects on every page load / token refresh).
+        var mid = int.TryParse(Context.User?.FindFirst("mid")?.Value, out var mm) ? mm : 0;
+        var access = mid > 0 ? await accessService.GetAsync(mid, Context.ConnectionAborted) : null;
+        var chatOpen = access?.IsFeatureOpen(AppFeatures.ChapterChat) ?? true;
+        var privateOpen = access?.IsFeatureOpen(AppFeatures.PrivateMessages) ?? true;
+
         // "chp" is the same chapter-id claim ICurrentUser/CurrentUser.cs reads for every REST
         // call — see AccessTokenService's own header comment for the claim contract. Missing
         // or non-positive means a detached, council-homed member (CLAUDE.md invariant #14):
         // he has no chapter, so no chapter chat group. Not an error — just nothing to join.
         var chapterId = int.TryParse(Context.User?.FindFirst("chp")?.Value, out var c) ? c : 0;
 
-        if (chapterId > 0)
+        if (chapterId > 0 && chatOpen)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, ChatGroups.Chapter(chapterId));
 
@@ -74,7 +86,7 @@ public sealed class ChatHub : Hub
         // (should not happen for an authenticated user, but treated the same as a missing
         // chapter claim above) simply joins nothing.
         var memberId = int.TryParse(Context.User?.FindFirst("mid")?.Value, out var m) ? m : 0;
-        if (memberId > 0)
+        if (memberId > 0 && privateOpen)
             await Groups.AddToGroupAsync(Context.ConnectionId, ChatGroups.Member(memberId));
 
         await base.OnConnectedAsync();

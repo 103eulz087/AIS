@@ -225,4 +225,20 @@ describe("PortalShell — nav visibility", () => {
     const active = Array.from(container.querySelectorAll("nav a.active")).map(a => a.textContent);
     expect(active).toEqual(["Chapter registrations"]);
   });
+
+  it("shows the Settings group with App settings only to a seat holding AppSettings.Manage", async () => {
+    stubAuthFetch([], [nationalSeat("President", [...ALL_SIX, "AppSettings.Manage"], true)]);
+    await renderShell();
+    const headings = Array.from(container.querySelectorAll("nav h2")).map(h => h.textContent);
+    expect(headings[headings.length - 1]).toBe("Settings");
+    const settings = container.querySelector('section[aria-label="Settings"]')!;
+    expect(Array.from(settings.querySelectorAll("a")).map(a => a.textContent)).toEqual(["App settings"]);
+  });
+
+  it("hides the Settings group entirely without AppSettings.Manage", async () => {
+    stubAuthFetch(["CouncilAdmin"]);
+    await renderShell();
+    expect(navLinkTexts()).not.toContain("App settings");
+    expect(container.querySelector('section[aria-label="Settings"]')).toBeNull();
+  });
 });

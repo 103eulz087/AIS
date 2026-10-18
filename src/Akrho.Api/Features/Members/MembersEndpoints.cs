@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Domain;
 using Akrho.Infrastructure.Repositories;
@@ -35,7 +36,8 @@ public static class MembersEndpoints
     {
         var g = app.MapGroup("/api/members").WithTags("Members").RequireAuthorization();
 
-        g.MapGet("", Search).WithName("SearchMembers");
+        g.MapGet("", Search).WithName("SearchMembers")
+            .RequireFeature(AppFeatures.Members);
 
         // Self-service profile. No memberId anywhere in these three routes — the caller's own
         // identity comes from ICurrentUser (the JWT) alone, never from the request
@@ -86,7 +88,8 @@ public static class MembersEndpoints
         // — a Chapter Admin cannot use this to reach into another chapter's roster.
         g.MapPost("/{memberId:int}/enrolment-link", ReissueEnrolmentLink)
             .WithName("ReissueMemberEnrolmentLink")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMembersEnrolmentReissue);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMembersEnrolmentReissue)
+            .RequireFeature(AppFeatures.ChapterAdmin, exemptCouncilOfficers: true); // Portal's chapter registration screen calls this too
 
         // National Council only (client decision 2026-09-21) — see
         // AuthorizationPolicies.NationalMemberAccountManage's own doc comment for why the
@@ -109,7 +112,8 @@ public static class MembersEndpoints
         // authorization — it re-derives the requester's own ChapterAdmin seat and
         // compares chapters itself (CLAUDE.md invariant #4).
         g.MapPut("/{memberId:int}/identity", UpdateIdentity).WithName("UpdateMemberIdentity")
-            .RequireAuthorization(AuthorizationPolicies.ChapterMemberIdentityEdit);
+            .RequireAuthorization(AuthorizationPolicies.ChapterMemberIdentityEdit)
+            .RequireFeature(AppFeatures.Members);
 
         // Council Portal's own global search — name, member number, or mobile number,
         // scoped to the caller's own council jurisdiction (never a value from the

@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -31,8 +32,10 @@ public static class ChaptersEndpoints
         // from the caller's own currently-seated ChapterAdmin role (re-derived inside the
         // procedure itself), never from anything in the route or body — CLAUDE.md
         // invariant #4/#11.
-        g.MapGet("/me/invite-link", GetOwnInviteLink).WithName("GetOwnChapterInviteLink").RequireAuthorization();
-        g.MapPost("/me/invite-link/regenerate", RegenerateOwnInviteLink).WithName("RegenerateOwnChapterInviteLink").RequireAuthorization();
+        g.MapGet("/me/invite-link", GetOwnInviteLink).WithName("GetOwnChapterInviteLink").RequireAuthorization()
+            .RequireFeature(AppFeatures.ChapterAdmin);
+        g.MapPost("/me/invite-link/regenerate", RegenerateOwnInviteLink).WithName("RegenerateOwnChapterInviteLink").RequireAuthorization()
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         // Officer seat/unseat — a chapter's own President manages every office except his
         // own; only the council above the chapter can act on the President seat itself.
@@ -43,9 +46,11 @@ public static class ChaptersEndpoints
         g.MapGet("/{chapterId:int}/officers", GetOfficerRoster).WithName("GetChapterOfficerRoster")
             .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
         g.MapPost("/{chapterId:int}/officers", SeatOfficer).WithName("SeatChapterOfficer")
-            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
+            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat)
+            .RequireFeature(AppFeatures.ChapterAdmin);
         g.MapDelete("/{chapterId:int}/officers/{memberRoleId:int}", UnseatOfficer).WithName("UnseatChapterOfficer")
-            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat);
+            .RequireAuthorization(AuthorizationPolicies.ChapterOfficerSeat)
+            .RequireFeature(AppFeatures.ChapterAdmin);
 
         // Chapter hold — the settings screen's chapter picker, plus the hold/release
         // actions themselves. All three ChapterHoldManage (CouncilAdmin ROLE bar only);

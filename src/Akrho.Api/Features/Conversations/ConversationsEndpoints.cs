@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Api.Features.Chat;
 using Akrho.Infrastructure.Push;
@@ -21,7 +22,8 @@ public static class ConversationsEndpoints
 {
     public static IEndpointRouteBuilder MapConversations(this IEndpointRouteBuilder app)
     {
-        var g = app.MapGroup("/api/conversations").WithTags("Conversations").RequireAuthorization();
+        var g = app.MapGroup("/api/conversations").WithTags("Conversations").RequireAuthorization()
+            .RequireFeature(AppFeatures.PrivateMessages);
 
         g.MapPost("", StartConversation).WithName("StartConversation")
             .RequireRateLimiting(RateLimiting.ConversationStart);

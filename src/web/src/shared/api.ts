@@ -21,10 +21,29 @@ export function getAccessToken(): string | null { return accessToken; }
 export type ValidationErrors = Record<string, string[]>;
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string, public errors?: ValidationErrors) {
+  constructor(
+    public status: number, message: string, public errors?: ValidationErrors,
+    /** Machine code from a ProblemDetails body, e.g. "trial-ended". */
+    public code?: string,
+    /** The feature a locked call belonged to, e.g. "Meetings". */
+    public featureKey?: string,
+  ) {
     super(message);
   }
 }
+
+/** True when the server refused because the member's free trial is over. */
+export function isTrialEnded(err: unknown): err is ApiError {
+  return err instanceof ApiError && err.status === 403 && err.code === "trial-ended";
+}
+
+/**
+ * Set once by the app shell so a "trial-ended" refusal anywhere can refresh the
+ * member's access state (react-query lives outside this module, same reasoning as
+ * the refresh handler below).
+ */
+let trialEndedHandler: (() => void) | null = null;
+export function setTrialEndedHandler(fn: (() => void) | null): void { trialEndedHandler = fn; }
 
 /**
  * Set once, by the auth provider, so this module can attempt a single silent
@@ -43,6 +62,8 @@ const NO_RETRY_PATHS = ["/api/auth/sign-in", "/api/auth/refresh", "/api/auth/sig
 async function toApiError(res: Response): Promise<ApiError> {
   let message = "Something went wrong.";
   let errors: ValidationErrors | undefined;
+  let code: string | undefined;
+  let featureKey: string | undefined;
   try {
     const body = await res.json();
     // A rejected proc/endpoint's own message reaches the client in one of three shapes,
@@ -65,8 +86,12 @@ async function toApiError(res: Response): Promise<ApiError> {
       message = body.detail;
     }
     if (body?.errors) errors = body.errors as ValidationErrors;
+    if (typeof body?.code === "string") code = body.code;
+    if (typeof body?.featureKey === "string") featureKey = body.featureKey;
   } catch { /* no JSON body, e.g. a bare 401 or 404 */ }
-  return new ApiError(res.status, message, errors);
+  const err = new ApiError(res.status, message, errors, code, featureKey);
+  if (isTrialEnded(err)) trialEndedHandler?.();
+  return err;
 }
 
 async function request<T>(path: string, init: RequestInit = {}, isRetry = false): Promise<T> {

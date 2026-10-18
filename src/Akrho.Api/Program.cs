@@ -11,6 +11,7 @@ using Akrho.Api.Features.Communications;
 using Akrho.Api.Features.Conversations;
 using Akrho.Api.Features.CouncilStatistics;
 using Akrho.Api.Features.Councils;
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Features.CouncilPermissions;
 using Akrho.Api.Features.Credential;
 using Akrho.Api.Features.Dashboard;
@@ -110,6 +111,9 @@ builder.Services.AddScoped<IChapterHoldRepository, ChapterHoldRepository>();
 builder.Services.AddScoped<IMemberPaymentTagRepository, MemberPaymentTagRepository>();
 builder.Services.AddScoped<IChapterLogoRepository, ChapterLogoRepository>();
 builder.Services.AddScoped<ICouncilPermissionRepository, CouncilPermissionRepository>();
+builder.Services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IMemberAccessService, MemberAccessService>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -285,6 +289,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.NationalAnnouncementManage, p =>
         p.RequireRole("CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.MemberPaymentTagManage, p =>
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
+    options.AddPolicy(AuthorizationPolicies.AppSettingsManage, p =>
         p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.ChapterLogoManage, p =>
         p.RequireRole("ChapterAdmin"));
@@ -496,6 +502,7 @@ app.MapIdCardExport();
 app.MapVerification();
 app.MapMemberPaymentTags();
 app.MapCouncilPermissions();
+app.MapAppSettings();
 
 // /?access_token= is honoured ONLY here (see the JwtBearerEvents.OnMessageReceived path
 // check above) — every other endpoint in this app still requires a real Authorization header.

@@ -1,3 +1,4 @@
+using Akrho.Api.Features.AppSettings;
 using Akrho.Api.Common;
 using Akrho.Infrastructure.Repositories;
 using Akrho.Infrastructure.Security;
@@ -19,7 +20,8 @@ public static class LedgerEndpoints
     public static IEndpointRouteBuilder MapLedger(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/chapters/{chapterId:int}/ledger")
-                   .WithTags("Ledger").RequireAuthorization();
+                   .WithTags("Ledger").RequireAuthorization()
+                   .RequireFeature(AppFeatures.Funds);
 
         g.MapGet("", Get).WithName("GetLedger");
         g.MapGet("/summary", GetSummary).WithName("GetLedgerSummary");

@@ -37,6 +37,7 @@ export const COUNCIL_PERMISSION = {
   CouncilMemberSearchRead: "CouncilMemberSearch.Read",
   MemberPaymentTagRead: "MemberPaymentTag.Read",
   MemberPaymentTagSet: "MemberPaymentTag.Set",
+  AppSettingsManage: "AppSettings.Manage",
 } as const;
 
 export type CouncilPermissionKeyName = typeof COUNCIL_PERMISSION[keyof typeof COUNCIL_PERMISSION];
@@ -338,4 +339,13 @@ export function canSetPaymentTags(seats: readonly CouncilSeatPermissions[]): boo
  */
 export function canManageChapterLogo(roles: readonly string[]): boolean {
   return roles.includes("ChapterAdmin");
+}
+
+/**
+ * Change the app-wide settings (the free trial). Gates on AppSettings.Manage (any seat) —
+ * National-only, held by National's President by default. Coarse client check; the API
+ * re-derives it server-side.
+ */
+export function canManageAppSettings(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.AppSettingsManage);
 }

@@ -1895,3 +1895,49 @@ export interface UpdateCouncilPermissionsRequest {
 export interface UpdateCouncilPermissionsResponse {
   changedCount: number;
 }
+
+/* ============================================================================
+ * Free trial / app settings
+ * GET /api/members/me/access, GET+PUT /api/app-settings
+ * ========================================================================== */
+
+export interface MemberAccessFeature { featureKey: string; displayName: string; isOpen: boolean }
+
+/** GET /api/members/me/access — what the signed-in member can use right now. */
+export interface MemberAccess {
+  isTrialEnabled: boolean;
+  trialDays: number;
+  trialStartedOn: string | null;
+  trialEndsOn: string | null;
+  trialDaysLeft: number;
+  isPaid: boolean;
+  isLocked: boolean;
+  membershipYear: number;
+  features: MemberAccessFeature[];
+}
+
+export interface AppSettingsFeature {
+  featureKey: string; displayName: string; description: string;
+  isAlwaysOpen: boolean; isOpenAfterTrial: boolean;
+}
+
+export interface AppSettingsPreview {
+  totalMembers: number; paidMembers: number; inTrialMembers: number; trialOverMembers: number;
+}
+
+/** GET /api/app-settings */
+export interface AppSettings {
+  isTrialEnabled: boolean;
+  trialDays: number;
+  updatedByGiftName: string | null;
+  updatedDate: string | null;
+  features: AppSettingsFeature[];
+  preview: AppSettingsPreview;
+}
+
+/** PUT /api/app-settings request body. */
+export interface UpdateAppSettingsRequest {
+  isTrialEnabled: boolean;
+  trialDays: number;
+  openFeatureKeys: string[];
+}

@@ -307,4 +307,16 @@ public static class AuthorizationPolicies
     /// President, never a parent's.
     /// </summary>
     public const string CouncilPermissionsManage = "CouncilPermissionsManage";
+
+    /// <summary>
+    /// Any council officer (coarse) — read and save the app-wide settings, currently the free
+    /// trial for members who have not paid this membership year (GET/PUT /api/app-settings).
+    /// Same all-six-roles "coarse client check, real server check" move as
+    /// <see cref="MemberPaymentTagManage"/>: WHICH National office may do it is set in National's
+    /// office permission grid via the National-only key AppSettings.Manage
+    /// (db/schema/30_app_settings_free_trial.sql; President only by default). The real gate is
+    /// usp_AppSettings_Get/_Set, each checking that key on a seat on the National Council itself
+    /// via fn_MemberSeatPermissions (51950 otherwise) — a seat on any other council never carries it.
+    /// </summary>
+    public const string AppSettingsManage = "AppSettingsManage";
 }
