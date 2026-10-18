@@ -334,7 +334,7 @@ Pass `-I` to enable it if you run `sqlcmd` directly instead of through `db-deplo
 ## 11. Staging server
 
 ```
-Site               http://itcoreapps.com:1973   (HTTPS not set up yet — plain HTTP for now)
+Site               https://alphakapparho.app   (domain on Cloudflare; moved off itcoreapps.com 2026-10-14)
 IIS site name      akp-staging-api
 Site physical path C:\inetpub\Akp-Staging              (the WEB APP root — NOT \api, see §8.11)
 API app path       C:\inetpub\Akp-Staging\api           (a nested IIS Application aliased "backend", never "api" — §8.10)

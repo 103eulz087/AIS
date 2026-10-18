@@ -448,9 +448,20 @@ internal static class ChapterRegistrationTestHelpers
         var officers = new List<ChapterCharterOfficerInput>();
         string? president = null;
 
+        // A fixed "0917{i:D3}0000" scheme (every call producing the exact same 8 numbers)
+        // used to live here — harmless as long as nothing ever let a real Approve commit
+        // against it, but the FIRST test that does (CouncilSecretary_can_approve_when_all_8_
+        // officers_are_verified) collides with EnrolmentIssueScopeTests' own long-lived fixture
+        // member on 09170000000, which sits in dbo.Member for that entire collection's run —
+        // a different xUnit collection, so it runs concurrently with this one in a full suite
+        // pass. Per-call random base keeps the 8 officers in ONE call distinct (consecutive)
+        // while making any two calls (same test, or a different fixture entirely) collide only
+        // by a roughly 1-in-8-million coincidence.
+        var callSeedBase = 1_000_000 + Random.Shared.Next(0, 8_999_991);
+
         for (var i = 0; i < offices.Count; i++)
         {
-            var mobile = $"0917{i:D3}0000";
+            var mobile = $"0917{callSeedBase + i:D7}";
             if (offices[i].OfficeName == "President") president = mobile;
 
             officers.Add(new ChapterCharterOfficerInput(

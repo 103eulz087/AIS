@@ -63,3 +63,15 @@ CREATE TYPE dbo.MemberTokenHashRow AS TABLE (
     TokenHash VARBINARY(32) NOT NULL
 );
 GO
+
+/* Council-permissions module (db/schema/28_council_permissions.sql). One row per cell a
+   caller wants to set on usp_CouncilPermission_Set's grid — (office, key) is the PK
+   because a single call never sets the same cell twice. */
+IF TYPE_ID('dbo.CouncilPermissionChangeRow') IS NULL
+CREATE TYPE dbo.CouncilPermissionChangeRow AS TABLE (
+    CouncilOfficeId INT NOT NULL,
+    PermissionKey   NVARCHAR(60) NOT NULL,
+    IsGranted       BIT NOT NULL,
+    PRIMARY KEY (CouncilOfficeId, PermissionKey)
+);
+GO

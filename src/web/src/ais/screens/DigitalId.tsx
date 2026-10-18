@@ -5,6 +5,8 @@ import { toDataURL } from "qrcode";
 import { api, type DownloadedFile } from "@/shared/api";
 import { shortDate } from "@/shared/format";
 import { ErrorState, ScreenSkeleton } from "@/shared/states";
+import { ID_CARD, NotPaidWatermark } from "@/shared/idCardTheme";
+import { ChapterMonogram } from "@/ais/screens/ChapterMonogram";
 import type { MyCredential } from "@/shared/types";
 
 /**
@@ -19,17 +21,26 @@ interface MyPhotoLookup {
 
 /**
  * A member's own Digital ID (docs/AIS-Project-Documentation.md §4.9), rendered as a
- * tap-to-flip card matching docs/AIS-Mockup.html's .idcard/.idface design:
- *   Front — photo, gift name (more prominent than the legal name, per CLAUDE.md domain
- *           vocabulary), full name, member number, chapter or council chain, date
- *           survive, blood type, status, and a validity line.
- *   Back  — the QR code resolving to the public verification page, a plain-language
- *           explanation of what scanning it shows, and the credential's issue date.
+ * tap-to-flip card. Visuals redesigned 2026-09-29 to match the client-supplied front.png/
+ * back.png ID card template — dark, emerald-green identity (ID_CARD, shared/
+ * idCardTheme.tsx), scoped to this screen and VerifyCard.tsx only; every other screen
+ * keeps the app's existing navy/brass identity.
+ *   Front — org wordmark, photo, chapter, member no., blood type, a circular chapter
+ *           mark, the Officer/Member tag, and a footer carrying the gift name (more
+ *           prominent than the legal name, per CLAUDE.md domain vocabulary).
+ *   Back  — the National Council seal, the QR code resolving to the public verification
+ *           page, a plain-language explanation of what scanning it shows, and the
+ *           credential's issue date.
  *
  * Both faces are position:absolute inside one 3D-perspective card (idCardStyle /
  * idFaceStyle); the back face is pre-rotated 180deg so it reads right-way-round once the
- * whole card turns over. There is no public verification PAGE yet — the QR's target
- * route resolves to nothing today; only the card preview is built here.
+ * whole card turns over.
+ *
+ * NOT YET PAID watermark (client decision 2026-09-29): a diagonal, non-blocking stamp on
+ * both faces when credential.isPaid is false — the standalone payment tag
+ * (dbo.MemberPaymentTagAction), never RenewedThrough. An untagged member reads as NOT
+ * paid, so this shows for the whole roster by default until National works through it.
+ * Watermark only — the card still opens and the QR still verifies either way.
  *
  * Endpoints:
  *   GET /api/members/me/credential — self-only. Idempotently self-issues the credential
@@ -48,8 +59,8 @@ interface MyPhotoLookup {
  * Profile.tsx.
  *
  * Two card designs, chosen by credential.officePosition (usp_Credential_GetOrIssueForSelf):
- *   - Member  — green and black outline.
- *   - Officer — red and black outline, plus his position (and the chapter or council he
+ *   - Member  — the emerald/black outline (ID_CARD's own identity).
+ *   - Officer — a red/black outline, plus his position (and the chapter or council he
  *               holds it in) on the front, so a seated officer is identifiable at a glance.
  * The position lives on the card face only — never in the QR or on the public
  * verification page (CLAUDE.md invariant #8).
@@ -108,6 +119,37 @@ export function DigitalId() {
 
   const credential = credentialQuery.data;
 
+  // Chapter mark, image slice (2026-09-29). Same authenticated-Blob pattern as the
+  // member photo above (chapter-logo/photo endpoints both need Authorization headers a
+  // bare <img src> would never send) — fetched only once credential.chapterLogoUrl is
+  // known to be non-null, so a chapter with no logo yet never even attempts the call.
+  const [chapterLogoObjectUrl, setChapterLogoObjectUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    async function loadChapterLogo() {
+      const url = credential?.chapterLogoUrl;
+      if (!url) {
+        setChapterLogoObjectUrl(null);
+        return;
+      }
+      try {
+        const file: DownloadedFile = await api.download(url);
+        objectUrl = URL.createObjectURL(file.blob);
+        if (!cancelled) setChapterLogoObjectUrl(objectUrl);
+      } catch {
+        if (!cancelled) setChapterLogoObjectUrl(null);
+      }
+    }
+
+    void loadChapterLogo();
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [credential?.chapterLogoUrl]);
+
   // Rendered at 220px internally so it stays crisp scaled down to the ~92px it displays
   // at on the card's back face — a raster QR only ever loses quality scaling up.
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -119,7 +161,7 @@ export function DigitalId() {
       return;
     }
     const absoluteUrl = new URL(verificationUrl, window.location.origin).toString();
-    toDataURL(absoluteUrl, { width: 220, margin: 1, color: { dark: "#0E1116", light: "#FFFFFF" } })
+    toDataURL(absoluteUrl, { width: 220, margin: 1, color: { dark: "#0B120E", light: "#FFFFFF" } })
       .then(url => { if (!cancelled) setQrDataUrl(url); })
       .catch(() => { if (!cancelled) setQrDataUrl(null); });
     return () => { cancelled = true; };
@@ -147,10 +189,17 @@ export function DigitalId() {
     ?? credential.nationalCouncilName
     ?? null;
 
+  // Only shown alongside an actual chapter name — a detached, council-homed member has
+  // no chapter to disambiguate, and "home" already fell back to this same value in that
+  // case, so repeating it would just be the same text twice.
+  const municipalityLabel = credential.chapterName
+    ? (credential.cityName ?? credential.provinceName ?? credential.regionName ?? null)
+    : null;
+
   const isOfficer = !!credential.officePosition;
   const theme = isOfficer ? OFFICER_THEME : MEMBER_THEME;
   const faceStyle: CSSProperties = { ...idFaceStyle, border: `2px solid ${theme.accent}` };
-  const strip: CSSProperties = { ...stripStyle, background: theme.stripBg, borderTop: `1px solid ${theme.accent}`, color: theme.soft };
+  const footerThemed: CSSProperties = { ...footerStyle, background: theme.stripBg, borderTop: `1px solid ${theme.accent}` };
 
   return (
     <div style={{ padding: "20px 16px 40px" }}>
@@ -184,89 +233,143 @@ export function DigitalId() {
           <div style={{ ...idCardStyle, transform: flipped ? "rotateY(180deg)" : undefined }}>
             {/* Front */}
             <div style={faceStyle}>
-              <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-                <div style={{ ...sealStyle, borderColor: theme.accent, color: theme.accent }}>ΑΚΡ</div>
+              <NotPaidWatermark isPaid={credential.isPaid} />
+              <div style={headerRowStyle}>
+                <div style={wordmarkStyle}>AIS</div>
                 <div style={{ minWidth: 0, flex: 1 }}>
-                  <div style={{ fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".2em", color: theme.accent }}>
-                    ALPHA KAPPA RHO
-                  </div>
-                  {home && (
-                    <div style={{ fontSize: 10, letterSpacing: ".1em", color: "#8B95A3", marginTop: 1 }}>
-                      {home.toUpperCase()}
+                  <div style={orgLineStyle}>ALPHA KAPPA RHO</div>
+                  <div style={sysLineStyle}>INFORMATION SYSTEM</div>
+                  <div style={cardLineStyle}>MEMBER IDENTIFICATION CARD</div>
+                </div>
+                {/* The National Council seal — same placement as the back face's own
+                    header, top-right aligned with the AIS wordmark. */}
+                <img src="/national-seal.jpg" alt="AKRHO National Council seal" style={nationalSealStyle} />
+              </div>
+              <div style={dividerStyle} />
+
+              {/* Member No., Blood type and Chapter beside the photo (client decision
+                  2026-09-30), the full name — and, for a seated officer, his position —
+                  at the TOP of that column, aligned with the photo's own top edge; the
+                  chapter mark and the Officer/Member tag share this same row too. */}
+              <div style={{ display: "flex", gap: 14, marginTop: 14, alignItems: "flex-start" }}>
+                <Photo objectUrl={photoObjectUrl} loading={photoLoading} giftName={credential.giftName} accent={theme.accent} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={topNameStyle}>{credential.fullName}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 6 }}>
+                    <Meta label="Chapter" value={home ?? "—"} />
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                      <Meta label="Member no." value={credential.memberNumber} mono />
+                      {credential.bloodTypeName && (
+                        <div style={{ textAlign: "right" }}>
+                          <Meta label="Blood" value={credential.bloodTypeName} mono />
+                        </div>
+                      )}
                     </div>
+                  </div>
+                </div>
+                {/* The chapter mark — for ownership, per the chapter's own choice.
+                    Borderless/no background whenever a real logo is on file, so a
+                    transparent-background upload's own artwork shows through with
+                    nothing added (client decision 2026-09-29); falls back to the
+                    generated initials-and-accent monogram until the President uploads
+                    one. */}
+                <div style={{ flex: "none" }}>
+                  {chapterLogoObjectUrl ? (
+                    <img src={chapterLogoObjectUrl} alt={`${home ?? "Chapter"} logo`} style={chapterLogoStyle} />
+                  ) : (
+                    <ChapterMonogram
+                      chapterName={home ?? ""}
+                      hexValue={credential.chapterMarkAccentHex ?? ID_CARD.accentDim}
+                      size={40}
+                    />
                   )}
                 </div>
+              </div>
+
+              {/* The Officer/Member tag — moved outside the footer (client decision
+                  2026-10-06), sitting just above its coloured top border rather than
+                  inside the footer's own padding. */}
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
                 <div style={{ ...roleTagStyle, background: theme.accent }}>
                   {isOfficer ? "Officer" : "Member"}
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: 14 }}>
-                <Photo objectUrl={photoObjectUrl} loading={photoLoading} giftName={credential.giftName} accent={theme.accent} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".04em",
-                    color: "var(--paper)", lineHeight: 1,
-                  }}>
-                    {credential.giftName}
-                  </div>
-                  <div style={{ fontSize: 12, color: "#98A2B0", marginTop: 4 }}>{credential.fullName}</div>
+              <div style={footerThemed}>
+                {/* Chapter name, prominent — gift name moved to the back (client
+                    decision 2026-10-06; it's already shown here on the front, in the
+                    Chapter field beside the photo, so showing it again would be
+                    redundant). Chapters are named with Greek letters and the same
+                    Greek name can recur in different municipalities, so the
+                    municipality/city is shown right below it to disambiguate. */}
+                <div style={{ minWidth: 0 }}>
+                  <div style={giftNameFooterStyle}>{credential.chapterName ?? home ?? "—"}</div>
+                  {credential.chapterName && municipalityLabel && (
+                    <div style={footerSubTextStyle}>{municipalityLabel}</div>
+                  )}
+                </div>
+                <div style={{ textAlign: "right", flex: "none" }}>
                   {isOfficer && (
-                    <div style={{ ...positionStyle, color: theme.accent }}>
+                    <div style={{ ...positionStyle, color: theme.accent, marginTop: 0 }}>
                       {credential.officePosition}
-                      {credential.officeBody && (
-                        <span style={{ color: theme.soft, fontWeight: 400 }}> · {credential.officeBody}</span>
-                      )}
                     </div>
                   )}
-
-                  <div style={metaGridStyle}>
-                    <Meta label="Member no." value={credential.memberNumber} mono color={theme.soft} />
-                    {credential.bloodTypeName && <Meta label="Blood" value={credential.bloodTypeName} mono color={theme.soft} />}
-                    {credential.dateSurvive && <Meta label="Date survive" value={shortDate(credential.dateSurvive)} color={theme.soft} />}
-                    <Meta label="Status" value={credential.statusName} color={theme.soft} />
-                  </div>
+                  {isOfficer && credential.officeBody && (
+                    <div style={{ fontSize: 10, color: theme.soft }}>{credential.officeBody}</div>
+                  )}
                 </div>
-              </div>
-
-              <div style={strip}>
-                <span>{home ?? ""}</span>
-                {credential.renewedThrough && <span>Renewed through {shortDate(credential.renewedThrough)}</span>}
               </div>
             </div>
 
             {/* Back */}
             <div style={{ ...faceStyle, ...idFaceBackStyle }}>
-              <div style={{ display: "flex", gap: 12, padding: "16px 16px 0" }}>
+              <NotPaidWatermark isPaid={credential.isPaid} />
+              <div style={headerRowStyle}>
+                <div style={wordmarkStyle}>AIS</div>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={orgLineStyle}>VERIFICATION</div>
+                  <div style={sysLineStyle}>ALPHA KAPPA RHO INFORMATION SYSTEM</div>
+                </div>
+                {/* The National Council seal — same on every member's card, every
+                    chapter, unlike the chapter-specific mark on the front face. */}
+                <img src="/national-seal.jpg" alt="AKRHO National Council seal" style={nationalSealStyle} />
+              </div>
+              <div style={dividerStyle} />
+
+              <div style={{ display: "flex", gap: 14, marginTop: 14 }}>
+                <div style={{ flex: 1, fontSize: 11, lineHeight: 1.6, color: ID_CARD.muted }}>
+                  <p style={{ color: ID_CARD.white, fontSize: 13, fontWeight: 600, margin: "0 0 6px" }}>
+                    Scan to verify this card.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Opens a public page showing photo, name, chapter and current status.
+                    No personal data is stored in the code.
+                  </p>
+                  <p style={{ color: theme.accent, fontSize: 10, letterSpacing: ".14em", margin: "12px 0 4px" }}>
+                    IF FOUND
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Return to the chapter secretary or any AKRHO council office.
+                  </p>
+                </div>
                 {qrDataUrl ? (
-                  <img src={qrDataUrl} alt="Verification QR code" width={92} height={92} style={{ flex: "none", borderRadius: 6 }} />
+                  <img src={qrDataUrl} alt="Verification QR code" width={88} height={88} style={{ flex: "none", borderRadius: 6 }} />
                 ) : (
                   <div style={{
-                    width: 92, height: 92, flex: "none", borderRadius: 6, background: "var(--paper)",
-                    display: "grid", placeItems: "center", color: "var(--mute)", fontSize: 10.5, textAlign: "center",
+                    width: 88, height: 88, flex: "none", borderRadius: 6, background: ID_CARD.white,
+                    display: "grid", placeItems: "center", color: "#5C6A63", fontSize: 10, textAlign: "center",
                   }}>
                     Preparing…
                   </div>
                 )}
-                <div style={{ fontSize: 10.5, lineHeight: 1.55, color: "#98A2B0" }}>
-                  <b style={{
-                    display: "block", fontFamily: "var(--f-disp)", fontSize: 12, letterSpacing: ".16em",
-                    color: theme.accent, textTransform: "uppercase", marginBottom: 5,
-                  }}>
-                    Verify this ID
-                  </b>
-                  Scan to open the public verification page. The code is an anonymous link
-                  — it carries no personal details of its own.
-                  <br /><br />
-                  The page shows only photo, gift name, chapter and current status. Nothing else.
-                  <br /><br />
-                  If this card is found, please return it to the chapter Secretary.
-                </div>
               </div>
 
-              <div style={strip}>
-                <span>Issued {shortDate(credential.credentialIssuedDateUtc)}</span>
-                <span>{home ? `${home.toUpperCase()} · AIS` : "AIS DIGITAL ID"}</span>
+              <div style={footerThemed}>
+                <span style={footerTextStyle}>Issued {shortDate(credential.credentialIssuedDateUtc)}</span>
+                {/* Gift name — moved here from the chapter/home display (client decision
+                    2026-10-06): the chapter is already shown prominently on the front,
+                    so the back carries the member's own identity instead. */}
+                <span style={footerTextStyle}>{credential.giftName}</span>
               </div>
             </div>
           </div>
@@ -299,19 +402,20 @@ function Photo({ objectUrl, loading, giftName, accent }: {
   );
 }
 
-function Meta({ label, value, mono, color }: { label: string; value: string; mono?: boolean; color: string }) {
+function Meta({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
       <div style={metaLabelStyle}>{label}</div>
-      <div className={mono ? "num" : undefined} style={{ ...metaValueStyle, color }}>{value}</div>
+      <div className={mono ? "num" : undefined} style={metaValueStyle}>{value}</div>
     </div>
   );
 }
 
 // The flip card: two absolutely-positioned faces sharing one 3D-perspective stage, the
-// back pre-rotated 180deg so it reads right-way-round once the whole card turns over.
-// A fixed minHeight is required — position:absolute faces contribute no size of their
-// own to the container, so without one the card would collapse to zero height.
+// back pre-rotated 180deg so it reads right-way-round once the whole card turns over. A
+// fixed minHeight is required — position:absolute faces contribute no size of their own
+// to the container, so without one the card would collapse to zero height. 262, not 250
+// — tall enough for an officer card's extra position line.
 const idStageStyle: CSSProperties = { perspective: 1400 };
 
 const idCardButtonStyle: CSSProperties = {
@@ -324,8 +428,10 @@ const idCardStyle: CSSProperties = {
   transition: "transform .6s cubic-bezier(.4,.1,.2,1)",
 };
 
-// Member = green and black, officer = red and black. The card body is black for both;
-// the accent (outline, seal, strip, photo frame, labels) is what tells them apart.
+// Member = ID_CARD's own emerald identity; officer = red, so a seated officer's card is
+// identifiable at a glance (client decision, Search-the-queue/officer-card slice). The
+// card body/background is the same ID_CARD.bg for both — only the accent (outline, role
+// tag, position line, photo frame, footer tint) tells them apart.
 const MEMBER_THEME = {
   accent: "var(--id-member)", soft: "var(--id-member-soft)", stripBg: "rgba(47,165,98,.16)",
 };
@@ -335,10 +441,9 @@ const OFFICER_THEME = {
 
 const idFaceStyle: CSSProperties = {
   position: "absolute", inset: 0, backfaceVisibility: "hidden", borderRadius: 14,
-  overflow: "hidden", padding: "16px 16px 32px",
-  background: "linear-gradient(160deg, #1C1F1E 0%, #121413 55%, var(--id-black) 100%)",
-  color: "var(--bond)",
-  boxShadow: "0 14px 34px rgba(0,0,0,.35)",
+  overflow: "hidden", padding: "16px 16px 40px",
+  background: ID_CARD.bg, color: ID_CARD.white,
+  boxShadow: "0 14px 34px rgba(0,0,0,.45)",
 };
 
 const roleTagStyle: CSSProperties = {
@@ -348,7 +453,7 @@ const roleTagStyle: CSSProperties = {
 
 const positionStyle: CSSProperties = {
   fontFamily: "var(--f-disp)", fontSize: 13, fontWeight: 600, letterSpacing: ".1em",
-  textTransform: "uppercase", marginTop: 6,
+  textTransform: "uppercase", marginTop: 4,
 };
 
 const idFaceBackStyle: CSSProperties = { transform: "rotateY(180deg)" };
@@ -357,29 +462,81 @@ const flipHintStyle: CSSProperties = {
   textAlign: "center", fontSize: 11.5, color: "var(--mute)", marginTop: 11, letterSpacing: ".03em",
 };
 
-const sealStyle: CSSProperties = {
-  width: 30, height: 30, borderRadius: "50%", border: "1.5px solid",
-  display: "grid", placeItems: "center", fontFamily: "var(--f-disp)", fontSize: 12,
-  fontWeight: 700, flex: "none",
+const headerRowStyle: CSSProperties = { display: "flex", alignItems: "center", gap: 10 };
+
+const wordmarkStyle: CSSProperties = {
+  fontFamily: "var(--f-disp)", fontSize: 26, fontWeight: 700, letterSpacing: ".01em",
+  color: ID_CARD.accent, flex: "none", lineHeight: 1,
+};
+
+const orgLineStyle: CSSProperties = {
+  fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".12em", color: ID_CARD.white, fontWeight: 700,
+};
+
+const sysLineStyle: CSSProperties = {
+  fontSize: 10, letterSpacing: ".1em", color: ID_CARD.accent, marginTop: 1,
+};
+
+const cardLineStyle: CSSProperties = {
+  fontSize: 8.5, letterSpacing: ".1em", color: ID_CARD.muted, marginTop: 1,
+};
+
+const dividerStyle: CSSProperties = {
+  height: 1, background: ID_CARD.border, marginTop: 10,
+};
+
+// Scaled slightly over 100% before the circular clip — the source artwork is a circular
+// badge with a thin white margin baked into its square canvas; a straight object-fit:
+// cover at 100% would leave a sliver of that white square showing at the mask's corners.
+const nationalSealStyle: CSSProperties = {
+  width: 40, height: 40, borderRadius: "50%", flex: "none",
+  objectFit: "cover", transform: "scale(1.12)",
+  border: `1.5px solid ${ID_CARD.accent}`,
+};
+
+// No border, no background fill — a transparent PNG logo shows only its own artwork,
+// with nothing added by this card (the "borderless" requirement 2026-09-29). Bounded by
+// max- rather than fixed width/height so a non-square logo isn't stretched or cropped.
+const chapterLogoStyle: CSSProperties = {
+  maxWidth: 44, maxHeight: 44, objectFit: "contain", flex: "none",
 };
 
 const photoStyle: CSSProperties = {
-  width: 72, height: 88, borderRadius: 8, flex: "none",
-  background: "#1E2220",
+  width: 66, height: 82, borderRadius: 8, flex: "none",
+  background: "#152019",
 };
 
-const metaGridStyle: CSSProperties = {
-  display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 12px", marginTop: 12,
+// Aligned with the photo's own top edge (the row's alignItems:"flex-start" is what
+// makes that alignment hold) — client decision 2026-09-30: never below the photo.
+const topNameStyle: CSSProperties = {
+  fontSize: 13, color: ID_CARD.white, fontWeight: 600, lineHeight: 1.3,
 };
 
 const metaLabelStyle: CSSProperties = {
   fontFamily: "var(--f-disp)", fontSize: 9.5, letterSpacing: ".14em", textTransform: "uppercase",
-  color: "#6F7A88",
+  color: ID_CARD.muted,
 };
 
-const metaValueStyle: CSSProperties = { fontSize: 12, marginTop: 2 };
+const metaValueStyle: CSSProperties = {
+  fontSize: 13, color: ID_CARD.white, marginTop: 2, fontWeight: 600,
+};
 
-const stripStyle: CSSProperties = {
-  position: "absolute", left: 0, right: 0, bottom: 0, padding: "8px 16px",
-  display: "flex", justifyContent: "space-between", gap: 10, fontSize: 10.5, letterSpacing: ".05em",
+const footerStyle: CSSProperties = {
+  position: "absolute", left: 0, right: 0, bottom: 0, padding: "9px 16px",
+  background: ID_CARD.footerBg, borderTop: `1px solid ${ID_CARD.border}`,
+  display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10,
+};
+
+const giftNameFooterStyle: CSSProperties = {
+  fontFamily: "var(--f-disp)", fontSize: 18, letterSpacing: ".04em", color: ID_CARD.white,
+  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+};
+
+const footerSubTextStyle: CSSProperties = {
+  fontSize: 10.5, color: ID_CARD.accentSoft, marginTop: 1,
+  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+};
+
+const footerTextStyle: CSSProperties = {
+  fontSize: 10, letterSpacing: ".05em", color: ID_CARD.accentSoft,
 };

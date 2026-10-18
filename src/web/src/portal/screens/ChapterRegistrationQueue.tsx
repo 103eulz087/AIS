@@ -32,9 +32,10 @@ function typeLabel(name: string): string {
  * usp_ChapterRegistration_GetQueue's own @RequestingMemberId derivation, never anything
  * this screen supplies — CLAUDE.md invariant #4/#11).
  *
- * canReviewChapterRegistrations (CouncilSecretary or CouncilAdmin) gates the whole
- * screen — anyone else sees a plain "you don't have access" state, same pattern as
- * ApplicationQueue's own canApproveApplications gate.
+ * canReviewChapterRegistrations (the caller's own ChapterRegistration.Review permission,
+ * on any council seat — phase 1 "dynamic council office permissions", 2026-10-17) gates
+ * the whole screen — anyone else sees a plain "you don't have access" state, same pattern
+ * as ApplicationQueue's own canApproveApplications gate.
  *
  * The search box narrows the SAME scoped queue by chapter name, reference number, or an
  * officer named on the filing (gift name, name, member number) — matched server-side in
@@ -43,8 +44,7 @@ function typeLabel(name: string): string {
  */
 export function ChapterRegistrationQueue() {
   const { claims } = useAuth();
-  const roles = claims?.roles ?? [];
-  const canReview = canReviewChapterRegistrations(roles);
+  const canReview = canReviewChapterRegistrations(claims?.councilSeats ?? []);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const statusId = searchParams.get("statusId") ?? "";

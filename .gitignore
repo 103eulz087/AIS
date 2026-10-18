@@ -10,3 +10,6 @@ appsettings.Production.json
 *.pfx
 uploads/
 TestResults/
+
+# Zipped deployment bundles are too large for GitHub (publish/api.zip was 172 MB)
+publish/*.zip

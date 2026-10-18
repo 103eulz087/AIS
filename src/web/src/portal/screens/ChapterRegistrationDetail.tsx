@@ -5,7 +5,7 @@ import { api, ApiError } from "@/shared/api";
 import { shortDate, shortTime } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
-import { canApproveChapterRegistrations, canReissueEnrolmentLink, canReviewChapterRegistrations } from "@/shared/roles";
+import { canReissueEnrolmentLink, canReviewChapterRegistrations } from "@/shared/roles";
 import type {
   ApproveChapterRegistrationResponse, ChapterRegistrationDetail as ChapterRegistrationDetailModel,
   ChapterRegistrationOfficer, ReissueMemberEnrolmentLinkResponse,
@@ -48,13 +48,17 @@ function routingExplanation(reason: string, intendedCouncilName: string | null, 
  * nonexistent id and for one acting at a council this caller has no standing over, so a
  * 404 here is rendered as one plain message either way.
  *
- * canReviewChapterRegistrations (CouncilSecretary or CouncilAdmin) gates the whole
- * screen. Within it, canApproveChapterRegistrations (CouncilAdmin only) additionally
- * gates the Approve action alone — a Secretary sees the full checklist and can verify
- * every officer, but the Approve button itself is disabled with a stated reason for him.
- * The server enforces the real gate regardless (usp_ChapterRegistration_Approve's own
- * "Only this council's President may give final approval" check) — canApprove here only
- * decides what to SHOW.
+ * canReviewChapterRegistrations (the caller's own ChapterRegistration.Review permission,
+ * on any council seat) gates the whole screen. Which of the three decision controls
+ * actually render — Verify, Approve, Return — is driven by data.canVerify/canApprove/
+ * canReturn, direct-seat checks the detail endpoint already computed against THIS
+ * registration's own acting council (phase 1 "dynamic council office permissions",
+ * 2026-10-17) — never re-derived client-side, and combined with statusName === "Submitted"
+ * (an already-decided registration offers none of the three regardless). This replaces
+ * the old "CouncilSecretary or CouncilAdmin, same role set end to end" posture: a
+ * council's own President can now grant Verify without Approve, or vice versa, to any
+ * office — the server enforces the real gate regardless either way
+ * (usp_ChapterRegistration_Approve/_VerifyOfficer/_Return's own matching permission checks).
  *
  * POST .../officers/{officerId}/verify, .../return and .../approve act on this
  * registration. Approve's response carries the enrolment link(s) SHOW-ONCE: Charter -> a
@@ -68,8 +72,7 @@ export function ChapterRegistrationDetail() {
 
   const { claims } = useAuth();
   const roles = claims?.roles ?? [];
-  const canReview = canReviewChapterRegistrations(roles);
-  const canApprove = canApproveChapterRegistrations(roles);
+  const canReview = canReviewChapterRegistrations(claims?.councilSeats ?? []);
   const canReissue = canReissueEnrolmentLink(roles);
 
   const { data, error, isLoading, refetch } = useQuery({
@@ -136,7 +139,16 @@ export function ChapterRegistrationDetail() {
 
   const verifiedCount = data.officers.filter(o => o.verifiedBy !== null).length;
   const allVerified = data.officers.length > 0 && verifiedCount === data.officers.length;
-  const canDecide = data.statusName === "Submitted";
+  // Each decision control is gated by BOTH the per-registration permission the detail
+  // endpoint already computed (data.canVerify/canApprove/canReturn — a direct-seat check
+  // against this registration's own acting council, phase 1 "dynamic council office
+  // permissions") AND the status condition: an already-decided registration offers none
+  // of the three regardless of what the seat holds.
+  const isSubmitted = data.statusName === "Submitted";
+  const canVerifyNow = data.canVerify && isSubmitted;
+  const canApproveNow = data.canApprove && isSubmitted;
+  const canReturnNow = data.canReturn && isSubmitted;
+  const canDecideAny = canApproveNow || canReturnNow;
   const routingNote = data.routing
     ? routingExplanation(data.routing.routingReason, data.intendedCouncilName, data.actingCouncilName)
     : (data.routingReason && data.routingReason !== "Parent"
@@ -287,9 +299,9 @@ export function ChapterRegistrationDetail() {
               noteDraft={noteDrafts[o.registrationOfficerId] ?? o.verifyNote ?? ""}
               onNoteChange={v => setNoteDrafts(prev => ({ ...prev, [o.registrationOfficerId]: v }))}
               busy={verifyingId === o.registrationOfficerId}
-              canAct={canDecide}
+              canAct={canVerifyNow}
               onVerify={verified => { void handleVerify(o, verified); }}
-              canReissue={canReissue && !canDecide}
+              canReissue={canReissue && !isSubmitted}
               targetMemberId={targetMemberId}
               reissuing={targetMemberId !== null && reissuingMemberId === targetMemberId}
               reissueResult={targetMemberId !== null ? reissueResults[targetMemberId] : undefined}
@@ -308,7 +320,7 @@ export function ChapterRegistrationDetail() {
         })}
       </div>
 
-      {data.decisionReason && !canDecide && (
+      {data.decisionReason && !isSubmitted && (
         <div style={sectionStyle}>
           <div style={sectionLabelStyle}>Decision</div>
           <div style={cardStyle}>
@@ -317,16 +329,11 @@ export function ChapterRegistrationDetail() {
         </div>
       )}
 
-      {canDecide && (
+      {canDecideAny && (
         <div style={sectionStyle}>
           {approveError && <p role="alert" style={errorTextStyle}>{approveError}</p>}
 
-          {!canApprove ? (
-            <p style={approveGateNoteStyle}>
-              Only a council admin (president) can give final approval. You can verify officers and
-              return this for correction, but the Approve action isn't available to you.
-            </p>
-          ) : !confirmingApprove ? (
+          {canApproveNow && (!confirmingApprove ? (
             <button
               type="button" disabled={!allVerified}
               title={allVerified ? undefined : `${verifiedCount} of ${data.officers.length} verified — every officer must be verified first.`}
@@ -357,42 +364,44 @@ export function ChapterRegistrationDetail() {
                 </button>
               </div>
             </div>
+          ))}
+
+          {canReturnNow && (
+            <div style={{ marginTop: 12 }}>
+              {!returnOpen ? (
+                <button type="button" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
+                  Return with a remark
+                </button>
+              ) : (
+                <form onSubmit={e => { void handleReturn(e); }} style={{ marginTop: 10 }}>
+                  <label htmlFor="returnReason" style={labelStyle}>Reason for returning</label>
+                  <textarea
+                    id="returnReason" value={returnReason} onChange={e => setReturnReason(e.target.value)}
+                    rows={3} style={{ ...fieldStyle, height: "auto", padding: 12 }}
+                  />
+                  <p style={hintStyle}>At least 10 characters — this will be shown to the chapter.</p>
+
+                  {returnError && <p role="alert" style={errorTextStyle}>{returnError}</p>}
+
+                  <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                    <button
+                      type="button"
+                      onClick={() => { setReturnOpen(false); setReturnReason(""); setReturnError(null); }}
+                      style={ghostButtonStyle}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit" disabled={returning || returnReason.trim().length < 10}
+                      style={{ ...primaryButtonStyle, opacity: returning ? 0.7 : 1 }}
+                    >
+                      {returning ? "Returning…" : "Return with a remark"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           )}
-
-          <div style={{ marginTop: 12 }}>
-            {!returnOpen ? (
-              <button type="button" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
-                Return with a remark
-              </button>
-            ) : (
-              <form onSubmit={e => { void handleReturn(e); }} style={{ marginTop: 10 }}>
-                <label htmlFor="returnReason" style={labelStyle}>Reason for returning</label>
-                <textarea
-                  id="returnReason" value={returnReason} onChange={e => setReturnReason(e.target.value)}
-                  rows={3} style={{ ...fieldStyle, height: "auto", padding: 12 }}
-                />
-                <p style={hintStyle}>At least 10 characters — this will be shown to the chapter.</p>
-
-                {returnError && <p role="alert" style={errorTextStyle}>{returnError}</p>}
-
-                <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                  <button
-                    type="button"
-                    onClick={() => { setReturnOpen(false); setReturnReason(""); setReturnError(null); }}
-                    style={ghostButtonStyle}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit" disabled={returning || returnReason.trim().length < 10}
-                    style={{ ...primaryButtonStyle, opacity: returning ? 0.7 : 1 }}
-                  >
-                    {returning ? "Returning…" : "Return with a remark"}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
         </div>
       )}
 
@@ -657,11 +666,6 @@ const fieldStyle: CSSProperties = {
 const hintStyle: CSSProperties = { fontSize: 12, color: "var(--mute)", marginTop: 6 };
 
 const errorTextStyle: CSSProperties = { fontSize: 13, color: "var(--out)", lineHeight: 1.5, marginBottom: 10 };
-
-const approveGateNoteStyle: CSSProperties = {
-  fontSize: 13, color: "var(--slate)", lineHeight: 1.6, padding: 12, borderRadius: "var(--r)",
-  background: "var(--bond)", border: "1px solid var(--line)",
-};
 
 const ghostButtonStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 18px", borderRadius: 8, border: "1px solid var(--line)",

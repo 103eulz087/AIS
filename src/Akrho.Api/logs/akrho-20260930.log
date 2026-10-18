@@ -1,0 +1,21 @@
+2026-09-30 09:01:54.381 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.0910 ms
+2026-09-30 09:01:54.386 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1271 ms
+2026-09-30 09:23:25.365 +08:00 [INF] Application is shutting down...
+2026-09-30 09:23:25.366 +08:00 [DBG] Hosting stopping
+2026-09-30 09:23:25.375 +08:00 [DBG] Hosting stopped
+2026-09-30 09:23:30.119 +08:00 [DBG] Hosting starting
+2026-09-30 09:23:30.492 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-30 09:23:30.496 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-30 09:23:30.497 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-30 09:23:30.497 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-30 09:23:30.497 +08:00 [INF] Hosting environment: Development
+2026-09-30 09:23:30.497 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-30 09:23:30.497 +08:00 [DBG] Hosting started
+2026-09-30 09:23:34.610 +08:00 [INF] HTTP GET /health responded 200 in 20.1182 ms
+2026-09-30 09:24:38.910 +08:00 [INF] HTTP POST /api/members/me/chapter-logo/stage responded 200 in 1030.4050 ms
+2026-09-30 09:24:39.068 +08:00 [INF] HTTP POST /api/members/me/chapter-logo responded 200 in 118.6123 ms
+2026-09-30 09:24:39.182 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 77.5070 ms
+2026-09-30 09:24:39.229 +08:00 [INF] HTTP POST /api/members/me/chapter-logo/stage responded 400 in 1.0081 ms
+2026-09-30 09:25:07.431 +08:00 [INF] Application is shutting down...
+2026-09-30 09:25:07.431 +08:00 [DBG] Hosting stopping
+2026-09-30 09:25:07.434 +08:00 [DBG] Hosting stopped

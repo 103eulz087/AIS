@@ -16,6 +16,7 @@ import {
 import { Navigate, useLocation } from "react-router-dom";
 import { api, setAccessToken, setRefreshHandler } from "@/shared/api";
 import { ScreenSkeleton } from "@/shared/states";
+import type { CouncilSeatPermissions } from "@/shared/types";
 
 export interface Claims {
   memberId: number;
@@ -24,6 +25,12 @@ export interface Claims {
   chapterName: string | null;
   giftName: string;
   roles: string[];
+  /** Every council seat the caller currently holds, each with the permission keys that
+   * seat's office actually carries (phase 1 "dynamic council office permissions",
+   * 2026-10-17) — empty for a plain chapter member. shared/roles.ts's council-facing
+   * helpers gate on THIS, never on roles alone; see CouncilSeatPermissions's own doc
+   * comment in shared/types.ts. */
+  councilSeats: CouncilSeatPermissions[];
 }
 
 interface MeResponse {
@@ -32,6 +39,10 @@ interface MeResponse {
   chapterName: string | null;
   giftName: string;
   roles: string[];
+  /** Absent on an older cached response or a test stub that hasn't been updated yet —
+   * loadClaims below always defaults it to [], never undefined, so nothing downstream
+   * has to guard against a missing array. */
+  councilSeats?: CouncilSeatPermissions[];
 }
 
 interface SignInResponse {
@@ -48,6 +59,11 @@ interface AuthContextValue {
   signIn: (identifier: string, password: string) => Promise<void>;
   completeEnrolment: (token: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  /** Re-fetches GET /api/auth/me without touching the session/token — used after an
+   * action that changes what the CALLER himself may do (e.g. saving his own council's
+   * permission grid), so the nav and every gated screen pick up the new councilSeats
+   * immediately rather than waiting for the next sign-in or silent refresh. */
+  reloadClaims: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -76,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loadClaims = useCallback(async () => {
     const me = await api.get<MeResponse>("/api/auth/me");
-    setClaims(me);
+    setClaims({ ...me, councilSeats: me.councilSeats ?? [] });
   }, []);
 
   // Used both to restore a session on load and as the 401 retry handler api.ts calls —
@@ -136,8 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [settleSignedOut]);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ session, claims, signIn, completeEnrolment, signOut }),
-    [session, claims, signIn, completeEnrolment, signOut],
+    () => ({ session, claims, signIn, completeEnrolment, signOut, reloadClaims: loadClaims }),
+    [session, claims, signIn, completeEnrolment, signOut, loadClaims],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

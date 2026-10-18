@@ -1,18 +1,21 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v8.0",
+    "name": ".NETCoreApp,Version=v8.0/win-x64",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v8.0": {
+    ".NETCoreApp,Version=v8.0": {},
+    ".NETCoreApp,Version=v8.0/win-x64": {
       "Akrho.Api/1.0.0": {
         "dependencies": {
           "Akrho.Infrastructure": "1.0.0",
-          "ClosedXML": "0.104.2",
           "FluentValidation.AspNetCore": "11.3.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.10",
+          "NPOI": "2.8.1",
+          "QRCoder": "1.6.0",
           "Serilog.AspNetCore": "8.0.3",
+          "SkiaSharp": "4.152.1",
           "Swashbuckle.AspNetCore": "6.8.1"
         },
         "runtime": {
@@ -46,26 +49,11 @@
           }
         }
       },
-      "ClosedXML/0.104.2": {
-        "dependencies": {
-          "ClosedXML.Parser": "1.2.0",
-          "DocumentFormat.OpenXml": "3.1.1",
-          "ExcelNumberFormat": "1.1.0",
-          "RBush": "4.0.0",
-          "SixLabors.Fonts": "1.0.0"
-        },
+      "BouncyCastle.Cryptography/2.6.2": {
         "runtime": {
-          "lib/netstandard2.1/ClosedXML.dll": {
-            "assemblyVersion": "0.104.2.0",
-            "fileVersion": "0.104.2.0"
-          }
-        }
-      },
-      "ClosedXML.Parser/1.2.0": {
-        "runtime": {
-          "lib/netstandard2.1/ClosedXML.Parser.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+          "lib/net6.0/BouncyCastle.Cryptography.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.6.2.46322"
           }
         }
       },
@@ -77,33 +65,19 @@
           }
         }
       },
-      "DocumentFormat.OpenXml/3.1.1": {
-        "dependencies": {
-          "DocumentFormat.OpenXml.Framework": "3.1.1"
-        },
+      "Enums.NET/5.0.0": {
         "runtime": {
-          "lib/net8.0/DocumentFormat.OpenXml.dll": {
-            "assemblyVersion": "3.1.1.0",
-            "fileVersion": "3.1.1.0"
+          "lib/net7.0/Enums.NET.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
           }
         }
       },
-      "DocumentFormat.OpenXml.Framework/3.1.1": {
-        "dependencies": {
-          "System.IO.Packaging": "8.0.1"
-        },
+      "ExtendedNumerics.BigDecimal/2025.1001.2.129": {
         "runtime": {
-          "lib/net8.0/DocumentFormat.OpenXml.Framework.dll": {
-            "assemblyVersion": "3.1.1.0",
-            "fileVersion": "3.1.1.0"
-          }
-        }
-      },
-      "ExcelNumberFormat/1.1.0": {
-        "runtime": {
-          "lib/netstandard2.0/ExcelNumberFormat.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
+          "lib/net8.0/ExtendedNumerics.BigDecimal.dll": {
+            "assemblyVersion": "2025.1001.2.129",
+            "fileVersion": "2025.1001.2.129"
           }
         }
       },
@@ -158,6 +132,14 @@
           }
         }
       },
+      "MathNet.Numerics.Signed/5.0.0": {
+        "runtime": {
+          "lib/net6.0/MathNet.Numerics.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.10": {
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "7.1.2"
@@ -196,6 +178,17 @@
           }
         }
       },
+      "Microsoft.Bcl.Cryptography/10.0.10": {
+        "dependencies": {
+          "System.Formats.Asn1": "10.0.10"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Bcl.Cryptography.dll": {
+            "assemblyVersion": "10.0.0.10",
+            "fileVersion": "10.0.1026.32716"
+          }
+        }
+      },
       "Microsoft.Data.SqlClient/5.2.2": {
         "dependencies": {
           "Azure.Identity": "1.11.4",
@@ -208,7 +201,7 @@
           "System.Runtime.Caching": "8.0.0"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Data.SqlClient.dll": {
+          "runtimes/win/lib/net8.0/Microsoft.Data.SqlClient.dll": {
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.22.24240.6"
           }
@@ -244,42 +237,11 @@
           "lib/net8.0/zh-Hant/Microsoft.Data.SqlClient.resources.dll": {
             "locale": "zh-Hant"
           }
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/net8.0/Microsoft.Data.SqlClient.dll": {
-            "rid": "unix",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.22.24240.6"
-          },
-          "runtimes/win/lib/net8.0/Microsoft.Data.SqlClient.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.22.24240.6"
-          }
         }
       },
       "Microsoft.Data.SqlClient.SNI.runtime/5.2.0": {
-        "runtimeTargets": {
-          "runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-arm",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-arm64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
+        "native": {
           "runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll": {
-            "rid": "win-x86",
-            "assetType": "native",
             "fileVersion": "0.0.0.0"
           }
         }
@@ -472,6 +434,14 @@
           }
         }
       },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
+          }
+        }
+      },
       "Microsoft.OpenApi/1.6.14": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {
@@ -488,11 +458,43 @@
           }
         }
       },
-      "RBush/4.0.0": {
+      "NPOI/2.8.1": {
+        "dependencies": {
+          "BouncyCastle.Cryptography": "2.6.2",
+          "Enums.NET": "5.0.0",
+          "ExtendedNumerics.BigDecimal": "2025.1001.2.129",
+          "MathNet.Numerics.Signed": "5.0.0",
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "SharpZipLib": "1.4.2",
+          "SkiaSharp": "4.152.1",
+          "System.Formats.Asn1": "10.0.10",
+          "System.Security.Cryptography.Xml": "10.0.10",
+          "ZString": "2.6.0"
+        },
         "runtime": {
-          "lib/net8.0/RBush.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "4.0.0.0"
+          "lib/net8.0/NPOI.Core.dll": {
+            "assemblyVersion": "2.8.1.0",
+            "fileVersion": "2.8.1.0"
+          },
+          "lib/net8.0/NPOI.OOXML.dll": {
+            "assemblyVersion": "2.8.1.0",
+            "fileVersion": "2.8.1.0"
+          },
+          "lib/net8.0/NPOI.OpenXml4Net.dll": {
+            "assemblyVersion": "2.8.1.0",
+            "fileVersion": "2.8.1.0"
+          },
+          "lib/net8.0/NPOI.OpenXmlFormats.dll": {
+            "assemblyVersion": "2.8.1.0",
+            "fileVersion": "2.8.1.0"
+          }
+        }
+      },
+      "QRCoder/1.6.0": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.6.0.0",
+            "fileVersion": "1.6.0.0"
           }
         }
       },
@@ -605,11 +607,32 @@
           }
         }
       },
-      "SixLabors.Fonts/1.0.0": {
+      "SharpZipLib/1.4.2": {
         "runtime": {
-          "lib/netcoreapp3.1/SixLabors.Fonts.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+          "lib/net6.0/ICSharpCode.SharpZipLib.dll": {
+            "assemblyVersion": "1.4.2.13",
+            "fileVersion": "1.4.2.13"
+          }
+        }
+      },
+      "SkiaSharp/4.152.1": {
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "4.152.1"
+        },
+        "runtime": {
+          "lib/net6.0/SkiaSharp.dll": {
+            "assemblyVersion": "4.152.0.0",
+            "fileVersion": "4.152.1.0"
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.Win32/4.152.1": {
+        "native": {
+          "runtimes/win-x64/native/libSkiaSharp.dll": {
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/libSkiaSharp.pdb": {
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -672,6 +695,14 @@
           }
         }
       },
+      "System.Formats.Asn1/10.0.10": {
+        "runtime": {
+          "lib/net8.0/System.Formats.Asn1.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.1026.32716"
+          }
+        }
+      },
       "System.IdentityModel.Tokens.Jwt/7.1.2": {
         "dependencies": {
           "Microsoft.IdentityModel.JsonWebTokens": "7.1.2",
@@ -681,14 +712,6 @@
           "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll": {
             "assemblyVersion": "7.1.2.0",
             "fileVersion": "7.1.2.41121"
-          }
-        }
-      },
-      "System.IO.Packaging/8.0.1": {
-        "runtime": {
-          "lib/net8.0/System.IO.Packaging.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.1024.46610"
           }
         }
       },
@@ -705,17 +728,21 @@
           "System.Configuration.ConfigurationManager": "8.0.0"
         },
         "runtime": {
-          "lib/net8.0/System.Runtime.Caching.dll": {
+          "runtimes/win/lib/net8.0/System.Runtime.Caching.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
+        }
+      },
+      "System.Security.Cryptography.Pkcs/10.0.10": {
+        "dependencies": {
+          "Microsoft.Bcl.Cryptography": "10.0.10",
+          "System.Formats.Asn1": "10.0.10"
         },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Runtime.Caching.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+        "runtime": {
+          "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.1026.32716"
           }
         }
       },
@@ -724,6 +751,26 @@
           "lib/net8.0/System.Security.Cryptography.ProtectedData.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "System.Security.Cryptography.Xml/10.0.10": {
+        "dependencies": {
+          "Microsoft.Bcl.Cryptography": "10.0.10",
+          "System.Security.Cryptography.Pkcs": "10.0.10"
+        },
+        "runtime": {
+          "lib/net8.0/System.Security.Cryptography.Xml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.1026.32716"
+          }
+        }
+      },
+      "ZString/2.6.0": {
+        "runtime": {
+          "lib/net7.0/ZString.dll": {
+            "assemblyVersion": "2.6.0.0",
+            "fileVersion": "2.6.0.0"
           }
         }
       },
@@ -776,19 +823,12 @@
       "path": "azure.identity/1.11.4",
       "hashPath": "azure.identity.1.11.4.nupkg.sha512"
     },
-    "ClosedXML/0.104.2": {
+    "BouncyCastle.Cryptography/2.6.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gOkSjQ152MhpKmw70cBkJV+FnaZAWzDwM36luRf/7FlWYnNeH++9XYdGTd0Y4KQlVPkKVxy948M5MMsnsGC4GQ==",
-      "path": "closedxml/0.104.2",
-      "hashPath": "closedxml.0.104.2.nupkg.sha512"
-    },
-    "ClosedXML.Parser/1.2.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-w+/0tsxABS3lkSH8EUlA7IGme+mq5T/Puf3DbOiTckmSuUpAUO2LK29oXYByCcWkBv6wcRHxgWlQb1lxkwI0Tw==",
-      "path": "closedxml.parser/1.2.0",
-      "hashPath": "closedxml.parser.1.2.0.nupkg.sha512"
+      "sha512": "sha512-7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w==",
+      "path": "bouncycastle.cryptography/2.6.2",
+      "hashPath": "bouncycastle.cryptography.2.6.2.nupkg.sha512"
     },
     "Dapper/2.1.35": {
       "type": "package",
@@ -797,26 +837,19 @@
       "path": "dapper/2.1.35",
       "hashPath": "dapper.2.1.35.nupkg.sha512"
     },
-    "DocumentFormat.OpenXml/3.1.1": {
+    "Enums.NET/5.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-2z9QBzeTLNNKWM9SaOSDMegfQk/7hDuElOsmF77pKZMkFRP/GHA/W/4yOAQD9kn15N/FsFxHn3QVYkatuZghiA==",
-      "path": "documentformat.openxml/3.1.1",
-      "hashPath": "documentformat.openxml.3.1.1.nupkg.sha512"
+      "sha512": "sha512-NfGq1iLJZ15XZPgBhjk4Ns1XZ+beaGk6cog6B4LxcROdGoSMdgCJqYXF70P6VTd3dz/vFRY4h1u1lAMqW/DC2w==",
+      "path": "enums.net/5.0.0",
+      "hashPath": "enums.net.5.0.0.nupkg.sha512"
     },
-    "DocumentFormat.OpenXml.Framework/3.1.1": {
+    "ExtendedNumerics.BigDecimal/2025.1001.2.129": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6APEp/ElZV58S/4v8mf4Ke3ONEDORs64MqdD64Z7wWpcHANB9oovQsGIwtqjnKihulOj7T0a6IxHIHOfMqKOng==",
-      "path": "documentformat.openxml.framework/3.1.1",
-      "hashPath": "documentformat.openxml.framework.3.1.1.nupkg.sha512"
-    },
-    "ExcelNumberFormat/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA==",
-      "path": "excelnumberformat/1.1.0",
-      "hashPath": "excelnumberformat.1.1.0.nupkg.sha512"
+      "sha512": "sha512-+woGT1lsBtwkntOpx2EZbdbySv0aWPefE0vrfvclxVdbi4oa2bbtphFPWgMiQe+kRCPICbfFJwp6w1DuR7Ge2Q==",
+      "path": "extendednumerics.bigdecimal/2025.1001.2.129",
+      "hashPath": "extendednumerics.bigdecimal.2025.1001.2.129.nupkg.sha512"
     },
     "FluentValidation/11.5.1": {
       "type": "package",
@@ -853,6 +886,13 @@
       "path": "lib.net.http.webpush/3.3.1",
       "hashPath": "lib.net.http.webpush.3.3.1.nupkg.sha512"
     },
+    "MathNet.Numerics.Signed/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PSrHBVMf41SjbhlnpOMnoir8YgkyEJ6/nwxvjYpH+vJCexNcx2ms6zRww5yLVqLet1xLJgZ39swtKRTLhWdnAw==",
+      "path": "mathnet.numerics.signed/5.0.0",
+      "hashPath": "mathnet.numerics.signed.5.0.0.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.10": {
       "type": "package",
       "serviceable": true,
@@ -880,6 +920,13 @@
       "sha512": "sha512-yuvf07qFWFqtK3P/MRkEKLhn5r2UbSpVueRziSqj0yJQIKFwG1pq9mOayK3zE5qZCTs0CbrwL9M6R8VwqyGy2w==",
       "path": "microsoft.bcl.asyncinterfaces/1.1.1",
       "hashPath": "microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512"
+    },
+    "Microsoft.Bcl.Cryptography/10.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Qdx/MB+kxJoPIWZ0PpKpGSj8C02oaGXgue59HixUX/vinLsBIDYTX3RNW8mj9fBCeCmCp5+28KojlvI1N9hQPw==",
+      "path": "microsoft.bcl.cryptography/10.0.10",
+      "hashPath": "microsoft.bcl.cryptography.10.0.10.nupkg.sha512"
     },
     "Microsoft.Data.SqlClient/5.2.2": {
       "type": "package",
@@ -1014,6 +1061,13 @@
       "path": "microsoft.identitymodel.tokens/7.1.2",
       "hashPath": "microsoft.identitymodel.tokens.7.1.2.nupkg.sha512"
     },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "hashPath": "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512"
+    },
     "Microsoft.OpenApi/1.6.14": {
       "type": "package",
       "serviceable": true,
@@ -1028,12 +1082,19 @@
       "path": "microsoft.sqlserver.server/1.0.0",
       "hashPath": "microsoft.sqlserver.server.1.0.0.nupkg.sha512"
     },
-    "RBush/4.0.0": {
+    "NPOI/2.8.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-j3GeRxxLUQdc+UrZnvythdQxi3bd8ayn87VDjfGXrvfodF550n9wR6SgQvpo+YiAv3GJezsu6lK0l47rRqnbdg==",
-      "path": "rbush/4.0.0",
-      "hashPath": "rbush.4.0.0.nupkg.sha512"
+      "sha512": "sha512-0Zxx/o+Qc0UkQqcpnzFuDWBfIsX5PO3WKbQopCQMB+8He80EHBR/1OItn/2J7RZLkqYeDqYto/rppxPJKrJBmQ==",
+      "path": "npoi/2.8.1",
+      "hashPath": "npoi.2.8.1.nupkg.sha512"
+    },
+    "QRCoder/1.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
+      "path": "qrcoder/1.6.0",
+      "hashPath": "qrcoder.1.6.0.nupkg.sha512"
     },
     "Serilog/3.1.1": {
       "type": "package",
@@ -1098,12 +1159,26 @@
       "path": "serilog.sinks.file/5.0.0",
       "hashPath": "serilog.sinks.file.5.0.0.nupkg.sha512"
     },
-    "SixLabors.Fonts/1.0.0": {
+    "SharpZipLib/1.4.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-LFQsCZlV0xlUyXAOMUo5kkSl+8zAQXXbbdwWchtk0B4o7zotZhQsQOcJUELGHdfPfm/xDAsz6hONAuV25bJaAg==",
-      "path": "sixlabors.fonts/1.0.0",
-      "hashPath": "sixlabors.fonts.1.0.0.nupkg.sha512"
+      "sha512": "sha512-yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A==",
+      "path": "sharpziplib/1.4.2",
+      "hashPath": "sharpziplib.1.4.2.nupkg.sha512"
+    },
+    "SkiaSharp/4.152.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-p3rj8SVoa+2Tmx1EITE4jIwCDPcYjwXdZ3c9yM6l9wNn6572hwxzrth6WOBK0iGnAoTGoJBZuZpy8wYjbov6sw==",
+      "path": "skiasharp/4.152.1",
+      "hashPath": "skiasharp.4.152.1.nupkg.sha512"
+    },
+    "SkiaSharp.NativeAssets.Win32/4.152.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MLDP6XT8CHLHF6gZlpW06iswGNBlL/JB2+SKuSLz0Y0k1zzsfofNyUY6J6FC32A4/F67E9S8MwovRBL+ELw0lw==",
+      "path": "skiasharp.nativeassets.win32/4.152.1",
+      "hashPath": "skiasharp.nativeassets.win32.4.152.1.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.8.1": {
       "type": "package",
@@ -1147,19 +1222,19 @@
       "path": "system.configuration.configurationmanager/8.0.0",
       "hashPath": "system.configuration.configurationmanager.8.0.0.nupkg.sha512"
     },
+    "System.Formats.Asn1/10.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Lt7KTFei7vmp/+JtTCLB3D3MNDFIfyFl9zETGtKFuoeaThNeHCyE7sJTZ10wfwHbd2z0rW72fjIpNXPkxEObaA==",
+      "path": "system.formats.asn1/10.0.10",
+      "hashPath": "system.formats.asn1.10.0.10.nupkg.sha512"
+    },
     "System.IdentityModel.Tokens.Jwt/7.1.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-Thhbe1peAmtSBFaV/ohtykXiZSOkx59Da44hvtWfIMFofDA3M3LaVyjstACf2rKGn4dEDR2cUpRAZ0Xs/zB+7Q==",
       "path": "system.identitymodel.tokens.jwt/7.1.2",
       "hashPath": "system.identitymodel.tokens.jwt.7.1.2.nupkg.sha512"
-    },
-    "System.IO.Packaging/8.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-KYkIOAvPexQOLDxPO2g0BVoWInnQhPpkFzRqvNrNrMhVT6kqhVr0zEb6KCHlptLFukxnZrjuMVAnxK7pOGUYrw==",
-      "path": "system.io.packaging/8.0.1",
-      "hashPath": "system.io.packaging.8.0.1.nupkg.sha512"
     },
     "System.Memory.Data/1.0.2": {
       "type": "package",
@@ -1175,12 +1250,33 @@
       "path": "system.runtime.caching/8.0.0",
       "hashPath": "system.runtime.caching.8.0.0.nupkg.sha512"
     },
+    "System.Security.Cryptography.Pkcs/10.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KG8t5RHczdgB3IWvRndpI0nE1DSo7ikDYSDbITxfgRFyIvnYiKzuPjaZOsPnwFQ1aOGUl9sEulJul9wlHLEUoA==",
+      "path": "system.security.cryptography.pkcs/10.0.10",
+      "hashPath": "system.security.cryptography.pkcs.10.0.10.nupkg.sha512"
+    },
     "System.Security.Cryptography.ProtectedData/8.0.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-+TUFINV2q2ifyXauQXRwy4CiBhqvDEDZeVJU7qfxya4aRYOKzVBpN+4acx25VcPB9ywUN6C0n8drWl110PhZEg==",
       "path": "system.security.cryptography.protecteddata/8.0.0",
       "hashPath": "system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
+    },
+    "System.Security.Cryptography.Xml/10.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Mz6Y+s+uMQKj1H2BUF0OhlmaOQkLgSG34/IrUaBDirYBQ6bgwcFvO/XtXWcoDlBLFoFB0uKqDNhybHOd+fQK1A==",
+      "path": "system.security.cryptography.xml/10.0.10",
+      "hashPath": "system.security.cryptography.xml.10.0.10.nupkg.sha512"
+    },
+    "ZString/2.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XE8a+11nZg0LRaf+RGABEWaHIf8yGd5w8v/Ra1iWxMBmAVzwuKbW7G21mS0U7w7sh1lYcgckInWGgnz4qyET8A==",
+      "path": "zstring/2.6.0",
+      "hashPath": "zstring.2.6.0.nupkg.sha512"
     },
     "Akrho.Domain/1.0.0": {
       "type": "project",

@@ -60,6 +60,9 @@ import { CouncilRoster } from "@/portal/screens/CouncilRoster";
 import { MemberSearch } from "@/portal/screens/MemberSearch";
 import { ChapterHolds } from "@/portal/screens/ChapterHolds";
 import { NationalAnnouncements } from "@/portal/screens/NationalAnnouncements";
+import { MemberPaymentTags } from "@/portal/screens/MemberPaymentTags";
+import { MemberPaymentTagStats } from "@/portal/screens/MemberPaymentTagStats";
+import { CouncilPermissions } from "@/portal/screens/CouncilPermissions";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -139,7 +142,7 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/portal/chapter-registrations", <ChapterRegistrationQueue key="prq" />],
   ["/portal/chapter-registrations/some-registration-id", <ChapterRegistrationDetail key="prd" />],
   ["/portal/id-card-export", <IdCardExport key="pice" />],
-  // No session in jsdom -> canViewCouncilStatistics(roles=[]) is false, so this
+  // No session in jsdom -> canViewCouncilStatistics(councilSeats=[]) is false, so this
   // deterministically exercises the "you don't have access" empty state without ever
   // calling GET /api/councils/statistics — same reasoning as every other role-gated
   // Portal screen above.
@@ -149,7 +152,7 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // reasoning as every other role-gated Portal screen above.
   ["/portal/councils", <CouncilRegistry key="pcr" />],
   ["/portal/councils/1", <CouncilRoster key="pcrost" />],
-  // No session in jsdom -> canSearchMembersByJurisdiction(roles=[]) is false, so this
+  // No session in jsdom -> canSearchMembersByJurisdiction(councilSeats=[]) is false, so this
   // deterministically exercises the "you don't have access" empty state without ever
   // calling GET /api/members/search-jurisdiction — same reasoning as every other
   // role-gated Portal screen above.
@@ -164,6 +167,19 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // calling GET /api/announcements/national — same reasoning as every other
   // role-gated Portal screen above.
   ["/portal/announcements", <NationalAnnouncements key="pna" />],
+  // No session in jsdom -> canManageMemberPaymentTags(roles=[]) is false, so this
+  // deterministically exercises the "you don't have access" empty state without ever
+  // calling GET /api/chapters/search-jurisdiction — same reasoning as every other
+  // role-gated Portal screen above.
+  ["/portal/member-payment-tags", <MemberPaymentTags key="pmpt" />],
+  // Same role gate, same reasoning — the Paid/Unpaid/Free report alongside the tagging
+  // screen above.
+  ["/portal/member-payment-tags/stats", <MemberPaymentTagStats key="pmpts" />],
+  // No session in jsdom -> claims is null -> councilSeats is [], so this deterministically
+  // exercises the "no council seat on file" empty state without ever calling GET
+  // /api/councils/{councilId}/permissions — same reasoning as every other permission/
+  // role-gated Portal screen above.
+  ["/portal/council-permissions", <CouncilPermissions key="pcp" />],
   ["/corrective-actions", <CaseList key="cl" chapterId={1} />],
   ["/corrective-actions/new", <CaseNew key="cn" chapterId={1} />],
   ["/corrective-actions/some-case-id", <CaseDetail key="cd" chapterId={1} />],

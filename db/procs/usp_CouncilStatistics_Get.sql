@@ -24,15 +24,20 @@
    invariant #10 explicitly names that pattern as the one to continue).
 
    SCOPING (invariant #4 — never trust a caller-supplied id, check it here too even though
-   the API layer should have already):
+   the API layer should have already). Scoped by the dynamic CouncilStatistics.Read
+   permission (db/schema/28_council_permissions.sql), not by bare council membership —
+   a council's own President can widen or narrow who holds it via usp_CouncilPermission_Set,
+   but the default grid reproduces today's "President or Secretary" matrix exactly:
      - @FocusCouncilId NULL  -> resolved to the caller's own highest-level (shallowest)
-       currently-seated council (dbo.CouncilLevel.LevelOrder ASC; National=2 is shallower
-       than Regional=3, etc. — see db/seed/01_reference.sql).
-     - @FocusCouncilId given -> asserted to be inside dbo.fn_MemberCouncilScope(@RequestingMemberId)
-       (db/schema/19_scope_functions.sql) — the union of dbo.fn_CouncilSubtree applied to
-       every council the caller currently holds a seat on.
-     - Holds no council seat at all      -> THROW 51620 (distinct from the next case).
-     - Holds a seat, but not over @FocusCouncilId -> THROW 51621.
+       currently-seated council THAT STILL HOLDS CouncilStatistics.Read there
+       (dbo.CouncilLevel.LevelOrder ASC; National=2 is shallower than Regional=3, etc. —
+       see db/seed/01_reference.sql).
+     - @FocusCouncilId given -> asserted to be inside
+       dbo.fn_MemberPermissionScope(@RequestingMemberId, 'CouncilStatistics.Read')
+       (db/schema/28_council_permissions.sql) — the union of dbo.fn_CouncilSubtree applied
+       to every council where the caller's own seat currently grants that key.
+     - Holds the key nowhere at all      -> THROW 51620 (distinct from the next case).
+     - Holds it somewhere, but not over @FocusCouncilId -> THROW 51621.
    Both numbers picked from the free 516xx band — 51600 is already used twice (by
    usp_ChapterInviteLink_Regenerate/_GetOwn) but nothing else in that band is taken; grep
    every usp_*.sql file under db/procs before adding a third THROW to this file.
@@ -71,8 +76,8 @@ BEGIN
     DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
 
     /* ---------- Scoping (invariant #4) ---------- */
-    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId))
-        THROW 51620, 'You do not currently hold a council office, so there is no statistics view to show.', 1;
+    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilStatistics.Read'))
+        THROW 51620, 'You do not have permission to view council statistics.', 1;
 
     IF @FocusCouncilId IS NULL
     BEGIN
@@ -84,11 +89,15 @@ BEGIN
           AND  mr.ScopeType = 'Council'
           AND  mr.TermStart <= @Today
           AND  (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+          AND  EXISTS (
+                   SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+                   WHERE sp.CouncilId = mr.ScopeId AND sp.PermissionKey = N'CouncilStatistics.Read'
+               )
         ORDER BY cl.LevelOrder ASC, mr.ScopeId ASC;
     END
     ELSE
     BEGIN
-        IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId) sc WHERE sc.CouncilId = @FocusCouncilId)
+        IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilStatistics.Read') sc WHERE sc.CouncilId = @FocusCouncilId)
             THROW 51621, 'That council is outside what you are permitted to view.', 1;
     END
 

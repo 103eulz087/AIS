@@ -126,7 +126,8 @@ MERGE dbo.Province AS t USING (
      (91,'Western Samar','12'),
      (92,'Zambales','06'),
      (93,'Zamboanga del Norte','13'),
-     (94,'Zamboanga del Sur','13')
+     (94,'Zamboanga del Sur','13'),
+     (95,'Zamboanga Sibugay','13')
     ) AS s(ProvinceCode,ProvinceName,RegionCode)
     JOIN dbo.Region r ON r.RegionCode = s.RegionCode
 ) AS src ON t.ProvinceCode = src.ProvinceCode

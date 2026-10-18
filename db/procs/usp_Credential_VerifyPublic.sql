@@ -31,9 +31,11 @@
 
    RETURNED DATA (invariant #7, extended per product decision for the photo endpoint
    alongside this one): GiftName, ChapterName, MemberStatus.StatusName, RenewedThrough
-   (raw, nullable, untransformed — wording is the API/frontend's job). Nothing else: no
-   legal name, no member number, no blood type, no council chain, no address, no contact
-   info.
+   (raw, nullable, untransformed — wording is the API/frontend's job), IsPaid (added
+   2026-09-29 — the standalone payment tag, dbo.MemberPaymentTagAction, deliberately NOT
+   derived from RenewedThrough/MemberRenewal — see usp_Credential_GetOrIssueForSelf's own
+   header). Nothing else: no legal name, no member number, no blood type, no council
+   chain, no address, no contact info.
 
    AUDIT (invariant #10). Every call — valid or not — writes one dbo.ScanLog row in the
    same transaction as the read, recording which of Live/Invalid/Revoked/Expired actually
@@ -85,18 +87,36 @@ BEGIN
                 CAST(NULL AS NVARCHAR(150)) AS ChapterName,
                 CAST(NULL AS NVARCHAR(30))  AS StatusName,
                 CAST(NULL AS DATE)          AS RenewedThrough,
+                CAST(0 AS BIT)              AS IsPaid,
                 CAST(0 AS BIT)              AS IsValid;
         RETURN;
     END
+
+    -- IsPaid (added 2026-09-29): the standalone payment tag, not RenewedThrough — see
+    -- usp_Credential_GetOrIssueForSelf's own header for the full reasoning (same "no row =
+    -- NOT paid" default). Same 09-Aug-anchored membership year every payment-tag proc uses.
+    DECLARE @CurrentMembershipYear2 INT;
+    DECLARE @Today3 DATE = CAST(SYSUTCDATETIME() AS DATE);
+    DECLARE @Anniversary3 DATE = DATEFROMPARTS(YEAR(@Today3), 8, 8);
+    SET @CurrentMembershipYear2 = CASE WHEN @Today3 > @Anniversary3 THEN YEAR(@Today3) ELSE YEAR(@Today3) - 1 END;
 
     SELECT  m.GiftName,
             ch.ChapterName,        -- LEFT JOIN: a detached, council-homed member (invariant #14) has no ChapterId
             ms.StatusName,
             m.RenewedThrough,      -- raw, nullable, untransformed
+            -- 'Free' (added 2026-10-06) suppresses the watermark exactly like 'Tagged' —
+            -- see 27_member_payment_tag_free_status.sql's own header.
+            CAST(CASE WHEN lt.ActionType IN ('Tagged', 'Free') THEN 1 ELSE 0 END AS BIT) AS IsPaid,
             CAST(1 AS BIT) AS IsValid
     FROM    dbo.Member m
             LEFT JOIN dbo.Chapter ch  ON ch.ChapterId = m.ChapterId
             JOIN      dbo.MemberStatus ms ON ms.StatusId = m.StatusId
+            OUTER APPLY (
+                SELECT TOP (1) ActionType
+                FROM   dbo.MemberPaymentTagAction
+                WHERE  MemberId = m.MemberId AND MembershipYear = @CurrentMembershipYear2
+                ORDER BY PerformedDate DESC, MemberPaymentTagActionId DESC
+            ) lt
     WHERE   m.MemberId = @MemberId;
 END
 GO

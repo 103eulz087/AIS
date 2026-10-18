@@ -84,14 +84,29 @@ BEGIN
 END
 GO
 
-/* A single, scoped, anti-enumeration lookup for an OUT-OF-jurisdiction nominee — by
-   exact member number only, never a browsable/searchable list (invariant #7: cross-
-   chapter member data is name, chapter and status only; this proc returns exactly that
-   shape and nothing else). Same authority gate as usp_Council_EligibleOfficers. */
+/* A scoped, anti-enumeration lookup for an OUT-OF-jurisdiction nominee ("From all records"
+   in the seating panel) — never a browsable/searchable list. Invariant #7: cross-chapter
+   member data is name, chapter and status only; this proc returns exactly that shape (plus
+   the renewal flags the seat rules need) and never the mobile number itself.
+
+   2026-10-18: looked up by NAME + MOBILE NUMBER together, not member number — officers
+   don't know or can't easily retrieve a brother's member number, but they can ask him for
+   his name and phone. The mobile number is the key that must match (last 10 digits, so
+   0917…, +63917… and 63917… all match the same stored 0917…); the name only narrows it and
+   must match his gift name, first name, last name or full name. Knowing a name alone
+   returns nothing, so this still cannot be used to browse members outside the council's
+   jurisdiction. More than one row is possible when a number is shared (e.g. a family
+   phone) — the officer picks the right one.
+
+   @MemberNumber is kept, and still means an exact match on its own, ONLY so the API build
+   already deployed keeps working until the new one replaces it. The app no longer sends it.
+   Same authority gate as usp_Council_EligibleOfficers. */
 CREATE OR ALTER PROCEDURE dbo.usp_Council_MemberLookup
     @RequestingMemberId INT,
     @CouncilId     INT,
-    @MemberNumber  NVARCHAR(30)
+    @MemberNumber  NVARCHAR(30)  = NULL,
+    @Name          NVARCHAR(100) = NULL,
+    @MobileNo      NVARCHAR(30)  = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -106,8 +121,30 @@ BEGIN
         WHERE mr.MemberId = @RequestingMemberId AND mr.ScopeType = 'Council' AND mr.ScopeId = @ActingCouncilId
           AND r.RoleName = 'CouncilAdmin' AND mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
     )
-        THROW 51651, 'Only the council that may seat this council''s officers may look up a member by number.', 1;
+        THROW 51651, 'Only the council that may seat this council''s officers may look up a member.', 1;
 
+    SET @MemberNumber = NULLIF(LTRIM(RTRIM(@MemberNumber)), N'');
+    SET @Name         = NULLIF(LTRIM(RTRIM(@Name)), N'');
+
+    -- Digits only, then the last 10 (the subscriber number without 0 / 63 / +63).
+    DECLARE @Mobile10 VARCHAR(10) = NULL;
+    IF @MobileNo IS NOT NULL
+    BEGIN
+        DECLARE @Digits VARCHAR(30) = '', @i INT = 1, @ch NCHAR(1);
+        WHILE @i <= LEN(@MobileNo)
+        BEGIN
+            SET @ch = SUBSTRING(@MobileNo, @i, 1);
+            IF @ch LIKE N'[0-9]' SET @Digits += CAST(@ch AS VARCHAR(1));
+            SET @i += 1;
+        END
+        IF LEN(@Digits) >= 10 SET @Mobile10 = RIGHT(@Digits, 10);
+    END
+
+    IF @MemberNumber IS NULL AND (@Name IS NULL OR LEN(@Name) < 2 OR @Mobile10 IS NULL)
+        THROW 51652, 'Enter both his name and his mobile number.', 1;
+
+    -- Column list unchanged from the member-number version: the deployed API maps this
+    -- into a positional record, and an extra column would fail that mapping (CLAUDE.md §8.7).
     SELECT  m.MemberId, m.GiftName, m.MemberNumber, ch.ChapterName, ms.StatusName,
             m.RenewedThrough,
             CAST(CASE WHEN m.RenewedThrough IS NOT NULL AND m.RenewedThrough >= @Today
@@ -119,9 +156,18 @@ BEGIN
     FROM    dbo.Member m
             LEFT JOIN dbo.Chapter ch ON ch.ChapterId = m.ChapterId
             JOIN dbo.MemberStatus ms ON ms.StatusId = m.StatusId
-    WHERE   m.MemberNumber = @MemberNumber
-      AND   m.IsDeleted = 0
-      AND   ms.StatusName IN ('Approved','Active');
+    WHERE   m.IsDeleted = 0
+      AND   ms.StatusName IN ('Approved','Active')
+      AND   (
+                (@MemberNumber IS NOT NULL AND m.MemberNumber = @MemberNumber)
+             OR (@MemberNumber IS NULL
+                 AND RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(m.MobileNo, '+', ''), ' ', ''), '-', ''), '(', ''), ')', ''), 10) = @Mobile10
+                 AND (   m.GiftName  LIKE '%' + @Name + '%'
+                      OR m.FirstName LIKE '%' + @Name + '%'
+                      OR m.LastName  LIKE '%' + @Name + '%'
+                      OR (m.FirstName + ' ' + m.LastName) LIKE '%' + @Name + '%'))
+            )
+    ORDER BY m.GiftName;
 END
 GO
 
@@ -370,7 +416,12 @@ GO
    pattern usp_ChapterRegistration_Approve's Turnover branch already uses for a chapter's
    own officers). Any dbo.SeatOverride row for this seat is left exactly as it is — it is
    a permanent historical record of who was seated and why, not a description of a
-   current state, and it must never be touched by an unseat. */
+   current state, and it must never be touched by an unseat.
+
+   If this was the council's last officer, its open Submitted chapter registrations move up
+   to the nearest council above that still has someone seated, in this same transaction
+   (usp_ChapterRegistration_RerouteFromDormant — invariant #13a's dormancy case, applied to
+   registrations already filed). Without it they would sit at a council nobody can act for. */
 CREATE OR ALTER PROCEDURE dbo.usp_Council_UnseatOfficer
     @RequestingMemberId INT,
     @MemberRoleId INT,
@@ -408,6 +459,10 @@ BEGIN
         INSERT dbo.AuditLog (TableName, RecordId, [Action], NewValues, PerformedBy)
         VALUES ('MemberRole', CAST(@MemberRoleId AS NVARCHAR(40)), 'CouncilUnseat',
                 CONCAT(N'{"Reason":"', REPLACE(@Reason, '"', ''''), N'"}'), @RequestingMemberId);
+
+        -- No-op unless that was the last seat that runs past today.
+        EXEC dbo.usp_ChapterRegistration_RerouteFromDormant
+             @CouncilId = @CouncilId, @ActorMemberId = @RequestingMemberId;
     COMMIT;
 END
 GO

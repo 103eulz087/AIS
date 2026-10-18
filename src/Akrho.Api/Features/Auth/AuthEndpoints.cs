@@ -120,7 +120,7 @@ public static class AuthEndpoints
     }
 
     private static async Task<Ok<MeResponseDto>> Me(
-        ICurrentUser caller, IAuthRepository repo, CancellationToken ct)
+        ICurrentUser caller, IAuthRepository repo, ICouncilPermissionRepository councilPermissions, CancellationToken ct)
     {
         var claimRows = await repo.GetClaimsAsync(caller.MemberId, ct);
         var giftName = claimRows.Count > 0 ? claimRows[0].GiftName : string.Empty;
@@ -130,12 +130,26 @@ public static class AuthEndpoints
             .Distinct(StringComparer.Ordinal)
             .ToList();
 
+        // "What can I do, and where" — the caller's own council seats and effective
+        // permissions, straight from usp_CouncilPermission_GetMine (never rejects; this is
+        // always and only the caller's own data). Empty for an ordinary chapter member who
+        // holds no council seat at all.
+        var mine = await councilPermissions.GetMineAsync(caller.MemberId, ct);
+        var permissionsByCouncil = mine.Permissions
+            .GroupBy(p => p.CouncilId)
+            .ToDictionary(g => g.Key, g => (IReadOnlyList<string>)g.Select(p => p.PermissionKey).ToList());
+        var councilSeats = mine.Seats
+            .Select(s => new CouncilSeatPermissionsDto(
+                s.CouncilId, s.CouncilName, s.OfficeName, s.CanManagePermissions,
+                permissionsByCouncil.TryGetValue(s.CouncilId, out var keys) ? keys : []))
+            .ToList();
+
         // ChapterName: no stored procedure currently hands a member's own chapter name
         // back with his claims (usp_Auth_GetClaims does not join dbo.Chapter), and this
         // endpoint does not reach around that with an inline query. Gap noted for a
         // follow-up proc (extend usp_Auth_GetClaims, or a small usp_Chapter_GetName) —
         // until then the frontend keeps its AppShell hardcode.
-        return TypedResults.Ok(new MeResponseDto(caller.MemberId, caller.ChapterId, null, giftName, roles));
+        return TypedResults.Ok(new MeResponseDto(caller.MemberId, caller.ChapterId, null, giftName, roles, councilSeats));
     }
 
     private static async Task<Results<Ok, ValidationProblem, UnauthorizedHttpResult, NotFound>> ChangePassword(

@@ -289,7 +289,9 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
 }) {
   const [mode, setMode] = useState<"search" | "lookup">("search");
   const [search, setSearch] = useState("");
-  const [memberNumber, setMemberNumber] = useState("");
+  const [lookupName, setLookupName] = useState("");
+  const [lookupMobile, setLookupMobile] = useState("");
+  const [lookupResults, setLookupResults] = useState<CouncilMemberLookup[] | null>(null);
   const [selected, setSelected] = useState<CouncilOfficerCandidate | CouncilMemberLookup | null>(null);
   const [termStart, setTermStart] = useState(() => new Date().toISOString().slice(0, 10));
   const [outsideReason, setOutsideReason] = useState("");
@@ -305,21 +307,31 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
   });
 
   async function runLookup() {
-    if (!memberNumber.trim()) return;
+    const nameText = lookupName.trim();
+    const mobileText = lookupMobile.trim();
+    if (!nameText || !mobileText) { setError("Enter both his name and his mobile number."); return; }
     setLookupBusy(true);
     setError(null);
+    setSelected(null);
     try {
-      const row = await api.get<CouncilMemberLookup>(
-        `/api/councils/member-lookup?councilId=${councilId}&memberNumber=${encodeURIComponent(memberNumber.trim())}`);
-      setSelected(row);
+      const rows = await api.get<CouncilMemberLookup[]>(
+        `/api/councils/member-lookup?councilId=${councilId}&name=${encodeURIComponent(nameText)}&mobileNo=${encodeURIComponent(mobileText)}`);
+      setLookupResults(rows);
+      const only = rows.length === 1 ? rows[0] : undefined;
+      if (only) setSelected(only);
     } catch (err) {
-      setSelected(null);
-      setError(err instanceof ApiError && err.status === 404
-        ? "No member found with that number."
-        : err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setLookupResults(null);
+      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLookupBusy(false);
     }
+  }
+
+  function switchMode(next: "search" | "lookup") {
+    setMode(next);
+    setSelected(null);
+    setLookupResults(null);
+    setError(null);
   }
 
   const isOutside = mode === "lookup" && selected !== null;
@@ -352,10 +364,10 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
       <p style={{ fontSize: 12.5, color: "var(--slate)", marginBottom: 8 }}>Seat {officeName}</p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-        <button type="button" onClick={() => { setMode("search"); setSelected(null); setError(null); }}
+        <button type="button" onClick={() => switchMode("search")}
           style={mode === "search" ? tabActiveStyle : tabStyle}>From this jurisdiction</button>
-        <button type="button" onClick={() => { setMode("lookup"); setSelected(null); setError(null); }}
-          style={mode === "lookup" ? tabActiveStyle : tabStyle}>From elsewhere (by member number)</button>
+        <button type="button" onClick={() => switchMode("lookup")}
+          style={mode === "lookup" ? tabActiveStyle : tabStyle}>From all records</button>
       </div>
 
       {mode === "search" ? (
@@ -382,22 +394,49 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
         </>
       ) : (
         <>
-          <div style={{ display: "flex", gap: 8 }}>
-            <input value={memberNumber} onChange={e => setMemberNumber(e.target.value)} placeholder="Member number" style={fieldStyle} />
-            <button type="button" onClick={() => { void runLookup(); }} disabled={lookupBusy} style={ghostButtonStyle}>
+          <p style={{ ...hintStyle, marginTop: 0, marginBottom: 8, lineHeight: 1.6 }}>
+            Ask the brother for his name and the mobile number he registered with. Both must match.
+          </p>
+          <form
+            onSubmit={e => { e.preventDefault(); void runLookup(); }}
+            style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+          >
+            <input
+              value={lookupName} onChange={e => setLookupName(e.target.value)}
+              placeholder="Name or gift name" aria-label="Name or gift name" autoComplete="off"
+              style={{ ...fieldStyle, flex: "1 1 180px", width: "auto" }}
+            />
+            <input
+              value={lookupMobile} onChange={e => setLookupMobile(e.target.value)}
+              placeholder="Mobile number (e.g. 0917 123 4567)" aria-label="Mobile number"
+              inputMode="tel" autoComplete="off"
+              style={{ ...fieldStyle, flex: "1 1 180px", width: "auto" }}
+            />
+            <button type="submit" disabled={lookupBusy} style={ghostButtonStyle}>
               {lookupBusy ? "…" : "Look up"}
             </button>
-          </div>
-          {selected && "statusName" in selected && (
-            <div style={{ ...candidateRowStyle, ...candidateRowSelectedStyle, marginTop: 8 }}>
-              <span>{selected.giftName} — {selected.memberNumber}</span>
-              <span style={{ fontSize: 11, color: "var(--mute)" }}>
-                {selected.chapterName ?? "No chapter on file"} · {selected.statusName}
-                {selected.isLapsed && " · Renewal lapsed"}
-                {selected.noMobileNumber && " · No mobile number on file"}
-              </span>
-            </div>
+          </form>
+          {lookupResults && lookupResults.length === 0 && (
+            <p style={hintStyle}>No member found with that name and mobile number. Check both and try again.</p>
           )}
+          {lookupResults && lookupResults.length > 1 && (
+            <p style={hintStyle}>More than one brother uses this number. Choose the right one.</p>
+          )}
+          <div style={{ marginTop: 8 }}>
+            {(lookupResults ?? []).map(r => (
+              <button
+                key={r.memberId} type="button" onClick={() => setSelected(r)}
+                style={{ ...candidateRowStyle, ...(selected?.memberId === r.memberId ? candidateRowSelectedStyle : {}) }}
+              >
+                <span>{r.giftName} — {r.memberNumber}</span>
+                <span style={{ fontSize: 11, color: "var(--mute)" }}>
+                  {r.chapterName ?? "No chapter on file"} · {r.statusName}
+                  {r.isLapsed && " · Renewal lapsed"}
+                  {!r.isLapsed && !r.isCurrent && " · Not yet renewed"}
+                </span>
+              </button>
+            ))}
+          </div>
         </>
       )}
 

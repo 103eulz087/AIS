@@ -7,17 +7,22 @@ import { canExportIdCards } from "@/shared/roles";
 import type { ChapterPublic } from "@/shared/types";
 
 /**
- * GET /api/id-card-exports?chapterId= — a ZIP (spreadsheet + member photos) for the
- * National Council's CouncilAdmin to bulk-print physical ID cards. chapterId is omitted
- * entirely for "All chapters" (the default); passed only when a specific chapter is
- * chosen. Fetched as an authenticated Blob via api.download() -> URL.createObjectURL,
- * the same pattern DigitalId.tsx/Profile.tsx use for a member photo and ExpenseDetail.tsx
- * uses for a receipt attachment — never a bare <a href> or <img src>, since this call
- * needs an Authorization header the browser has no other way to attach.
+ * Two export types (client decision 2026-10-06), both National CouncilAdmin only, both
+ * fetched as an authenticated Blob via api.download() -> URL.createObjectURL — the same
+ * pattern DigitalId.tsx/Profile.tsx use for a member photo and ExpenseDetail.tsx uses for
+ * a receipt attachment — never a bare <a href> or <img src>, since both calls need an
+ * Authorization header the browser has no other way to attach:
  *
- * This has a real side effect (usp_Credential_BulkIssueForExport bulk-issues any missing
- * member credentials) but is fully idempotent and safe to run more than once — see the
- * endpoint's own header comment (IdCardExportEndpoints.cs).
+ *   GET /api/id-card-exports?chapterId=            — "Export Data": a ZIP (spreadsheet +
+ *     member photos) for a physical Magicard card print run.
+ *   GET /api/id-card-exports/digital-id?chapterId= — "Export Digital ID images": a ZIP of
+ *     rendered front/back PNGs per member (DigitalIdCardRenderer.cs, server-side).
+ *
+ * chapterId is omitted entirely for "All chapters" (the default); passed only when a
+ * specific chapter is chosen. Both have a real side effect
+ * (usp_Credential_BulkIssueForExport bulk-issues any missing member credentials) but are
+ * fully idempotent and safe to run more than once — see IdCardExportEndpoints.cs's own
+ * header comment.
  *
  * GET /api/chapters — the public, unauthenticated chapter list (ChapterPublic[],
  * usp_Chapter_ListPublic). Consumed here as a flat, alphabetical list: this screen only
@@ -45,7 +50,9 @@ export function IdCardExport() {
   });
 
   const [chapterId, setChapterId] = useState("");
-  const [exporting, setExporting] = useState(false);
+  // Which of the two exports is in flight, if any — null means neither. Both buttons
+  // disable while either runs (no real reason to let two large exports overlap).
+  const [exporting, setExporting] = useState<"data" | "digital-id" | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
 
   const rows = Array.isArray(chapters.data) ? chapters.data : [];
@@ -63,19 +70,19 @@ export function IdCardExport() {
     );
   }
 
-  async function runExport() {
+  async function runExport(kind: "data" | "digital-id") {
     setExportError(null);
-    setExporting(true);
+    setExporting(kind);
     try {
-      const path = chapterId
-        ? `/api/id-card-exports?chapterId=${chapterId}`
-        : "/api/id-card-exports";
+      const basePath = kind === "data" ? "/api/id-card-exports" : "/api/id-card-exports/digital-id";
+      const path = chapterId ? `${basePath}?chapterId=${chapterId}` : basePath;
+      const fallbackName = kind === "data" ? "id-cards" : "digital-ids";
       const file: DownloadedFile = await api.download(path);
       const url = URL.createObjectURL(file.blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = file.fileName === "download"
-        ? `id-cards-${new Date().toISOString().replace(/[:.]/g, "-")}.zip`
+        ? `${fallbackName}-${new Date().toISOString().replace(/[:.]/g, "-")}.zip`
         : file.fileName;
       document.body.appendChild(link);
       link.click();
@@ -92,7 +99,7 @@ export function IdCardExport() {
         setExportError("Check your connection and try again.");
       }
     } finally {
-      setExporting(false);
+      setExporting(null);
     }
   }
 
@@ -102,7 +109,8 @@ export function IdCardExport() {
         National ID card export
       </h1>
       <p style={{ fontSize: 13.5, color: "var(--slate)", marginTop: 6 }}>
-        Download a ZIP of the member spreadsheet and photos for a physical ID card print run.
+        Two ways to export member ID cards — pick a chapter (or all of them), then choose
+        which one you need.
       </p>
 
       <div style={panelStyle}>
@@ -132,19 +140,46 @@ export function IdCardExport() {
           </select>
         )}
 
-        <button
-          type="button"
-          onClick={() => { void runExport(); }}
-          disabled={exporting}
-          style={exportButtonStyle(exporting)}
-        >
-          {exporting ? "Preparing your export…" : "Download ZIP"}
-        </button>
+        <div style={exportOptionStyle}>
+          <div>
+            <div style={exportOptionTitleStyle}>1. Export Data</div>
+            <p style={exportOptionBodyStyle}>
+              The member spreadsheet (.xls) and photo folder for a physical ID card print
+              run on the Magicard printer.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => { void runExport("data"); }}
+            disabled={exporting !== null}
+            style={exportButtonStyle(exporting !== null)}
+          >
+            {exporting === "data" ? "Preparing…" : "Download ZIP"}
+          </button>
+        </div>
+
+        <div style={exportOptionStyle}>
+          <div>
+            <div style={exportOptionTitleStyle}>2. Export Digital ID images</div>
+            <p style={exportOptionBodyStyle}>
+              The actual digital ID card image, front and back, for each member — ready to
+              view, print or share on its own.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => { void runExport("digital-id"); }}
+            disabled={exporting !== null}
+            style={exportButtonStyle(exporting !== null)}
+          >
+            {exporting === "digital-id" ? "Preparing…" : "Download ZIP"}
+          </button>
+        </div>
 
         {exporting && (
           <p style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 10 }}>
-            This can take a while for a large chapter list — photos are being packaged one
-            by one. Please don't close this tab.
+            This can take a while for a large chapter list — {exporting === "data" ? "photos" : "card images"} are
+            being packaged one by one. Please don&rsquo;t close this tab.
           </p>
         )}
 
@@ -169,6 +204,19 @@ const fieldLabelStyle: CSSProperties = {
 const fieldStyle: CSSProperties = {
   width: "100%", minHeight: 40, padding: "0 10px", borderRadius: 8, fontSize: 13,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
+};
+
+const exportOptionStyle: CSSProperties = {
+  display: "flex", flexDirection: "column", gap: 10, marginTop: 20,
+  paddingTop: 16, borderTop: "1px solid var(--line)",
+};
+
+const exportOptionTitleStyle: CSSProperties = {
+  fontFamily: "var(--f-disp)", fontSize: 14, letterSpacing: ".04em", color: "var(--ink)",
+};
+
+const exportOptionBodyStyle: CSSProperties = {
+  fontSize: 12.5, color: "var(--slate)", marginTop: 4, lineHeight: 1.5,
 };
 
 function exportButtonStyle(exporting: boolean): CSSProperties {

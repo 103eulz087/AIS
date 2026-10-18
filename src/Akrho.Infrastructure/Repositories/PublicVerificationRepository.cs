@@ -28,7 +28,11 @@ internal static class PublicVerificationErrors
 /// see the procedure's own header comment) — never branch on which failure it was, here or above.
 /// </summary>
 public sealed record PublicVerifyRow(
-    string? GiftName, string? ChapterName, string? StatusName, DateTime? RenewedThrough, bool IsValid);
+    string? GiftName, string? ChapterName, string? StatusName, DateTime? RenewedThrough,
+    // The standalone payment tag — false for every non-Live result and for an untagged
+    // member alike (client decision 2026-09-29). See usp_Credential_VerifyPublic's own
+    // header comment.
+    bool IsPaid, bool IsValid);
 
 /// <summary>
 /// Backs the one genuinely public, unauthenticated read path in this system. Deliberately takes

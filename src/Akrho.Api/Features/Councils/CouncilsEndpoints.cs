@@ -107,22 +107,22 @@ public static class CouncilsEndpoints
         }
     }
 
-    private static async Task<Results<Ok<CouncilMemberLookupDto>, NotFound, ProblemHttpResult>> MemberLookup(
-        int councilId, string memberNumber, ICouncilSeatingRepository repo, ICurrentUser caller, CancellationToken ct)
+    private static async Task<Results<Ok<List<CouncilMemberLookupDto>>, ProblemHttpResult>> MemberLookup(
+        int councilId, string? name, string? mobileNo, ICouncilSeatingRepository repo, ICurrentUser caller, CancellationToken ct)
     {
         try
         {
-            var row = await repo.MemberLookupAsync(caller.MemberId, councilId, memberNumber, ct);
-            if (row is null) return TypedResults.NotFound();
-
-            return TypedResults.Ok(new CouncilMemberLookupDto(
-                row.MemberId, row.GiftName, row.MemberNumber, row.ChapterName, row.StatusName,
-                row.RenewedThrough is { } rt ? DateOnly.FromDateTime(rt) : null,
-                row.IsCurrent, row.IsLapsed, row.NoMobileNumber));
+            var rows = await repo.MemberLookupAsync(caller.MemberId, councilId, name ?? "", mobileNo ?? "", ct);
+            var items = rows.Select(r => new CouncilMemberLookupDto(
+                r.MemberId, r.GiftName, r.MemberNumber, r.ChapterName, r.StatusName,
+                r.RenewedThrough is { } rt ? DateOnly.FromDateTime(rt) : null,
+                r.IsCurrent, r.IsLapsed, r.NoMobileNumber)).ToList();
+            return TypedResults.Ok(items);
         }
         catch (CouncilSeatingException ex)
         {
-            return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
+            return TypedResults.Problem(detail: ex.Message, statusCode: ex.Category == CouncilSeatingErrorCategory.Forbidden
+                ? StatusCodes.Status403Forbidden : StatusCodes.Status400BadRequest);
         }
     }
 

@@ -18,8 +18,9 @@ const CHAPTERS_TAKE = 25;
  * Council statistics — council-to-council, council-to-chapter, and (via a link into
  * the existing member directory) chapter-to-member visibility, for whichever council
  * an officer is seated on. Reached from PortalShell's nav, gated by
- * canViewCouncilStatistics (CouncilSecretary or CouncilAdmin) — anyone else sees a
- * plain "you don't have access" state, same pattern as every other Portal screen.
+ * canViewCouncilStatistics (the caller's own CouncilStatistics.Read permission, on any
+ * council seat — phase 1 "dynamic council office permissions", 2026-10-17) — anyone else
+ * sees a plain "you don't have access" state, same pattern as every other Portal screen.
  *
  * Endpoints:
  *   GET /api/councils/statistics?from=&to=&skip=&take=            — the caller's own seat
@@ -47,8 +48,7 @@ const CHAPTERS_TAKE = 25;
  */
 export function CouncilStatistics() {
   const { claims } = useAuth();
-  const roles = claims?.roles ?? [];
-  const canView = canViewCouncilStatistics(roles);
+  const canView = canViewCouncilStatistics(claims?.councilSeats ?? []);
 
   const [focusCouncilId, setFocusCouncilId] = useState<number | null>(null);
   const [trail, setTrail] = useState<Crumb[]>([]);

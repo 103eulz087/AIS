@@ -1,12 +1,16 @@
 /* Council Portal's global member search — by gift/legal name, member number, or mobile
-   number, scoped to the requesting officer's own jurisdiction via fn_MemberCouncilScope.
-   A National officer's own council seat's subtree IS the entire tree (fn_CouncilSubtree
-   walks down from wherever he is seated), so this one proc covers both cases the client
-   asked for with no branch between them: "search everyone" at National, "search only my
-   own region/province/city" everywhere else. Never call this with an explicit
-   council/chapter id from the request — @RequestingMemberId is the only input that
-   decides scope (CLAUDE.md invariant #4), the same posture as every fn_MemberCouncilScope
-   caller (usp_Council_GetRoster, usp_CouncilStatistics_Get).
+   number, scoped to the requesting officer's own jurisdiction via the dynamic
+   CouncilMemberSearch.Read permission (db/schema/28_council_permissions.sql's
+   dbo.fn_MemberPermissionScope), not by bare council membership — a council's own
+   President can widen or narrow who holds this key via usp_CouncilPermission_Set, but
+   the default grid reproduces today's "President/Secretary/Treasurer/Vice President/PIO"
+   matrix exactly. A National officer's own council seat's subtree IS the entire tree
+   (fn_CouncilSubtree walks down from wherever he is seated), so this one proc covers both
+   cases the client asked for with no branch between them: "search everyone" at National,
+   "search only my own region/province/city" everywhere else. Never call this with an
+   explicit council/chapter id from the request — @RequestingMemberId is the only input
+   that decides scope (CLAUDE.md invariant #4), the same posture as every
+   fn_MemberPermissionScope caller (usp_CouncilStatistics_Get).
 
    Deliberately a DIFFERENT visibility rule from usp_Member_Search's own directory (CLAUDE.md
    invariant #7 — "cross-chapter member data is name, chapter, status only"): that invariant
@@ -40,7 +44,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId))
+    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilMemberSearch.Read'))
         THROW 51830, 'You must hold a currently-seated council office to search members.', 1;
 
     SET @Search = LTRIM(RTRIM(@Search));
@@ -64,7 +68,7 @@ BEGIN
                 LEFT JOIN dbo.UserAccount ua ON ua.MemberId = m.MemberId
         WHERE   m.IsDeleted = 0
           AND   EXISTS (
-                    SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId) sc
+                    SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilMemberSearch.Read') sc
                     WHERE  sc.CouncilId = ch.ParentCouncilId OR sc.CouncilId = m.HomeCouncilId
                 )
           AND   (   m.GiftName     LIKE '%' + @Search + '%'

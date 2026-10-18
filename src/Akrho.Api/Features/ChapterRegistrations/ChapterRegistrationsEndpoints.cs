@@ -195,7 +195,7 @@ public static class ChapterRegistrationsEndpoints
                 r.RegistrationId, r.ReferenceNo, r.RegistrationType, r.ProposedChapterName,
                 r.ChapterId, r.ChapterName, r.StatusName, r.SubmittedDate,
                 r.ActingCouncilId, r.ActingCouncilName, r.IntendedCouncilId, r.RoutingReason,
-                r.DecidedBy, r.DecidedDate, r.CanAct)).ToList();
+                r.DecidedBy, r.DecidedDate, r.CanAct, r.CanVerify, r.CanApprove, r.CanReturn)).ToList();
 
             var total = rows.Count > 0 ? rows[0].TotalCount : 0;
             return TypedResults.Ok(new PagedResult<ChapterRegistrationQueueItemDto>(items, total, req.Skip, req.Take));
@@ -424,7 +424,7 @@ public static class ChapterRegistrationsEndpoints
             h.SubmittedByMemberId, h.SubmittedByGiftName,
             h.SubmittedDate, h.StatusName, h.IsOpen,
             h.DecidedBy, h.DecidedByGiftName, h.DecidedDate, h.DecisionReason,
-            h.CreatedChapterId,
+            h.CreatedChapterId, h.CanVerify, h.CanApprove, h.CanReturn,
             officers, history, routing);
     }
 }

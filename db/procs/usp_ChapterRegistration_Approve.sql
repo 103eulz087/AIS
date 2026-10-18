@@ -14,8 +14,15 @@
    here at all.
 
    GUARDS, both branches:
-     - caller currently seated CouncilAdmin (decision E1b's approver role — distinct
-       from CouncilSecretary, which only verifies) on ActingCouncilId;
+     - caller holds the dynamic ChapterRegistration.Approve permission on ActingCouncilId
+       (db/schema/28_council_permissions.sql's dbo.fn_MemberSeatPermissions). Originally
+       CouncilAdmin-only (decision E1b's two-person control: Secretary verifies, Admin
+       approves); widened 2026-10-06 (client decision) so a Secretary can be a role
+       confined entirely to this module — verify AND approve, nothing else in the Portal
+       (see AuthorizationPolicies.CouncilChapterRegistrationApprove and PortalShell.tsx's
+       nav-filtering comment). Both defaults still reproduce exactly via 28's own
+       CouncilPermissionDefault seed; only that council's own President can now widen or
+       narrow it further, via usp_CouncilPermission_Set;
      - StatusId = Submitted;
      - ALL EIGHT officers verified (VerifiedBy IS NOT NULL) — THROWs with a clear count
        ("5 of 8 verified") rather than a bare rejection. */
@@ -56,18 +63,21 @@ BEGIN
     IF @StatusId <> @SubmittedId
         THROW 51561, 'This registration has already been decided.', 1;
 
-    /* Two-person control (decision E1b): the Secretary (or the admin) verifies officers
-       individually; final approval is CouncilAdmin ONLY — a distinct, narrower
-       capability from verification. */
+    /* Originally a two-person control (decision E1b): the Secretary verified officers
+       individually; only the Admin gave final approval. Widened 2026-10-06 (client
+       decision) — CouncilSecretary may now approve too, matching
+       AuthorizationPolicies.CouncilChapterRegistrationApprove, so a Secretary seat can
+       be confined to this module end to end (verify AND approve) with no other
+       standing power anywhere else in the Portal. Now expressed as the dynamic
+       ChapterRegistration.Approve permission (db/schema/28_council_permissions.sql) —
+       President and Secretary still hold it by default on every council, reproducing
+       this exact matrix, until that council's own President changes its own grid. */
     IF NOT EXISTS (
-        SELECT 1 FROM dbo.MemberRole mr
-        JOIN   dbo.Role r ON r.RoleId = mr.RoleId
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council' AND mr.ScopeId = @ActingCouncilId
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
-          AND  r.RoleName = 'CouncilAdmin'
+        SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+        WHERE  sp.CouncilId = @ActingCouncilId
+          AND  sp.PermissionKey = N'ChapterRegistration.Approve'
     )
-        THROW 51562, 'Only this council''s President may give final approval.', 1;
+        THROW 51562, 'You do not have permission to approve registrations for this council.', 1;
 
     -- Compared against how many officers this REGISTRATION actually submitted, never
     -- dbo.ChapterOffice's own row count (8) — a Charter registration can legitimately

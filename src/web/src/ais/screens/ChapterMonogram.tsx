@@ -1,9 +1,12 @@
 /**
  * The generated monogram — the default chapter mark shown before a chapter uploads its
  * own logo (docs/AIS-Project-Documentation.md §7A.3: "A generated monogram is the
- * default, so a chapter that has no logo file still looks finished on day one"). No image
- * upload exists anywhere in this module; this is the ONLY mark a chapter has at charter
- * time, rendered live as the petitioner types the chapter's name and picks an accent.
+ * default, so a chapter that has no logo file still looks finished on day one"). This
+ * module itself still has no image upload — it's the live preview shown while petitioning
+ * a new chapter (RegisterChapter.tsx/RegisterChapterStatus.tsx), before any logo can even
+ * exist yet. The real upload (added 2026-09-29) lives in Profile.tsx's own "Chapter logo"
+ * section, President-only, once the chapter is already chartered — DigitalId.tsx renders
+ * this same component as the fallback there whenever credential.chapterLogoUrl is null.
  */
 export function chapterInitials(chapterName: string): string {
   const words = chapterName.trim().split(/\s+/).filter(Boolean);

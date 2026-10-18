@@ -41,6 +41,9 @@ import { CouncilRoster } from "@/portal/screens/CouncilRoster";
 import { MemberSearch } from "@/portal/screens/MemberSearch";
 import { ChapterHolds } from "@/portal/screens/ChapterHolds";
 import { NationalAnnouncements } from "@/portal/screens/NationalAnnouncements";
+import { MemberPaymentTags } from "@/portal/screens/MemberPaymentTags";
+import { MemberPaymentTagStats } from "@/portal/screens/MemberPaymentTagStats";
+import { CouncilPermissions } from "@/portal/screens/CouncilPermissions";
 import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
@@ -328,9 +331,11 @@ export const router = createBrowserRouter([
    * chrome for this one module. A later Portal module should extend PortalShell's own
    * nav rather than building separate chrome again.
    *
-   * canReviewChapterRegistrations/canApproveChapterRegistrations (CouncilSecretary/
-   * CouncilAdmin) gate what each screen actually shows; RequireAuth here only checks
-   * that SOME session exists, same division of labour as the AIS "/" group above.
+   * canReviewChapterRegistrations/canApproveChapterRegistrations/canViewCouncilStatistics/
+   * canSearchMembersByJurisdiction (phase 1 "dynamic council office permissions",
+   * 2026-10-17: each a permission key on claims.councilSeats, no longer a role name) gate
+   * what each screen actually shows; RequireAuth here only checks that SOME session
+   * exists, same division of labour as the AIS "/" group above.
    */
   {
     path: "/portal",
@@ -367,6 +372,22 @@ export const router = createBrowserRouter([
       // Admin" authority is re-derived server-side — see NationalAnnouncements.tsx's
       // own header comment.
       { path: "announcements", element: <NationalAnnouncements /> },
+      // canManageMemberPaymentTags (CouncilAdmin); a simple, standalone paid/unpaid tag
+      // for National to track during initial rollout, deliberately separate from the
+      // renewal-fee module. Real "seated National CouncilAdmin" authority is re-derived
+      // server-side — see MemberPaymentTags.tsx's own header comment.
+      { path: "member-payment-tags", element: <MemberPaymentTags /> },
+      // Same gate, same report-only read — the Paid/Unpaid/Free counts alongside the
+      // tagging screen above.
+      { path: "member-payment-tags/stats", element: <MemberPaymentTagStats /> },
+      // Phase 1 "dynamic council office permissions" (2026-10-17). Any council seat may
+      // VIEW this screen (CouncilPermissions.tsx's own picker defaults to a council the
+      // caller can EDIT — canManageCouncilPermissions, i.e. that council's own seated
+      // President — when he holds one, otherwise the first council he's seated on at
+      // all); editing is further gated per-council by header.canEdit from the grid
+      // response itself. No councilId in the route — the screen's own picker supplies it
+      // from claims.councilSeats, never a URL param.
+      { path: "council-permissions", element: <CouncilPermissions /> },
     ],
   },
 ]);

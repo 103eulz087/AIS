@@ -4,14 +4,22 @@
    with the exact same "not found" error, so this cannot be used to probe which
    registration ids exist under a council this caller does not oversee.
 
-   "Has standing over" here means: seated on the registration's ActingCouncilId itself,
-   OR on any ANCESTOR of it (a provincial officer may always look at what its city
-   councils are deciding — the read-only half of the queue's own visibility rule,
-   applied to a single item). Walked UP via Council.ParentCouncilId, the mirror image of
-   usp_Council_GetSubtree's own downward walk.
+   "Has standing over" here means: holds the dynamic ChapterRegistration.Review
+   permission on the registration's ActingCouncilId itself, OR on any ANCESTOR of it
+   (db/schema/28_council_permissions.sql's dbo.fn_MemberPermissionScope — a provincial
+   officer may always look at what its city councils are deciding, but only if his own
+   seat there still grants Review; this is the read-only half of the queue's own
+   visibility rule, applied to a single item). fn_MemberPermissionScope already walks
+   DOWN from every Review-holding seat via dbo.fn_CouncilSubtree, so testing
+   "ActingCouncilId is in that result set" is equivalent to the old upward ancestor walk,
+   with no separate CTE needed here anymore.
+
+   Result set 1 ends with CanVerify/CanApprove/CanReturn — the same direct-seat-on-
+   ActingCouncilId flags usp_ChapterRegistration_GetQueue returns per row, computed
+   identically here for the single-item view.
 
    Four result sets:
-     1. The registration header.
+     1. The registration header, plus CanVerify/CanApprove/CanReturn at the end.
      2. Its eight officers, in office order, each with its verification state and its
         resolved identity (COALESCE over the Member row for a Turnover seat, or the
         typed-in columns for a Charter seat — never both populated, by
@@ -25,7 +33,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
     DECLARE @ActingCouncilId INT;
 
     SELECT @ActingCouncilId = ActingCouncilId FROM dbo.ChapterRegistration WHERE RegistrationId = @RegistrationId;
@@ -33,25 +40,22 @@ BEGIN
     IF @ActingCouncilId IS NULL
         THROW 51530, 'Registration not found.', 1;
 
-    DECLARE @AncestorCouncils TABLE (CouncilId INT PRIMARY KEY);
-    ;WITH AncestorTree AS (
-        SELECT CouncilId, ParentCouncilId FROM dbo.Council WHERE CouncilId = @ActingCouncilId
-        UNION ALL
-        SELECT c.CouncilId, c.ParentCouncilId
-        FROM   dbo.Council c JOIN AncestorTree a ON c.CouncilId = a.ParentCouncilId
-    )
-    INSERT INTO @AncestorCouncils (CouncilId)
-    SELECT CouncilId FROM AncestorTree
-    OPTION (MAXRECURSION 20);
-
     IF NOT EXISTS (
-        SELECT 1 FROM dbo.MemberRole mr
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council'
-          AND  mr.ScopeId  IN (SELECT CouncilId FROM @AncestorCouncils)
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
+        SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'ChapterRegistration.Review') sc
+        WHERE  sc.CouncilId = @ActingCouncilId
     )
         THROW 51530, 'Registration not found.', 1;
+
+    -- One member, one registration — a single call each is plenty here (contrast
+    -- usp_ChapterRegistration_GetQueue, which materializes this once for up to @Take rows).
+    DECLARE @MyPerms TABLE (PermissionKey NVARCHAR(60) PRIMARY KEY);
+    -- DISTINCT: a member seated in two offices on one council (e.g. President and Secretary)
+    -- holds the same key twice in fn_MemberSeatPermissions; without it the PK rejects the insert.
+    INSERT INTO @MyPerms (PermissionKey)
+    SELECT DISTINCT sp.PermissionKey
+    FROM   dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+    WHERE  sp.CouncilId = @ActingCouncilId
+      AND  sp.PermissionKey IN (N'ChapterRegistration.Verify', N'ChapterRegistration.Approve', N'ChapterRegistration.Return');
 
     -- 1. The registration header. ChapterName resolves via COALESCE(ChapterId,
     --    CreatedChapterId) — a Charter row's own ChapterId is NULL forever (it didn't
@@ -65,7 +69,10 @@ BEGIN
             cr.SubmittedByMemberId, sm.GiftName AS SubmittedByGiftName,
             cr.SubmittedDate, cr.StatusId, s.StatusName, cr.IsOpen,
             cr.DecidedBy, db.GiftName AS DecidedByGiftName, cr.DecidedDate, cr.DecisionReason,
-            cr.CreatedChapterId
+            cr.CreatedChapterId,
+            CAST(CASE WHEN EXISTS (SELECT 1 FROM @MyPerms WHERE PermissionKey = N'ChapterRegistration.Verify')  THEN 1 ELSE 0 END AS BIT) AS CanVerify,
+            CAST(CASE WHEN EXISTS (SELECT 1 FROM @MyPerms WHERE PermissionKey = N'ChapterRegistration.Approve') THEN 1 ELSE 0 END AS BIT) AS CanApprove,
+            CAST(CASE WHEN EXISTS (SELECT 1 FROM @MyPerms WHERE PermissionKey = N'ChapterRegistration.Return')  THEN 1 ELSE 0 END AS BIT) AS CanReturn
     FROM    dbo.ChapterRegistration cr
             JOIN dbo.ChapterRegistrationStatus s ON s.StatusId = cr.StatusId
             JOIN dbo.Council ac ON ac.CouncilId = cr.ActingCouncilId
@@ -119,10 +126,13 @@ BEGIN
     WHERE   u.RegistrationId = @RegistrationId
     ORDER BY u.UpdateDate ASC, u.ChapterRegistrationUpdateId ASC;
 
-    -- 4. The routing record.
-    SELECT  ar.RoutingId, ar.IntendedCouncilId, ar.ActingCouncilId, ar.RoutingReason,
+    -- 4. The routing record — the LATEST one only. A registration can collect several
+    -- (a resubmit that re-routes, or usp_ChapterRegistration_RerouteFromDormant), and
+    -- ChapterRegistrationRepository reads this set with ReadSingleOrDefault.
+    SELECT  TOP (1) ar.RoutingId, ar.IntendedCouncilId, ar.ActingCouncilId, ar.RoutingReason,
             ar.ActorMemberId, ar.ActedOn, ar.Remarks
     FROM    dbo.ApprovalRouting ar
-    WHERE   ar.SubjectType = 'Chapter' AND ar.SubjectId = @RegistrationId;
+    WHERE   ar.SubjectType = 'Chapter' AND ar.SubjectId = @RegistrationId
+    ORDER BY ar.ActedOn DESC, ar.RoutingId DESC;
 END
 GO

@@ -71,12 +71,17 @@ public sealed record ChapterRegistrationQueueRequest(int? StatusId = null, strin
 /// <summary>One row of a council officer's own registration queue. NO councilId anywhere in the
 /// request — scoped entirely from ICurrentUser.CouncilIds server-side (via
 /// usp_ChapterRegistration_GetQueue's own @RequestingMemberId derivation). CanAct is a display
-/// convenience only, never itself a permission boundary.</summary>
+/// convenience only, never itself a permission boundary — it is the OR of CanVerify/CanApprove/
+/// CanReturn, each a direct-seat check (dbo.fn_MemberSeatPermissions) on the registration's own
+/// ActingCouncilId: a registration visible only because it sits in the subtree of a council the
+/// caller holds Review on (not ActingCouncilId itself) carries all four as false — read-only
+/// visibility. The action endpoints (VerifyOfficer/Return/Approve) each re-check independently;
+/// never treat any of these flags as a permission boundary on its own.</summary>
 public sealed record ChapterRegistrationQueueItemDto(
     int RegistrationId, string ReferenceNo, string RegistrationType, string? ProposedChapterName,
     int? ChapterId, string? ChapterName, string StatusName, DateTime SubmittedDateUtc,
     int ActingCouncilId, string ActingCouncilName, int? IntendedCouncilId, string RoutingReason,
-    int? DecidedBy, DateTime? DecidedDateUtc, bool CanAct);
+    int? DecidedBy, DateTime? DecidedDateUtc, bool CanAct, bool CanVerify, bool CanApprove, bool CanReturn);
 
 /// <summary>One of the eight seats, resolved identity included, for the council officer
 /// reviewing the registration.</summary>
@@ -99,6 +104,9 @@ public sealed record ChapterRegistrationRoutingDto(
 /// <summary>
 /// The full registration, for the council officer reviewing it — same reasoning as
 /// MembershipApplicationDetailDto: the reviewer view, never shown to the wider membership.
+/// CanVerify/CanApprove/CanReturn are the same direct-seat checks (dbo.fn_MemberSeatPermissions,
+/// over this registration's own ActingCouncilId) as ChapterRegistrationQueueItemDto's own —
+/// display convenience only; VerifyOfficer/Return/Approve each re-check independently.
 /// </summary>
 public sealed record ChapterRegistrationDetailDto(
     int RegistrationId, string ReferenceNo, string RegistrationType, int? ChapterId, string? ChapterName,
@@ -110,7 +118,7 @@ public sealed record ChapterRegistrationDetailDto(
     int? SubmittedByMemberId, string? SubmittedByGiftName,
     DateTime SubmittedDateUtc, string StatusName, bool IsOpen,
     int? DecidedBy, string? DecidedByGiftName, DateTime? DecidedDateUtc, string? DecisionReason,
-    int? CreatedChapterId,
+    int? CreatedChapterId, bool CanVerify, bool CanApprove, bool CanReturn,
     IReadOnlyList<ChapterRegistrationOfficerDto> Officers,
     IReadOnlyList<ChapterRegistrationUpdateDto> History,
     ChapterRegistrationRoutingDto? Routing);

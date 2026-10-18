@@ -96,6 +96,9 @@ public static class CredentialEndpoints
             // #8). Relative path so the frontend resolves it against its own origin, not a
             // hardcoded domain. Lowercase, hyphenated ("D") format.
             $"/verify/{r.TokenSubject.ToString("D").ToLowerInvariant()}",
-            r.OfficePosition, r.OfficeBody);
+            r.OfficePosition, r.OfficeBody,
+            r.IsPaid,
+            r.HasChapterLogo ? "/api/members/me/chapter-logo" : null,
+            r.MarkAccentHex);
     }
 }

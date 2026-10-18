@@ -6,6 +6,8 @@ import { api, ApiError, type DownloadedFile } from "@/shared/api";
 import { shortDate, validThrough } from "@/shared/format";
 import { ErrorState, ScreenSkeleton } from "@/shared/states";
 import { PasswordInput } from "@/shared/PasswordInput";
+import { useAuth } from "@/shared/auth";
+import { canManageChapterLogo } from "@/shared/roles";
 import type { BloodTypeOption, SkillOption } from "@/shared/types";
 import { NotificationSettings } from "@/ais/screens/NotificationSettings";
 
@@ -104,6 +106,14 @@ function buildForm(data: MemberProfileResponse): FormState {
 const PHOTO_ACCEPT = "image/jpeg,image/png,image/heic";
 const MAX_PHOTO_SIZE_BYTES = 4 * 1024 * 1024;
 
+// Chapter mark, image slice. Client decision 2026-09-30: any image format is accepted
+// (relaxed from the original PNG-only restriction) — a format with transparency (PNG,
+// WEBP, GIF) still shows up borderless on the ID card; a format without one (JPEG)
+// shows whatever background the source file itself had. See
+// MembersEndpoints.StageChapterLogo's own header comment for the full trade-off.
+const LOGO_ACCEPT = "image/*";
+const MAX_LOGO_SIZE_BYTES = 3 * 1024 * 1024;
+
 /**
  * A member's own record — the only screen where he can see Address/Email/DateSurvive/
  * approval provenance about himself, and edit a bounded slice of it.
@@ -125,6 +135,9 @@ const MAX_PHOTO_SIZE_BYTES = 4 * 1024 * 1024;
  * has loading/error/loaded states.
  */
 export function Profile() {
+  const { claims } = useAuth();
+  const canManageLogo = canManageChapterLogo(claims?.roles ?? []);
+
   const profileQuery = useQuery({
     queryKey: ["member-profile"],
     queryFn: () => api.get<MemberProfileResponse>("/api/members/me"),
@@ -201,6 +214,75 @@ export function Profile() {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [data?.photoUrl, photoVersion]);
+
+  // Chapter mark, image slice (2026-09-29) — President (ChapterAdmin) only. Tries the
+  // fetch directly rather than reading GET /api/members/me/credential first: this
+  // screen has no other reason to self-issue a Digital ID credential, and a 404 here
+  // (no logo on file yet) is the normal, expected first-run state, not an error.
+  const [chapterLogoObjectUrl, setChapterLogoObjectUrl] = useState<string | null>(null);
+  const [chapterLogoLoading, setChapterLogoLoading] = useState(false);
+  const [chapterLogoVersion, setChapterLogoVersion] = useState(0);
+  const [chapterLogoUploading, setChapterLogoUploading] = useState(false);
+  const [chapterLogoUploadError, setChapterLogoUploadError] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!canManageLogo) return;
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    async function loadChapterLogo() {
+      setChapterLogoLoading(true);
+      try {
+        const file: DownloadedFile = await api.download("/api/members/me/chapter-logo");
+        objectUrl = URL.createObjectURL(file.blob);
+        if (!cancelled) setChapterLogoObjectUrl(objectUrl);
+      } catch {
+        // No logo uploaded yet — the normal first-run state, never an error banner.
+        if (!cancelled) setChapterLogoObjectUrl(null);
+      } finally {
+        if (!cancelled) setChapterLogoLoading(false);
+      }
+    }
+
+    void loadChapterLogo();
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [canManageLogo, chapterLogoVersion]);
+
+  async function handleChapterLogoPicked(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // lets the same file be re-picked after a retry
+    if (!file) return;
+
+    setChapterLogoUploadError(null);
+
+    if (file.size > MAX_LOGO_SIZE_BYTES) {
+      setChapterLogoUploadError("That logo is too large. Logos up to 3 MB are accepted.");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      setChapterLogoUploadError("Choose an image file for the logo.");
+      return;
+    }
+
+    setChapterLogoUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const staged = await api.upload<{ attachmentStagingId: number }>(
+        "/api/members/me/chapter-logo/stage", formData);
+      await api.post("/api/members/me/chapter-logo", { attachmentStagingId: staged.attachmentStagingId });
+      setChapterLogoVersion(v => v + 1);
+    } catch (err) {
+      setChapterLogoUploadError(
+        err instanceof ApiError ? err.message : "Could not upload that logo. Please try again.");
+    } finally {
+      setChapterLogoUploading(false);
+    }
+  }
 
   if (profileQuery.isLoading) return <ScreenSkeleton rows={8} />;
   if (profileQuery.error) {
@@ -525,6 +607,50 @@ export function Profile() {
         {photoUploadError && <p role="alert" style={{ ...errorTextStyle, textAlign: "center" }}>{photoUploadError}</p>}
       </div>
 
+      {/* Chapter mark, image slice (2026-09-29) — President only. This is the chapter's
+          OWN logo, not a personal photo: it shows up on every member's Digital ID, not
+          just the President's own. */}
+      {canManageLogo && (
+        <div>
+          <div style={sectionLabelStyle}>Chapter logo</div>
+          <p style={noteStyle}>
+            Shown on every member&rsquo;s digital ID. Any image format, up to 3 MB — a PNG
+            or WEBP with a transparent background looks best (no white box behind it).
+          </p>
+          <div style={{ textAlign: "center", padding: "8px 0 20px" }}>
+            {chapterLogoLoading ? (
+              <div style={logoPreviewStyle} aria-busy="true" />
+            ) : chapterLogoObjectUrl ? (
+              <div style={logoPreviewStyle}>
+                <img src={chapterLogoObjectUrl} alt="Chapter logo" style={logoPreviewImgStyle} />
+              </div>
+            ) : (
+              <div style={{ ...logoPreviewStyle, display: "grid", placeItems: "center" }}>
+                <span style={{ fontSize: 11.5, color: "var(--mute)" }}>No logo yet</span>
+              </div>
+            )}
+
+            <div>
+              <button
+                type="button" disabled={chapterLogoUploading}
+                onClick={() => logoInputRef.current?.click()}
+                style={changePhotoLinkStyle}
+              >
+                {chapterLogoUploading ? "Uploading…" : chapterLogoObjectUrl ? "Change logo" : "Upload logo"}
+              </button>
+            </div>
+            <input
+              ref={logoInputRef} type="file" accept={LOGO_ACCEPT}
+              onChange={e => { void handleChapterLogoPicked(e); }} style={{ display: "none" }}
+            />
+
+            {chapterLogoUploadError && (
+              <p role="alert" style={{ ...errorTextStyle, textAlign: "center" }}>{chapterLogoUploadError}</p>
+            )}
+          </div>
+        </div>
+      )}
+
       <ChangePasswordSection />
 
       <NotificationSettings />
@@ -686,6 +812,15 @@ const avatarStyle: CSSProperties = {
   width: 84, height: 84, borderRadius: "50%", margin: "0 auto", background: "var(--deep)",
   color: "var(--brass-soft)", display: "grid", placeItems: "center",
   fontFamily: "var(--f-disp)", fontSize: 26,
+};
+
+const logoPreviewStyle: CSSProperties = {
+  width: 96, height: 96, borderRadius: "var(--r)", margin: "0 auto",
+  background: "var(--bond)", border: "1px solid var(--line)",
+};
+
+const logoPreviewImgStyle: CSSProperties = {
+  width: "100%", height: "100%", objectFit: "contain",
 };
 
 const changePhotoLinkStyle: CSSProperties = {

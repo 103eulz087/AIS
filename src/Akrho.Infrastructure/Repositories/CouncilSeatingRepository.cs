@@ -33,7 +33,7 @@ internal static class CouncilSeatingErrors
 {
     private static readonly HashSet<int> Known =
     [
-        51650, 51651, 51660, 51661, 51662, 51663, 51664,
+        51650, 51651, 51652, 51660, 51661, 51662, 51663, 51664,
         51670, 51671, 51672, 51673, 51674, 51675, 51676,
         51680, 51681, 51682, 51690, 51691, 51692
     ];
@@ -90,10 +90,11 @@ public interface ICouncilSeatingRepository
     Task<IReadOnlyList<CouncilOfficerCandidateRow>> EligibleOfficersAsync(
         int requestingMemberId, int councilId, string? search, CancellationToken ct);
 
-    /// <summary>CouncilAdmin at the resolved seating authority only. Throws
-    /// <see cref="CouncilSeatingException"/> (Forbidden). Returns null if no match.</summary>
-    Task<CouncilMemberLookupRow?> MemberLookupAsync(
-        int requestingMemberId, int councilId, string memberNumber, CancellationToken ct);
+    /// <summary>CouncilAdmin at the resolved seating authority only. Name AND mobile number
+    /// must both match — never a browsable list. Throws <see cref="CouncilSeatingException"/>
+    /// (Forbidden, or BadRequest when either is missing). Empty if nobody matches.</summary>
+    Task<IReadOnlyList<CouncilMemberLookupRow>> MemberLookupAsync(
+        int requestingMemberId, int councilId, string name, string mobileNo, CancellationToken ct);
 
     /// <summary>Throws <see cref="CouncilSeatingException"/> (Forbidden / BadRequest).</summary>
     Task<CouncilCreatedRow> CreateAsync(
@@ -136,16 +137,17 @@ public sealed class CouncilSeatingRepository(ISqlConnectionFactory factory) : IC
         }
     }
 
-    public async Task<CouncilMemberLookupRow?> MemberLookupAsync(
-        int requestingMemberId, int councilId, string memberNumber, CancellationToken ct)
+    public async Task<IReadOnlyList<CouncilMemberLookupRow>> MemberLookupAsync(
+        int requestingMemberId, int councilId, string name, string mobileNo, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
         {
-            return await conn.QuerySingleOrDefaultAsync<CouncilMemberLookupRow?>(new CommandDefinition(
+            var rows = await conn.QueryAsync<CouncilMemberLookupRow>(new CommandDefinition(
                 "dbo.usp_Council_MemberLookup",
-                new { RequestingMemberId = requestingMemberId, CouncilId = councilId, MemberNumber = memberNumber },
+                new { RequestingMemberId = requestingMemberId, CouncilId = councilId, Name = name, MobileNo = mobileNo },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
+            return rows.AsList();
         }
         catch (SqlException ex) when (CouncilSeatingErrors.IsKnown(ex.Number))
         {

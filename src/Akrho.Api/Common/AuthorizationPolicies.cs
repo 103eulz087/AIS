@@ -83,38 +83,42 @@ public static class AuthorizationPolicies
     public const string ChapterOfficerRosterFile = "ChapterOfficerRosterFile";
 
     /// <summary>
-    /// CouncilSecretary or CouncilAdmin — see a council's chapter-registration queue/detail,
-    /// tick an officer's verification, or return a registration for correction. NOTE:
-    /// <c>ChapterAuditor</c> must NEVER be added here or to any other write-granting policy —
-    /// it is deliberately read-only (docs §7A.4: "an auditor who can edit what he audits is
-    /// not an auditor"). This is a COUNCIL role check (CouncilSecretary/CouncilAdmin), not to
-    /// be confused with the chapter-level ChapterAuditor office seeded by
-    /// db/schema/17_chapter_registration.sql, which never appears in any policy at all.
+    /// Phase 1 "dynamic council office permissions" (2026-10-17): widened to all six council
+    /// roles (CouncilAdmin, CouncilOfficer, CouncilSecretary, CouncilTreasurer, CouncilPIO,
+    /// CouncilAuditor), including CouncilAuditor. This is now only the coarse "holds SOME
+    /// council office" pre-check — the real gate is the stored procedure, via
+    /// dbo.fn_MemberSeatPermissions over the ChapterRegistration.Review/Verify/Approve/Return
+    /// keys (db/schema/28_council_permissions.sql), which usp_ChapterRegistration_GetQueue/
+    /// _Get/_VerifyOfficer/_Return check themselves. CouncilAuditor clears this ROLE check but
+    /// is never granted ChapterRegistration.Verify/Approve/Return by default (dbo.CouncilOffice
+    /// seeds it IsReadOnly) — adding a write permission to a read-only office is itself
+    /// rejected by usp_CouncilPermission_Set (51934), so an auditor who can edit what he
+    /// audits (docs §7A.4) stays structurally impossible, enforced in the procedure, not here.
     /// </summary>
     public const string CouncilChapterRegistrationVerify = "CouncilChapterRegistrationVerify";
 
     /// <summary>
-    /// CouncilAdmin only — final approval of a chapter registration (charter or turnover).
-    /// Narrower than <see cref="CouncilChapterRegistrationVerify"/> by design, same two-person-
-    /// control reasoning as <see cref="ChapterMeetingsFinalize"/> narrowing
-    /// <see cref="ChapterMeetingsWrite"/>: verifying individual officers is the Secretary's (or
-    /// the Admin's) job; giving final approval — which creates member records / regenerates
-    /// credentials — is reserved for the council's own most accountable officer (§7A.4
-    /// decision E1b). <c>ChapterAuditor</c> must NEVER be added here either, for the same
-    /// reason noted on <see cref="CouncilChapterRegistrationVerify"/>.
+    /// Final approval of a chapter registration (charter or turnover). Originally
+    /// CouncilAdmin-only, then CouncilSecretary/CouncilAdmin (§7A.4 decision E1b widened
+    /// 2026-10-06), now the same all-six-roles coarse check as
+    /// <see cref="CouncilChapterRegistrationVerify"/> (Phase 1, 2026-10-17) — same reasoning:
+    /// the real gate is usp_ChapterRegistration_Approve's own fn_MemberSeatPermissions check
+    /// over ChapterRegistration.Approve, and CouncilAuditor's seeded IsReadOnly office makes
+    /// holding that key structurally impossible without usp_CouncilPermission_Set rejecting
+    /// the grant (51934) first.
     /// </summary>
     public const string CouncilChapterRegistrationApprove = "CouncilChapterRegistrationApprove";
 
     /// <summary>
-    /// CouncilSecretary or CouncilAdmin — read council-wide/chapter-subtree statistics
-    /// (GET /api/councils/statistics, GET /api/councils/{councilId}/statistics). Same role
-    /// bar as <see cref="CouncilChapterRegistrationVerify"/>: read-only, but still a seated
-    /// council office, not open to every member. <c>ChapterAuditor</c> must NEVER be added
-    /// here either, same reasoning as <see cref="CouncilChapterRegistrationVerify"/>'s own
-    /// note. Do NOT add ProvincialOfficer/RegionalOfficer/NationalSecretariat/SystemAdmin
-    /// here or to any policy — these are seeded role names (db/seed/01_reference.sql) that
-    /// grant nothing anywhere in code today, and this must not be the first place they
-    /// silently start meaning something.
+    /// Read council-wide/chapter-subtree statistics (GET /api/councils/statistics, GET
+    /// /api/councils/{councilId}/statistics). Phase 1 (2026-10-17): widened to all six council
+    /// roles, same coarse-check-only reasoning as <see cref="CouncilChapterRegistrationVerify"/>
+    /// — usp_CouncilStatistics_Get's own 51620/51621 checks are the real gate, scoped via
+    /// dbo.fn_MemberPermissionScope(@RequestingMemberId, 'CouncilStatistics.Read'). Do
+    /// NOT add ProvincialOfficer/RegionalOfficer/NationalSecretariat/SystemAdmin here or to any
+    /// policy — these are seeded role names (db/seed/01_reference.sql) that grant nothing
+    /// anywhere in code today, and this must not be the first place they silently start
+    /// meaning something.
     /// </summary>
     public const string CouncilStatisticsRead = "CouncilStatisticsRead";
 
@@ -190,16 +194,15 @@ public static class AuthorizationPolicies
 
     /// <summary>
     /// Any real council office — read-only global member search (GET
-    /// /api/members/search-jurisdiction), by name, member number, or mobile number. Same
-    /// ROLE bar as <see cref="CouncilRegistryRead"/> (a Secretary or Treasurer has as much
-    /// legitimate reason to look a member up as an Admin does), kept as its own named
-    /// policy rather than reused because it gates a different capability — mirrors
-    /// canReviewChapterRegistrations/canViewCouncilStatistics in shared/roles.ts, which
-    /// share an identical role bar for the same reason. usp_Member_SearchByJurisdiction
-    /// re-derives the caller's own dbo.fn_MemberCouncilScope regardless of role — a
-    /// National officer's own scope happens to be the whole tree, a Regional/Provincial/
-    /// City officer's is only his own subtree; this policy never knows or checks which.
-    /// <c>CouncilAuditor</c> and the inert seeded role names must NEVER be added here.
+    /// /api/members/search-jurisdiction), by name, member number, or mobile number. Phase 1
+    /// (2026-10-17): widened to all six council roles, including CouncilAuditor — same
+    /// coarse-check-only reasoning as <see cref="CouncilChapterRegistrationVerify"/>.
+    /// usp_Member_SearchByJurisdiction/_GetByJurisdiction re-derive the caller's own
+    /// dbo.fn_MemberCouncilScope regardless of role — a National officer's own scope happens
+    /// to be the whole tree, a Regional/Provincial/City officer's is only his own subtree;
+    /// this policy never knows or checks which. Do NOT add the inert seeded role names
+    /// (ProvincialOfficer/RegionalOfficer/NationalSecretariat/SystemAdmin) here or to any
+    /// policy, same reasoning as <see cref="CouncilStatisticsRead"/>'s own note.
     /// </summary>
     public const string CouncilMemberSearchRead = "CouncilMemberSearchRead";
 
@@ -234,4 +237,75 @@ public static class AuthorizationPolicies
     /// one chapter on hold, which is CouncilAdmin-only for the same reason.
     /// </summary>
     public const string NationalAnnouncementManage = "NationalAnnouncementManage";
+
+    /// <summary>
+    /// CouncilAdmin — search a chapter's own member list and tag/untag whoever has paid
+    /// this membership year (GET /api/member-payment-tags/chapters/{chapterId}/members,
+    /// POST .../members/{memberId}). Client decision 2026-09-29: held at National alone
+    /// while chapters are still rolling out — deliberately narrower than the "National, or
+    /// the chapter/council's own governing body" split <see cref="ChapterHoldManage"/> uses;
+    /// see usp_MemberPaymentTag_Set.sql's own header. The real "specifically the seated
+    /// National CouncilAdmin, not one seated elsewhere" restriction is re-derived entirely
+    /// server-side by usp_MemberPaymentTag_GetChapterMembers/_Set, same "coarse client
+    /// check, real server check" posture as every other policy in this file. Do NOT add
+    /// CouncilSecretary/CouncilTreasurer/CouncilOfficer/CouncilPIO here — this is a brand
+    /// new, informal control the client wants held at National alone, same reasoning as
+    /// <see cref="NationalMemberAccountManage"/>.
+    /// </summary>
+    public const string MemberPaymentTagManage = "MemberPaymentTagManage";
+
+    /// <summary>
+    /// ChapterAdmin only — stage or set the caller's OWN chapter's logo (POST
+    /// /api/members/me/chapter-logo/stage, POST /api/members/me/chapter-logo). Per this
+    /// codebase's own officer-seeding convention (db/seed/01_reference.sql), the
+    /// 'ChapterAdmin' role IS the President's office — nothing else maps to it — so this
+    /// reuses that role bar directly rather than inventing a separate "President" claim,
+    /// same posture as <see cref="ChapterMemberIdentityEdit"/>/<see cref="ChapterOfficerRosterFile"/>.
+    /// The real "specifically the caller's OWN chapter" restriction is re-derived
+    /// entirely server-side by usp_Chapter_SetLogo (it resolves the chapter from the
+    /// caller's own Member row — there is no chapter id in the request to substitute).
+    /// GET /api/members/me/chapter-logo carries NO policy beyond plain authentication —
+    /// any member needs to see his own chapter's logo on his own Digital ID, not just
+    /// the President who set it.
+    /// </summary>
+    public const string ChapterLogoManage = "ChapterLogoManage";
+
+    /// <summary>
+    /// CouncilSecretary or CouncilAdmin — the National ID card export (GET
+    /// /api/id-card-exports and its /digital-id variant). Split out (Phase 1, 2026-10-17)
+    /// from <see cref="CouncilChapterRegistrationApprove"/>, which it used to reuse, so that
+    /// widening CouncilChapterRegistrationApprove to all six council roles does not also
+    /// widen who may bulk-export every member's photo and credential data — this stays
+    /// exactly the pre-widening role set. The procedures' own 51581 check (National Council
+    /// only, re-derived from @RequestingMemberId) remains the real restriction; this policy
+    /// is only the coarse "must hold one of these two roles, on some council" pre-check.
+    /// </summary>
+    public const string NationalIdCardExport = "NationalIdCardExport";
+
+    /// <summary>
+    /// Any real council office — read a council's own permission grid (GET
+    /// /api/councils/{councilId}/permissions). Same all-six-roles coarse bar as
+    /// <see cref="CouncilChapterRegistrationVerify"/>/<see cref="CouncilStatisticsRead"/>:
+    /// visibility is intentionally broader than who may edit (any officer who may see the
+    /// council at all may see what it grants — usp_CouncilPermission_GetGrid's own header),
+    /// re-derived server-side via dbo.fn_MemberCouncilScope (51930 if the council is outside
+    /// the caller's view). <c>CouncilAuditor</c> belongs here same as everywhere else in this
+    /// group — read access was never the risk; see <see cref="CouncilPermissionsManage"/> for
+    /// the actual write boundary.
+    /// </summary>
+    public const string CouncilPermissionsRead = "CouncilPermissionsRead";
+
+    /// <summary>
+    /// CouncilAdmin only — edit a council's own permission grid (PUT
+    /// /api/councils/{councilId}/permissions). Deliberately narrower than
+    /// <see cref="CouncilPermissionsRead"/>, and deliberately NOT widened to every council
+    /// role the way the four Phase 1 policies above were: this is the one capability that
+    /// decides every OTHER council capability, so it is reserved for that council's own
+    /// seated President alone — there is no "manage permissions" key to delegate this away
+    /// with either (db/schema/28_council_permissions.sql's own header). The coarse ROLE bar
+    /// here only confirms the caller holds SOME CouncilAdmin seat; usp_CouncilPermission_Set's
+    /// own 51931 is what actually confirms it is THIS council's own currently-seated
+    /// President, never a parent's.
+    /// </summary>
+    public const string CouncilPermissionsManage = "CouncilPermissionsManage";
 }

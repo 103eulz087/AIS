@@ -36,7 +36,16 @@
    signal that call was skipped, not an expected steady state. Only a currently-valid
    credential counts (RevokedDate IS NULL AND ExpiryDate > SYSUTCDATETIME()) — the same
    idempotency rule usp_Credential_BulkIssueForExport itself enforces, so this can never
-   show a revoked or expired token as if it were live. */
+   show a revoked or expired token as if it were live.
+
+   ADDED 2026-10-09 (client decision): DateSurvive, the chapter's own City/Municipal ->
+   Provincial -> Regional council chain (CityName/ProvinceName/RegionName — mirrors
+   usp_Member_ListForDigitalIdExport's own CouncilChain CTE, walked one level further up),
+   and PaymentStatus (Paid/Free/Unpaid for the current membership year — same tri-state
+   expression usp_MemberPaymentTag_ListMembers.sql's own SELECT uses, repeated here rather
+   than shared, since nothing in this codebase shares SQL expressions across procs).
+   GiftName was already selected before this change; not newly added despite being asked
+   for again. */
 CREATE OR ALTER PROCEDURE dbo.usp_Member_ListForIdCardExport
     @RequestingMemberId INT,
     @ChapterId           INT = NULL
@@ -67,23 +76,62 @@ BEGIN
     )
         THROW 51581, 'Only the National Council Admin may run an ID card export.', 1;
 
-    SELECT  m.MemberId, m.MemberNumber,
-            m.FirstName, m.MiddleName, m.LastName, m.GiftName,
+    -- Same 09-Aug-anchored membership year every payment-tag-aware proc uses.
+    DECLARE @CurrentMembershipYear INT;
+    DECLARE @Anniversary DATE = DATEFROMPARTS(YEAR(@Today), 8, 8);
+    SET @CurrentMembershipYear = CASE WHEN @Today > @Anniversary THEN YEAR(@Today) ELSE YEAR(@Today) - 1 END;
+
+    ;WITH TargetMembers AS (
+        SELECT  m.MemberId, m.MemberNumber,
+                m.FirstName, m.MiddleName, m.LastName, m.GiftName, m.DateSurvive,
+                m.BloodTypeId, m.ChapterId, m.PhotoPath, m.PhotoContentType, m.StatusId
+        FROM    dbo.Member m
+        WHERE   m.IsDeleted = 0
+          AND   (@ChapterId IS NULL OR m.ChapterId = @ChapterId)
+    ),
+    CouncilChain AS (
+        SELECT  tm.MemberId, c.CouncilId, c.ParentCouncilId, c.CouncilName, cl.LevelName
+        FROM    TargetMembers tm
+                JOIN dbo.Chapter ch      ON ch.ChapterId = tm.ChapterId
+                JOIN dbo.Council c       ON c.CouncilId = ch.ParentCouncilId
+                JOIN dbo.CouncilLevel cl ON cl.CouncilLevelId = c.CouncilLevelId
+        UNION ALL
+        SELECT  cc.MemberId, p.CouncilId, p.ParentCouncilId, p.CouncilName, cl.LevelName
+        FROM    CouncilChain cc
+                JOIN dbo.Council p       ON p.CouncilId = cc.ParentCouncilId
+                JOIN dbo.CouncilLevel cl ON cl.CouncilLevelId = p.CouncilLevelId
+    ),
+    LatestTag AS (
+        SELECT  MemberId, ActionType,
+                ROW_NUMBER() OVER (PARTITION BY MemberId ORDER BY PerformedDate DESC, MemberPaymentTagActionId DESC) AS rn
+        FROM    dbo.MemberPaymentTagAction
+        WHERE   MembershipYear = @CurrentMembershipYear
+    )
+    SELECT  tm.MemberId, tm.MemberNumber,
+            tm.FirstName, tm.MiddleName, tm.LastName, tm.GiftName, tm.DateSurvive,
             bt.BloodTypeName,
-            m.ChapterId, ch.ChapterName, ch.ChapterCode,
+            tm.ChapterId, ch.ChapterName, ch.ChapterCode,
+            MAX(CASE WHEN cc.LevelName = 'City/Municipal' THEN cc.CouncilName END) AS CityName,
+            MAX(CASE WHEN cc.LevelName = 'Provincial'      THEN cc.CouncilName END) AS ProvinceName,
+            MAX(CASE WHEN cc.LevelName = 'Regional'        THEN cc.CouncilName END) AS RegionName,
             ms.StatusName,
-            m.PhotoPath, m.PhotoContentType,
+            CASE lt.ActionType WHEN 'Tagged' THEN 'Paid' WHEN 'Free' THEN 'Free' ELSE 'Unpaid' END AS PaymentStatus,
+            tm.PhotoPath, tm.PhotoContentType,
             mc.TokenSubject
-    FROM    dbo.Member m
-            JOIN dbo.Chapter ch      ON ch.ChapterId = m.ChapterId
-            JOIN dbo.MemberStatus ms ON ms.StatusId  = m.StatusId
-            LEFT JOIN dbo.BloodType bt ON bt.BloodTypeId = m.BloodTypeId
+    FROM    TargetMembers tm
+            JOIN dbo.Chapter ch      ON ch.ChapterId = tm.ChapterId
+            JOIN dbo.MemberStatus ms ON ms.StatusId  = tm.StatusId
+            LEFT JOIN dbo.BloodType bt ON bt.BloodTypeId = tm.BloodTypeId
+            LEFT JOIN CouncilChain cc  ON cc.MemberId = tm.MemberId
+            LEFT JOIN LatestTag lt     ON lt.MemberId = tm.MemberId AND lt.rn = 1
             LEFT JOIN dbo.MemberCredential mc
-                   ON mc.MemberId = m.MemberId
+                   ON mc.MemberId = tm.MemberId
                   AND mc.RevokedDate IS NULL
                   AND mc.ExpiryDate > SYSUTCDATETIME()
-    WHERE   m.IsDeleted = 0
-      AND   (@ChapterId IS NULL OR m.ChapterId = @ChapterId)
-    ORDER BY ch.ChapterName, m.LastName, m.FirstName;
+    GROUP BY tm.MemberId, tm.MemberNumber, tm.FirstName, tm.MiddleName, tm.LastName, tm.GiftName,
+             tm.DateSurvive, bt.BloodTypeName, tm.ChapterId, ch.ChapterName, ch.ChapterCode,
+             ms.StatusName, lt.ActionType, tm.PhotoPath, tm.PhotoContentType, mc.TokenSubject
+    ORDER BY ch.ChapterName, tm.LastName, tm.FirstName
+    OPTION (MAXRECURSION 20);
 END
 GO

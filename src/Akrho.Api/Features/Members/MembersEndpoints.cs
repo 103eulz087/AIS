@@ -21,6 +21,16 @@ public static class MembersEndpoints
         "image/jpeg", "image/png", "image/heic"
     };
 
+    // Chapter mark, image slice. Client decision 2026-09-30: any image format is
+    // accepted (relaxed from the original PNG-only restriction) — a generic "image/*"
+    // check rather than a fixed allow-list, so a new browser/phone image type never
+    // needs a code change here. A format with an alpha channel (PNG, WEBP, GIF) still
+    // comes out borderless on the ID card, since this byte-for-byte storage pipeline
+    // (IFileStorage never re-encodes) preserves whatever the source file already had;
+    // a format without one (JPEG) shows whatever background the source file baked in —
+    // that trade-off was shown to the client and accepted.
+    private const long MaxLogoSizeBytes = 3L * 1024 * 1024;
+
     public static IEndpointRouteBuilder MapMembers(this IEndpointRouteBuilder app)
     {
         var g = app.MapGroup("/api/members").WithTags("Members").RequireAuthorization();
@@ -47,6 +57,20 @@ public static class MembersEndpoints
         g.MapPost("/me/photo/stage", StageOwnPhoto).WithName("StageOwnMemberPhoto")
             .RequireRateLimiting(RateLimiting.ProfilePhotoUpload)
             .DisableAntiforgery();
+
+        // Chapter mark, image slice (2026-09-29) — President (ChapterAdmin) only, same
+        // stage/claim split as the photo pair above, gated additionally by
+        // ChapterLogoManage since (unlike a member's own photo) this writes to the
+        // CHAPTER's own record, not the caller's. GET has no extra policy: any
+        // authenticated member of the caller's own chapter needs to see it on his own
+        // Digital ID (DigitalId.tsx), same as GetPhoto's own reasoning below.
+        g.MapPost("/me/chapter-logo/stage", StageChapterLogo).WithName("StageChapterLogo")
+            .RequireAuthorization(AuthorizationPolicies.ChapterLogoManage)
+            .RequireRateLimiting(RateLimiting.ProfilePhotoUpload)
+            .DisableAntiforgery();
+        g.MapPost("/me/chapter-logo", SetChapterLogo).WithName("SetChapterLogo")
+            .RequireAuthorization(AuthorizationPolicies.ChapterLogoManage);
+        g.MapGet("/me/chapter-logo", GetOwnChapterLogo).WithName("GetOwnChapterLogo");
 
         // Any authenticated caller may ask for ANY member's photo by id — usp_Member_GetPhoto
         // enforces the actual visibility rule (self, or same chapter) and throws the identical
@@ -301,6 +325,87 @@ public static class MembersEndpoints
             // Same "not found" for a nonexistent member, a wrong-chapter caller, and a member
             // who has never uploaded a photo — anti-enumeration, usp_Member_GetPhoto's own
             // header comment.
+            return TypedResults.NotFound();
+        }
+    }
+
+    private static async Task<Results<Ok<ChapterLogoStagedDto>, BadRequest<string>>> StageChapterLogo(
+        IFormFile? file, IFileStorage storage, IAttachmentRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        if (file is null || file.Length == 0)
+            return TypedResults.BadRequest("Choose a logo image to upload.");
+
+        if (file.Length > MaxLogoSizeBytes)
+            return TypedResults.BadRequest("That logo is too large. Logos up to 3 MB are accepted.");
+
+        if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            return TypedResults.BadRequest("Choose an image file for the logo.");
+
+        await using var stream = file.OpenReadStream();
+        var stored = await storage.SaveAsync(stream, file.FileName, file.ContentType, ct);
+
+        // ChapterId/UploadedBy come from the caller's own token, never the request
+        // (CLAUDE.md invariant #11) — same generic AttachmentStaging row every other
+        // upload in this codebase uses; usp_Chapter_SetLogo is what actually restricts
+        // this staged row to becoming ONLY the caller's own chapter's logo.
+        var displayName = Path.GetFileName(file.FileName);
+        var attachmentStagingId = await repo.StageAsync(
+            caller.ChapterId, caller.MemberId, stored.RelativePath, displayName,
+            stored.FileSize, file.ContentType, ct);
+
+        return TypedResults.Ok(new ChapterLogoStagedDto(attachmentStagingId));
+    }
+
+    private static async Task<Results<Ok<ChapterLogoSetDto>, ProblemHttpResult>> SetChapterLogo(
+        SetChapterLogoRequest req, IChapterLogoRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        try
+        {
+            await repo.SetLogoAsync(caller.MemberId, req.AttachmentStagingId, ct);
+            return TypedResults.Ok(new ChapterLogoSetDto("/api/members/me/chapter-logo"));
+        }
+        catch (ChapterLogoException ex)
+        {
+            return ex.Category switch
+            {
+                ChapterLogoErrorCategory.Forbidden =>
+                    TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
+                _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
+            };
+        }
+    }
+
+    private static async Task<Results<FileStreamHttpResult, NotFound>> GetOwnChapterLogo(
+        IChapterLogoRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct)
+    {
+        ChapterLogoRow row;
+        try
+        {
+            row = await repo.GetLogoPathForMemberAsync(caller.MemberId, ct);
+        }
+        catch (ChapterLogoException)
+        {
+            // Same "not found" whether the caller's chapter simply has no logo yet, or he
+            // is a detached member with no chapter at all — anti-enumeration, matching
+            // GetPhoto's own posture.
+            return TypedResults.NotFound();
+        }
+
+        try
+        {
+            var stream = await storage.OpenReadAsync(row.LogoPath, ct);
+
+            // The actual uploaded format (any image type is accepted — client decision
+            // 2026-09-30), same PhotoPath/PhotoContentType pairing GetPhoto already uses.
+            // Content-Disposition: attachment for the same spoofed-content-type mitigation
+            // GetPhoto uses; LogoPath is itself an opaque, server-generated name.
+            return TypedResults.Stream(stream, row.LogoContentType ?? "application/octet-stream", row.LogoPath);
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException or UnauthorizedAccessException)
+        {
+            // The database (shared across environments) resolved a logo path that does not
+            // exist on THIS environment's disk — CLAUDE.md §8.12, same posture
+            // PublicVerificationRepository.GetPhotoAsync already uses. Never a 500.
             return TypedResults.NotFound();
         }
     }

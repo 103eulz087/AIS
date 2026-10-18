@@ -3,6 +3,21 @@
    render — never the QR token payload itself (that's CredentialService's job, backend
    slice, built on TokenSubject/KeyVersion returned here).
 
+   IsPaid (added 2026-09-29): the standalone payment tag (dbo.MemberPaymentTagAction,
+   db/schema/25_member_payment_tag.sql), NOT RenewedThrough/MemberRenewal.RenewalStatus —
+   deliberately a second, independent signal per that schema's own header. An untagged
+   member (no action row for the current membership year) reads as NOT paid — client
+   decision 2026-09-29, same "no row = false" default usp_MemberPaymentTag_GetChapterMembers
+   already uses — so the frontend's "NOT YET PAID" watermark is the default for the whole
+   roster until National works through it, not an opt-in flag.
+
+   HasChapterLogo / MarkAccentHex (added 2026-09-29): the chapter mark, image slice.
+   dbo.Chapter.LogoPath sat unused since 17_chapter_registration.sql — this is its first
+   consumer. Only a boolean travels through this proc/DTO layer, never the path itself
+   (same "never a raw storage path over the wire" posture the rest of this system uses
+   for PhotoPath/PhotoUrl) — the frontend resolves the real bytes via
+   GET /api/members/me/chapter-logo instead.
+
    NO @MemberId PARAMETER. Self-only by construction, same reasoning and same shape as
    usp_Member_GetOwnProfile / usp_Member_UpdateOwnProfile — @RequestingMemberId comes from
    the JWT and IS the row being read/issued for; there is no id here for a caller to
@@ -58,6 +73,18 @@ BEGIN
     IF @ExpiryDate IS NULL
         SET @ExpiryDate = DATEADD(YEAR, 1, SYSUTCDATETIME());
 
+    -- Same 09-Aug-anchored membership year every payment-tag proc uses (mirrors
+    -- Akrho.Domain.MembershipYear.YearFor) — the payment tag is deliberately a SEPARATE
+    -- signal from RenewedThrough below (client decision 2026-09-29, db/schema/
+    -- 25_member_payment_tag.sql's own header). An untagged member defaults to NOT paid
+    -- (client decision 2026-09-29) — every existing member starts this way until National
+    -- works through the roster; this is the same "no row = false" default
+    -- usp_MemberPaymentTag_GetChapterMembers already uses, just reused here.
+    DECLARE @CurrentMembershipYear INT;
+    DECLARE @Today2 DATE = CAST(SYSUTCDATETIME() AS DATE);
+    DECLARE @Anniversary2 DATE = DATEFROMPARTS(YEAR(@Today2), 8, 8);
+    SET @CurrentMembershipYear = CASE WHEN @Today2 > @Anniversary2 THEN YEAR(@Today2) ELSE YEAR(@Today2) - 1 END;
+
     DECLARE @CredentialId INT, @TokenSubject UNIQUEIDENTIFIER, @KeyVersion INT, @IssuedNew BIT = 0;
     DECLARE @ExistingExpiry DATETIME2;
     DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
@@ -109,6 +136,7 @@ BEGIN
     ;WITH StartPoint AS (
         SELECT  m.MemberId, m.ChapterId,
                 ch.ChapterName, ch.ChapterCode,
+                ch.LogoPath, ch.MarkAccentId,
                 COALESCE(ch.ParentCouncilId, m.HomeCouncilId) AS AnchorCouncilId
         FROM    dbo.Member m
                 LEFT JOIN dbo.Chapter ch ON ch.ChapterId = m.ChapterId
@@ -124,6 +152,12 @@ BEGIN
         FROM    CouncilChain cc
                 JOIN dbo.Council p       ON p.CouncilId = cc.ParentCouncilId
                 JOIN dbo.CouncilLevel cl ON cl.CouncilLevelId = p.CouncilLevelId
+    ),
+    LatestTag AS (
+        SELECT  TOP (1) ActionType
+        FROM    dbo.MemberPaymentTagAction
+        WHERE   MemberId = @RequestingMemberId AND MembershipYear = @CurrentMembershipYear
+        ORDER BY PerformedDate DESC, MemberPaymentTagActionId DESC
     )
     SELECT  @TokenSubject AS TokenSubject,
             @KeyVersion   AS KeyVersion,
@@ -148,7 +182,16 @@ BEGIN
             -- Shown on his OWN card only — never added to the public verification page or
             -- the QR (invariant #8).
             pos.OfficeName          AS OfficePosition,
-            pos.OfficeBody          AS OfficeBody
+            pos.OfficeBody          AS OfficeBody,
+            -- 'Free' (added 2026-10-06) suppresses the watermark exactly like 'Tagged' —
+            -- see 27_member_payment_tag_free_status.sql's own header.
+            CAST(CASE WHEN lt.ActionType IN ('Tagged', 'Free') THEN 1 ELSE 0 END AS BIT) AS IsPaid,
+            -- Chapter mark, image slice (2026-09-29): LogoPath is NULL until the chapter's
+            -- President uploads one (usp_Chapter_SetLogo) — the API layer, not this proc,
+            -- turns a non-NULL path into a servable URL. MarkAccentHex is the fallback
+            -- monogram colour (ChapterMonogram.tsx) for a chapter with no logo yet.
+            CASE WHEN sp.LogoPath IS NOT NULL THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS HasChapterLogo,
+            ca.HexValue AS MarkAccentHex
     FROM    dbo.Member m
             JOIN StartPoint sp           ON sp.MemberId = m.MemberId
             JOIN dbo.MemberCredential mc  ON mc.CredentialId = @CredentialId
@@ -177,11 +220,14 @@ BEGIN
                 ) x
                 ORDER BY x.ScopeRank, x.SortKey
             ) pos
+            LEFT JOIN LatestTag lt        ON 1 = 1
+            LEFT JOIN dbo.ChapterAccent ca ON ca.AccentId = sp.MarkAccentId
     WHERE   m.MemberId = @RequestingMemberId
     GROUP BY mc.IssuedDate, mc.ExpiryDate, m.GiftName, m.FirstName, m.MiddleName, m.LastName,
              m.MemberNumber, sp.ChapterId, sp.ChapterName, sp.ChapterCode, m.DateSurvive,
              bt.BloodTypeName, ms.StatusName, m.RenewedThrough,
-             pos.OfficeName, pos.OfficeBody
+             pos.OfficeName, pos.OfficeBody, lt.ActionType,
+             sp.LogoPath, ca.HexValue
     OPTION (MAXRECURSION 20);
 END
 GO

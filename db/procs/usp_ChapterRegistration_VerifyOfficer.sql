@@ -1,8 +1,13 @@
 /* Ticks ONE officer off against the sponsoring chapter's/council's own records — §7A.4:
-   "Verification is per officer, not per form." Caller must be seated CouncilSecretary OR
-   CouncilAdmin on the registration's ActingCouncilId (decision E1b: both may verify;
-   ONLY CouncilAdmin may give the final approval in usp_ChapterRegistration_Approve —
-   that is the distinct, narrower capability).
+   "Verification is per officer, not per form." Caller must hold the dynamic
+   ChapterRegistration.Verify permission on the registration's ActingCouncilId
+   (db/schema/28_council_permissions.sql's dbo.fn_MemberSeatPermissions) — a seat on that
+   exact council whose office currently grants that key. Decision E1b's original fixed
+   "CouncilSecretary or CouncilAdmin" matrix is still exactly what a council's default
+   grid reproduces (see 28's own CouncilPermissionDefault seed); only ONE council's own
+   President (via usp_CouncilPermission_Set) can now widen or narrow that from there —
+   ONLY the President-equivalent default also grants the final approve in
+   usp_ChapterRegistration_Approve, still the distinct, narrower capability.
 
    Mechanically cannot touch any roster field: the single UPDATE below names
    VerifiedBy / VerifiedDate / VerifyNote and nothing else. There is no second UPDATE
@@ -18,7 +23,6 @@ BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
-    DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
     DECLARE @RegistrationId INT, @ActingCouncilId INT, @StatusId INT;
 
     SELECT  @RegistrationId = o.RegistrationId, @ActingCouncilId = cr.ActingCouncilId, @StatusId = cr.StatusId
@@ -34,14 +38,11 @@ BEGIN
         THROW 51541, 'This registration is not awaiting verification.', 1;
 
     IF NOT EXISTS (
-        SELECT 1 FROM dbo.MemberRole mr
-        JOIN   dbo.Role r ON r.RoleId = mr.RoleId
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council' AND mr.ScopeId = @ActingCouncilId
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
-          AND  r.RoleName IN ('CouncilSecretary', 'CouncilAdmin')
+        SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+        WHERE  sp.CouncilId = @ActingCouncilId
+          AND  sp.PermissionKey = N'ChapterRegistration.Verify'
     )
-        THROW 51542, 'Only this council''s Secretary or President may verify an officer on this registration.', 1;
+        THROW 51542, 'You do not have permission to verify officers for this council.', 1;
 
     BEGIN TRAN;
         UPDATE dbo.ChapterRegistrationOfficer

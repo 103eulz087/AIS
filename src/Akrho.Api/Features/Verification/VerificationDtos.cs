@@ -18,7 +18,10 @@ public sealed record VerifyTokenRequest(Guid Token, bool WasOffline = false, str
 /// </summary>
 public sealed record PublicVerificationDto(
     bool IsValid, string? GiftName, string? ChapterName, string? StatusName,
-    DateOnly? RenewedThrough, string? PhotoUrl);
+    DateOnly? RenewedThrough, string? PhotoUrl,
+    // The standalone payment tag — false whenever IsValid is false too (client decision
+    // 2026-09-29). Drives the "NOT YET PAID" watermark on this public page.
+    bool IsPaid);
 
 /// <summary>
 /// POST /api/scans response — the in-app, signed-in counterpart to <see cref="PublicVerificationDto"/>.

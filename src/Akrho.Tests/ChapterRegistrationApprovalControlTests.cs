@@ -10,7 +10,9 @@ using Xunit;
 namespace Akrho.Tests;
 
 /*
- * usp_ChapterRegistration_Approve — atomicity and two-person-control suite.
+ * usp_ChapterRegistration_Approve — atomicity and approval-authority suite. The
+ * original two-person control (decision E1b: Secretary verifies, Admin alone approves)
+ * was widened 2026-10-06 so CouncilSecretary can approve too — see the first test below.
  *
  * Every test here builds its own real Charter registration through the real, public
  * usp_ChapterRegistration_Submit (via ChapterRegistrationRepository.SubmitAsync — the exact
@@ -133,8 +135,13 @@ public class ChapterRegistrationApprovalControlTests
 
     /// <summary>Deletes everything a test in this file could possibly have created for one
     /// registration: the registration/officers themselves, and — only if Approve actually got
-    /// far enough to write them (the atomicity test asserts it must NOT) — any Chapter/Member/
-    /// MemberRole/EnrolmentLink/AuditLog rows tied to it.</summary>
+    /// far enough to write them (the atomicity test asserts it must NOT, but a test proving a
+    /// Secretary's approval actually commits needs this to work for real) — any Chapter/Member/
+    /// MemberRole/EnrolmentLink/AuditLog rows tied to it. Order matters: ChapterRegistrationOfficer
+    /// (CreatedMemberId) and ChapterRegistration (CreatedChapterId) each hold a REFERENCE
+    /// constraint on Member/Chapter respectively, so both must be deleted BEFORE the rows they
+    /// point at, not after — the original order here had it backwards and simply never got
+    /// exercised until a test first made Approve commit for real.</summary>
     private static Task CleanupAsync(SqlConnection conn, int registrationId) =>
         conn.ExecuteAsync(
             """
@@ -152,30 +159,32 @@ public class ChapterRegistrationApprovalControlTests
                 JOIN dbo.ChapterRegistrationOfficer o ON o.CreatedMemberId = mr.MemberId
              WHERE o.RegistrationId = @registrationId;
 
-            DELETE m FROM dbo.Member m
-                JOIN dbo.ChapterRegistrationOfficer o ON o.CreatedMemberId = m.MemberId
-             WHERE o.RegistrationId = @registrationId;
+            DECLARE @createdMemberIds TABLE (MemberId INT);
+            INSERT INTO @createdMemberIds (MemberId)
+            SELECT CreatedMemberId FROM dbo.ChapterRegistrationOfficer WHERE RegistrationId = @registrationId AND CreatedMemberId IS NOT NULL;
 
             DELETE FROM dbo.ChapterRegistrationOfficer WHERE RegistrationId = @registrationId;
             DELETE FROM dbo.ChapterRegistrationUpdate WHERE RegistrationId = @registrationId;
             DELETE FROM dbo.ApprovalRouting WHERE SubjectType = 'Chapter' AND SubjectId = @registrationId;
+            DELETE FROM dbo.ChapterRegistration WHERE RegistrationId = @registrationId;
+
+            DELETE m FROM dbo.Member m JOIN @createdMemberIds c ON c.MemberId = m.MemberId;
 
             IF @createdChapterId IS NOT NULL DELETE FROM dbo.Chapter WHERE ChapterId = @createdChapterId;
-
-            DELETE FROM dbo.ChapterRegistration WHERE RegistrationId = @registrationId;
             """,
             new { registrationId });
 
     private static byte[] RandomHash() => RandomNumberGenerator.GetBytes(32);
 
     /// <summary>
-    /// Two-person control (decision E1b): a CouncilSecretary — who CAN verify every officer —
-    /// still cannot give final approval, even when all 8 are verified. The exact procedure
-    /// message ("Only this council's President may give final approval.") must reach the
-    /// caller through ChapterRegistrationException, not be swallowed into a generic 500.
+    /// Widened 2026-10-06 (client decision): the two-person control from decision E1b no
+    /// longer applies — a CouncilSecretary who verified every officer may now ALSO give
+    /// final approval himself, so the Secretary role can be confined to this one module
+    /// end to end. Proves the registration actually reaches Approved under a Secretary's
+    /// own authority, not merely that the role gate stops throwing.
     /// </summary>
     [SkippableFact]
-    public async Task CouncilSecretary_cannot_approve_even_when_all_8_officers_are_verified()
+    public async Task CouncilSecretary_can_approve_when_all_8_officers_are_verified()
     {
         Skip.If(_fx.ConnectionString is null, NoDbSkipReason);
         using var conn = new SqlConnection(_fx.ConnectionString);
@@ -192,18 +201,16 @@ public class ChapterRegistrationApprovalControlTests
                 registrationId, "Charter", _fx.CouncilSecretaryMemberId,
                 RandomHash(), null, new Dictionary<int, byte[]>(), null, CancellationToken.None);
 
-            var assertion = await act.Should().ThrowAsync<ChapterRegistrationException>();
-            assertion.Which.Category.Should().Be(ChapterRegistrationErrorCategory.Forbidden);
-            assertion.Which.Message.Should().Contain("Only this council's President may give final approval");
+            await act.Should().NotThrowAsync();
 
-            // Nothing decided — the registration is still exactly where it was.
-            var statusName = await conn.ExecuteScalarAsync<string>(
+            var (statusName, createdChapterId) = await conn.QuerySingleAsync<(string StatusName, int? CreatedChapterId)>(
                 """
-                SELECT s.StatusName FROM dbo.ChapterRegistration cr
+                SELECT s.StatusName, cr.CreatedChapterId FROM dbo.ChapterRegistration cr
                 JOIN dbo.ChapterRegistrationStatus s ON s.StatusId = cr.StatusId
                 WHERE cr.RegistrationId = @registrationId
                 """, new { registrationId });
-            statusName.Should().Be("Submitted");
+            statusName.Should().Be("Approved");
+            createdChapterId.Should().NotBeNull("a Secretary's own approval must charter the chapter for real, not a no-op");
         }
         finally
         {

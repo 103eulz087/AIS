@@ -125,6 +125,16 @@ export interface MyCredential {
   officePosition: string | null;
   /** The chapter or council he holds that office in. Null whenever officePosition is. */
   officeBody: string | null;
+  /** The standalone payment tag — false for an untagged member (client decision
+   * 2026-09-29). Drives the "NOT YET PAID" watermark; never derived from renewedThrough. */
+  isPaid: boolean;
+  /** Chapter mark, image slice (2026-09-29) — only non-null once the chapter's own
+   * President has uploaded a logo (see Profile.tsx's "Chapter logo" section). Fetch as
+   * an authenticated Blob, same as photoUrl elsewhere — never a bare <img src>. */
+  chapterLogoUrl: string | null;
+  /** Fallback generated-monogram colour (ChapterMonogram.tsx) for a chapter with no
+   * logo uploaded yet — one of the six CHAPTER_ACCENTS hex values, or null. */
+  chapterMarkAccentHex: string | null;
 }
 
 /**
@@ -675,6 +685,49 @@ export interface MemberJurisdictionResult {
   regionName: string | null;
   provinceName: string | null;
   cityName: string | null;
+}
+
+/** The tri-state payment tag (added 2026-10-06) — "Paid", "Unpaid", or "Free" (given free
+ * membership for the year; suppresses the Digital ID's "NOT YET PAID" watermark exactly
+ * like Paid does, but is tracked as its own distinct state here and in the report). */
+export type MemberPaymentStatus = "Paid" | "Unpaid" | "Free";
+
+/**
+ * GET /api/member-payment-tags/members — National Council only. Mirrors
+ * MemberPaymentTagMemberDto. A simple, standalone "has this member paid this membership
+ * year" tag — deliberately separate from renewedThrough/RenewalStatus (see
+ * db/schema/25_member_payment_tag.sql's own header). chapterId/chapterName ride along
+ * even when the row came from a direct member search (not a chapter list), so the
+ * screen never needs a second lookup either way.
+ */
+export interface MemberPaymentTag {
+  memberId: number;
+  memberNumber: string;
+  giftName: string;
+  fullName: string;
+  mobileNo: string | null;
+  chapterId: number;
+  chapterName: string;
+  statusName: string;
+  paymentStatus: MemberPaymentStatus;
+  taggedDateUtc: string | null;
+  taggedByGiftName: string | null;
+  membershipYear: number;
+}
+
+/**
+ * GET /api/member-payment-tags/stats — National Council only. Mirrors
+ * MemberPaymentTagStatsDto. One row per chapter (or, with ?chapterId=, just that one),
+ * for the Paid/Unpaid/Free report.
+ */
+export interface MemberPaymentTagStats {
+  chapterId: number;
+  chapterName: string;
+  totalMembers: number;
+  paidCount: number;
+  freeCount: number;
+  unpaidCount: number;
+  membershipYear: number;
 }
 
 /**
@@ -1297,7 +1350,12 @@ export interface SubmitChapterTurnoverResponse { referenceNo: string }
 /**
  * One row of a council officer's own registration queue. Mirrors
  * ChapterRegistrationQueueItemDto. canAct is a display convenience only, never itself a
- * permission boundary — the server enforces the real gate regardless.
+ * permission boundary — it is the OR of canVerify/canApprove/canReturn, each a direct-
+ * seat check (dbo.fn_MemberSeatPermissions) against the registration's own
+ * ActingCouncilId (phase 1 "dynamic council office permissions", 2026-10-17) — a
+ * registration visible only because it sits in a subtree the caller holds
+ * ChapterRegistration.Review on (not ActingCouncilId itself) carries all four as false,
+ * read-only visibility. The server enforces the real gate regardless of any of these.
  */
 export interface ChapterRegistrationQueueItem {
   registrationId: number;
@@ -1315,6 +1373,9 @@ export interface ChapterRegistrationQueueItem {
   decidedBy: number | null;
   decidedDateUtc: string | null;
   canAct: boolean;
+  canVerify: boolean;
+  canApprove: boolean;
+  canReturn: boolean;
 }
 
 /**
@@ -1375,6 +1436,13 @@ export interface ChapterRegistrationRouting {
 /**
  * The full registration, for the council officer reviewing it. Mirrors
  * ChapterRegistrationDetailDto — never shown to the wider membership.
+ *
+ * canVerify/canApprove/canReturn (phase 1 "dynamic council office permissions",
+ * 2026-10-17) are the same direct-seat checks (dbo.fn_MemberSeatPermissions over this
+ * registration's own ActingCouncilId) as ChapterRegistrationQueueItem's own fields —
+ * display convenience only; the drive-the-buttons source of truth, alongside
+ * statusName === "Submitted" (an already-decided registration offers none of these
+ * regardless of what the seat holds). The real endpoints each re-check independently.
  */
 export interface ChapterRegistrationDetail {
   registrationId: number;
@@ -1408,6 +1476,9 @@ export interface ChapterRegistrationDetail {
   decidedDateUtc: string | null;
   decisionReason: string | null;
   createdChapterId: number | null;
+  canVerify: boolean;
+  canApprove: boolean;
+  canReturn: boolean;
   officers: ChapterRegistrationOfficer[];
   history: ChapterRegistrationUpdate[];
   routing: ChapterRegistrationRouting | null;
@@ -1472,6 +1543,9 @@ export interface PublicVerificationDto {
   statusName: string | null;
   renewedThrough: string | null;
   photoUrl: string | null;
+  /** The standalone payment tag — false whenever isValid is false too. Drives the
+   * "NOT YET PAID" watermark on this public page. */
+  isPaid: boolean;
 }
 
 /**
@@ -1583,8 +1657,9 @@ export interface CouncilOfficerCandidate {
   noMobileNumber: boolean;
 }
 
-/** GET /api/councils/member-lookup?councilId=&memberNumber= — an out-of-jurisdiction
- * nominee, found by exact number only, never a browsable list (invariant #7). */
+/** One row of GET /api/councils/member-lookup?councilId=&name=&mobileNo= — an
+ * out-of-jurisdiction nominee, found only when his name AND mobile number both match,
+ * never a browsable list (invariant #7). */
 export interface CouncilMemberLookup {
   memberId: number;
   giftName: string;
@@ -1702,4 +1777,121 @@ export interface SeatChapterOfficerRequest {
 
 export interface ChapterOfficerSeatResult {
   memberRoleId: number;
+}
+
+/* ============================================================================
+ * Phase 1 "dynamic council office permissions" (2026-10-17). Mirrors
+ * src/Akrho.Api/Features/CouncilPermissions/CouncilPermissionDtos.cs and
+ * src/Akrho.Api/Features/Auth/AuthDtos.cs's CouncilSeatPermissionsDto field-for-field —
+ * read those files first if either drifts.
+ * ========================================================================== */
+
+/**
+ * One council seat the caller currently holds, GET /api/auth/me's own councilSeats.
+ * Mirrors CouncilSeatPermissionsDto. permissions is the FULL list of keys currently
+ * granted to this seat's office on this council (ChapterRegistration.Review/Verify/
+ * Approve/Return, CouncilStatistics.Read, CouncilMemberSearch.Read today) — a convenience
+ * projection only; every council-facing endpoint re-derives the caller's real standing
+ * server-side regardless (CLAUDE.md invariant #4). canManagePermissions is true only when
+ * this seat is THIS council's own currently-seated presiding office (the President) —
+ * never a parent's.
+ */
+export interface CouncilSeatPermissions {
+  councilId: number;
+  councilName: string;
+  officeName: string;
+  canManagePermissions: boolean;
+  permissions: string[];
+}
+
+/** Header of GET /api/councils/{councilId}/permissions's grid. canEdit mirrors this
+ * EXACT council's own CouncilSeatPermissions.canManagePermissions — never a parent's. */
+export interface CouncilPermissionHeader {
+  councilId: number;
+  councilName: string;
+  isNational: boolean;
+  canEdit: boolean;
+}
+
+/** One council office — a row of the grid. isReadOnly is the Auditor's own seeded flag
+ * (an auditor who can edit what he audits is not an auditor); every write-permission cell
+ * on an isReadOnly office arrives isLocked, never offered as a toggle. */
+export interface CouncilPermissionOffice {
+  id: number;
+  name: string;
+  isPresiding: boolean;
+  isReadOnly: boolean;
+}
+
+/** One grantable permission key — a column of the grid. requiresKey, when present, names
+ * another key that must ALSO be granted on the same office — mirrored client-side by
+ * requiresKeyDependents() below so the form can warn before a save the server would 400. */
+export interface CouncilPermissionKey {
+  permissionKey: string;
+  displayName: string;
+  description: string | null;
+  isWrite: boolean;
+  isNationalOnly: boolean;
+  requiresKey: string | null;
+  sortOrder: number;
+}
+
+/** One (office, key) cell. isLocked/lockReason, when set, mean this cell can never be
+ * changed — the President's own fixed grant, a write key on the read-only Auditor office,
+ * or a National-only key on a non-National council. Render disabled with lockReason, never
+ * a toggle that would submit a no-op change. */
+export interface CouncilPermissionCell {
+  councilOfficeId: number;
+  permissionKey: string;
+  isGranted: boolean;
+  isDefault: boolean;
+  isLocked: boolean;
+  lockReason: string | null;
+}
+
+/** One of the last 50 changes made to a council's grid, newest first. changedDateUtc is
+ * UTC — render with shortDate/shortTime (Asia/Manila), never hand-formatted. */
+export interface CouncilPermissionHistory {
+  historyId: number;
+  councilOfficeId: number;
+  officeName: string;
+  permissionKey: string;
+  wasGranted: boolean;
+  isGranted: boolean;
+  changedBy: number;
+  changedByGiftName: string;
+  changedDateUtc: string;
+  reason: string | null;
+}
+
+/** GET /api/councils/{councilId}/permissions. Anyone inside the caller's own council
+ * scope may view this grid even when header.canEdit is false — visibility is broader
+ * than who may edit (see CouncilPermissionHeader's own doc comment). */
+export interface CouncilPermissionGrid {
+  header: CouncilPermissionHeader;
+  offices: CouncilPermissionOffice[];
+  permissions: CouncilPermissionKey[];
+  cells: CouncilPermissionCell[];
+  history: CouncilPermissionHistory[];
+}
+
+/** One requested cell change. The server computes the actual diff against the current
+ * effective grant and silently skips any no-op — submitting the whole visible grid state
+ * is safe, though this screen only ever sends what actually changed. */
+export interface CouncilPermissionChange {
+  councilOfficeId: number;
+  permissionKey: string;
+  isGranted: boolean;
+}
+
+/** PUT /api/councils/{councilId}/permissions request body. Only the council's own
+ * currently-seated President may call this — a 403 here means the caller's own standing
+ * changed (e.g. his term ended) since the grid was loaded, not a client bug. */
+export interface UpdateCouncilPermissionsRequest {
+  changes: CouncilPermissionChange[];
+  reason: string | null;
+}
+
+export interface UpdateCouncilPermissionsResponse {
+  changedCount: number;
 }

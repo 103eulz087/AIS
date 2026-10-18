@@ -56,14 +56,40 @@ internal static class IdCardExportErrors
 /// header). TokenSubject is nullable in the row shape but expected non-null in practice, because
 /// the caller is required to call <see cref="IIdCardExportRepository.BulkIssueCredentialsAsync"/>
 /// first, in the same request, with the same (requestingMemberId, chapterId) pair.
+///
+/// CityName/ProvinceName/RegionName and PaymentStatus added 2026-10-09 (client decision) —
+/// same CouncilChain-walk and tri-state tagging expression usp_Member_ListForDigitalIdExport's
+/// own proc already uses, repeated here rather than shared (see that proc's header).
 /// </summary>
 public sealed record IdCardExportMemberRow(
     int MemberId, string MemberNumber,
-    string FirstName, string? MiddleName, string LastName, string GiftName,
+    string FirstName, string? MiddleName, string LastName, string GiftName, DateTime? DateSurvive,
     string? BloodTypeName,
     int ChapterId, string ChapterName, string? ChapterCode,
+    string? CityName, string? ProvinceName, string? RegionName,
+    string StatusName, string PaymentStatus,
+    string? PhotoPath, string? PhotoContentType,
+    Guid? TokenSubject);
+
+/// <summary>
+/// One row of dbo.usp_Member_ListForDigitalIdExport — everything DigitalIdCardRenderer
+/// needs to paint one member's front/back card, bulk. Shares no column shape with
+/// <see cref="IdCardExportMemberRow"/> on purpose — that one's columns are keyed to the
+/// Magicard printer's own mail-merge template; this one's are keyed to the renderer only.
+/// Chapter-homed members only, same restriction as the Magicard export (see that row's
+/// own header). ChapterLogoPath/ChapterLogoContentType and MarkAccentHex drive the same
+/// "real logo, or generated monogram" choice DigitalId.tsx itself makes.
+/// </summary>
+public sealed record DigitalIdExportMemberRow(
+    int MemberId, string MemberNumber,
+    string FirstName, string? MiddleName, string LastName, string GiftName,
+    string? BloodTypeName,
+    int ChapterId, string ChapterName, string? ChapterCode, string? CityName,
     string StatusName,
     string? PhotoPath, string? PhotoContentType,
+    string? OfficePosition, string? OfficeBody,
+    bool IsPaid,
+    string? ChapterLogoPath, string? ChapterLogoContentType, string? MarkAccentHex,
     Guid? TokenSubject);
 
 public interface IIdCardExportRepository
@@ -89,6 +115,16 @@ public interface IIdCardExportRepository
     /// (Forbidden / Conflict).
     /// </summary>
     Task<IReadOnlyList<IdCardExportMemberRow>> ListForExportAsync(
+        int requestingMemberId, int? chapterId, CancellationToken ct);
+
+    /// <summary>
+    /// dbo.usp_Member_ListForDigitalIdExport — the Digital ID image export's own list,
+    /// a completely separate column shape from <see cref="ListForExportAsync"/>. Same
+    /// caller/scope rules as <see cref="BulkIssueCredentialsAsync"/>, which must still be
+    /// called first, in the same request. Throws <see cref="IdCardExportException"/>
+    /// (Forbidden / Conflict).
+    /// </summary>
+    Task<IReadOnlyList<DigitalIdExportMemberRow>> ListForDigitalIdExportAsync(
         int requestingMemberId, int? chapterId, CancellationToken ct);
 }
 
@@ -119,6 +155,24 @@ public sealed class IdCardExportRepository(ISqlConnectionFactory factory) : IIdC
         {
             var rows = await conn.QueryAsync<IdCardExportMemberRow>(new CommandDefinition(
                 "dbo.usp_Member_ListForIdCardExport",
+                new { RequestingMemberId = requestingMemberId, ChapterId = chapterId },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+            return rows.ToList();
+        }
+        catch (SqlException ex) when (IdCardExportErrors.IsKnown(ex.Number))
+        {
+            throw new IdCardExportException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<IReadOnlyList<DigitalIdExportMemberRow>> ListForDigitalIdExportAsync(
+        int requestingMemberId, int? chapterId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            var rows = await conn.QueryAsync<DigitalIdExportMemberRow>(new CommandDefinition(
+                "dbo.usp_Member_ListForDigitalIdExport",
                 new { RequestingMemberId = requestingMemberId, ChapterId = chapterId },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
             return rows.ToList();

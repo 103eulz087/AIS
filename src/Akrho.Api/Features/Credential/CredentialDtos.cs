@@ -25,7 +25,15 @@ public sealed record MyCredentialDto(
     string VerificationUrl,
     // The office he currently holds (e.g. "President") and the chapter or council he holds
     // it in. Both NULL for a plain member. Non-null switches the card to the officer design.
-    string? OfficePosition, string? OfficeBody);
+    string? OfficePosition, string? OfficeBody,
+    // The standalone payment tag — an untagged member reads as false (client decision
+    // 2026-09-29). Drives the "NOT YET PAID" watermark; never derived from RenewedThrough.
+    bool IsPaid,
+    // Chapter mark, image slice (2026-09-29). ChapterLogoUrl is only ever non-null when
+    // a logo is actually on file — same "only emit a URL when the resource exists"
+    // posture MembersEndpoints already uses for its own PhotoUrl. ChapterMarkAccentHex
+    // is the fallback generated-monogram colour (ChapterMonogram.tsx) when it isn't.
+    string? ChapterLogoUrl, string? ChapterMarkAccentHex);
 
 /// <summary>
 /// POST /api/scans body — the in-app, signed-in scan. Same shape as

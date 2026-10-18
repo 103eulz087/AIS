@@ -70,13 +70,15 @@ type AccountActionKind = "block" | "unblock" | "reset";
  * usp_Member_ListBlocked's own scope) since browsing every currently-blocked account has
  * no search term to type; it isn't a filter on the jurisdiction search.
  *
- * canSearchMembersByJurisdiction / canManageMemberAccounts gate what this screen shows;
+ * canSearchMembersByJurisdiction (the caller's own CouncilMemberSearch.Read permission,
+ * on any council seat — phase 1 "dynamic council office permissions", 2026-10-17) /
+ * canManageMemberAccounts (still role-based, phase 2 scope) gate what this screen shows;
  * the server re-derives the real authorization independently inside each procedure,
  * same "coarse client check, real server check" posture as every other Portal screen.
  */
 export function MemberSearch() {
   const { claims } = useAuth();
-  const canSearch = canSearchMembersByJurisdiction(claims?.roles ?? []);
+  const canSearch = canSearchMembersByJurisdiction(claims?.councilSeats ?? []);
   const canManageAccounts = canManageMemberAccounts(claims?.roles ?? []);
 
   const [showBlockedOnly, setShowBlockedOnly] = useState(false);

@@ -52,7 +52,15 @@ public sealed record MemberCredentialRow(
     string? NationalCouncilName, string? RegionName, string? ProvinceName, string? CityName,
     DateTime? DateSurvive, string? BloodTypeName,
     string StatusName, DateTime? RenewedThrough,
-    string? OfficePosition, string? OfficeBody);
+    string? OfficePosition, string? OfficeBody,
+    // The standalone payment tag (dbo.MemberPaymentTagAction), NOT derived from
+    // RenewedThrough — see usp_Credential_GetOrIssueForSelf's own header comment.
+    // An untagged member reads as false (client decision 2026-09-29).
+    bool IsPaid,
+    // Chapter mark, image slice (2026-09-29). Never the raw LogoPath — just whether one
+    // exists; the API layer turns this into a servable URL. MarkAccentHex is the
+    // fallback generated-monogram colour for a chapter with no logo yet.
+    bool HasChapterLogo, string? MarkAccentHex);
 
 /// <summary>
 /// The single row usp_Credential_VerifyForMember returns — the in-app, signed-in counterpart to

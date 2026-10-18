@@ -11,6 +11,7 @@ using Akrho.Api.Features.Communications;
 using Akrho.Api.Features.Conversations;
 using Akrho.Api.Features.CouncilStatistics;
 using Akrho.Api.Features.Councils;
+using Akrho.Api.Features.CouncilPermissions;
 using Akrho.Api.Features.Credential;
 using Akrho.Api.Features.Dashboard;
 using Akrho.Api.Features.Discipline;
@@ -21,6 +22,7 @@ using Akrho.Api.Features.IdCardExport;
 using Akrho.Api.Features.Ledger;
 using Akrho.Api.Features.Meetings;
 using Akrho.Api.Features.Members;
+using Akrho.Api.Features.MemberPaymentTags;
 using Akrho.Api.Features.MembershipApplications;
 using Akrho.Api.Features.Notifications;
 using Akrho.Api.Features.Reference;
@@ -105,6 +107,9 @@ builder.Services.AddScoped<IMemberAccountActionRepository, MemberAccountActionRe
 builder.Services.AddScoped<ICouncilSeatingRepository, CouncilSeatingRepository>();
 builder.Services.AddScoped<IChapterOfficerRepository, ChapterOfficerRepository>();
 builder.Services.AddScoped<IChapterHoldRepository, ChapterHoldRepository>();
+builder.Services.AddScoped<IMemberPaymentTagRepository, MemberPaymentTagRepository>();
+builder.Services.AddScoped<IChapterLogoRepository, ChapterLogoRepository>();
+builder.Services.AddScoped<ICouncilPermissionRepository, CouncilPermissionRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
 builder.Services.AddSingleton<IAccessTokenService, AccessTokenService>();
 builder.Services.AddSingleton<IScopeGuard, ScopeGuard>();
@@ -120,6 +125,8 @@ builder.Services.AddSignalR();
 // enqueue a job (see PushJob.cs's own header comment on why an endpoint never touches the
 // worker's internals directly).
 builder.Services.AddSingleton<IPushSender, PushSender>();
+// Hourly: moves open chapter registrations off councils that no longer have anyone seated.
+builder.Services.AddHostedService<Akrho.Infrastructure.Routing.RegistrationRerouteHostedService>();
 builder.Services.AddSingleton<PushDispatchHostedService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<PushDispatchHostedService>());
 builder.Services.AddSingleton<IPushJobEnqueuer>(sp => sp.GetRequiredService<PushDispatchHostedService>());
@@ -234,17 +241,33 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.ChapterChatModerate, p =>
         p.RequireRole("ChapterOfficer", "ChapterAdmin"));
 
-    // Chapter-registration module (db/schema/17_chapter_registration.sql). ChapterAuditor is
-    // seeded read-only (GrantsLogin=1, but no write capability anywhere) and must NEVER be
-    // added to either council policy below — see AuthorizationPolicies' own comments on both.
+    // Chapter-registration module (db/schema/17_chapter_registration.sql).
     options.AddPolicy(AuthorizationPolicies.ChapterOfficerRosterFile, p =>
         p.RequireRole("ChapterAdmin"));
+
+    // Split out AHEAD of the Phase 1 widening below (2026-10-17), so NationalIdCardExport
+    // keeps exactly CouncilChapterRegistrationApprove's PRE-widening role set — see
+    // AuthorizationPolicies.NationalIdCardExport's own comment for why.
+    options.AddPolicy(AuthorizationPolicies.NationalIdCardExport, p =>
+        p.RequireRole("CouncilSecretary", "CouncilAdmin"));
+
+    // Phase 1 "dynamic council office permissions" (2026-10-17): all four of these widened to
+    // every seated council role, including CouncilAuditor. Each is now only the coarse "holds
+    // SOME seated council office" pre-check — usp_ChapterRegistration_GetQueue/_Get/
+    // _VerifyOfficer/_Return/_Approve and usp_Member_SearchByJurisdiction/_GetByJurisdiction
+    // check the real, dynamic grant themselves via dbo.fn_MemberSeatPermissions, and
+    // usp_CouncilStatistics_Get via dbo.fn_MemberPermissionScope(..., 'CouncilStatistics.Read').
+    // CouncilAuditor's seeded read-only
+    // office makes actually holding a write key structurally impossible — granting one is
+    // itself rejected by usp_CouncilPermission_Set (51934) — so an auditor who can edit what
+    // he audits (docs §7A.4) stays impossible, enforced in the procedures, not by the role
+    // list here. See AuthorizationPolicies' own comments on each constant for detail.
     options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationVerify, p =>
-        p.RequireRole("CouncilSecretary", "CouncilAdmin"));
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.CouncilChapterRegistrationApprove, p =>
-        p.RequireRole("CouncilAdmin"));
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.CouncilStatisticsRead, p =>
-        p.RequireRole("CouncilSecretary", "CouncilAdmin"));
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.NationalMemberAccountManage, p =>
         p.RequireRole("CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.CouncilSeatOfficer, p =>
@@ -256,10 +279,22 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.ChapterMemberIdentityEdit, p =>
         p.RequireRole("ChapterAdmin"));
     options.AddPolicy(AuthorizationPolicies.CouncilMemberSearchRead, p =>
-        p.RequireRole("CouncilSecretary", "CouncilAdmin", "CouncilTreasurer", "CouncilOfficer", "CouncilPIO"));
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.ChapterHoldManage, p =>
         p.RequireRole("CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.NationalAnnouncementManage, p =>
+        p.RequireRole("CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.MemberPaymentTagManage, p =>
+        p.RequireRole("CouncilAdmin"));
+    options.AddPolicy(AuthorizationPolicies.ChapterLogoManage, p =>
+        p.RequireRole("ChapterAdmin"));
+
+    // Phase 1 "dynamic council office permissions" grid itself. Read is the same all-six-roles
+    // coarse bar as the four policies above; manage is deliberately NOT widened — see
+    // AuthorizationPolicies.CouncilPermissionsManage's own comment for why.
+    options.AddPolicy(AuthorizationPolicies.CouncilPermissionsRead, p =>
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
+    options.AddPolicy(AuthorizationPolicies.CouncilPermissionsManage, p =>
         p.RequireRole("CouncilAdmin"));
 });
 builder.Services.AddEndpointsApiExplorer();
@@ -459,6 +494,8 @@ app.MapCouncilStatistics();
 app.MapCouncils();
 app.MapIdCardExport();
 app.MapVerification();
+app.MapMemberPaymentTags();
+app.MapCouncilPermissions();
 
 // /?access_token= is honoured ONLY here (see the JwtBearerEvents.OnMessageReceived path
 // check above) — every other endpoint in this app still requires a real Authorization header.

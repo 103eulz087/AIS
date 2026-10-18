@@ -8,10 +8,11 @@
    should show less than drilling into it does.
 
    Scoped identically to usp_Member_SearchByJurisdiction: @RequestingMemberId's own
-   dbo.fn_MemberCouncilScope decides whether @MemberId is reachable at all — National's
-   own scope is the whole tree, everyone else's is only their own subtree. A member
-   outside that scope collapses to the same "not found" as a genuinely nonexistent one
-   (never a distinguishing 403 — same information-leakage reasoning as
+   dbo.fn_MemberPermissionScope(@RequestingMemberId, 'CouncilMemberSearch.Read')
+   (db/schema/28_council_permissions.sql) decides whether @MemberId is reachable at all —
+   National's own scope is the whole tree, everyone else's is only their own subtree. A
+   member outside that scope collapses to the same "not found" as a genuinely nonexistent
+   one (never a distinguishing 403 — same information-leakage reasoning as
    usp_Member_GetPhoto's own identical collapse).
 
    RegionName/ProvinceName/CityName: same council-chain walk as
@@ -25,7 +26,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId))
+    IF NOT EXISTS (SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilMemberSearch.Read'))
         THROW 51832, 'You must hold a currently-seated council office to view member details.', 1;
 
     IF NOT EXISTS (
@@ -34,7 +35,7 @@ BEGIN
                LEFT JOIN dbo.Chapter ch ON ch.ChapterId = m.ChapterId
         WHERE  m.MemberId = @MemberId AND m.IsDeleted = 0
           AND  EXISTS (
-                  SELECT 1 FROM dbo.fn_MemberCouncilScope(@RequestingMemberId) sc
+                  SELECT 1 FROM dbo.fn_MemberPermissionScope(@RequestingMemberId, N'CouncilMemberSearch.Read') sc
                   WHERE sc.CouncilId = ch.ParentCouncilId OR sc.CouncilId = m.HomeCouncilId
               )
     )

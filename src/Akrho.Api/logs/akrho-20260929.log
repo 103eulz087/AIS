@@ -1,0 +1,642 @@
+2026-09-29 14:35:14.921 +08:00 [INF] Application is shutting down...
+2026-09-29 14:35:14.925 +08:00 [DBG] Hosting stopping
+2026-09-29 14:35:14.982 +08:00 [DBG] Hosting stopped
+2026-09-29 14:35:19.917 +08:00 [DBG] Hosting starting
+2026-09-29 14:35:20.273 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-29 14:35:20.278 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-29 14:35:20.278 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-29 14:35:20.278 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-29 14:35:20.278 +08:00 [INF] Hosting environment: Development
+2026-09-29 14:35:20.278 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-29 14:35:20.279 +08:00 [DBG] Hosting started
+2026-09-29 14:35:33.281 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 15.4973 ms
+2026-09-29 14:35:33.281 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 15.5028 ms
+2026-09-29 14:35:44.415 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 2.9554 ms
+2026-09-29 14:35:44.418 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1230 ms
+2026-09-29 14:35:45.088 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2944 ms
+2026-09-29 14:35:45.088 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1214 ms
+2026-09-29 14:35:45.919 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4663 ms
+2026-09-29 14:35:45.931 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.3687 ms
+2026-09-29 14:35:46.369 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1744 ms
+2026-09-29 14:35:46.379 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1685 ms
+2026-09-29 14:35:50.318 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 938.0665 ms
+2026-09-29 14:35:50.422 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 74.7724 ms
+2026-09-29 14:35:54.066 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 134.5838 ms
+2026-09-29 14:35:56.468 +08:00 [INF] HTTP GET /api/chapter-registrations/154 responded 200 in 200.5707 ms
+2026-09-29 14:36:09.750 +08:00 [INF] HTTP GET /api/chapter-registrations/153 responded 200 in 111.5519 ms
+2026-09-29 14:36:14.890 +08:00 [INF] HTTP GET /api/councils responded 200 in 284.0245 ms
+2026-09-29 14:36:28.942 +08:00 [INF] HTTP GET /api/chapter-registrations responded 200 in 119.8168 ms
+2026-09-29 14:36:52.908 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 964.1268 ms
+2026-09-29 14:37:03.638 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 95.4654 ms
+2026-09-29 14:37:04.010 +08:00 [INF] HTTP GET /api/members responded 200 in 456.4757 ms
+2026-09-29 15:04:22.931 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 3.0992 ms
+2026-09-29 15:04:22.936 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.1940 ms
+2026-09-29 23:02:26.286 +08:00 [INF] HTTP GET /api/councils/statistics responded 401 in 37.1460 ms
+2026-09-29 23:02:26.432 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 1.1164 ms
+2026-09-29 23:02:26.628 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2423 ms
+2026-09-29 23:02:26.641 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.4545 ms
+2026-09-29 23:02:26.979 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2805 ms
+2026-09-29 23:02:26.989 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.0663 ms
+2026-09-29 23:05:23.068 +08:00 [INF] Application is shutting down...
+2026-09-29 23:05:23.069 +08:00 [DBG] Hosting stopping
+2026-09-29 23:05:23.079 +08:00 [DBG] Hosting stopped
+2026-09-29 23:05:29.358 +08:00 [DBG] Hosting starting
+2026-09-29 23:05:29.726 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-29 23:05:29.731 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-29 23:05:29.731 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-29 23:05:29.731 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-29 23:05:29.732 +08:00 [INF] Hosting environment: Development
+2026-09-29 23:05:29.732 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-29 23:05:29.732 +08:00 [DBG] Hosting started
+2026-09-29 23:05:38.923 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 15.1007 ms
+2026-09-29 23:05:38.923 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 15.1040 ms
+2026-09-29 23:05:44.115 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 1776.6306 ms
+2026-09-29 23:05:44.257 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 108.2057 ms
+2026-09-29 23:05:44.550 +08:00 [INF] HTTP GET /api/councils/statistics responded 200 in 244.6265 ms
+2026-09-29 23:05:54.038 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 1218.0652 ms
+2026-09-29 23:05:54.557 +08:00 [INF] HTTP GET /api/members responded 200 in 1736.9650 ms
+2026-09-29 23:06:02.160 +08:00 [INF] HTTP GET /api/councils/19/statistics responded 200 in 145.4651 ms
+2026-09-29 23:06:18.866 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 258.8515 ms
+2026-09-29 23:06:19.942 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 87.1795 ms
+2026-09-29 23:06:28.611 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 75.2045 ms
+2026-09-29 23:06:45.224 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 125.0833 ms
+2026-09-29 23:06:51.494 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 66.2096 ms
+2026-09-29 23:06:52.075 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 67.8222 ms
+2026-09-29 23:06:53.664 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 112.9313 ms
+2026-09-29 23:06:55.041 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 68.0491 ms
+2026-09-29 23:06:57.395 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 129.3033 ms
+2026-09-29 23:07:02.773 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 103.3954 ms
+2026-09-29 23:07:08.179 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 169.0833 ms
+2026-09-29 23:07:09.859 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 100.4748 ms
+2026-09-29 23:07:13.223 +08:00 [INF] HTTP GET /api/chapters/search-jurisdiction responded 200 in 83.4580 ms
+2026-09-29 23:07:15.636 +08:00 [INF] HTTP GET /api/member-payment-tags/chapters/149/members responded 200 in 86.6490 ms
+2026-09-29 23:07:17.100 +08:00 [INF] HTTP POST /api/member-payment-tags/members/844 responded 200 in 83.5816 ms
+2026-09-29 23:07:17.194 +08:00 [INF] HTTP GET /api/member-payment-tags/chapters/149/members responded 200 in 72.0936 ms
+2026-09-29 23:07:19.684 +08:00 [INF] HTTP POST /api/member-payment-tags/members/844 responded 200 in 385.1138 ms
+2026-09-29 23:07:19.780 +08:00 [INF] HTTP GET /api/member-payment-tags/chapters/149/members responded 200 in 71.7006 ms
+2026-09-29 23:07:39.697 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2020 ms
+2026-09-29 23:07:39.708 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 0.2052 ms
+2026-09-29 23:07:42.100 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 452.1642 ms
+2026-09-29 23:07:42.235 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 97.0101 ms
+2026-09-29 23:07:42.360 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 74.6570 ms
+2026-09-29 23:07:42.408 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 87.9566 ms
+2026-09-29 23:07:42.849 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 520.6222 ms
+2026-09-29 23:07:42.850 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 522.0631 ms
+2026-09-29 23:07:42.851 +08:00 [INF] HTTP GET /api/conversations responded 200 in 523.4328 ms
+2026-09-29 23:07:44.489 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 138.8114 ms
+2026-09-29 23:07:44.491 +08:00 [INF] HTTP GET /api/members/me responded 200 in 155.6926 ms
+2026-09-29 23:07:44.635 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 80.1145 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 290
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:07:44.644 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 290
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:07:44.648 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 290
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:08:48.781 +08:00 [INF] HTTP POST /api/auth/sign-out responded 200 in 128.3880 ms
+2026-09-29 23:27:26.277 +08:00 [INF] HTTP GET /health responded 307 in 3.2088 ms
+2026-09-29 23:27:33.854 +08:00 [INF] HTTP GET /health responded 307 in 0.0868 ms
+2026-09-29 23:27:33.931 +08:00 [INF] HTTP GET /health responded 200 in 3.6503 ms
+2026-09-29 23:27:45.190 +08:00 [INF] Application is shutting down...
+2026-09-29 23:27:45.190 +08:00 [DBG] Hosting stopping
+2026-09-29 23:27:45.195 +08:00 [DBG] Hosting stopped
+se.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2026-09-29 23:27:53.554 +08:00 [DBG] Hosting starting
+2026-09-29 23:27:53.876 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-29 23:27:53.881 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-29 23:27:53.881 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-29 23:27:53.881 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-29 23:27:53.881 +08:00 [INF] Hosting environment: Development
+2026-09-29 23:27:53.881 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-29 23:27:53.881 +08:00 [DBG] Hosting started
+2026-09-29 23:28:08.117 +08:00 [INF] HTTP GET /health responded 307 in 4.1521 ms
+2026-09-29 23:28:19.771 +08:00 [INF] HTTP GET /health responded 307 in 0.6258 ms
+2026-09-29 23:28:26.820 +08:00 [INF] HTTP GET /health responded 307 in 0.5349 ms
+2026-09-29 23:28:32.824 +08:00 [INF] HTTP GET /health responded 200 in 13.1244 ms
+2026-09-29 23:29:37.124 +08:00 [INF] HTTP POST /api/members/me/chapter-logo/stage responded 200 in 1312.9405 ms
+2026-09-29 23:29:37.262 +08:00 [INF] HTTP POST /api/members/me/chapter-logo responded 200 in 110.5877 ms
+2026-09-29 23:29:37.342 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 57.3838 ms
+2026-09-29 23:29:37.442 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 73.6593 ms
+2026-09-29 23:29:53.563 +08:00 [INF] HTTP POST /api/members/me/chapter-logo/stage responded 400 in 0.6525 ms
+2026-09-29 23:29:54.111 +08:00 [INF] HTTP POST /api/members/me/chapter-logo responded 403 in 0.5840 ms
+2026-09-29 23:30:43.312 +08:00 [INF] Application is shutting down...
+2026-09-29 23:30:43.312 +08:00 [DBG] Hosting stopping
+2026-09-29 23:30:43.314 +08:00 [DBG] Hosting stopped
+2026-09-29 23:34:19.423 +08:00 [DBG] Hosting starting
+2026-09-29 23:34:19.747 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-09-29 23:34:19.752 +08:00 [INF] Now listening on: https://localhost:5443
+2026-09-29 23:34:19.752 +08:00 [INF] Now listening on: http://localhost:5080
+2026-09-29 23:34:19.752 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-29 23:34:19.752 +08:00 [INF] Hosting environment: Development
+2026-09-29 23:34:19.752 +08:00 [INF] Content root path: /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api
+2026-09-29 23:34:19.753 +08:00 [DBG] Hosting started
+2026-09-29 23:34:32.245 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 12.6810 ms
+2026-09-29 23:34:32.245 +08:00 [INF] HTTP POST /api/auth/refresh responded 401 in 12.6865 ms
+2026-09-29 23:34:36.097 +08:00 [INF] HTTP POST /api/auth/sign-in responded 200 in 958.3114 ms
+2026-09-29 23:34:36.218 +08:00 [INF] HTTP GET /api/auth/me responded 200 in 86.7741 ms
+2026-09-29 23:34:36.499 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 136.9532 ms
+2026-09-29 23:34:36.785 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 402.4640 ms
+2026-09-29 23:34:36.788 +08:00 [INF] HTTP GET /api/members/me responded 200 in 403.5535 ms
+2026-09-29 23:34:36.872 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 61.8238 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:34:36.878 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:34:36.880 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:35:21.390 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 76.8064 ms
+2026-09-29 23:35:21.400 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 67.1707 ms
+2026-09-29 23:35:21.717 +08:00 [INF] HTTP GET /api/conversations responded 200 in 376.3808 ms
+2026-09-29 23:35:21.719 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 378.3080 ms
+2026-09-29 23:35:22.843 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 126.1835 ms
+2026-09-29 23:35:40.294 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 68.2484 ms
+2026-09-29 23:35:42.645 +08:00 [INF] HTTP GET /api/chapters/1/officers responded 200 in 224.7343 ms
+2026-09-29 23:35:46.539 +08:00 [INF] HTTP GET /api/membership-applications responded 200 in 56.5171 ms
+2026-09-29 23:35:49.148 +08:00 [INF] HTTP GET /api/chapters/1/ledger responded 200 in 112.7879 ms
+2026-09-29 23:35:53.289 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 167.5361 ms
+2026-09-29 23:35:55.624 +08:00 [INF] HTTP GET /api/members responded 200 in 102.1169 ms
+2026-09-29 23:35:59.100 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 59.7207 ms
+2026-09-29 23:35:59.139 +08:00 [INF] HTTP GET /api/conversations responded 200 in 67.5014 ms
+2026-09-29 23:35:59.141 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 69.7963 ms
+2026-09-29 23:35:59.468 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 396.6005 ms
+2026-09-29 23:36:06.056 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 67.4060 ms
+2026-09-29 23:36:06.072 +08:00 [INF] HTTP GET /api/members/me responded 200 in 63.4369 ms
+2026-09-29 23:36:06.075 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 56.2106 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:36:06.079 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 59.7635 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:36:06.080 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:36:06.080 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:36:06.081 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:36:06.081 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:18.864 +08:00 [INF] HTTP GET /api/members/me responded 200 in 66.2238 ms
+2026-09-29 23:37:18.884 +08:00 [INF] HTTP GET /api/blood-types responded 200 in 53.7493 ms
+2026-09-29 23:37:18.889 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 404 in 59.1374 ms
+2026-09-29 23:37:18.895 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 404 in 56.8950 ms
+2026-09-29 23:37:18.933 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 53.4846 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:37:18.934 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:18.934 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:18.970 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 66.7769 ms
+2026-09-29 23:37:19.293 +08:00 [INF] HTTP GET /api/skills responded 200 in 453.8145 ms
+2026-09-29 23:37:36.289 +08:00 [INF] HTTP POST /api/members/me/chapter-logo/stage responded 200 in 95.2170 ms
+2026-09-29 23:37:36.393 +08:00 [INF] HTTP POST /api/members/me/chapter-logo responded 200 in 71.7022 ms
+2026-09-29 23:37:36.503 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 76.8048 ms
+2026-09-29 23:37:41.486 +08:00 [INF] HTTP GET /api/chapters/1/meetings responded 200 in 66.0222 ms
+2026-09-29 23:37:41.509 +08:00 [INF] HTTP GET /api/chapters/1/ledger/summary responded 200 in 58.6998 ms
+2026-09-29 23:37:41.513 +08:00 [INF] HTTP GET /api/conversations responded 200 in 62.0017 ms
+2026-09-29 23:37:41.516 +08:00 [INF] HTTP GET /api/chapters/1/announcements responded 200 in 65.6309 ms
+2026-09-29 23:37:42.576 +08:00 [INF] HTTP GET /api/chapters/1/dashboard responded 200 in 70.7718 ms
+2026-09-29 23:37:54.395 +08:00 [INF] HTTP GET /api/members/me responded 200 in 54.5504 ms
+2026-09-29 23:37:54.426 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 57.0644 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:37:54.429 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:54.429 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:54.471 +08:00 [INF] HTTP GET /api/notifications/preferences responded 200 in 90.2066 ms
+2026-09-29 23:37:54.477 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 97.5082 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:37:54.480 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:54.480 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 100.4611 ms
+2026-09-29 23:37:54.481 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:37:54.780 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 391.5120 ms
+2026-09-29 23:38:02.321 +08:00 [INF] HTTP GET /api/members/me/credential responded 200 in 62.2042 ms
+2026-09-29 23:38:02.356 +08:00 [INF] HTTP GET /api/members/me responded 200 in 66.6347 ms
+2026-09-29 23:38:02.356 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 66.4329 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:38:02.356 +08:00 [ERR] HTTP GET /api/members/1/photo responded 500 in 66.2444 ms
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2026-09-29 23:38:02.357 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:38:02.358 +08:00 [ERR] An unhandled exception has occurred while executing the request.
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:38:02.358 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:38:02.359 +08:00 [ERR] Unhandled error on /api/members/1/photo
+System.IO.FileNotFoundException: Could not find file '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'.
+File name: '/Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/bin/Debug/net8.0/uploads/5398ffb2c1a44ef6aa0c7565cfc270ac.jpg'
+   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync)
+   at Akrho.Infrastructure.Storage.LocalFileStorage.OpenReadAsync(String relativePath, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Infrastructure/Storage/IFileStorage.cs:line 107
+   at Akrho.Api.Features.Members.MembersEndpoints.GetPhoto(Int32 memberId, IMemberProfileRepository repo, IFileStorage storage, ICurrentUser caller, CancellationToken ct) in /Users/eulzavancena/Documents/PROJECTS/AIS/src/Akrho.Api/Features/Members/MembersEndpoints.cs:line 316
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2026-09-29 23:38:02.399 +08:00 [INF] HTTP GET /api/members/me/chapter-logo responded 200 in 54.5467 ms

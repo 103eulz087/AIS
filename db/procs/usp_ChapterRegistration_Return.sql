@@ -4,9 +4,12 @@
    on the other end (usp_Meeting_Reopen, usp_MembershipApplication_Return,
    usp_Donation_Void, usp_Expense_Void, usp_Announcement_Withdraw).
 
-   Either verifying role may return it (CouncilSecretary or CouncilAdmin) — the same bar
-   as usp_ChapterRegistration_VerifyOfficer, since a return is simply "verification
-   failed, tell them why," not the separate, narrower final-approval capability.
+   Caller must hold the dynamic ChapterRegistration.Return permission on the
+   registration's ActingCouncilId (db/schema/28_council_permissions.sql) — by default
+   granted to the same President/Secretary offices usp_ChapterRegistration_VerifyOfficer
+   checks for Verify, since a return is simply "verification failed, tell them why," not
+   the separate, narrower final-approval capability. A council's own President can widen
+   or narrow this independently via usp_CouncilPermission_Set.
 
    Stays open (IsOpen remains 1): a returned registration still occupies its
    chapter-turnover or municipality/proposed-name slot until it is corrected and
@@ -27,7 +30,6 @@ BEGIN
     IF @Reason IS NULL OR LEN(LTRIM(RTRIM(@Reason))) < 10
         THROW 51550, 'A reason of at least 10 characters is required — it will be shown to the chapter.', 1;
 
-    DECLARE @Today DATE = CAST(SYSUTCDATETIME() AS DATE);
     DECLARE @ActingCouncilId INT, @StatusId INT;
 
     SELECT @ActingCouncilId = ActingCouncilId, @StatusId = StatusId
@@ -41,14 +43,11 @@ BEGIN
         THROW 51552, 'This registration has already been decided, or is not awaiting a decision.', 1;
 
     IF NOT EXISTS (
-        SELECT 1 FROM dbo.MemberRole mr
-        JOIN   dbo.Role r ON r.RoleId = mr.RoleId
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council' AND mr.ScopeId = @ActingCouncilId
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
-          AND  r.RoleName IN ('CouncilSecretary', 'CouncilAdmin')
+        SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+        WHERE  sp.CouncilId = @ActingCouncilId
+          AND  sp.PermissionKey = N'ChapterRegistration.Return'
     )
-        THROW 51553, 'Only this council''s Secretary or President may return this registration.', 1;
+        THROW 51553, 'You do not have permission to return registrations for this council.', 1;
 
     DECLARE @ReturnedId INT = (SELECT StatusId FROM dbo.ChapterRegistrationStatus WHERE StatusName = 'ReturnedForCorrection');
 

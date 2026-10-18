@@ -8,9 +8,10 @@ public sealed record CouncilOfficerCandidateDto(
     int ChapterId, string ChapterName, DateOnly? RenewedThrough,
     bool IsCurrent, bool IsLapsed, bool NoMobileNumber);
 
-/// <summary>GET /api/councils/member-lookup?councilId=&memberNumber= — for an
-/// out-of-jurisdiction nominee, found by exact number only, never a browsable list
-/// (invariant #7).</summary>
+/// <summary>One row of GET /api/councils/member-lookup?councilId=&name=&mobileNo= — an
+/// out-of-jurisdiction nominee, found only when his name AND mobile number both match,
+/// never a browsable list (invariant #7). The mobile number is a lookup key only; it is
+/// never sent back.</summary>
 public sealed record CouncilMemberLookupDto(
     int MemberId, string GiftName, string MemberNumber, string? ChapterName, string StatusName,
     DateOnly? RenewedThrough, bool IsCurrent, bool IsLapsed, bool NoMobileNumber);

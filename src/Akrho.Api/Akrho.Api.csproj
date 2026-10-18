@@ -10,11 +10,23 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
     <PackageReference Include="NPOI" Version="2.8.1" />
+    <!-- Pure C#, no native assets — the Digital ID image export's own QR codes
+         (DigitalIdCardRenderer.cs). Client-side credential screens still generate their QR
+         with the "qrcode" npm package; this is the server-side-export-only equivalent. -->
+    <PackageReference Include="QRCoder" Version="1.6.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageReference Include="SkiaSharp" Version="4.152.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Akrho.Infrastructure\Akrho.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- DigitalIdCardRenderer.cs's own font files (real Barlow Condensed/IBM Plex Sans
+         TTFs, loaded via SKTypeface.FromFile — not relying on the Windows Server having
+         either Google Font installed) and a copy of the National Council seal image
+         (src/web/public/national-seal.jpg — the API can't reach into the web project's
+         own static files, so this is a deliberate duplicate, not a broken reference). -->
+    <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

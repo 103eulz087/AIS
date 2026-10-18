@@ -6,7 +6,53 @@
  * narrower, so a button never promises an action the API will then 403 on.
  * The backend enforces every one of these again server-side; these functions only
  * decide what to SHOW, never what to allow.
+ *
+ * Phase 1 "dynamic council office permissions" (2026-10-17): four of these —
+ * canReviewChapterRegistrations, canApproveChapterRegistrations,
+ * canViewCouncilStatistics, canSearchMembersByJurisdiction — used to gate on ROLE NAME
+ * (CouncilSecretary/CouncilAdmin, or the wider five-role set for search). The matching
+ * backend policies (AuthorizationPolicies.CouncilChapterRegistrationVerify/Approve,
+ * CouncilStatisticsRead, CouncilMemberSearchRead) were widened to a coarse "holds SOME
+ * council office" pre-check — the real gate moved to a per-office, per-council PERMISSION
+ * KEY a council's own President can grant or revoke (db/schema/28_council_permissions.sql,
+ * GET /api/auth/me's own councilSeats). These four functions were re-implemented on top
+ * of that — they now take the caller's own CouncilSeatPermissions array, never roles —
+ * so a role check here can no longer promise a capability a council has since revoked
+ * from that office, or withhold one it has since granted. Every OTHER helper in this file
+ * is still role-based by design (phase 2 scope, unchanged) — do not convert them without
+ * a matching backend permission key to drive them.
  */
+import type { CouncilSeatPermissions } from "@/shared/types";
+
+/** The six phase 1 permission keys, exactly as seeded in dbo.CouncilPermission
+ * (db/schema/28_council_permissions.sql). Use these constants, never a hand-typed
+ * string, so a typo fails at compile time instead of silently never matching. */
+export const COUNCIL_PERMISSION = {
+  ChapterRegistrationReview: "ChapterRegistration.Review",
+  ChapterRegistrationVerify: "ChapterRegistration.Verify",
+  ChapterRegistrationApprove: "ChapterRegistration.Approve",
+  ChapterRegistrationReturn: "ChapterRegistration.Return",
+  CouncilStatisticsRead: "CouncilStatistics.Read",
+  CouncilMemberSearchRead: "CouncilMemberSearch.Read",
+} as const;
+
+export type CouncilPermissionKeyName = typeof COUNCIL_PERMISSION[keyof typeof COUNCIL_PERMISSION];
+
+/** True if ANY of the caller's council seats currently carries this permission key —
+ * a member seated on two councils only needs one of them to grant it. */
+export function hasCouncilPermission(
+  seats: readonly CouncilSeatPermissions[], key: string,
+): boolean {
+  return seats.some(s => s.permissions.includes(key));
+}
+
+/** True if the caller is the currently-seated President of ANY council he holds a seat
+ * on — the only capability phase 1 never makes grantable (db/schema/28_council_
+ * permissions.sql's own header: "there is deliberately NO 'manage permissions' key").
+ * Drives whether the Office Permissions screen offers a council to EDIT, not just view. */
+export function canManageCouncilPermissions(seats: readonly CouncilSeatPermissions[]): boolean {
+  return seats.some(s => s.canManagePermissions);
+}
 
 /** ChapterOfficer or ChapterAdmin — create/edit a meeting, save/clear attendance. */
 export function canWriteMeetings(roles: readonly string[]): boolean {
@@ -137,38 +183,41 @@ export function canViewCouncilRegistry(roles: readonly string[]): boolean {
 }
 
 /**
- * CouncilSecretary or CouncilAdmin — see a council's chapter-registration queue and
- * detail, tick officers off as verified, return a registration for correction. Mirrors
- * AuthorizationPolicies.CouncilChapterRegistrationVerify (Program.cs:
- * RequireRole("CouncilSecretary", "CouncilAdmin")). This is a COUNCIL role check, wholly
- * separate from ChapterAdmin/ChapterOfficer above.
+ * See a council's chapter-registration queue and detail, tick officers off as verified,
+ * return a registration for correction. Gates on the caller's own ChapterRegistration.
+ * Review permission key (any seat), per this file's own header note on phase 1 —
+ * formerly a CouncilSecretary/CouncilAdmin role check; today's default grant reproduces
+ * that same role bar byte for byte (db/schema/28_council_permissions.sql), so nothing
+ * visibly changes for an existing council until its own President edits the grid.
  */
-export function canReviewChapterRegistrations(roles: readonly string[]): boolean {
-  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
+export function canReviewChapterRegistrations(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.ChapterRegistrationReview);
 }
 
 /**
- * CouncilSecretary or CouncilAdmin — view the council statistics rollup (council-to-
- * council, council-to-chapter, chapter-to-member). Mirrors
- * AuthorizationPolicies.CouncilStatisticsRead (Program.cs), same role set as
- * canReviewChapterRegistrations above — the Secretary is the council's record-keeper
- * and already sees the registration queue, so this does not narrow further to
- * CouncilAdmin alone.
+ * View the council statistics rollup (council-to-council, council-to-chapter,
+ * chapter-to-member). Gates on CouncilStatistics.Read (any seat) — same phase 1 note as
+ * canReviewChapterRegistrations above; the default grant is CouncilSecretary + CouncilAdmin's
+ * old role bar, unchanged until a council's own President edits its grid.
  */
-export function canViewCouncilStatistics(roles: readonly string[]): boolean {
-  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin");
+export function canViewCouncilStatistics(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.CouncilStatisticsRead);
 }
 
 /**
- * CouncilAdmin only — final approval of a chapter registration (charter or turnover).
- * Narrower than canReviewChapterRegistrations by design, same two-person-integrity
- * reasoning as canFinalizeMeetings vs. canWriteMeetings: a Secretary can verify every
- * officer but a President/CouncilAdmin alone commits the decision. Mirrors
- * AuthorizationPolicies.CouncilChapterRegistrationApprove (Program.cs:
- * RequireRole("CouncilAdmin")).
+ * Final approval of a chapter registration (charter or turnover), ANYWHERE the caller is
+ * seated — gates on ChapterRegistration.Approve (any seat), same phase 1 note as
+ * canReviewChapterRegistrations above. The default grant still reproduces the
+ * CouncilSecretary/CouncilAdmin role bar widened 2026-10-06 (a Secretary confined to this
+ * one module end to end — verify AND approve, no other Portal access; see
+ * PortalShell.tsx's own nav-filtering comment) — unchanged until a council's own
+ * President edits its grid. ChapterRegistrationDetail.tsx itself drives its own Approve
+ * button from the per-registration data.canApprove the detail endpoint returns instead (a
+ * direct-seat check scoped to THAT registration's own acting council) — this coarser
+ * function is kept for any screen that only needs "can approve something, somewhere".
  */
-export function canApproveChapterRegistrations(roles: readonly string[]): boolean {
-  return roles.includes("CouncilAdmin");
+export function canApproveChapterRegistrations(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.ChapterRegistrationApprove);
 }
 
 /**
@@ -220,17 +269,18 @@ export function canExportIdCards(roles: readonly string[]): boolean {
 }
 
 /**
- * Any real council office — the Council Portal's global member search. Mirrors
- * AuthorizationPolicies.CouncilMemberSearchRead's own ROLE bar, same broad "any seated
- * council officer" posture as canViewCouncilRegistry above (a Secretary or Treasurer has
- * as much legitimate reason to look a member up as an Admin does). Which members the
- * search actually returns is scoped server-side to the caller's own jurisdiction
- * (usp_Member_SearchByJurisdiction) — this helper only decides whether to show the
- * screen at all. CouncilAuditor and the inert seeded role names must never be added here.
+ * The Council Portal's global member search. Gates on CouncilMemberSearch.Read (any
+ * seat) — same phase 1 note as canReviewChapterRegistrations above. The default grant
+ * reproduces the old five-role bar exactly (CouncilSecretary, CouncilAdmin,
+ * CouncilTreasurer, Vice President/CouncilOfficer, CouncilPIO — a Secretary or Treasurer
+ * has as much legitimate reason to look a member up as an Admin does), unchanged until a
+ * council's own President edits its grid; CouncilAuditor still holds nothing by default
+ * (its seeded IsReadOnly office). Which members the search actually returns is scoped
+ * server-side to the caller's own jurisdiction (usp_Member_SearchByJurisdiction) — this
+ * helper only decides whether to show the screen at all.
  */
-export function canSearchMembersByJurisdiction(roles: readonly string[]): boolean {
-  return roles.includes("CouncilSecretary") || roles.includes("CouncilAdmin")
-      || roles.includes("CouncilTreasurer") || roles.includes("CouncilOfficer") || roles.includes("CouncilPIO");
+export function canSearchMembersByJurisdiction(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.CouncilMemberSearchRead);
 }
 
 /**
@@ -255,4 +305,26 @@ export function canManageChapterHolds(roles: readonly string[]): boolean {
  */
 export function canPostNationalAnnouncements(roles: readonly string[]): boolean {
   return roles.includes("CouncilAdmin");
+}
+
+/**
+ * CouncilAdmin — search a chapter's own member list and tag/untag whoever has paid this
+ * membership year. Mirrors AuthorizationPolicies.MemberPaymentTagManage's own ROLE bar;
+ * the real "specifically the seated National CouncilAdmin" restriction is re-derived
+ * entirely server-side (usp_MemberPaymentTag_GetChapterMembers/_Set), same "coarse client
+ * check, real server check" posture as every other helper here.
+ */
+export function canManageMemberPaymentTags(roles: readonly string[]): boolean {
+  return roles.includes("CouncilAdmin");
+}
+
+/**
+ * ChapterAdmin only — upload the chapter's own logo, shown on every member's Digital ID.
+ * Mirrors AuthorizationPolicies.ChapterLogoManage's own ROLE bar: per this codebase's
+ * officer-seeding convention, 'ChapterAdmin' IS the President's office, so this reuses
+ * that role bar directly rather than a separate "President" claim — same posture as
+ * canFileOfficerRoster/canEditMemberIdentity above.
+ */
+export function canManageChapterLogo(roles: readonly string[]): boolean {
+  return roles.includes("ChapterAdmin");
 }

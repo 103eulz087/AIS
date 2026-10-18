@@ -88,8 +88,8 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
     {
         var members = new List<IdCardExportMemberRow>
         {
-            new(1, "ZZTEST-001", "Juan", null, "Dela Cruz", "TESTGIFT", "O+",
-                1, "ZZTEST Chapter", "ZZT", "Active", null, null, Guid.NewGuid())
+            new(1, "ZZTEST-001", "Juan", null, "Dela Cruz", "TESTGIFT", null, "O+",
+                1, "ZZTEST Chapter", "ZZT", null, null, null, "Active", "Unpaid", null, null, Guid.NewGuid())
         };
 
         var zipBytes = await InvokeBuildZipAsync(members, _storage, "https://portal.example");
@@ -117,11 +117,11 @@ public sealed class IdCardExportZipBuildingTests : IDisposable
             "image/png", CancellationToken.None);
 
         var withPhoto = new IdCardExportMemberRow(
-            1, "ZZTEST-001", "Juan", null, "Dela Cruz", "TESTGIFT", "O+",
-            1, "ZZTEST Chapter", "ZZT", "Active", stored.RelativePath, "image/png", Guid.NewGuid());
+            1, "ZZTEST-001", "Juan", null, "Dela Cruz", "TESTGIFT", null, "O+",
+            1, "ZZTEST Chapter", "ZZT", null, null, null, "Active", "Unpaid", stored.RelativePath, "image/png", Guid.NewGuid());
         var withoutPhoto = new IdCardExportMemberRow(
-            2, "ZZTEST-002", "Pedro", null, "Reyes", "TESTGIFT2", null,
-            1, "ZZTEST Chapter", "ZZT", "Active", null, null, Guid.NewGuid());
+            2, "ZZTEST-002", "Pedro", null, "Reyes", "TESTGIFT2", null, null,
+            1, "ZZTEST Chapter", "ZZT", null, null, null, "Active", "Unpaid", null, null, Guid.NewGuid());
 
         var zipBytes = await InvokeBuildZipAsync([withPhoto, withoutPhoto], _storage, "https://portal.example");
 

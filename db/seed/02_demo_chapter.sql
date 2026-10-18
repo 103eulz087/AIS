@@ -134,7 +134,16 @@ GO
    after picking 004/005 instead of 002/003. Decision E1b: CouncilAdmin is the council
    President's full-admin/approval capability; CouncilSecretary verifies each officer.
    Both terms are open-ended (TermStart = today, TermEnd = NULL), matching every other
-   seed role in this file. */
+   seed role in this file.
+
+   CouncilOfficeId is set on both inserts below (db/schema/28_council_permissions.sql) so
+   a freshly-seeded database resolves each seat's office directly rather than through
+   dbo.fn_MemberSeatPermissions's RoleId fallback — that fallback exists purely for data
+   seeded BEFORE this module shipped (and for xUnit fixtures that still seat by RoleId
+   alone), so a brand-new seed may as well set the column outright. This is a change to
+   future inserts only: the two IF NOT EXISTS guards below are unchanged, and nothing here
+   UPDATEs a MemberRole row that may already exist on a shared dev database from before
+   CouncilOfficeId existed — see this module's own header on why that would be wrong to do. */
 DECLARE @DemoCouncilId INT = (SELECT CouncilId FROM dbo.Council WHERE CouncilName = 'Sta. Rosa City Council');
 DECLARE @SeatToday DATE = CAST(SYSUTCDATETIME() AS DATE);
 
@@ -148,11 +157,12 @@ IF NOT EXISTS (
       AND  mr.ScopeType = 'Council'
       AND  mr.ScopeId = @DemoCouncilId
 )
-INSERT dbo.MemberRole (MemberId, RoleId, ScopeType, ScopeId, TermStart, TermEnd)
-SELECT m.MemberId, r.RoleId, 'Council', @DemoCouncilId, @SeatToday, NULL
-FROM   dbo.Member m, dbo.Role r
+INSERT dbo.MemberRole (MemberId, RoleId, ScopeType, ScopeId, TermStart, TermEnd, CouncilOfficeId)
+SELECT m.MemberId, r.RoleId, 'Council', @DemoCouncilId, @SeatToday, NULL, co.CouncilOfficeId
+FROM   dbo.Member m, dbo.Role r, dbo.CouncilOffice co
 WHERE  m.MemberNumber = 'AKR-04-0117-004'
-  AND  r.RoleName = 'CouncilAdmin';
+  AND  r.RoleName = 'CouncilAdmin'
+  AND  co.OfficeName = 'President';
 
 IF NOT EXISTS (
     SELECT 1
@@ -164,11 +174,12 @@ IF NOT EXISTS (
       AND  mr.ScopeType = 'Council'
       AND  mr.ScopeId = @DemoCouncilId
 )
-INSERT dbo.MemberRole (MemberId, RoleId, ScopeType, ScopeId, TermStart, TermEnd)
-SELECT m.MemberId, r.RoleId, 'Council', @DemoCouncilId, @SeatToday, NULL
-FROM   dbo.Member m, dbo.Role r
+INSERT dbo.MemberRole (MemberId, RoleId, ScopeType, ScopeId, TermStart, TermEnd, CouncilOfficeId)
+SELECT m.MemberId, r.RoleId, 'Council', @DemoCouncilId, @SeatToday, NULL, co.CouncilOfficeId
+FROM   dbo.Member m, dbo.Role r, dbo.CouncilOffice co
 WHERE  m.MemberNumber = 'AKR-04-0117-005'
-  AND  r.RoleName = 'CouncilSecretary';
+  AND  r.RoleName = 'CouncilSecretary'
+  AND  co.OfficeName = 'Secretary';
 GO
 
 /* One PendingApproval membership application against the demo chapter, so the approval

@@ -44,7 +44,7 @@ The last confirmed-working staging deploy was 2026-09-17 (sign-in, chapter regis
 council approval, National ID Card Export). Everything from this session (see below) is
 only live on the **shared dev/staging database** (`corex.itcoreapps.com,6601` /
 `AISDB` — CLAUDE.md §10/§11), not on the actual staging site
-(`http://itcoreapps.com:1973`) or its API. A `build-for-staging.ps1` + copy + IIS pool
+(`https://alphakapparho.app`) or its API. A `build-for-staging.ps1` + copy + IIS pool
 recycle is still needed before any of this is visible there.
 
 ---
@@ -141,7 +141,7 @@ trust either without checking current code first)
 ## Switching to macOS — what changes, what doesn't
 
 The **deployment target never changes** — staging is still the same Windows Server/IIS
-box (`http://itcoreapps.com:1973`) regardless of what OS you develop on. Only your local
+box (`https://alphakapparho.app`) regardless of what OS you develop on. Only your local
 build/dev workflow differs.
 
 **Works unchanged on Mac:**

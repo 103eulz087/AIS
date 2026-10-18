@@ -138,7 +138,8 @@ public sealed record ChapterRegistrationQueueRow(
     int RegistrationId, string ReferenceNo, string RegistrationType, string? ProposedChapterName,
     int? ChapterId, string? ChapterName, int StatusId, string StatusName, DateTime SubmittedDate,
     int ActingCouncilId, string ActingCouncilName, int? IntendedCouncilId, string RoutingReason,
-    int? DecidedBy, DateTime? DecidedDate, bool CanAct, int TotalCount);
+    int? DecidedBy, DateTime? DecidedDate, bool CanAct, int TotalCount,
+    bool CanVerify, bool CanApprove, bool CanReturn);
 
 /// <summary>One of the eight seats on a registration, resolved identity included — COALESCE over
 /// the Member row for a Turnover seat, or the typed-in columns for a Charter seat (never both
@@ -173,7 +174,7 @@ public sealed record ChapterRegistrationRow(
     int? SubmittedByMemberId, string? SubmittedByGiftName,
     DateTime SubmittedDate, int StatusId, string StatusName, bool IsOpen,
     int? DecidedBy, string? DecidedByGiftName, DateTime? DecidedDate, string? DecisionReason,
-    int? CreatedChapterId);
+    int? CreatedChapterId, bool CanVerify, bool CanApprove, bool CanReturn);
 
 public sealed record ChapterRegistrationDetailRows(
     ChapterRegistrationRow Header,
@@ -291,6 +292,14 @@ public interface IChapterRegistrationRepository
         int registrationId, string registrationType, int requestingMemberId,
         byte[]? tokenHash, DateTime? expiresOn,
         IReadOnlyDictionary<int, byte[]> turnoverTokenHashes, string? defaultPasswordHash, CancellationToken ct);
+
+    /// <summary>
+    /// Moves every open Submitted registration sitting at a council with nobody seated past
+    /// today up to the nearest council above that still has someone seated
+    /// (usp_ChapterRegistration_RerouteFromDormant, swept with no council filter and no actor).
+    /// Returns how many moved. Never rejects.
+    /// </summary>
+    Task<int> RerouteFromDormantAsync(CancellationToken ct);
 }
 
 public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory) : IChapterRegistrationRepository
@@ -562,5 +571,17 @@ public sealed class ChapterRegistrationRepository(ISqlConnectionFactory factory)
         {
             throw new ChapterRegistrationException(ex.Number, ex.Message);
         }
+    }
+
+    public async Task<int> RerouteFromDormantAsync(CancellationToken ct)
+    {
+        var p = new DynamicParameters();
+        p.Add("MovedCount", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+        using var conn = await factory.OpenAsync(ct);
+        await conn.ExecuteAsync(new CommandDefinition(
+            "dbo.usp_ChapterRegistration_RerouteFromDormant", p,
+            commandType: CommandType.StoredProcedure, cancellationToken: ct));
+        return p.Get<int?>("MovedCount") ?? 0;
     }
 }

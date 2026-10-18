@@ -47,7 +47,7 @@ public static class VerificationEndpoints
         return TypedResults.Ok(new PublicVerificationDto(
             row.IsValid, row.GiftName, row.ChapterName, row.StatusName,
             row.RenewedThrough is { } rt ? DateOnly.FromDateTime(rt) : null,
-            photoUrl));
+            photoUrl, row.IsPaid));
     }
 
     private static async Task<Results<FileStreamHttpResult, NotFound>> GetPhoto(

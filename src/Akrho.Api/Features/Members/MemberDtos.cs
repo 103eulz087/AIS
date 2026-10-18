@@ -92,6 +92,16 @@ public sealed record MemberPhotoClaimedDto(string PhotoUrl);
 /// <summary>POST /api/members/me/photo/stage — the id to pass into a following POST /api/members/me/photo.</summary>
 public sealed record MemberPhotoStagedDto(int AttachmentStagingId);
 
+/// <summary>POST /api/members/me/chapter-logo/stage — the id to pass into a following
+/// POST /api/members/me/chapter-logo. President (ChapterAdmin) only.</summary>
+public sealed record ChapterLogoStagedDto(int AttachmentStagingId);
+
+/// <summary>POST /api/members/me/chapter-logo — claims an already-staged upload as the
+/// caller's own chapter's logo.</summary>
+public sealed record SetChapterLogoRequest(int AttachmentStagingId);
+
+public sealed record ChapterLogoSetDto(string ChapterLogoUrl);
+
 /// <summary>
 /// StatusId (optional) filters to one exact MemberStatus — lets a dashboard tile like
 /// "Inactive: 7" link straight to GET /api/members?chapterId=1&amp;statusId=4 instead of a
