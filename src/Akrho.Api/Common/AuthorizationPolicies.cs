@@ -239,18 +239,17 @@ public static class AuthorizationPolicies
     public const string NationalAnnouncementManage = "NationalAnnouncementManage";
 
     /// <summary>
-    /// CouncilAdmin — search a chapter's own member list and tag/untag whoever has paid
-    /// this membership year (GET /api/member-payment-tags/chapters/{chapterId}/members,
-    /// POST .../members/{memberId}). Client decision 2026-09-29: held at National alone
-    /// while chapters are still rolling out — deliberately narrower than the "National, or
-    /// the chapter/council's own governing body" split <see cref="ChapterHoldManage"/> uses;
-    /// see usp_MemberPaymentTag_Set.sql's own header. The real "specifically the seated
-    /// National CouncilAdmin, not one seated elsewhere" restriction is re-derived entirely
-    /// server-side by usp_MemberPaymentTag_GetChapterMembers/_Set, same "coarse client
-    /// check, real server check" posture as every other policy in this file. Do NOT add
-    /// CouncilSecretary/CouncilTreasurer/CouncilOfficer/CouncilPIO here — this is a brand
-    /// new, informal control the client wants held at National alone, same reasoning as
-    /// <see cref="NationalMemberAccountManage"/>.
+    /// Any council officer (coarse) — list members' payment tags, read the payment report,
+    /// and tag whoever has paid this membership year (GET /api/member-payment-tags/members,
+    /// GET .../stats, POST .../members/{memberId}). Client decision 2026-09-29: held at
+    /// National alone while chapters are still rolling out. Since 2026-10-18 WHICH National
+    /// office may do it is set in National's office permission grid — the National-only keys
+    /// MemberPaymentTag.Read/.Set (db/schema/29_payment_tag_permissions.sql; President only
+    /// by default) — so this policy was widened to all six council roles, the same phase 1
+    /// "coarse client check, real server check" move as <see cref="CouncilStatisticsRead"/>.
+    /// The real gate is usp_MemberPaymentTag_ListMembers/_GetStats/_Set, each checking the
+    /// caller's key on a seat on the National Council itself via fn_MemberSeatPermissions —
+    /// a seat on any other council never carries these keys (IsNationalOnly).
     /// </summary>
     public const string MemberPaymentTagManage = "MemberPaymentTagManage";
 

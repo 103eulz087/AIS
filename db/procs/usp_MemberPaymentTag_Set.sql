@@ -1,6 +1,8 @@
-/* Tags a member Paid, Free, or Unpaid for a membership year — National Council Admin
-   only (client decision 2026-09-29, held at National alone while chapters are still
-   rolling out). Tri-state as of 2026-10-06: 'Free' is for members given free membership
+/* Tags a member Paid, Free, or Unpaid for a membership year — National Council only
+   (client decision 2026-09-29, held at National alone while chapters are still rolling
+   out). Since 2026-10-18 the office that may do it is set in National's office
+   permission grid ("Update payment tags", MemberPaymentTag.Set) instead of being
+   hardcoded to the President; by default it still is only the President. Tri-state as of 2026-10-06: 'Free' is for members given free membership
    for the year — it suppresses the Digital ID's "NOT YET PAID" watermark exactly like
    Paid does (see usp_Credential_GetOrIssueForSelf's own IsPaid formula), but is tracked
    as its own distinct state for the Payment Tags screen and the Paid/Free/Unpaid report
@@ -41,16 +43,13 @@ BEGIN
     IF @NationalCouncilId IS NULL
         THROW 51910, 'The National Council is not configured.', 1;
 
+    -- Office permission grid (db/schema/29_payment_tag_permissions.sql): a National-only
+    -- key, held by National's President by default and grantable to any other National office.
     IF NOT EXISTS (
-        SELECT 1
-        FROM   dbo.MemberRole mr
-               JOIN dbo.Role r ON r.RoleId = mr.RoleId
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council' AND mr.ScopeId = @NationalCouncilId
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
-          AND  r.RoleName = 'CouncilAdmin'
+        SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+        WHERE  sp.CouncilId = @NationalCouncilId AND sp.PermissionKey = N'MemberPaymentTag.Set'
     )
-        THROW 51911, 'Only the National Council Admin may tag member payment status.', 1;
+        THROW 51911, 'You don''t have permission to update payment tags. Ask the National President to switch on "Update payment tags" for your office.', 1;
 
     IF NOT EXISTS (SELECT 1 FROM dbo.Member WHERE MemberId = @MemberId AND IsDeleted = 0)
         THROW 51913, 'Member not found.', 1;

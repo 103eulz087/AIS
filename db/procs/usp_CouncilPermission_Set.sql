@@ -114,13 +114,23 @@ BEGIN
                    ON ac.CouncilOfficeId = cep.CouncilOfficeId AND ac.PermissionKey = cep.PermissionKey
     WHERE   cep.CouncilOfficeId IN (SELECT DISTINCT CouncilOfficeId FROM @ActualChanges);
 
-    IF EXISTS (
-        SELECT 1 FROM @Final f
-               JOIN dbo.CouncilPermission cp ON cp.PermissionKey = f.PermissionKey
-               JOIN @Final req ON req.CouncilOfficeId = f.CouncilOfficeId AND req.PermissionKey = cp.RequiresKey
-        WHERE f.IsGranted = 1 AND cp.RequiresKey IS NOT NULL AND req.IsGranted = 0
-    )
-        THROW 51936, 'Verify, Approve, and Return all require Review — grant Review first, or this would leave one of them granted without it.', 1;
+    -- The message names the actual pair (e.g. "Update payment tags" needs "View payment
+    -- tags"), not just the chapter-registration keys this check was first written for.
+    DECLARE @MissingFor NVARCHAR(100), @MissingNeeds NVARCHAR(100);
+    SELECT TOP (1) @MissingFor = cp.DisplayName, @MissingNeeds = rq.DisplayName
+    FROM   @Final f
+           JOIN dbo.CouncilPermission cp ON cp.PermissionKey = f.PermissionKey
+           JOIN @Final req ON req.CouncilOfficeId = f.CouncilOfficeId AND req.PermissionKey = cp.RequiresKey
+           JOIN dbo.CouncilPermission rq ON rq.PermissionKey = cp.RequiresKey
+    WHERE  f.IsGranted = 1 AND cp.RequiresKey IS NOT NULL AND req.IsGranted = 0
+    ORDER BY cp.SortOrder;
+
+    IF @MissingFor IS NOT NULL
+    BEGIN
+        DECLARE @RequiresMsg NVARCHAR(400) = CONCAT(N'"', @MissingFor, N'" needs "', @MissingNeeds,
+            N'" — grant "', @MissingNeeds, N'" first, or don''t take it away while "', @MissingFor, N'" is still on.');
+        THROW 51936, @RequiresMsg, 1;
+    END
 
     BEGIN TRAN;
         MERGE dbo.CouncilOfficePermission AS tgt

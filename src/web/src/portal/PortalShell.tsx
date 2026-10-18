@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/shared/auth";
-import { canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics } from "@/shared/roles";
+import { canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
 
 /**
  * Council Portal chrome. Desktop-first, but usable on a phone browser per CLAUDE.md's own
@@ -32,12 +32,15 @@ import { canManageMemberAccounts, canReviewChapterRegistrations, canSearchMember
  * each checked against claims.councilSeats — "Members" ALSO shown if
  * canManageMemberAccounts, still role-based, since a National CouncilAdmin needs this
  * link even on a council seat with no search permission granted).
+ * "Payment tags" and "Payment report" moved out of the secretaryOnly list into the
+ * permission grid too (canViewPaymentTags, MemberPaymentTag.Read — National-only, held by
+ * National's President by default); they are no longer decided by role name at all.
  * "Office permissions" is shown to ANY signed-in member who holds at least one council
  * seat at all, whatever permissions that seat carries — everyone seated gets to see what
  * their own office can and cannot do, even an Auditor with nothing granted.
  *
  * The secretaryOnly narrowing below is reserved for PHASE 2 links ONLY — ID card export,
- * chapter holds, announcements, payment tags/report, Councils registry — exactly the same
+ * chapter holds, announcements, Councils registry — exactly the same
  * client decision as before (2026-10-06): a user seated ONLY as CouncilSecretary —
  * nowhere also seated CouncilAdmin — sees none of these, keeping that role confined to
  * the chapter-registration module end to end. It does not touch "Chapter
@@ -78,8 +81,8 @@ export function PortalShell() {
       links: [
         { to: "/portal/members", label: "Members", show: showMembers, icon: "people" },
         { to: "/portal/id-card-export", label: "ID card export", show: !secretaryOnly, icon: "card" },
-        { to: "/portal/member-payment-tags", label: "Payment tags", show: !secretaryOnly, icon: "tag", end: true },
-        { to: "/portal/member-payment-tags/stats", label: "Payment report", show: !secretaryOnly, icon: "chart" },
+        { to: "/portal/member-payment-tags", label: "Payment tags", show: canViewPaymentTags(seats), icon: "tag", end: true },
+        { to: "/portal/member-payment-tags/stats", label: "Payment report", show: canViewPaymentTags(seats), icon: "chart" },
       ],
     },
     {

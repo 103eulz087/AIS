@@ -167,7 +167,7 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   // calling GET /api/announcements/national — same reasoning as every other
   // role-gated Portal screen above.
   ["/portal/announcements", <NationalAnnouncements key="pna" />],
-  // No session in jsdom -> canManageMemberPaymentTags(roles=[]) is false, so this
+  // No session in jsdom -> canViewPaymentTags(seats=[]) is false, so this
   // deterministically exercises the "you don't have access" empty state without ever
   // calling GET /api/chapters/search-jurisdiction — same reasoning as every other
   // role-gated Portal screen above.

@@ -50,8 +50,12 @@ function seatsForRoles(roles: string[]): CouncilSeatPermissions[] {
   return seats;
 }
 
-function stubAuthFetch(roles: string[]) {
-  const councilSeats = seatsForRoles(roles);
+function nationalSeat(officeName: string, permissions: string[], canManagePermissions: boolean): CouncilSeatPermissions {
+  return { councilId: 1, councilName: "National Council", officeName, permissions, canManagePermissions };
+}
+
+function stubAuthFetch(roles: string[], seatsOverride?: CouncilSeatPermissions[]) {
+  const councilSeats = seatsOverride ?? seatsForRoles(roles);
   vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
     if (url.includes("/api/auth/refresh")) {
@@ -138,8 +142,36 @@ describe("PortalShell — nav visibility", () => {
     expect(links).toContain("Statistics");
     expect(links).toContain("Councils");
     expect(links).toContain("Members");
-    expect(links).toContain("Payment tags");
     expect(links).toContain("Office permissions");
+  });
+
+  it("shows Payment tags and Payment report to a National President seat holding the payment tag keys", async () => {
+    stubAuthFetch(["CouncilAdmin"], [
+      nationalSeat("President", [...ALL_SIX, "MemberPaymentTag.Read", "MemberPaymentTag.Set"], true),
+    ]);
+    await renderShell();
+
+    const links = navLinkTexts();
+    expect(links).toContain("Payment tags");
+    expect(links).toContain("Payment report");
+  });
+
+  it("hides Payment tags and Payment report from a National Secretary-only seat without the keys", async () => {
+    stubAuthFetch(["CouncilSecretary"], [nationalSeat("Secretary", ALL_SIX, false)]);
+    await renderShell();
+
+    const links = navLinkTexts();
+    expect(links).not.toContain("Payment tags");
+    expect(links).not.toContain("Payment report");
+  });
+
+  it("hides Payment tags from a President seat on a non-National council (default grant has no payment keys)", async () => {
+    stubAuthFetch(["CouncilAdmin"]);
+    await renderShell();
+
+    const links = navLinkTexts();
+    expect(links).not.toContain("Payment tags");
+    expect(links).not.toContain("Payment report");
   });
 
   it("hides Chapter registrations, Statistics and Members from a role with none of those permissions (Treasurer)", async () => {

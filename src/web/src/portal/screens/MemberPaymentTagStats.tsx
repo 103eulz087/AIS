@@ -3,19 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { api } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
-import { canManageMemberPaymentTags } from "@/shared/roles";
+import { canViewPaymentTags } from "@/shared/roles";
 import type { MemberPaymentTagStats } from "@/shared/types";
 
 /**
  * The Paid/Unpaid/Free report (client decision 2026-10-06) — one row per chapter,
  * counting its active members by current payment-tag status for the membership year.
  * GET /api/member-payment-tags/stats, no chapterId — every chapter nationally. Same
- * National-only gate as MemberPaymentTags.tsx itself; same "coarse client check, real
+ * MemberPaymentTag.Read gate (canViewPaymentTags) as MemberPaymentTags.tsx itself; same "coarse client check, real
  * server check" posture as every other Portal screen.
  */
 export function MemberPaymentTagStats() {
   const { claims } = useAuth();
-  const canManage = canManageMemberPaymentTags(claims?.roles ?? []);
+  const canManage = canViewPaymentTags(claims?.councilSeats ?? []);
 
   const statsQuery = useQuery({
     queryKey: ["member-payment-tag-stats"],
@@ -28,7 +28,7 @@ export function MemberPaymentTagStats() {
     return (
       <EmptyState
         title="You don't have access to this"
-        body="Only National Council can view the payment tag report."
+        body="Your office does not have the 'View payment tags' permission."
       />
     );
   }

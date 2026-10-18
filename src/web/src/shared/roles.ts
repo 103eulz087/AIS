@@ -24,8 +24,9 @@
  */
 import type { CouncilSeatPermissions } from "@/shared/types";
 
-/** The six phase 1 permission keys, exactly as seeded in dbo.CouncilPermission
- * (db/schema/28_council_permissions.sql). Use these constants, never a hand-typed
+/** The council permission keys, exactly as seeded in dbo.CouncilPermission
+ * (db/schema/28_council_permissions.sql — the first six are phase 1; the two
+ * MemberPaymentTag keys are National-only and held by National's President by default). Use these constants, never a hand-typed
  * string, so a typo fails at compile time instead of silently never matching. */
 export const COUNCIL_PERMISSION = {
   ChapterRegistrationReview: "ChapterRegistration.Review",
@@ -34,6 +35,8 @@ export const COUNCIL_PERMISSION = {
   ChapterRegistrationReturn: "ChapterRegistration.Return",
   CouncilStatisticsRead: "CouncilStatistics.Read",
   CouncilMemberSearchRead: "CouncilMemberSearch.Read",
+  MemberPaymentTagRead: "MemberPaymentTag.Read",
+  MemberPaymentTagSet: "MemberPaymentTag.Set",
 } as const;
 
 export type CouncilPermissionKeyName = typeof COUNCIL_PERMISSION[keyof typeof COUNCIL_PERMISSION];
@@ -308,14 +311,22 @@ export function canPostNationalAnnouncements(roles: readonly string[]): boolean 
 }
 
 /**
- * CouncilAdmin — search a chapter's own member list and tag/untag whoever has paid this
- * membership year. Mirrors AuthorizationPolicies.MemberPaymentTagManage's own ROLE bar;
- * the real "specifically the seated National CouncilAdmin" restriction is re-derived
- * entirely server-side (usp_MemberPaymentTag_GetChapterMembers/_Set), same "coarse client
- * check, real server check" posture as every other helper here.
+ * View the member payment tag list and the Paid/Unpaid/Free report. Gates on
+ * MemberPaymentTag.Read (any seat). National-only: the key is only ever granted on
+ * National Council seats, and by default only National's President holds it. The real
+ * restriction is re-derived server-side by the payment tag procedures.
  */
-export function canManageMemberPaymentTags(roles: readonly string[]): boolean {
-  return roles.includes("CouncilAdmin");
+export function canViewPaymentTags(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.MemberPaymentTagRead);
+}
+
+/**
+ * Change a member's payment tag (Paid / Unpaid / Free). Gates on MemberPaymentTag.Set
+ * (any seat), which itself requires MemberPaymentTag.Read in the permission grid. A user
+ * who can view but not set sees the list read-only.
+ */
+export function canSetPaymentTags(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.MemberPaymentTagSet);
 }
 
 /**

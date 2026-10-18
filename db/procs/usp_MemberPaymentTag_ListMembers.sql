@@ -45,16 +45,13 @@ BEGIN
     IF @NationalCouncilId IS NULL
         THROW 51910, 'The National Council is not configured.', 1;
 
+    -- Office permission grid (db/schema/29_payment_tag_permissions.sql): a National-only
+    -- key, held by National's President by default and grantable to any other National office.
     IF NOT EXISTS (
-        SELECT 1
-        FROM   dbo.MemberRole mr
-               JOIN dbo.Role r ON r.RoleId = mr.RoleId
-        WHERE  mr.MemberId  = @RequestingMemberId
-          AND  mr.ScopeType = 'Council' AND mr.ScopeId = @NationalCouncilId
-          AND  mr.TermStart <= @Today AND (mr.TermEnd IS NULL OR mr.TermEnd >= @Today)
-          AND  r.RoleName = 'CouncilAdmin'
+        SELECT 1 FROM dbo.fn_MemberSeatPermissions(@RequestingMemberId) sp
+        WHERE  sp.CouncilId = @NationalCouncilId AND sp.PermissionKey = N'MemberPaymentTag.Read'
     )
-        THROW 51911, 'Only the National Council Admin may view member payment status.', 1;
+        THROW 51911, 'You don''t have permission to view payment tags. Ask the National President to switch on "View payment tags" for your office.', 1;
 
     IF @ChapterId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.Chapter WHERE ChapterId = @ChapterId)
         THROW 51912, 'Chapter not found.', 1;

@@ -285,7 +285,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthorizationPolicies.NationalAnnouncementManage, p =>
         p.RequireRole("CouncilAdmin"));
     options.AddPolicy(AuthorizationPolicies.MemberPaymentTagManage, p =>
-        p.RequireRole("CouncilAdmin"));
+        p.RequireRole("CouncilAdmin", "CouncilOfficer", "CouncilSecretary", "CouncilTreasurer", "CouncilPIO", "CouncilAuditor"));
     options.AddPolicy(AuthorizationPolicies.ChapterLogoManage, p =>
         p.RequireRole("ChapterAdmin"));
 

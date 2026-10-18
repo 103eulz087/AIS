@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
-import { canManageMemberPaymentTags } from "@/shared/roles";
+import { canSetPaymentTags, canViewPaymentTags } from "@/shared/roles";
 import type { ChapterJurisdictionResult, MemberPaymentStatus, MemberPaymentTag } from "@/shared/types";
 
 type SearchMode = "chapter" | "member";
@@ -23,13 +23,16 @@ type StatusFilter = MemberPaymentStatus | "All";
  * The status filter (All/Paid/Unpaid/Free) narrows whichever list is showing — a
  * chapter's roster, or direct search results.
  *
- * canManageMemberPaymentTags gates the whole screen; the server re-derives the real
- * "seated National CouncilAdmin" authority independently, same "coarse client check,
+ * canViewPaymentTags (MemberPaymentTag.Read) gates the whole screen; canSetPaymentTags
+ * (MemberPaymentTag.Set) gates only the Paid/Free/Unpaid buttons — without it the list is
+ * read-only. The server re-derives both independently, same "coarse client check,
  * real server check" posture as every other Portal screen.
  */
 export function MemberPaymentTags() {
   const { claims } = useAuth();
-  const canManage = canManageMemberPaymentTags(claims?.roles ?? []);
+  const seats = claims?.councilSeats ?? [];
+  const canManage = canViewPaymentTags(seats);
+  const canSet = canSetPaymentTags(seats);
 
   const [mode, setMode] = useState<SearchMode>("chapter");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
@@ -88,7 +91,7 @@ export function MemberPaymentTags() {
   const [busyMemberId, setBusyMemberId] = useState<number | null>(null);
 
   async function setStatus(m: MemberPaymentTag, status: MemberPaymentStatus) {
-    if (m.paymentStatus === status) return;
+    if (!canSet || m.paymentStatus === status) return;
     setBusyMemberId(m.memberId);
     setRowError(prev => { const next = { ...prev }; delete next[m.memberId]; return next; });
     try {
@@ -109,7 +112,7 @@ export function MemberPaymentTags() {
     return (
       <EmptyState
         title="You don't have access to this"
-        body="Only National Council can tag members as paid."
+        body="Your office does not have the 'View payment tags' permission."
       />
     );
   }
@@ -141,6 +144,7 @@ export function MemberPaymentTags() {
                 {mode === "member" && <td style={tdStyle}>{m.chapterName}</td>}
                 <td style={tdStyle}>{m.statusName}</td>
                 <td style={tdStyle}>
+                  {canSet ? (
                   <div style={tagButtonRowStyle}>
                     {(["Paid", "Free", "Unpaid"] as const).map(option => (
                       <button
@@ -154,6 +158,9 @@ export function MemberPaymentTags() {
                       </button>
                     ))}
                   </div>
+                  ) : (
+                    <div style={{ fontWeight: 600 }}>{m.paymentStatus}</div>
+                  )}
                   {m.paymentStatus !== "Unpaid" && m.taggedByGiftName && (
                     <div style={{ fontSize: 11, color: "var(--mute)", marginTop: 4 }}>
                       by {m.taggedByGiftName}
@@ -178,6 +185,13 @@ export function MemberPaymentTags() {
         Search a chapter, or a member directly, and tag who has paid, is exempt for free,
         or hasn&rsquo;t paid this membership year.
       </p>
+
+      {!canSet && (
+        <p role="note" style={{ fontSize: 13, color: "var(--slate)", marginTop: 10 }}>
+          You can view payment tags. Updating them needs the &lsquo;Update payment tags&rsquo;
+          permission from your council President.
+        </p>
+      )}
 
       <div style={tabRowStyle}>
         <button type="button" onClick={() => switchMode("chapter")} style={tabStyle(mode === "chapter")}>

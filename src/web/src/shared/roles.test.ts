@@ -8,7 +8,7 @@
 import { describe, expect, it } from "vitest";
 import {
   canApproveChapterRegistrations, canManageCouncilPermissions, canReviewChapterRegistrations,
-  canSearchMembersByJurisdiction, canViewCouncilStatistics, COUNCIL_PERMISSION, hasCouncilPermission,
+  canSearchMembersByJurisdiction, canSetPaymentTags, canViewCouncilStatistics, canViewPaymentTags, COUNCIL_PERMISSION, hasCouncilPermission,
 } from "./roles";
 import type { CouncilSeatPermissions } from "./types";
 
@@ -105,5 +105,27 @@ describe("canSearchMembersByJurisdiction", () => {
     expect(canApproveChapterRegistrations(auditor)).toBe(false);
     expect(canViewCouncilStatistics(auditor)).toBe(false);
     expect(canSearchMembersByJurisdiction(auditor)).toBe(false);
+  });
+});
+
+describe("canViewPaymentTags / canSetPaymentTags", () => {
+  const read = COUNCIL_PERMISSION.MemberPaymentTagRead;
+  const set = COUNCIL_PERMISSION.MemberPaymentTagSet;
+
+  it("view is driven by MemberPaymentTag.Read alone", () => {
+    expect(canViewPaymentTags([seat({ permissions: [read] })])).toBe(true);
+    expect(canViewPaymentTags([seat({ permissions: [set] })])).toBe(false);
+    expect(canViewPaymentTags([seat({ permissions: [] })])).toBe(false);
+  });
+
+  it("set is driven by MemberPaymentTag.Set alone", () => {
+    expect(canSetPaymentTags([seat({ permissions: [read, set] })])).toBe(true);
+    expect(canSetPaymentTags([seat({ permissions: [read] })])).toBe(false);
+  });
+
+  it("either key on any one seat is enough, and no seats means neither", () => {
+    expect(canViewPaymentTags([seat(), seat({ permissions: [read] })])).toBe(true);
+    expect(canViewPaymentTags([])).toBe(false);
+    expect(canSetPaymentTags([])).toBe(false);
   });
 });

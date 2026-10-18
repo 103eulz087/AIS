@@ -372,7 +372,7 @@ export const router = createBrowserRouter([
       // Admin" authority is re-derived server-side — see NationalAnnouncements.tsx's
       // own header comment.
       { path: "announcements", element: <NationalAnnouncements /> },
-      // canManageMemberPaymentTags (CouncilAdmin); a simple, standalone paid/unpaid tag
+      // canViewPaymentTags (MemberPaymentTag.Read grid key); a simple, standalone paid/unpaid tag
       // for National to track during initial rollout, deliberately separate from the
       // renewal-fee module. Real "seated National CouncilAdmin" authority is re-derived
       // server-side — see MemberPaymentTags.tsx's own header comment.
