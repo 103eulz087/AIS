@@ -192,7 +192,7 @@ export function IdCardExport() {
 }
 
 const panelStyle: CSSProperties = {
-  marginTop: 20, padding: 20, borderRadius: "var(--r)",
+  marginTop: 20, padding: 16, minWidth: 0, borderRadius: "var(--r)",
   background: "var(--paper)", border: "1px solid var(--line)", maxWidth: 480,
 };
 
@@ -202,7 +202,7 @@ const fieldLabelStyle: CSSProperties = {
 };
 
 const fieldStyle: CSSProperties = {
-  width: "100%", minHeight: 40, padding: "0 10px", borderRadius: 8, fontSize: 13,
+  width: "100%", minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 14,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 

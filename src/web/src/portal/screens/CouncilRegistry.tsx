@@ -5,6 +5,7 @@ import { api, ApiError } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
 import { canSeatCouncilOfficers, canViewCouncilRegistry } from "@/shared/roles";
+import { ResponsiveTable } from "../responsive";
 import type { CouncilRegistry, CreateCouncilRequest } from "@/shared/types";
 
 interface Crumb { councilId: number; councilName: string }
@@ -79,7 +80,7 @@ export function CouncilRegistry() {
     <div>
       <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".03em" }}>Council registry</h1>
 
-      <div style={{ padding: "10px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 4, fontSize: 12.5 }}>
+      <div style={{ padding: "6px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 2, fontSize: 12.5 }}>
         <button type="button" onClick={goHome} style={crumbButtonStyle}>Your council</button>
         {trail.map((c, i) => (
           <span key={c.councilId} style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -88,12 +89,12 @@ export function CouncilRegistry() {
           </span>
         ))}
         <span style={{ color: "var(--mute)" }}>›</span>
-        <span style={{ color: "var(--ink)", fontWeight: 600 }}>{focus.councilName}</span>
+        <span style={{ color: "var(--ink)", fontWeight: 600, overflowWrap: "anywhere" }}>{focus.councilName}</span>
       </div>
 
       <CouncilStateCard row={focus} />
 
-      <div style={{ display: "flex", gap: 10, margin: "16px 0" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "16px 0" }}>
         <Link to={`/portal/councils/${focus.councilId}`} style={primaryLinkStyle}>View / manage officers</Link>
         {canSeat && (
           <button type="button" onClick={() => setShowCreate(s => !s)} style={ghostButtonStyle}>
@@ -114,32 +115,18 @@ export function CouncilRegistry() {
       ) : (
         <>
           <div style={sectionLabelStyle}>Councils beneath {focus.councilName}</div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Council</th>
-                  <th style={thStyle}>Level</th>
-                  <th style={thStyle}>State</th>
-                  <th style={thStyle}>Chapters</th>
-                  <th style={thStyle}>Members</th>
-                </tr>
-              </thead>
-              <tbody>
-                {children.map(row => (
-                  <tr key={row.councilId}>
-                    <td style={tdStyle}>
-                      <button type="button" onClick={() => drillInto(row)} style={linkButtonStyle}>{row.councilName}</button>
-                    </td>
-                    <td style={tdStyle}>{row.levelName}</td>
-                    <td style={tdStyle}><StateLabel row={row} /></td>
-                    <td style={tdStyle} className="num">{row.directChapterCount}</td>
-                    <td style={tdStyle} className="num">{row.directMemberCount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ResponsiveTable
+            rows={children}
+            rowKey={r => r.councilId}
+            columns={[
+              { key: "council", header: "Council", primary: true,
+                render: r => <button type="button" onClick={() => drillInto(r)} style={linkButtonStyle}>{r.councilName}</button> },
+              { key: "level", header: "Level", render: r => r.levelName },
+              { key: "state", header: "State", render: r => <StateLabel row={r} /> },
+              { key: "chapters", header: "Chapters", numeric: true, render: r => r.directChapterCount },
+              { key: "members", header: "Members", numeric: true, render: r => r.directMemberCount },
+            ]}
+          />
         </>
       )}
     </div>
@@ -149,7 +136,7 @@ export function CouncilRegistry() {
 function CouncilStateCard({ row }: { row: CouncilRegistry }) {
   return (
     <div style={cardStyle}>
-      <div style={{ fontFamily: "var(--f-disp)", fontSize: 16, letterSpacing: ".02em" }}>{row.councilName}</div>
+      <div style={{ fontFamily: "var(--f-disp)", fontSize: 16, letterSpacing: ".02em", overflowWrap: "anywhere" }}>{row.councilName}</div>
       <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 2 }}>{row.levelName}</div>
       <div style={{ marginTop: 10 }}><StateLabel row={row} detailed /></div>
       <div style={{ marginTop: 10, fontSize: 12.5, color: "var(--slate)" }}>
@@ -267,24 +254,9 @@ const sectionLabelStyle: CSSProperties = {
   color: "var(--mute)", padding: "18px 0 8px",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 640,
-};
+const linkButtonStyle: CSSProperties = { color: "var(--info)", textDecoration: "underline", fontSize: 13.5, minHeight: "var(--tap)", textAlign: "left", overflowWrap: "anywhere" };
 
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
-};
-
-const linkButtonStyle: CSSProperties = { color: "var(--info)", textDecoration: "underline", fontSize: 13.5 };
-
-const crumbButtonStyle: CSSProperties = { color: "var(--info)", fontSize: 12.5, minHeight: 28, padding: "0 2px" };
+const crumbButtonStyle: CSSProperties = { color: "var(--info)", fontSize: 13, minHeight: "var(--tap)", padding: "0 6px", overflowWrap: "anywhere", textAlign: "left" };
 
 const primaryLinkStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 18px", borderRadius: 8, display: "flex", alignItems: "center",

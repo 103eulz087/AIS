@@ -6,6 +6,7 @@ import { shortDate } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
 import { canReviewChapterRegistrations } from "@/shared/roles";
+import { ResponsiveTable } from "../responsive";
 import {
   CHAPTER_REGISTRATION_STATUSES, type ChapterRegistrationQueueItem, type ChapterRegistrationStatusName,
 } from "@/shared/types";
@@ -140,33 +141,25 @@ export function ChapterRegistrationQueue() {
           />
         )
       ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={thStyle}>Reference</th>
-                <th style={thStyle}>Type</th>
-                <th style={thStyle}>Chapter</th>
-                <th style={thStyle}>Status</th>
-                <th style={thStyle}>Submitted</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map(r => (
-                <tr key={r.registrationId}>
-                  <td style={tdStyle}>
-                    <Link to={`/portal/chapter-registrations/${r.registrationId}`} style={linkStyle} className="num">
-                      {r.referenceNo}
-                    </Link>
-                  </td>
-                  <td style={tdStyle}>{typeLabel(r.registrationType)}</td>
-                  <td style={tdStyle}>{r.chapterName ?? r.proposedChapterName ?? "—"}</td>
-                  <td style={tdStyle}><span style={statusPillStyle(r.statusName)}>{statusLabel(r.statusName)}</span></td>
-                  <td style={tdStyle}>{shortDate(r.submittedDateUtc)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div>
+          <ResponsiveTable<ChapterRegistrationQueueItem>
+            rows={items}
+            rowKey={r => r.registrationId}
+            columns={[
+              {
+                key: "ref", header: "Reference", primary: true,
+                render: r => (
+                  <Link to={`/portal/chapter-registrations/${r.registrationId}`} style={linkStyle} className="num">
+                    {r.referenceNo}
+                  </Link>
+                ),
+              },
+              { key: "type", header: "Type", render: r => typeLabel(r.registrationType) },
+              { key: "chapter", header: "Chapter", render: r => r.chapterName ?? r.proposedChapterName ?? "—" },
+              { key: "status", header: "Status", render: r => <span style={statusPillStyle(r.statusName)}>{statusLabel(r.statusName)}</span> },
+              { key: "submitted", header: "Submitted", render: r => shortDate(r.submittedDateUtc) },
+            ]}
+          />
 
           {data && data.total > skip + items.length && (
             <div style={{ padding: 16, textAlign: "center" }}>
@@ -200,31 +193,18 @@ function statusPillStyle(statusName: string): CSSProperties {
 const filterRowStyle: CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8, margin: "16px 0" };
 
 const searchFieldStyle: CSSProperties = {
-  flex: "1 1 260px", minHeight: 40, padding: "0 12px", borderRadius: 8, fontSize: 13.5,
+  flex: "1 1 260px", minWidth: 0, minHeight: "var(--tap)", padding: "0 12px", borderRadius: 8, fontSize: 13.5,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
 const filterFieldStyle: CSSProperties = {
-  minWidth: 220, minHeight: 40, padding: "0 10px", borderRadius: 8, fontSize: 13,
+  flex: "1 1 200px", minWidth: 0, minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 13,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 640,
+const linkStyle: CSSProperties = {
+  color: "var(--info)", textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: "var(--tap)",
 };
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
-};
-
-const linkStyle: CSSProperties = { color: "var(--info)", textDecoration: "none" };
 
 const loadMoreStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 20px", borderRadius: 8,

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
+import { ResponsiveTable } from "../responsive";
 import { canSetPaymentTags, canViewPaymentTags } from "@/shared/roles";
 import type { ChapterJurisdictionResult, MemberPaymentStatus, MemberPaymentTag } from "@/shared/types";
 
@@ -122,42 +123,40 @@ export function MemberPaymentTags() {
       return <EmptyState title="No members" body="Nobody matches this search and filter." />;
     }
     return (
-      <div style={{ overflowX: "auto", marginTop: 16 }}>
-        <table style={tableStyle}>
-          <thead>
-            <tr>
-              <th style={thStyle}>Member</th>
-              <th style={thStyle}>Member No.</th>
-              {mode === "member" && <th style={thStyle}>Chapter</th>}
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Paid {membershipYear}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(m => (
-              <tr key={m.memberId}>
-                <td style={tdStyle}>
+      <div style={{ marginTop: 16 }}>
+        <ResponsiveTable
+          rows={rows}
+          rowKey={m => m.memberId}
+          columns={[
+            { key: "member", header: "Member", primary: true,
+              render: m => (
+                <>
                   <div style={{ fontWeight: 600 }}>{m.giftName}</div>
-                  <div style={{ fontSize: 12, color: "var(--mute)" }}>{m.fullName}</div>
-                </td>
-                <td style={tdStyle}>{m.memberNumber}</td>
-                {mode === "member" && <td style={tdStyle}>{m.chapterName}</td>}
-                <td style={tdStyle}>{m.statusName}</td>
-                <td style={tdStyle}>
+                  <div style={{ fontSize: 12, color: "var(--mute)", fontWeight: 400 }}>{m.fullName}</div>
+                </>
+              ) },
+            { key: "number", header: "Member No.", render: m => <span className="num">{m.memberNumber}</span> },
+            ...(mode === "member"
+              ? [{ key: "chapter", header: "Chapter", render: (m: MemberPaymentTag) => m.chapterName }]
+              : []),
+            { key: "status", header: "Status", render: m => m.statusName },
+            { key: "paid", header: `Paid ${membershipYear ?? ""}`.trim(),
+              render: m => (
+                <>
                   {canSet ? (
-                  <div style={tagButtonRowStyle}>
-                    {(["Paid", "Free", "Unpaid"] as const).map(option => (
-                      <button
-                        key={option}
-                        type="button"
-                        disabled={busyMemberId === m.memberId}
-                        onClick={() => { void setStatus(m, option); }}
-                        style={tagButtonStyle(m.paymentStatus === option, option)}
-                      >
-                        {option}
-                      </button>
-                    ))}
-                  </div>
+                    <div style={tagButtonRowStyle}>
+                      {(["Paid", "Free", "Unpaid"] as const).map(option => (
+                        <button
+                          key={option}
+                          type="button"
+                          disabled={busyMemberId === m.memberId}
+                          onClick={() => { void setStatus(m, option); }}
+                          style={tagButtonStyle(m.paymentStatus === option, option)}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
                   ) : (
                     <div style={{ fontWeight: 600 }}>{m.paymentStatus}</div>
                   )}
@@ -169,11 +168,10 @@ export function MemberPaymentTags() {
                   {rowError[m.memberId] && (
                     <p role="alert" style={errorStyle}>{rowError[m.memberId]}</p>
                   )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </>
+              ) },
+          ]}
+        />
       </div>
     );
   }
@@ -217,7 +215,7 @@ export function MemberPaymentTags() {
       )}
 
       {mode === "chapter" && selectedChapter && (
-        <h2 style={{ fontFamily: "var(--f-disp)", fontSize: 18, letterSpacing: ".02em", marginTop: 12 }}>
+        <h2 style={{ fontFamily: "var(--f-disp)", fontSize: 18, letterSpacing: ".02em", marginTop: 12, overflowWrap: "anywhere" }}>
           {selectedChapter.chapterName}
         </h2>
       )}
@@ -250,37 +248,28 @@ export function MemberPaymentTags() {
             (chapterQuery.data?.items ?? []).length === 0 ? (
               <EmptyState title="No matches" body="No chapter matches that search." />
             ) : (
-              <div style={{ overflowX: "auto", marginTop: 16 }}>
-                <table style={tableStyle}>
-                  <thead>
-                    <tr>
-                      <th style={thStyle}>Chapter</th>
-                      <th style={thStyle}>Region / Province / City</th>
-                      <th style={thStyle}>Members</th>
-                      <th style={thStyle} />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(chapterQuery.data?.items ?? []).map(r => (
-                      <tr key={r.chapterId}>
-                        <td style={tdStyle}>{r.chapterName}</td>
-                        <td style={{ ...tdStyle, fontSize: 12.5, color: "var(--slate)" }}>
-                          {[r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—"}
-                        </td>
-                        <td style={tdStyle}>{r.memberCount}</td>
-                        <td style={tdStyle}>
-                          <button
-                            type="button"
-                            onClick={() => setSelected({ chapterId: r.chapterId, chapterName: r.chapterName })}
-                            style={viewButtonStyle}
-                          >
-                            View members
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div style={{ marginTop: 16 }}>
+                <ResponsiveTable
+                  rows={chapterQuery.data?.items ?? []}
+                  rowKey={r => r.chapterId}
+                  columns={[
+                    { key: "chapter", header: "Chapter", primary: true, render: r => r.chapterName },
+                    { key: "area", header: "Region / Province / City",
+                      render: r => <span style={{ fontSize: 12.5, color: "var(--slate)" }}>
+                        {[r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—"}
+                      </span> },
+                    { key: "members", header: "Members", numeric: true, render: r => r.memberCount },
+                    { key: "open", header: "", render: r => (
+                      <button
+                        type="button"
+                        onClick={() => setSelected({ chapterId: r.chapterId, chapterName: r.chapterName })}
+                        style={viewButtonStyle}
+                      >
+                        View members
+                      </button>
+                    ) },
+                  ]}
+                />
               </div>
             )
           )}
@@ -326,21 +315,6 @@ const searchInputStyle: CSSProperties = {
   borderRadius: 8, fontSize: 15, border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 640,
-};
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
-};
-
 const viewButtonStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 14px", borderRadius: 8,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--info)", fontSize: 12.5,
@@ -348,12 +322,12 @@ const viewButtonStyle: CSSProperties = {
 
 const backButtonStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 4px", border: "none", background: "none",
-  color: "var(--info)", fontSize: 13.5, cursor: "pointer", marginTop: 12, display: "block",
+  color: "var(--info)", fontSize: 13.5, cursor: "pointer", marginTop: 12, display: "block", textAlign: "left",
 };
 
 const errorStyle: CSSProperties = { marginTop: 4, fontSize: 12.5, color: "var(--out)", lineHeight: 1.4 };
 
-const tabRowStyle: CSSProperties = { display: "flex", gap: 8, marginTop: 16 };
+const tabRowStyle: CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 };
 
 function tabStyle(active: boolean): CSSProperties {
   return {
@@ -367,18 +341,18 @@ const statusFilterRowStyle: CSSProperties = { display: "flex", gap: 6, marginTop
 
 function filterChipStyle(active: boolean): CSSProperties {
   return {
-    minHeight: 34, padding: "0 12px", borderRadius: 999, fontSize: 12.5,
+    minHeight: "var(--tap)", padding: "0 16px", borderRadius: 999, fontSize: 13,
     border: "1px solid var(--line)", background: active ? "var(--info)" : "var(--paper)",
     color: active ? "var(--paper)" : "var(--slate)",
   };
 }
 
-const tagButtonRowStyle: CSSProperties = { display: "flex", gap: 4 };
+const tagButtonRowStyle: CSSProperties = { display: "flex", gap: 6, width: "100%", minWidth: 200 };
 
 function tagButtonStyle(active: boolean, option: "Paid" | "Free" | "Unpaid"): CSSProperties {
   const activeColor = option === "Paid" ? "var(--in)" : option === "Free" ? "var(--info)" : "var(--out)";
   return {
-    minHeight: 30, padding: "0 10px", borderRadius: 6, fontSize: 11.5, fontWeight: active ? 700 : 400,
+    flex: "1 1 0", minHeight: "var(--tap)", padding: "0 8px", borderRadius: 8, fontSize: 13, fontWeight: active ? 700 : 400,
     border: `1px solid ${active ? activeColor : "var(--line)"}`,
     background: active ? activeColor : "var(--paper)", color: active ? "var(--paper)" : "var(--slate)",
   };

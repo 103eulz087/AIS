@@ -5,6 +5,7 @@ import { api } from "@/shared/api";
 import { peso, shortDate } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
+import { ResponsiveTable } from "../responsive";
 import { canViewCouncilStatistics } from "@/shared/roles";
 import { MEMBER_STATUSES, type ChapterStatisticsDto, type CouncilRollupDto, type CouncilStatisticsResponse } from "@/shared/types";
 
@@ -119,7 +120,7 @@ export function CouncilStatistics() {
         </p>
       </div>
 
-      <div style={{ padding: "6px 16px 0" }}>
+      <div style={{ padding: "6px 0 0" }}>
         <Breadcrumb trail={trail} current={f.councilName} onHome={goHome} onJump={jumpToTrail} />
       </div>
 
@@ -130,12 +131,12 @@ export function CouncilStatistics() {
       />
 
       <GroupLabel>{f.councilName}</GroupLabel>
-      <div style={{ padding: "0 16px" }}>
+      <div style={{ padding: 0 }}>
         <SeatingCard rollup={f} />
       </div>
 
       <GroupLabel>Structure</GroupLabel>
-      <div style={{ padding: "0 16px" }}>
+      <div style={{ padding: 0 }}>
         <div style={tilesGridStyle}>
           <Tile label="Child councils" value={f.directChildCouncilCount} />
           <Tile label="Councils in this tree" value={f.totalCouncilsInSubtree} />
@@ -151,7 +152,7 @@ export function CouncilStatistics() {
       <RenewalGroup rollup={f} />
 
       <GroupLabel>Chapter registrations in this tree</GroupLabel>
-      <div style={{ padding: "0 16px" }}>
+      <div style={{ padding: 0 }}>
         <div style={tilesGridStyle}>
           <Tile label="Submitted" value={f.regSubmittedCount} />
           <Tile label="Returned for correction" value={f.regReturnedForCorrectionCount} />
@@ -168,42 +169,29 @@ export function CouncilStatistics() {
       {data.childCouncils.length > 0 && (
         <>
           <GroupLabel>Child councils</GroupLabel>
-          <div style={{ padding: "0 16px", overflowX: "auto" }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Council</th>
-                  <th style={thStyle}>Level</th>
-                  <th style={thStyle}>Officers</th>
-                  <th style={thStyle}>Members</th>
-                  <th style={thStyle}>Chapters</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.childCouncils.map(c => (
-                  <tr key={c.councilId}>
-                    <td style={tdStyle}>
-                      <button type="button" onClick={() => drillInto(c)} style={linkButtonStyle}>{c.councilName}</button>
-                    </td>
-                    <td style={tdStyle}>{c.levelName}</td>
-                    <td style={tdStyle}>
-                      {c.hasSeatedOfficers
-                        ? <span style={{ color: "var(--in)" }}>Seated</span>
-                        : <span style={{ color: "var(--out)" }}>Not seated</span>}
-                    </td>
-                    <td style={tdStyle} className="num">{c.memberTotal}</td>
-                    <td style={tdStyle} className="num">{c.totalChaptersInSubtree}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div style={{ padding: 0 }}>
+            <ResponsiveTable
+              rows={data.childCouncils}
+              rowKey={c => c.councilId}
+              columns={[
+                { key: "council", header: "Council", primary: true,
+                  render: c => <button type="button" onClick={() => drillInto(c)} style={linkButtonStyle}>{c.councilName}</button> },
+                { key: "level", header: "Level", render: c => c.levelName },
+                { key: "officers", header: "Officers",
+                  render: c => c.hasSeatedOfficers
+                    ? <span style={{ color: "var(--in)" }}>Seated</span>
+                    : <span style={{ color: "var(--out)" }}>Not seated</span> },
+                { key: "members", header: "Members", numeric: true, render: c => c.memberTotal },
+                { key: "chapters", header: "Chapters", numeric: true, render: c => c.totalChaptersInSubtree },
+              ]}
+            />
           </div>
         </>
       )}
 
       <GroupLabel>Chapters in this tree</GroupLabel>
       {data.chapters.length === 0 ? (
-        <div style={{ padding: "0 16px" }}>
+        <div style={{ padding: 0 }}>
           <p style={{ fontSize: 12, color: "var(--mute)", lineHeight: 1.6 }}>
             No chapters found under this council.
           </p>
@@ -216,7 +204,7 @@ export function CouncilStatistics() {
         />
       )}
 
-      <p style={{ padding: "18px 16px 0", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
+      <p style={{ padding: "18px 0 0", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
         Every figure above is a council-wide or chapter-wide total, never a per-member
         number. Chapter balances are aggregate totals only — individual ledger entries
         stay visible to that chapter's own officers and members.
@@ -231,7 +219,7 @@ function Breadcrumb({ trail, current, onHome, onJump }: {
   trail: Crumb[]; current: string; onHome: () => void; onJump: (index: number) => void;
 }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 4, fontSize: 12.5 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 2, fontSize: 13 }}>
       <button type="button" onClick={onHome} style={crumbButtonStyle}>Your council</button>
       {trail.map((c, i) => (
         <span key={c.councilId} style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -240,7 +228,7 @@ function Breadcrumb({ trail, current, onHome, onJump }: {
         </span>
       ))}
       <span style={{ color: "var(--mute)" }}>›</span>
-      <span style={{ color: "var(--ink)", fontWeight: 600 }}>{current}</span>
+      <span style={{ color: "var(--ink)", fontWeight: 600, overflowWrap: "anywhere" }}>{current}</span>
     </div>
   );
 }
@@ -272,7 +260,7 @@ function PeriodSelector({ period, onChange, customFrom, customTo, onCustomFrom, 
   onCustomFrom: (v: string) => void; onCustomTo: (v: string) => void;
 }) {
   return (
-    <div style={{ padding: "10px 16px 4px" }}>
+    <div style={{ padding: "10px 0 4px" }}>
       <select
         aria-label="Select period" value={period}
         onChange={e => onChange(e.target.value as PeriodOption)}
@@ -285,7 +273,7 @@ function PeriodSelector({ period, onChange, customFrom, customTo, onCustomFrom, 
       </select>
 
       {period === "custom" && (
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
           <input
             type="date" aria-label="From date" value={customFrom}
             onChange={e => onCustomFrom(e.target.value)} style={dateInputStyle}
@@ -315,7 +303,7 @@ function MembershipGroup({ rollup: m }: { rollup: CouncilRollupDto }) {
   };
 
   return (
-    <div style={{ padding: "0 16px" }}>
+    <div style={{ padding: 0 }}>
       {m.memberTotal === 0 && (
         <p style={{ fontSize: 12, color: "var(--mute)", margin: "0 0 8px", lineHeight: 1.6 }}>
           No members recorded under this council yet.
@@ -345,7 +333,7 @@ function MembershipGroup({ rollup: m }: { rollup: CouncilRollupDto }) {
 function RenewalGroup({ rollup: r }: { rollup: CouncilRollupDto }) {
   if (!r.hasRenewalData) {
     return (
-      <div style={{ padding: "0 16px" }}>
+      <div style={{ padding: 0 }}>
         <p style={{ fontSize: 13, color: "var(--mute)", lineHeight: 1.6 }}>
           No renewal season recorded yet for this period.
         </p>
@@ -353,7 +341,7 @@ function RenewalGroup({ rollup: r }: { rollup: CouncilRollupDto }) {
     );
   }
   return (
-    <div style={{ padding: "0 16px" }}>
+    <div style={{ padding: 0 }}>
       <div style={tilesGridStyle}>
         <Tile label="Renewed" value={r.renewedCount} valueColor="var(--in)" />
         <Tile label="Lapsed" value={r.lapsedCount} />
@@ -371,7 +359,7 @@ function RenewalGroup({ rollup: r }: { rollup: CouncilRollupDto }) {
 
 function ActivityGroup({ rollup: a }: { rollup: CouncilRollupDto }) {
   return (
-    <div style={{ padding: "0 16px" }}>
+    <div style={{ padding: 0 }}>
       <div style={tilesGridStyle}>
         <Tile label="Meetings held" value={a.meetingsHeld} />
         <div style={{ ...tileStyle, gridColumn: "1 / -1" }}>
@@ -410,7 +398,7 @@ function CorrectiveActionsGroup({ counts }: { counts: { statusName: string; case
   };
 
   return (
-    <div style={{ padding: "0 16px" }}>
+    <div style={{ padding: 0 }}>
       <div style={tilesGridStyle}>
         {statuses.map(s => (
           <Tile key={s} label={s} value={byName.get(s) ?? 0} valueColor={statusColor(s)} />
@@ -435,21 +423,14 @@ function ChaptersTable({ chapters, toDate, totalCount, skip, onLoadMore }: {
   chapters: ChapterStatisticsDto[]; toDate: string; totalCount: number; skip: number; onLoadMore: () => void;
 }) {
   return (
-    <div style={{ padding: "0 16px", overflowX: "auto" }}>
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th style={thStyle}>Chapter</th>
-            <th style={thStyle}>Council</th>
-            <th style={thStyle}>Members</th>
-            <th style={thStyle}>Balance as at {shortDate(toDate)}</th>
-            <th style={thStyle}>Cases</th>
-          </tr>
-        </thead>
-        <tbody>
-          {chapters.map(c => (
-            <tr key={c.chapterId}>
-              <td style={tdStyle}>
+    <div style={{ padding: 0 }}>
+      <ResponsiveTable
+        rows={chapters}
+        rowKey={c => c.chapterId}
+        columns={[
+          { key: "chapter", header: "Chapter", primary: true,
+            render: c => (
+              <>
                 <Link
                   to={`/members?chapterId=${c.chapterId}&chapterName=${encodeURIComponent(c.chapterName)}`}
                   style={linkStyle}
@@ -457,21 +438,18 @@ function ChaptersTable({ chapters, toDate, totalCount, skip, onLoadMore }: {
                   {c.chapterName}
                 </Link>
                 {!c.isActive && <span style={{ marginLeft: 6, fontSize: 10, color: "var(--mute)" }}>INACTIVE</span>}
-              </td>
-              <td style={tdStyle}>{c.parentCouncilName}</td>
-              <td style={tdStyle} className="num">{c.memberActive} active / {c.memberTotal} total</td>
-              <td style={tdStyle} className="num">
-                {c.openingBalance === 0 && c.periodIn === 0 && c.periodOut === 0 && c.closingBalance === 0
-                  ? <span style={{ color: "var(--mute)" }}>No entries recorded</span>
-                  : peso(c.closingBalance)}
-              </td>
-              <td style={tdStyle} className="num">
-                {c.caseCountPending + c.caseCountUnderReview + c.caseCountReconciled + c.caseCountDismissed}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </>
+            ) },
+          { key: "council", header: "Council", render: c => c.parentCouncilName },
+          { key: "members", header: "Members", numeric: true, render: c => `${c.memberActive} active / ${c.memberTotal} total` },
+          { key: "balance", header: `Balance as at ${shortDate(toDate)}`, numeric: true,
+            render: c => c.openingBalance === 0 && c.periodIn === 0 && c.periodOut === 0 && c.closingBalance === 0
+              ? <span style={{ color: "var(--mute)" }}>No entries recorded</span>
+              : peso(c.closingBalance) },
+          { key: "cases", header: "Cases", numeric: true,
+            render: c => c.caseCountPending + c.caseCountUnderReview + c.caseCountReconciled + c.caseCountDismissed },
+        ]}
+      />
 
       {totalCount > skip + chapters.length && (
         <div style={{ padding: 16, textAlign: "center" }}>
@@ -546,22 +524,22 @@ function rangeFor(period: PeriodOption, customFrom: string, customTo: string): D
 
 /* ------------------------------------------------------------------------- Styles */
 
-const headerStyle: CSSProperties = { padding: "20px 16px 6px" };
+const headerStyle: CSSProperties = { padding: "0 0 6px" };
 
 const titleStyle: CSSProperties = { fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em" };
 
 const groupLabelStyle: CSSProperties = {
-  padding: "18px 16px 8px", fontFamily: "var(--f-disp)", fontSize: 13,
+  padding: "18px 0 8px", fontFamily: "var(--f-disp)", fontSize: 13,
   letterSpacing: ".08em", textTransform: "uppercase", color: "var(--slate)",
 };
 
 const selectStyle: CSSProperties = {
-  width: "100%", maxWidth: 280, minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 13.5,
+  width: "100%", maxWidth: 320, minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 13.5,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
 const dateInputStyle: CSSProperties = {
-  minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 13,
+  flex: "1 1 140px", minWidth: 0, minHeight: "var(--tap)", padding: "0 10px", borderRadius: 8, fontSize: 13,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
@@ -570,7 +548,7 @@ const cardStyle: CSSProperties = {
 };
 
 const tilesGridStyle: CSSProperties = {
-  display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10, marginTop: 10,
+  display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 10, marginTop: 10,
 };
 
 const tileStyle: CSSProperties = {
@@ -579,33 +557,19 @@ const tileStyle: CSSProperties = {
 };
 
 const tileLabelStyle: CSSProperties = {
+  overflowWrap: "anywhere",
   fontSize: 11.5, letterSpacing: ".04em", color: "var(--mute)", textTransform: "uppercase",
 };
 
 const tileValueStyle: CSSProperties = { fontSize: 20, fontWeight: 700, marginTop: 4 };
 
 const crumbButtonStyle: CSSProperties = {
-  color: "var(--info)", fontSize: 12.5, minHeight: 28, padding: "0 2px",
+  color: "var(--info)", fontSize: 13, minHeight: "var(--tap)", padding: "0 6px", textAlign: "left", overflowWrap: "anywhere",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 640,
-};
+const linkStyle: CSSProperties = { color: "var(--info)", textDecoration: "none", overflowWrap: "anywhere" };
 
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
-};
-
-const linkStyle: CSSProperties = { color: "var(--info)", textDecoration: "none" };
-
-const linkButtonStyle: CSSProperties = { color: "var(--info)", textDecoration: "underline", fontSize: 13.5 };
+const linkButtonStyle: CSSProperties = { color: "var(--info)", textDecoration: "underline", fontSize: 13.5, minHeight: "var(--tap)", textAlign: "left", overflowWrap: "anywhere" };
 
 const loadMoreStyle: CSSProperties = {
   minHeight: "var(--tap)", padding: "0 20px", borderRadius: 8,

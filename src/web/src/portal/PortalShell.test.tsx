@@ -242,3 +242,39 @@ describe("PortalShell — nav visibility", () => {
     expect(container.querySelector('section[aria-label="Settings"]')).toBeNull();
   });
 });
+
+describe("PortalShell — hamburger menu", () => {
+  it("toggles aria-expanded on the hamburger, and the close button shuts the drawer", async () => {
+    stubAuthFetch(["CouncilAdmin"]);
+    await renderShell();
+    const burger = container.querySelector<HTMLButtonElement>('button[aria-label="Open menu"]')!;
+    expect(burger.getAttribute("aria-expanded")).toBe("false");
+    await act(async () => { burger.click(); });
+    expect(burger.getAttribute("aria-expanded")).toBe("true");
+    expect(container.querySelector(".pshell-side")!.classList.contains("is-open")).toBe(true);
+    const close = container.querySelector<HTMLButtonElement>('button[aria-label="Close menu"]')!;
+    await act(async () => { close.click(); });
+    expect(burger.getAttribute("aria-expanded")).toBe("false");
+    expect(container.querySelector(".pshell-side")!.classList.contains("is-open")).toBe(false);
+  });
+
+  it("folds and unfolds a group's links from its heading on a narrow screen", async () => {
+    vi.stubGlobal("matchMedia", (q: string) => ({
+      matches: true, media: q, addEventListener: () => {}, removeEventListener: () => {},
+    }));
+    stubAuthFetch(["CouncilAdmin"]);
+    await renderShell();
+    const heading = (label: string) =>
+      Array.from(container.querySelectorAll<HTMLButtonElement>("button.pshell-hbtn")).find(b => b.textContent === label)!;
+    const hidden = (id: string) => container.querySelector<HTMLElement>("#" + id)!.hidden;
+    // The page is Chapter registrations, so Chapters starts open and Members starts folded.
+    expect(heading("Chapters").getAttribute("aria-expanded")).toBe("true");
+    expect(heading("Members").getAttribute("aria-expanded")).toBe("false");
+    await act(async () => { heading("Chapters").click(); });
+    expect(hidden("pnav-chapters")).toBe(true);
+    await act(async () => { heading("Members").click(); });
+    expect(hidden("pnav-members")).toBe(false);
+    // Links stay in the DOM either way.
+    expect(navLinkTexts()).toContain("Chapter registrations");
+  });
+});

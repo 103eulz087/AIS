@@ -154,7 +154,7 @@ export function NationalAnnouncements() {
           <div style={{ marginTop: 20 }}>
             {items.map(a => (
               <div key={a.announcementId} style={rowStyle}>
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ flex: "1 1 240px", minWidth: 0, overflowWrap: "anywhere" }}>
                   <div style={{ fontSize: 14, fontWeight: 600 }}>
                     {a.isUrgent && !a.isWithdrawn && <span style={urgentPillStyle}>Urgent</span>}
                     {a.title}
@@ -179,7 +179,7 @@ export function NationalAnnouncements() {
                         placeholder="Reason for withdrawing" style={promptInputStyle} autoFocus
                       />
                       {withdrawError && <p role="alert" style={errorStyle}>{withdrawError}</p>}
-                      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
                         <button
                           type="button" onClick={() => { void confirmWithdraw(); }} disabled={withdrawBusy}
                           style={{ ...ghostButtonStyle, background: "var(--deep)", color: "var(--brass-soft)" }}
@@ -210,6 +210,7 @@ export function NationalAnnouncements() {
 
 const formCardStyle: CSSProperties = {
   marginTop: 16, padding: 16, borderRadius: "var(--r)", background: "var(--paper)", border: "1px solid var(--line)",
+  maxWidth: 640,
 };
 
 const labelStyle: CSSProperties = {
@@ -234,12 +235,12 @@ const buttonStyle: CSSProperties = {
 };
 
 const rowStyle: CSSProperties = {
-  display: "flex", gap: 12, alignItems: "flex-start", padding: "14px 16px",
+  display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-start", padding: "14px 16px",
   background: "var(--paper)", border: "1px solid var(--line)", borderRadius: "var(--r)", marginBottom: 10,
 };
 
 const bodyPreviewStyle: CSSProperties = {
-  fontSize: 12.5, color: "var(--slate)", marginTop: 6, lineHeight: 1.5, whiteSpace: "pre-wrap",
+  fontSize: 13, color: "var(--slate)", marginTop: 6, lineHeight: 1.5, whiteSpace: "pre-wrap", overflowWrap: "anywhere",
 };
 
 const withdrawnBannerStyle: CSSProperties = {

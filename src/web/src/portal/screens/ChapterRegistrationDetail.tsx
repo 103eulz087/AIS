@@ -229,7 +229,7 @@ export function ChapterRegistrationDetail() {
   return (
     <div style={{ paddingBottom: 24 }}>
       <div>
-        <div style={{ fontFamily: "var(--f-disp)", fontSize: 24, lineHeight: 1.15, letterSpacing: ".02em" }}>
+        <div style={{ fontFamily: "var(--f-disp)", fontSize: 24, lineHeight: 1.15, letterSpacing: ".02em", overflowWrap: "anywhere" }}>
           {data.chapterName ?? data.proposedChapterName ?? "Chapter registration"}
         </div>
         <div style={{ fontSize: 13, color: "var(--slate)", marginTop: 4 }}>{typeLabel(data.registrationType)}</div>
@@ -273,7 +273,7 @@ export function ChapterRegistrationDetail() {
       )}
 
       <div style={sectionStyle}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", columnGap: 12 }}>
           <div style={sectionLabelStyle}>Officers</div>
           <div style={{ fontSize: 12.5, color: allVerified ? "var(--in)" : "var(--mute)" }}>
             {verifiedCount} of {data.officers.length} verified
@@ -351,7 +351,7 @@ export function ChapterRegistrationDetail() {
                 {" "}The link is shown only once, right after you approve — have a way to copy and
                 send it ready before you continue.
               </p>
-              <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 12 }}>
                 <button type="button" onClick={() => setConfirmingApprove(false)} style={ghostButtonStyle}>
                   Cancel
                 </button>
@@ -383,7 +383,7 @@ export function ChapterRegistrationDetail() {
 
                   {returnError && <p role="alert" style={errorTextStyle}>{returnError}</p>}
 
-                  <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
                     <button
                       type="button"
                       onClick={() => { setReturnOpen(false); setReturnReason(""); setReturnError(null); }}
@@ -451,8 +451,8 @@ function OfficerRow({
 
   return (
     <div style={cardStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-        <div>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+        <div style={{ minWidth: 0, flex: "1 1 200px" }}>
           <div style={{ fontSize: 11, color: "var(--mute)" }}>{o.officeName}</div>
           <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2 }}>
             {o.giftName}{!o.grantsLogin && <span style={noLoginPillStyle}>Recorded — no login</span>}
@@ -463,7 +463,7 @@ function OfficerRow({
           </div>
         </div>
         <span style={{
-          fontSize: 11, padding: "3px 9px", borderRadius: 10, whiteSpace: "nowrap",
+          fontSize: 11, padding: "3px 9px", borderRadius: 10,
           background: isVerified ? "var(--bond)" : "#FBF4E4",
           color: isVerified ? "var(--in)" : "var(--warn)",
           border: `1px solid ${isVerified ? "var(--line)" : "#E7D6A8"}`,
@@ -481,7 +481,7 @@ function OfficerRow({
             id={`note-${o.registrationOfficerId}`} value={noteDraft} disabled={busy}
             onChange={e => onNoteChange(e.target.value)} style={fieldStyle}
           />
-          <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
             <button
               type="button" disabled={busy || isVerified} onClick={() => onVerify(true)}
               style={{ ...smallPrimaryButtonStyle, opacity: busy ? 0.7 : 1 }}
@@ -624,7 +624,7 @@ const sectionLabelStyle: CSSProperties = {
 
 const cardStyle: CSSProperties = {
   padding: 14, borderRadius: "var(--r)", background: "var(--paper)",
-  border: "1px solid var(--line)", marginBottom: 10,
+  border: "1px solid var(--line)", marginBottom: 10, minWidth: 0, overflowWrap: "anywhere",
 };
 
 const pillStyle: CSSProperties = {
@@ -633,7 +633,7 @@ const pillStyle: CSSProperties = {
 };
 
 const noLoginPillStyle: CSSProperties = {
-  marginLeft: 8, fontSize: 10, padding: "2px 8px", borderRadius: 10, whiteSpace: "nowrap",
+  marginLeft: 8, fontSize: 10, padding: "2px 8px", borderRadius: 10, display: "inline-block",
   background: "var(--bond)", color: "var(--slate)", border: "1px solid var(--line)",
 };
 
@@ -646,13 +646,13 @@ const historyRowStyle: CSSProperties = { padding: "8px 0", borderBottom: "1px so
 
 const approvePanelStyle: CSSProperties = {
   marginTop: 16, padding: 16, borderRadius: "var(--r)", background: "var(--paper)",
-  border: "1px solid var(--brass)",
+  border: "1px solid var(--brass)", overflowWrap: "anywhere",
 };
 
 const enrolmentLinkRowStyle: CSSProperties = { display: "flex", gap: 10, alignItems: "center", marginTop: 8, flexWrap: "wrap" };
 
 const enrolmentLinkBoxStyle: CSSProperties = {
-  flex: "1 1 260px", padding: 10, borderRadius: 8, background: "var(--bond)",
+  flex: "1 1 200px", minWidth: 0, padding: 10, borderRadius: 8, background: "var(--bond)",
   border: "1px solid var(--line)", fontSize: 12.5, wordBreak: "break-all", color: "var(--ink)",
 };
 
@@ -674,7 +674,7 @@ const ghostButtonStyle: CSSProperties = {
 };
 
 const smallPrimaryButtonStyle: CSSProperties = {
-  minHeight: 38, padding: "0 16px", borderRadius: 8,
+  minHeight: "var(--tap)", padding: "0 16px", borderRadius: 8,
   background: "var(--deep)", color: "var(--brass-soft)",
   fontFamily: "var(--f-disp)", fontSize: 13, letterSpacing: ".05em", textTransform: "uppercase",
 };
@@ -687,5 +687,5 @@ const primaryButtonStyle: CSSProperties = {
 
 const confirmPanelStyle: CSSProperties = {
   marginTop: 10, padding: 14, borderRadius: "var(--r)", background: "var(--paper)",
-  border: "1px solid var(--brass)",
+  border: "1px solid var(--brass)", overflowWrap: "anywhere",
 };

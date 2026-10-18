@@ -1,10 +1,11 @@
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
 import { canManageMemberAccounts, canSearchMembersByJurisdiction } from "@/shared/roles";
 import { shortDate, validThrough } from "@/shared/format";
+import { ResponsiveTable } from "../responsive";
 import type { BlockedMember, MemberJurisdictionResult, MemberPasswordReset } from "@/shared/types";
 
 /**
@@ -181,6 +182,30 @@ export function MemberSearch() {
   const searchRows = searchQuery.data?.items ?? [];
   const blockedRows = blockedQuery.data ?? [];
 
+  // The "View details" panel and the block/unblock/reset prompt for one member — opened under
+  // that member's row on a wide screen, at the bottom of his card on a phone (ResponsiveTable's
+  // expandedRow). Null when nothing is open for him.
+  function expandedFor(memberId: number) {
+    if (viewingId !== memberId && promptFor?.memberId !== memberId) return null;
+    return (
+      <>
+        {viewingId === memberId && (
+          <div style={expandedBoxStyle}><DetailPanel query={detailQuery} /></div>
+        )}
+        {promptFor?.memberId === memberId && (
+          <div style={expandedBoxStyle}>
+            <AccountActionPrompt
+              promptFor={promptFor} reason={reason} setReason={setReason}
+              busy={actionBusy} error={actionError}
+              onConfirm={() => { void confirmAction(); }}
+              onCancel={() => setPromptFor(null)}
+            />
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <div>
       <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".03em" }}>Members</h1>
@@ -189,7 +214,7 @@ export function MemberSearch() {
       </p>
 
       {canManageAccounts && (
-        <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
           <button
             type="button"
             onClick={() => setShowBlockedOnly(false)}
@@ -253,98 +278,74 @@ export function MemberSearch() {
             searchRows.length === 0 ? (
               <EmptyState title="No matches" body="Nobody in your jurisdiction matches that search." />
             ) : (
-              <div style={{ overflowX: "auto", marginTop: 16, opacity: searchQuery.isFetching ? 0.6 : 1 }}>
-                <table style={tableStyle}>
-                  <thead>
-                    <tr>
-                      <th style={thStyle}>Member</th>
-                      <th style={thStyle}>Chapter / Home council</th>
-                      <th style={thStyle}>Region / Province / City</th>
-                      <th style={thStyle}>Mobile</th>
-                      <th style={thStyle}>Status</th>
-                      <th style={thStyle}>Renewal</th>
-                      <th style={thStyle} />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {searchRows.map(r => (
-                      <Fragment key={r.memberId}>
-                        <tr>
-                          <td style={tdStyle}>
-                            <div style={{ fontWeight: 600 }}>{r.giftName} — {r.memberNumber}</div>
-                            <div style={{ fontSize: 12, color: "var(--slate)" }}>{r.fullName}</div>
-                          </td>
-                          <td style={tdStyle}>
-                            {r.chapterName ?? (r.homeCouncilName ? `${r.homeCouncilName} (detached)` : "—")}
-                          </td>
-                          <td style={{ ...tdStyle, fontSize: 12.5, color: "var(--slate)" }}>
-                            {[r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—"}
-                          </td>
-                          <td style={tdStyle}>{r.mobileNo ?? "—"}</td>
-                          <td style={tdStyle}>
-                            <span style={statusBadgeStyle(r.statusName)}>{r.statusName}</span>
-                            {r.isBlocked && <span style={blockedBadgeStyle}>Blocked</span>}
-                          </td>
-                          <td style={tdStyle}>{validThrough(r.renewedThrough)}</td>
-                          <td style={tdStyle}>
-                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                              <button type="button" onClick={() => toggleDetails(r.memberId)} style={viewButtonStyle}>
-                                {viewingId === r.memberId ? "Hide" : "View details"}
-                              </button>
-                              {canManageAccounts && (
-                                <>
-                                  {r.isBlocked ? (
-                                    <button
-                                      type="button"
-                                      onClick={() => openPrompt(r.memberId, r.giftName, "unblock")}
-                                      style={unblockButtonStyle}
-                                    >
-                                      Unblock
-                                    </button>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      onClick={() => openPrompt(r.memberId, r.giftName, "block")}
-                                      style={blockButtonStyle}
-                                    >
-                                      Block
-                                    </button>
-                                  )}
+              <div style={{ marginTop: 16, opacity: searchQuery.isFetching ? 0.6 : 1 }}>
+                <ResponsiveTable
+                  rows={searchRows}
+                  rowKey={r => r.memberId}
+                  expandedRow={r => expandedFor(r.memberId)}
+                  columns={[
+                    { key: "member", header: "Member", primary: true,
+                      render: r => (
+                        <>
+                          <div style={{ fontWeight: 600 }}>{r.giftName} — <span className="num">{r.memberNumber}</span></div>
+                          <div style={{ fontSize: 12, color: "var(--slate)", fontWeight: 400 }}>{r.fullName}</div>
+                        </>
+                      ) },
+                    { key: "chapter", header: "Chapter / Home council",
+                      render: r => r.chapterName ?? (r.homeCouncilName ? `${r.homeCouncilName} (detached)` : "—") },
+                    { key: "area", header: "Region / Province / City",
+                      render: r => <span style={{ fontSize: 12.5, color: "var(--slate)" }}>
+                        {[r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—"}
+                      </span> },
+                    { key: "mobile", header: "Mobile", render: r => <span className="num">{r.mobileNo ?? "—"}</span> },
+                    { key: "status", header: "Status",
+                      render: r => (
+                        <>
+                          <span style={statusBadgeStyle(r.statusName)}>{r.statusName}</span>
+                          {r.isBlocked && <span style={blockedBadgeStyle}>Blocked</span>}
+                        </>
+                      ) },
+                    { key: "renewal", header: "Renewal", render: r => validThrough(r.renewedThrough) },
+                    { key: "actions", header: "",
+                      render: r => (
+                        <>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                            <button type="button" onClick={() => toggleDetails(r.memberId)} style={viewButtonStyle}>
+                              {viewingId === r.memberId ? "Hide" : "View details"}
+                            </button>
+                            {canManageAccounts && (
+                              <>
+                                {r.isBlocked ? (
                                   <button
                                     type="button"
-                                    onClick={() => openPrompt(r.memberId, r.giftName, "reset")}
-                                    style={viewButtonStyle}
+                                    onClick={() => openPrompt(r.memberId, r.giftName, "unblock")}
+                                    style={unblockButtonStyle}
                                   >
-                                    Reset password
+                                    Unblock
                                   </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                        {viewingId === r.memberId && (
-                          <tr>
-                            <td colSpan={7} style={{ ...tdStyle, background: "var(--bond)" }}>
-                              <DetailPanel query={detailQuery} />
-                            </td>
-                          </tr>
-                        )}
-                        {promptFor?.memberId === r.memberId && (
-                          <tr>
-                            <td colSpan={7} style={{ ...tdStyle, background: "var(--bond)" }}>
-                              <AccountActionPrompt
-                                promptFor={promptFor} reason={reason} setReason={setReason}
-                                busy={actionBusy} error={actionError}
-                                onConfirm={() => { void confirmAction(); }}
-                                onCancel={() => setPromptFor(null)}
-                              />
-                            </td>
-                          </tr>
-                        )}
-                      </Fragment>
-                    ))}
-                  </tbody>
-                </table>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => openPrompt(r.memberId, r.giftName, "block")}
+                                    style={blockButtonStyle}
+                                  >
+                                    Block
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => openPrompt(r.memberId, r.giftName, "reset")}
+                                  style={viewButtonStyle}
+                                >
+                                  Reset password
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </>
+                      ) },
+                  ]}
+                />
               </div>
             )
           )}
@@ -357,65 +358,37 @@ export function MemberSearch() {
         blockedRows.length === 0 ? (
           <EmptyState title="Nobody is currently blocked" body="Blocked members appear here for review." />
         ) : (
-          <div style={{ overflowX: "auto", marginTop: 16 }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Member</th>
-                  <th style={thStyle}>Chapter</th>
-                  <th style={thStyle}>Reason</th>
-                  <th style={thStyle}>Blocked</th>
-                  <th style={thStyle}>By</th>
-                  <th style={thStyle} />
-                </tr>
-              </thead>
-              <tbody>
-                {blockedRows.map(r => (
-                  <Fragment key={r.memberId}>
-                    <tr>
-                      <td style={tdStyle} className="num">{r.giftName} — {r.memberNumber}</td>
-                      <td style={tdStyle}>{r.chapterName ?? "—"}</td>
-                      <td style={tdStyle}>{r.reason}</td>
-                      <td style={tdStyle}>{shortDate(r.performedDateUtc)}</td>
-                      <td style={tdStyle}>{r.blockedByGiftName ?? "—"}</td>
-                      <td style={tdStyle}>
-                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                          <button type="button" onClick={() => toggleDetails(r.memberId)} style={viewButtonStyle}>
-                            {viewingId === r.memberId ? "Hide" : "View details"}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => openPrompt(r.memberId, r.giftName, "unblock")}
-                            style={unblockButtonStyle}
-                          >
-                            Unblock
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    {viewingId === r.memberId && (
-                      <tr>
-                        <td colSpan={6} style={{ ...tdStyle, background: "var(--bond)" }}>
-                          <DetailPanel query={detailQuery} />
-                        </td>
-                      </tr>
-                    )}
-                    {promptFor?.memberId === r.memberId && (
-                      <tr>
-                        <td colSpan={6} style={{ ...tdStyle, background: "var(--bond)" }}>
-                          <AccountActionPrompt
-                            promptFor={promptFor} reason={reason} setReason={setReason}
-                            busy={actionBusy} error={actionError}
-                            onConfirm={() => { void confirmAction(); }}
-                            onCancel={() => setPromptFor(null)}
-                          />
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                ))}
-              </tbody>
-            </table>
+          <div style={{ marginTop: 16 }}>
+            <ResponsiveTable
+              rows={blockedRows}
+              rowKey={r => r.memberId}
+              expandedRow={r => expandedFor(r.memberId)}
+              columns={[
+                { key: "member", header: "Member", primary: true,
+                  render: r => <span className="num">{r.giftName} — {r.memberNumber}</span> },
+                { key: "chapter", header: "Chapter", render: r => r.chapterName ?? "—" },
+                { key: "reason", header: "Reason", render: r => r.reason },
+                { key: "blocked", header: "Blocked", render: r => shortDate(r.performedDateUtc) },
+                { key: "by", header: "By", render: r => r.blockedByGiftName ?? "—" },
+                { key: "actions", header: "",
+                  render: r => (
+                    <>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        <button type="button" onClick={() => toggleDetails(r.memberId)} style={viewButtonStyle}>
+                          {viewingId === r.memberId ? "Hide" : "View details"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openPrompt(r.memberId, r.giftName, "unblock")}
+                          style={unblockButtonStyle}
+                        >
+                          Unblock
+                        </button>
+                      </div>
+                    </>
+                  ) },
+              ]}
+            />
           </div>
         )
       )}
@@ -459,7 +432,7 @@ function AccountActionPrompt({
         placeholder="Reason" style={promptInputStyle} autoFocus
       />
       {error && <p role="alert" style={errorStyle}>{error}</p>}
-      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
         <button
           type="button" onClick={onConfirm} disabled={busy}
           style={{ ...viewButtonStyle, background: "var(--deep)", color: "var(--brass-soft)" }}
@@ -494,13 +467,13 @@ function MemberDetailFields({ d }: { d: MemberFullDetail }) {
   ];
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "10px 20px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: "10px 20px" }}>
       {rows.map(([label, value]) => (
         <div key={label}>
           <div style={{ fontSize: 11, letterSpacing: ".05em", textTransform: "uppercase", color: "var(--mute)" }}>
             {label}
           </div>
-          <div style={{ fontSize: 13.5, marginTop: 2 }}>{value}</div>
+          <div style={{ fontSize: 13.5, marginTop: 2, overflowWrap: "anywhere" }}>{value}</div>
         </div>
       ))}
     </div>
@@ -526,19 +499,8 @@ const searchInputStyle: CSSProperties = {
   borderRadius: 8, fontSize: 15, border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 880,
-};
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
+const expandedBoxStyle: CSSProperties = {
+  marginTop: 10, padding: 12, borderRadius: 8, background: "var(--bond)", border: "1px solid var(--line)",
 };
 
 const viewButtonStyle: CSSProperties = {

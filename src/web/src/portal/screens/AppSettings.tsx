@@ -167,7 +167,7 @@ export function AppSettings() {
               <label key={f.featureKey} style={featureRowStyle}>
                 <input type="checkbox" checked={checked} disabled={f.isAlwaysOpen} style={checkStyle}
                   onChange={() => toggleFeature(f.featureKey)} />
-                <span>
+                <span style={{ minWidth: 0 }}>
                   <span style={{ fontWeight: 600, fontSize: 14 }}>{f.displayName}</span>
                   {f.isAlwaysOpen && <span style={pillStyle}>Always open</span>}
                   <span style={{ display: "block", fontSize: 12.5, color: "var(--slate)", marginTop: 2, lineHeight: 1.4 }}>
@@ -214,8 +214,8 @@ export function AppSettings() {
 }
 
 const cardStyle: CSSProperties = {
-  marginTop: 18, padding: 18, background: "var(--paper)", border: "1px solid var(--line)",
-  borderRadius: "var(--r)", maxWidth: 720,
+  marginTop: 18, padding: 16, background: "var(--paper)", border: "1px solid var(--line)",
+  borderRadius: "var(--r)", maxWidth: 720, minWidth: 0, overflowWrap: "anywhere",
 };
 const h2Style: CSSProperties = { fontFamily: "var(--f-disp)", fontSize: 18, letterSpacing: ".04em", marginBottom: 6 };
 const helpStyle: CSSProperties = { fontSize: 12.5, color: "var(--mute)", lineHeight: 1.5, marginTop: 4 };
@@ -225,12 +225,12 @@ const labelStyle: CSSProperties = {
 };
 const rowStyle: CSSProperties = { display: "flex", alignItems: "center", gap: 12, minHeight: "var(--tap)", marginTop: 12, fontSize: 15 };
 const featureRowStyle: CSSProperties = {
-  display: "flex", alignItems: "flex-start", gap: 12, minHeight: "var(--tap)", padding: "10px 0",
+  display: "flex", alignItems: "flex-start", gap: 12, minHeight: "var(--tap)", padding: "10px 0", minWidth: 0,
   borderTop: "1px solid var(--line)",
 };
 const checkStyle: CSSProperties = { width: 22, height: 22, flex: "none", marginTop: 1, accentColor: "var(--deep)" };
 const daysInputStyle: CSSProperties = {
-  width: 120, minHeight: "var(--tap)", padding: "0 12px", border: "1px solid var(--line)",
+  width: 120, maxWidth: "100%", minHeight: "var(--tap)", padding: "0 12px", border: "1px solid var(--line)",
   borderRadius: 8, fontSize: 16, background: "var(--paper)",
 };
 const pillStyle: CSSProperties = {

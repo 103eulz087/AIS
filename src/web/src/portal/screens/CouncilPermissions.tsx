@@ -318,13 +318,13 @@ function GridView({
 
               {saveError && <p role="alert" style={errorTextStyle}>{saveError}</p>}
 
-              <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-                <button type="button" onClick={onCancelConfirm} disabled={saving} style={ghostButtonStyle}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 12 }}>
+                <button type="button" onClick={onCancelConfirm} disabled={saving} style={{ ...ghostButtonStyle, flex: "1 1 120px" }}>
                   Cancel
                 </button>
                 <button
                   type="button" disabled={saving} onClick={onSave}
-                  style={{ ...primaryButtonStyle, opacity: saving ? 0.7 : 1 }}
+                  style={{ ...primaryButtonStyle, flex: "1 1 160px", opacity: saving ? 0.7 : 1 }}
                 >
                   {saving ? "Saving…" : "Confirm and save"}
                 </button>
@@ -410,7 +410,7 @@ function OfficeCard({ office, permissions, grid, canEdit, effectiveGranted, onTo
                       aria-label={`${office.name} — ${permission.displayName}`}
                       style={checkboxStyle}
                     />
-                    <span>
+                    <span style={{ minWidth: 0 }}>
                       <span style={{ fontSize: 13.5, fontWeight: 600 }}>{permission.displayName}</span>
                       {permission.description && (
                         <span style={{ display: "block", fontSize: 12, color: "var(--slate)", marginTop: 2, lineHeight: 1.5 }}>
@@ -441,6 +441,7 @@ function OfficeCard({ office, permissions, grid, canEdit, effectiveGranted, onTo
 
 const cardStyle: CSSProperties = {
   padding: 16, borderRadius: "var(--r)", background: "var(--paper)", border: "1px solid var(--line)",
+  minWidth: 0, overflowWrap: "anywhere",
 };
 
 const permissionRowStyle: CSSProperties = { paddingTop: 2 };
@@ -475,6 +476,7 @@ const sectionLabelStyle: CSSProperties = {
 
 const historyRowStyle: CSSProperties = {
   padding: 12, borderRadius: "var(--r)", background: "var(--paper)", border: "1px solid var(--line)",
+  overflowWrap: "anywhere",
 };
 
 const changeRowStyle: CSSProperties = { fontSize: 13, padding: "4px 0" };
@@ -495,5 +497,5 @@ const primaryButtonStyle: CSSProperties = {
 
 const confirmPanelStyle: CSSProperties = {
   marginTop: 10, padding: 16, borderRadius: "var(--r)", background: "var(--paper)",
-  border: "1px solid var(--brass)",
+  border: "1px solid var(--brass)", overflowWrap: "anywhere",
 };

@@ -1,6 +1,7 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/shared/auth";
+import { useIsNarrow } from "./responsive";
 import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
 
 /**
@@ -13,10 +14,13 @@ import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistra
  *  - Wide screens: a ~240px left sidebar — wordmark on top, links under four small section
  *    headings (Chapters, Members, Councils, Notices), gift name and "Sign out" pinned at
  *    the bottom — with the content column to its right.
- *  - Phones (< 900px): a slim top bar with the wordmark and a "Menu" button. The SAME nav
+ *  - Phones (< 900px): a slim top bar with a hamburger button and the wordmark. The SAME nav
  *    opens as a drawer over the page; picking a link, tapping the backdrop, the close
  *    button or pressing Escape closes it. The drawer is hidden with CSS, never unmounted,
- *    so every link stays in the DOM.
+ *    so every link stays in the DOM. On a phone each group heading is a button that folds
+ *    its links away (only the group holding the current page starts open); on wide screens the
+ *    groups are always open. Opening moves focus into the drawer, closing returns it to the
+ *    hamburger, and the page behind does not scroll while the drawer is open.
  *  - A whole group, heading included, is dropped when none of its links are visible.
  *  - Links are NavLinks; a detail route (/portal/councils/:id) keeps its parent lit.
  *    "Payment tags" uses `end` because "Payment report" is its sibling under the same path.
@@ -56,6 +60,12 @@ import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistra
 export function PortalShell() {
   const { claims, signOut } = useAuth();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const narrow = useIsNarrow();
+  const { pathname } = useLocation();
+  const menuBtn = useRef<HTMLButtonElement>(null);
+  const closeBtn = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
   const roles = claims?.roles ?? [];
   const seats = claims?.councilSeats ?? [];
   const secretaryOnly = roles.includes("CouncilSecretary") && !roles.includes("CouncilAdmin");
@@ -66,6 +76,18 @@ export function PortalShell() {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Focus into the drawer on open, back to the hamburger on close; lock page scroll meanwhile.
+  useEffect(() => {
+    if (open) {
+      wasOpen.current = true;
+      closeBtn.current?.focus();
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = prev; };
+    }
+    if (wasOpen.current) { wasOpen.current = false; menuBtn.current?.focus(); }
   }, [open]);
 
   const groups: NavGroup[] = [
@@ -114,21 +136,21 @@ export function PortalShell() {
       <style>{shellCss}</style>
 
       <header className="pshell-bar">
-        <Link to="/portal/chapter-registrations" style={wordmarkStyle}>Skeptron Council Portal</Link>
         {claims && (
-          <button type="button" className="pshell-menubtn" aria-expanded={open} aria-controls="portal-nav"
-            onClick={() => setOpen(true)}>
-            <Icon name="menu" /> Menu
+          <button type="button" ref={menuBtn} className="pshell-menubtn" aria-label="Open menu" aria-expanded={open}
+            aria-controls="portal-nav" onClick={() => setOpen(true)}>
+            <Icon name="menu" size={24} />
           </button>
         )}
+        <Link to="/portal/chapter-registrations" className="pshell-word" style={wordmarkStyle}>Skeptron Council Portal</Link>
       </header>
 
       <div className={"pshell-backdrop" + (open ? " is-open" : "")} onClick={close} aria-hidden="true" />
 
-      <aside className={"pshell-side" + (open ? " is-open" : "")}>
+      <aside aria-label="Menu" className={"pshell-side" + (open ? " is-open" : "")}>
         <div className="pshell-brand">
-          <Link to="/portal/chapter-registrations" style={wordmarkStyle} onClick={close}>Skeptron Council Portal</Link>
-          <button type="button" className="pshell-close" onClick={close} aria-label="Close menu">
+          <Link to="/portal/chapter-registrations" className="pshell-word" style={wordmarkStyle} onClick={close}>Skeptron Council Portal</Link>
+          <button type="button" ref={closeBtn} className="pshell-close" onClick={close} aria-label="Close menu">
             <Icon name="close" />
           </button>
         </div>
@@ -138,15 +160,33 @@ export function PortalShell() {
             {groups.map(g => {
               const visible = g.links.filter(l => l.show);
               if (visible.length === 0) return null;
+              const holdsPage = visible.some(l => pathname === l.to || pathname.startsWith(l.to + "/"));
+              // Folded only on a phone. Starts folded except the group holding the current page; a tap overrides.
+              const folded = narrow && (collapsed[g.heading] ?? !holdsPage);
+              const listId = "pnav-" + g.heading.toLowerCase();
               return (
                 <section key={g.heading} aria-label={g.heading}>
-                  <h2 className="pshell-h">{g.heading}</h2>
+                  <h2 className="pshell-h">
+                    {narrow ? (
+                      <button type="button" className="pshell-hbtn" aria-expanded={!folded} aria-controls={listId}
+                        onClick={() => setCollapsed(c => ({ ...c, [g.heading]: !folded }))}>
+                        <span>{g.heading}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"
+                          strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+                          style={{ transform: folded ? "none" : "rotate(180deg)", transition: "transform .15s" }}>
+                          <path d="M6 9l6 6 6-6" />
+                        </svg>
+                      </button>
+                    ) : g.heading}
+                  </h2>
+                  <div id={listId} hidden={folded}>
                   {visible.map(l => (
                     <NavLink key={l.to} to={l.to} end={l.end} className="pshell-link" onClick={close}>
                       <Icon name={l.icon} />
                       <span>{l.label}</span>
                     </NavLink>
                   ))}
+                  </div>
                 </section>
               );
             })}
@@ -162,7 +202,7 @@ export function PortalShell() {
       </aside>
 
       <main className="pshell-main">
-        <div style={contentStyle}><Outlet /></div>
+        <div className="pshell-content" style={contentStyle}><Outlet /></div>
       </main>
     </div>
   );
@@ -188,9 +228,9 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
   gear: <><circle cx="12" cy="12" r="3" /><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" /></>,
 };
 
-function Icon({ name }: { name: IconName }) {
+function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
       strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flex: "none" }}>
       {ICON_PATHS[name]}
     </svg>
@@ -202,26 +242,33 @@ const wordmarkStyle: CSSProperties = {
   color: "inherit", textDecoration: "none",
 };
 
-const contentStyle: CSSProperties = { maxWidth: 1100, margin: "0 auto", padding: "24px 20px 60px" };
+const contentStyle: CSSProperties = { maxWidth: 1100, margin: "0 auto", padding: "24px 20px 60px", minWidth: 0 };
 
 /** Scoped to .pshell. Media queries and :hover/:focus-visible can't live in inline styles. */
 const shellCss = `
 .pshell { display: flex; flex-direction: column; }
 .pshell-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px;
   background: var(--deep); color: var(--paper); padding: 0 16px; min-height: 56px; }
-.pshell-menubtn { display: inline-flex; align-items: center; gap: 8px; min-height: var(--tap); min-width: var(--tap);
-  padding: 0 12px; color: var(--paper); font-size: 14px; border: 1px solid var(--slate); border-radius: var(--r); background: transparent; }
+.pshell-bar { justify-content: flex-start; padding: 0 8px; }
+.pshell-menubtn { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap);
+  color: var(--paper); border-radius: var(--r); background: transparent; }
+.pshell-word { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.pshell-hbtn { display: flex; width: 100%; align-items: center; justify-content: space-between; min-height: var(--tap);
+  padding: 0 8px; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: transparent; }
+.pshell-hbtn:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.pshell-content { padding: 20px 16px 48px !important; }
+@media (prefers-reduced-motion: reduce) { .pshell-side { transition: none !important; } .pshell-hbtn svg { transition: none !important; } }
 .pshell-backdrop { display: none; }
 .pshell-side { position: fixed; top: 0; bottom: 0; left: 0; width: min(300px, 86vw); z-index: 30;
   background: var(--deep); color: var(--paper); display: flex; flex-direction: column;
   transform: translateX(-100%); visibility: hidden; transition: transform .18s ease, visibility .18s; overflow-y: auto; }
 .pshell-side.is-open { transform: none; visibility: visible; }
 .pshell-backdrop.is-open { display: block; position: fixed; inset: 0; z-index: 20; background: rgba(14,17,22,.55); }
-.pshell-brand { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 16px; min-height: 56px; }
+.pshell-brand { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 12px 0 16px; min-height: 56px; }
 .pshell-close { display: inline-flex; align-items: center; justify-content: center; min-width: var(--tap); min-height: var(--tap);
   color: var(--paper); background: transparent; }
 .pshell-nav { flex: 1; padding: 4px 12px 16px; }
-.pshell-h { margin: 18px 8px 6px; font: 600 11px var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.pshell-h { margin: 6px 0 0; font: 600 11px var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
 .pshell-link { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 12px; border-radius: 8px;
   color: var(--paper); text-decoration: none; font-size: 14px; border-left: 3px solid transparent; }
 .pshell-link:hover { background: var(--slate); }
@@ -239,5 +286,7 @@ const shellCss = `
   .pshell-bar, .pshell-backdrop, .pshell-close { display: none !important; }
   .pshell-side { position: sticky; top: 0; height: 100dvh; width: 240px; flex: none; transform: none; visibility: visible; transition: none; }
   .pshell-brand { padding: 0 16px; min-height: 64px; }
+  .pshell-h { margin: 18px 8px 6px; }
+  .pshell-content { padding: 24px 20px 60px !important; }
 }
 `;

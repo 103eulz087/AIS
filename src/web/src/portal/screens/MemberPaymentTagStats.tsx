@@ -4,6 +4,7 @@ import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { api } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
 import { canViewPaymentTags } from "@/shared/roles";
+import { ResponsiveTable } from "../responsive";
 import type { MemberPaymentTagStats } from "@/shared/types";
 
 /**
@@ -71,35 +72,20 @@ export function MemberPaymentTagStats() {
       {rows.length === 0 ? (
         <EmptyState title="No chapters yet" body="No chapter has any active members on file." />
       ) : (
-        <div style={{ overflowX: "auto", marginTop: 20 }}>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={thStyle}>Chapter</th>
-                <th style={{ ...thStyle, textAlign: "right" }}>Total</th>
-                <th style={{ ...thStyle, textAlign: "right", color: "var(--in)" }}>Paid</th>
-                <th style={{ ...thStyle, textAlign: "right", color: "var(--info)" }}>Free</th>
-                <th style={{ ...thStyle, textAlign: "right", color: "var(--out)" }}>Unpaid</th>
-                <th style={{ ...thStyle, textAlign: "right" }}>% Paid/Free</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(r => {
-                const covered = r.paidCount + r.freeCount;
-                const pct = r.totalMembers > 0 ? Math.round((covered / r.totalMembers) * 100) : 0;
-                return (
-                  <tr key={r.chapterId}>
-                    <td style={tdStyle}>{r.chapterName}</td>
-                    <td className="num" style={{ ...tdStyle, textAlign: "right" }}>{r.totalMembers}</td>
-                    <td className="num" style={{ ...tdStyle, textAlign: "right", color: "var(--in)" }}>{r.paidCount}</td>
-                    <td className="num" style={{ ...tdStyle, textAlign: "right", color: "var(--info)" }}>{r.freeCount}</td>
-                    <td className="num" style={{ ...tdStyle, textAlign: "right", color: "var(--out)" }}>{r.unpaidCount}</td>
-                    <td className="num" style={{ ...tdStyle, textAlign: "right" }}>{pct}%</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div style={{ marginTop: 20 }}>
+          <ResponsiveTable
+            rows={rows}
+            rowKey={r => r.chapterId}
+            columns={[
+              { key: "chapter", header: "Chapter", primary: true, render: r => <span style={{ overflowWrap: "anywhere" }}>{r.chapterName}</span> },
+              { key: "total", header: "Total", numeric: true, render: r => r.totalMembers },
+              { key: "paid", header: "Paid", numeric: true, cellStyle: { color: "var(--in)" }, render: r => <span style={{ color: "var(--in)" }}>{r.paidCount}</span> },
+              { key: "free", header: "Free", numeric: true, cellStyle: { color: "var(--info)" }, render: r => <span style={{ color: "var(--info)" }}>{r.freeCount}</span> },
+              { key: "unpaid", header: "Unpaid", numeric: true, cellStyle: { color: "var(--out)" }, render: r => <span style={{ color: "var(--out)" }}>{r.unpaidCount}</span> },
+              { key: "pct", header: "% Paid/Free", numeric: true,
+                render: r => `${r.totalMembers > 0 ? Math.round(((r.paidCount + r.freeCount) / r.totalMembers) * 100) : 0}%` },
+            ]}
+          />
         </div>
       )}
     </div>
@@ -116,11 +102,11 @@ function SummaryTile({ label, value, color }: { label: string; value: number; co
 }
 
 const summaryRowStyle: CSSProperties = {
-  display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap",
+  display: "grid", gap: 12, marginTop: 20, gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
 };
 
 const tileStyle: CSSProperties = {
-  flex: "1 1 120px", padding: "14px 16px", borderRadius: "var(--r)",
+  minWidth: 0, padding: "14px 16px", borderRadius: "var(--r)",
   background: "var(--paper)", border: "1px solid var(--line)",
 };
 
@@ -131,19 +117,4 @@ const tileLabelStyle: CSSProperties = {
 
 const tileValueStyle: CSSProperties = {
   fontSize: 26, fontWeight: 700, marginTop: 4,
-};
-
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 640,
-};
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)",
 };

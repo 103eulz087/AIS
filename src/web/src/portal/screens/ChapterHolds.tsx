@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, ApiError, type Paged } from "@/shared/api";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
 import { canManageChapterHolds } from "@/shared/roles";
+import { ResponsiveTable } from "../responsive";
 import type { ChapterJurisdictionResult } from "@/shared/types";
 
 /**
@@ -80,6 +81,7 @@ export function ChapterHolds() {
   }
 
   const rows = data?.items ?? [];
+  const promptRow = promptFor ? rows.find(r => r.chapterId === promptFor.chapterId) : undefined;
 
   return (
     <div>
@@ -108,72 +110,63 @@ export function ChapterHolds() {
         rows.length === 0 ? (
           <EmptyState title="No matches" body="No chapter in your jurisdiction matches that search." />
         ) : (
-          <div style={{ overflowX: "auto", marginTop: 16, opacity: isFetching ? 0.6 : 1 }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Chapter</th>
-                  <th style={thStyle}>Region / Province / City</th>
-                  <th style={thStyle}>Members</th>
-                  <th style={thStyle}>Status</th>
-                  <th style={thStyle} />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map(r => (
-                  <Fragment key={r.chapterId}>
-                    <tr>
-                      <td style={tdStyle}>{r.chapterName}</td>
-                      <td style={{ ...tdStyle, fontSize: 12.5, color: "var(--slate)" }}>
-                        {[r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—"}
-                      </td>
-                      <td style={tdStyle}>{r.memberCount}</td>
-                      <td style={tdStyle}>
-                        <span style={r.isOnHold ? heldBadgeStyle : activeBadgeStyle}>
-                          {r.isOnHold ? "On hold" : "Active"}
-                        </span>
-                      </td>
-                      <td style={tdStyle}>
-                        <button
-                          type="button"
-                          onClick={() => openPrompt(r.chapterId, r.isOnHold ? "release" : "hold")}
-                          style={r.isOnHold ? releaseButtonStyle : holdButtonStyle}
-                        >
-                          {r.isOnHold ? "Release" : "Place on hold"}
-                        </button>
-                      </td>
-                    </tr>
-                    {promptFor?.chapterId === r.chapterId && (
-                      <tr>
-                        <td colSpan={5} style={{ ...tdStyle, background: "var(--bond)" }}>
-                          <p style={{ fontSize: 12.5, color: "var(--slate)", marginBottom: 8 }}>
-                            {promptFor.kind === "hold"
-                              ? `Placing ${r.chapterName} on hold. Every one of its ${r.memberCount} member(s) will be signed out and unable to log in until released.`
-                              : `Releasing ${r.chapterName} from hold. Its members will be able to sign in again.`}
-                          </p>
-                          <input
-                            value={reason} onChange={e => setReason(e.target.value)}
-                            placeholder="Reason" style={promptInputStyle} autoFocus
-                          />
-                          {actionError && <p role="alert" style={errorStyle}>{actionError}</p>}
-                          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                            <button
-                              type="button" onClick={() => { void confirmAction(); }} disabled={busy}
-                              style={{ ...holdButtonStyle, background: "var(--deep)", color: "var(--brass-soft)" }}
-                            >
-                              {busy ? "…" : promptFor.kind === "hold" ? "Confirm hold" : "Confirm release"}
-                            </button>
-                            <button type="button" onClick={() => setPromptFor(null)} disabled={busy} style={holdButtonStyle}>
-                              Cancel
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                ))}
-              </tbody>
-            </table>
+          <div style={{ marginTop: 16, opacity: isFetching ? 0.6 : 1 }}>
+            {promptRow && promptFor && (
+              <div style={promptPanelStyle}>
+                <p style={{ fontSize: 12.5, color: "var(--slate)", marginBottom: 8, overflowWrap: "anywhere" }}>
+                  {promptFor.kind === "hold"
+                    ? `Placing ${promptRow.chapterName} on hold. Every one of its ${promptRow.memberCount} member(s) will be signed out and unable to log in until released.`
+                    : `Releasing ${promptRow.chapterName} from hold. Its members will be able to sign in again.`}
+                </p>
+                <input
+                  value={reason} onChange={e => setReason(e.target.value)}
+                  placeholder="Reason" style={promptInputStyle} autoFocus
+                />
+                {actionError && <p role="alert" style={errorStyle}>{actionError}</p>}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+                  <button
+                    type="button" onClick={() => { void confirmAction(); }} disabled={busy}
+                    style={{ ...holdButtonStyle, background: "var(--deep)", color: "var(--brass-soft)" }}
+                  >
+                    {busy ? "…" : promptFor.kind === "hold" ? "Confirm hold" : "Confirm release"}
+                  </button>
+                  <button type="button" onClick={() => setPromptFor(null)} disabled={busy} style={holdButtonStyle}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            <ResponsiveTable<ChapterJurisdictionResult>
+              rows={rows}
+              rowKey={r => r.chapterId}
+              columns={[
+                { key: "chapter", header: "Chapter", primary: true, render: r => r.chapterName },
+                {
+                  key: "geo", header: "Region / Province / City",
+                  cellStyle: { fontSize: 12.5, color: "var(--slate)" },
+                  render: r => [r.regionName, r.provinceName, r.cityName].filter(Boolean).join(" / ") || "—",
+                },
+                { key: "members", header: "Members", render: r => r.memberCount },
+                {
+                  key: "status", header: "Status",
+                  render: r => (
+                    <span style={r.isOnHold ? heldBadgeStyle : activeBadgeStyle}>{r.isOnHold ? "On hold" : "Active"}</span>
+                  ),
+                },
+                {
+                  key: "act", header: "",
+                  render: r => (
+                    <button
+                      type="button"
+                      onClick={() => openPrompt(r.chapterId, r.isOnHold ? "release" : "hold")}
+                      style={r.isOnHold ? releaseButtonStyle : holdButtonStyle}
+                    >
+                      {r.isOnHold ? "Release" : "Place on hold"}
+                    </button>
+                  ),
+                },
+              ]}
+            />
           </div>
         )
       )}
@@ -186,19 +179,8 @@ const searchInputStyle: CSSProperties = {
   borderRadius: 8, fontSize: 15, border: "1px solid var(--line)", background: "var(--paper)", color: "var(--ink)",
 };
 
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 760,
-};
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
+const promptPanelStyle: CSSProperties = {
+  padding: 14, marginBottom: 12, borderRadius: "var(--r)", background: "var(--bond)", border: "1px solid var(--line)",
 };
 
 const heldBadgeStyle: CSSProperties = {

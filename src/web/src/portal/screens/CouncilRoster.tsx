@@ -5,6 +5,7 @@ import { api, ApiError } from "@/shared/api";
 import { shortDate } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
+import { ResponsiveTable } from "../responsive";
 import { canSeatCouncilOfficers, canViewCouncilRegistry } from "@/shared/roles";
 import {
   COUNCIL_OFFICES, type CouncilMemberLookup, type CouncilOfficerCandidate, type CouncilRegistry,
@@ -151,8 +152,8 @@ export function CouncilRoster() {
         const override = seat ? roster.overrides.find(o => o.memberRoleId === seat.memberRoleId) : undefined;
         return (
           <div key={office.councilOfficeId} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-              <div>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+              <div style={{ flex: "1 1 200px", minWidth: 0, overflowWrap: "anywhere" }}>
                 <div style={{ fontFamily: "var(--f-disp)", fontSize: 14, letterSpacing: ".02em" }}>{office.officeName}</div>
                 {seat ? (
                   <>
@@ -194,7 +195,7 @@ export function CouncilRoster() {
                 </p>
                 <input value={unseatReason} onChange={e => setUnseatReason(e.target.value)} placeholder="Reason" style={fieldStyle} autoFocus />
                 {unseatError && <p role="alert" style={errorStyle}>{unseatError}</p>}
-                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
                   <button type="button" onClick={() => { void confirmUnseat(seat.memberRoleId); }} disabled={unseatBusy} style={primaryButtonStyle}>
                     {unseatBusy ? "…" : "Confirm unseat"}
                   </button>
@@ -223,26 +224,15 @@ export function CouncilRoster() {
       {endedSeats.length > 0 && (
         <>
           <div style={sectionLabelStyle}>Past officers</div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Office</th>
-                  <th style={thStyle}>Officer</th>
-                  <th style={thStyle}>Term</th>
-                </tr>
-              </thead>
-              <tbody>
-                {endedSeats.map(s => (
-                  <tr key={s.memberRoleId}>
-                    <td style={tdStyle}>{s.officeName ?? "—"}</td>
-                    <td style={tdStyle}>{s.giftName} — {s.memberNumber}</td>
-                    <td style={tdStyle} className="num">{shortDate(s.termStart)} – {s.termEnd ? shortDate(s.termEnd) : "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ResponsiveTable
+            rows={endedSeats}
+            rowKey={s => s.memberRoleId}
+            columns={[
+              { key: "office", header: "Office", primary: true, render: s => s.officeName ?? "—" },
+              { key: "officer", header: "Officer", render: s => `${s.giftName} — ${s.memberNumber}` },
+              { key: "term", header: "Term", numeric: true, render: s => `${shortDate(s.termStart)} – ${s.termEnd ? shortDate(s.termEnd) : "—"}` },
+            ]}
+          />
         </>
       )}
 
@@ -253,30 +243,17 @@ export function CouncilRoster() {
             A permanent record — never a waiver, never removed, regardless of whether the seat itself has
             since ended.
           </p>
-          <div style={{ overflowX: "auto" }}>
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Officer</th>
-                  <th style={thStyle}>Home chapter</th>
-                  <th style={thStyle}>Reason</th>
-                  <th style={thStyle}>Seated by</th>
-                  <th style={thStyle}>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {roster.overrides.map(o => (
-                  <tr key={o.seatOverrideId}>
-                    <td style={tdStyle}>{o.giftName} — {o.memberNumber}</td>
-                    <td style={tdStyle}>{o.homeChapterName ?? "No home chapter on file"}</td>
-                    <td style={tdStyle}>{o.reason}</td>
-                    <td style={tdStyle}>{o.seatedByGiftName}</td>
-                    <td style={tdStyle} className="num">{shortDate(o.seatedOnUtc)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ResponsiveTable
+            rows={roster.overrides}
+            rowKey={o => o.seatOverrideId}
+            columns={[
+              { key: "officer", header: "Officer", primary: true, render: o => `${o.giftName} — ${o.memberNumber}` },
+              { key: "chapter", header: "Home chapter", render: o => o.homeChapterName ?? "No home chapter on file" },
+              { key: "reason", header: "Reason", render: o => o.reason },
+              { key: "by", header: "Seated by", render: o => o.seatedByGiftName },
+              { key: "date", header: "Date", numeric: true, render: o => shortDate(o.seatedOnUtc) },
+            ]}
+          />
         </>
       )}
     </div>
@@ -363,7 +340,7 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
     <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line)" }}>
       <p style={{ fontSize: 12.5, color: "var(--slate)", marginBottom: 8 }}>Seat {officeName}</p>
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
         <button type="button" onClick={() => switchMode("search")}
           style={mode === "search" ? tabActiveStyle : tabStyle}>From this jurisdiction</button>
         <button type="button" onClick={() => switchMode("lookup")}
@@ -404,13 +381,13 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
             <input
               value={lookupName} onChange={e => setLookupName(e.target.value)}
               placeholder="Name or gift name" aria-label="Name or gift name" autoComplete="off"
-              style={{ ...fieldStyle, flex: "1 1 180px", width: "auto" }}
+              style={{ ...fieldStyle, flex: "1 1 220px", width: "auto", minWidth: 0 }}
             />
             <input
               value={lookupMobile} onChange={e => setLookupMobile(e.target.value)}
               placeholder="Mobile number (e.g. 0917 123 4567)" aria-label="Mobile number"
               inputMode="tel" autoComplete="off"
-              style={{ ...fieldStyle, flex: "1 1 180px", width: "auto" }}
+              style={{ ...fieldStyle, flex: "1 1 220px", width: "auto", minWidth: 0 }}
             />
             <button type="submit" disabled={lookupBusy} style={ghostButtonStyle}>
               {lookupBusy ? "…" : "Look up"}
@@ -454,7 +431,7 @@ function SeatOfficerPanel({ councilId, councilOfficeId, officeName, onClose, onS
 
       {error && <p role="alert" style={errorStyle}>{error}</p>}
 
-      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
         <button type="button" onClick={() => { void handleSeat(); }} disabled={submitting || !selected} style={primaryButtonStyle}>
           {submitting ? "…" : "Confirm seat"}
         </button>
@@ -502,7 +479,7 @@ const ghostButtonStyle: CSSProperties = {
 };
 
 const tabStyle: CSSProperties = {
-  minHeight: 34, padding: "0 12px", borderRadius: 16, fontSize: 12,
+  minHeight: "var(--tap)", padding: "0 14px", borderRadius: 22, fontSize: 13,
   border: "1px solid var(--line)", background: "var(--paper)", color: "var(--slate)",
 };
 
@@ -511,22 +488,7 @@ const tabActiveStyle: CSSProperties = { ...tabStyle, background: "var(--deep)", 
 const candidateRowStyle: CSSProperties = {
   display: "flex", flexDirection: "column", gap: 2, width: "100%", textAlign: "left",
   padding: "8px 10px", borderRadius: 8, border: "1px solid var(--line)", background: "var(--paper)",
-  marginBottom: 6, fontSize: 13,
+  marginBottom: 6, fontSize: 13, minHeight: "var(--tap)", overflowWrap: "anywhere",
 };
 
 const candidateRowSelectedStyle: CSSProperties = { borderColor: "var(--brass)", background: "var(--bond)" };
-
-const tableStyle: CSSProperties = {
-  width: "100%", borderCollapse: "collapse", background: "var(--paper)",
-  border: "1px solid var(--line)", borderRadius: "var(--r)", minWidth: 560,
-};
-
-const thStyle: CSSProperties = {
-  textAlign: "left", fontFamily: "var(--f-disp)", fontSize: 11.5, letterSpacing: ".08em",
-  textTransform: "uppercase", color: "var(--mute)", padding: "10px 14px",
-  borderBottom: "1px solid var(--line)",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "12px 14px", fontSize: 13.5, borderBottom: "1px solid var(--line)", minHeight: "var(--tap)",
-};
