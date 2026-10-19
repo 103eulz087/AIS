@@ -90,7 +90,7 @@ export function Home({ chapterId }: { chapterId: number }) {
 
   return (
     <div style={{ paddingBottom: 24 }}>
-      <div style={greetingStyle}>
+      <div style={greetingStyle} data-tour="home-greeting">
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em" }}>
           {giftName ? `Kumusta, ${giftName}` : "Kumusta!"}
         </div>
@@ -125,7 +125,7 @@ export function Home({ chapterId }: { chapterId: number }) {
           dashboard link above, so this is never gated on isOfficer. */}
       {digitalIdOpen && (
         <div style={{ padding: "8px 16px 4px" }}>
-          <Link to="/digital-id" style={directoryLinkStyle}>
+          <Link to="/digital-id" style={directoryLinkStyle} data-tour="home-digital-id">
             <span>View your Digital ID</span>
             <span style={{ color: "var(--mute)" }}>›</span>
           </Link>

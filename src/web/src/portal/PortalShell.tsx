@@ -2,6 +2,10 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/shared/auth";
 import { useIsNarrow } from "./responsive";
+import { TourProvider, useTour } from "@/shared/tour/TourProvider";
+import { useTourAutoStart } from "@/shared/tour/useTourAutoStart";
+import { PORTAL_TOUR_KEY, PORTAL_TOUR_VERSION } from "@/shared/tour/types";
+import { buildPortalTourSteps, navTourTarget, PORTAL_LINK_STEP_PREFIX } from "./portalTour";
 import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
 
 /**
@@ -58,7 +62,14 @@ import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistra
  * phase 2 nav.
  */
 export function PortalShell() {
+  const { claims } = useAuth();
+  // The welcome tour lives here so the menu can open its own drawer while the tour points into it.
+  return <TourProvider memberId={claims?.memberId}><PortalShellInner /></TourProvider>;
+}
+
+function PortalShellInner() {
   const { claims, signOut } = useAuth();
+  const tour = useTour();
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const narrow = useIsNarrow();
@@ -131,13 +142,30 @@ export function PortalShell() {
 
   const close = () => setOpen(false);
 
+  // Welcome tour. On a phone the links live in the drawer, so hold it open (every group
+  // unfolded) while a menu-link step is showing; it closes by itself when the tour ends.
+  const tourInDrawer = narrow && tour.active && (tour.currentStep?.id ?? "").startsWith(PORTAL_LINK_STEP_PREFIX);
+  const drawerOpen = open || tourInDrawer;
+  const buildTourSteps = () => buildPortalTourSteps({
+    giftName: claims?.giftName,
+    visibleLinks: new Set(groups.flatMap(g => g.links.filter(l => l.show).map(l => l.to))),
+    canSettings: canManageAppSettings(seats),
+  });
+  useTourAutoStart({
+    tourKey: PORTAL_TOUR_KEY, tourVersion: PORTAL_TOUR_VERSION, enabled: !!claims, buildSteps: buildTourSteps,
+  });
+  const replayTour = () => {
+    setOpen(false);
+    tour.start({ tourKey: PORTAL_TOUR_KEY, tourVersion: PORTAL_TOUR_VERSION, steps: buildTourSteps() });
+  };
+
   return (
     <div className="pshell" style={{ minHeight: "100dvh" }}>
       <style>{shellCss}</style>
 
       <header className="pshell-bar">
         {claims && (
-          <button type="button" ref={menuBtn} className="pshell-menubtn" aria-label="Open menu" aria-expanded={open}
+          <button type="button" ref={menuBtn} className="pshell-menubtn" aria-label="Open menu" data-tour="portal-menu-button" aria-expanded={open}
             aria-controls="portal-nav" onClick={() => setOpen(true)}>
             <Icon name="menu" size={24} />
           </button>
@@ -145,9 +173,9 @@ export function PortalShell() {
         <Link to="/portal/chapter-registrations" className="pshell-word" style={wordmarkStyle}>Skeptron Council Portal</Link>
       </header>
 
-      <div className={"pshell-backdrop" + (open ? " is-open" : "")} onClick={close} aria-hidden="true" />
+      <div className={"pshell-backdrop" + (drawerOpen ? " is-open" : "")} onClick={close} aria-hidden="true" />
 
-      <aside aria-label="Menu" className={"pshell-side" + (open ? " is-open" : "")}>
+      <aside aria-label="Menu" data-tour="portal-sidebar" className={"pshell-side" + (drawerOpen ? " is-open" : "")}>
         <div className="pshell-brand">
           <Link to="/portal/chapter-registrations" className="pshell-word" style={wordmarkStyle} onClick={close}>Skeptron Council Portal</Link>
           <button type="button" ref={closeBtn} className="pshell-close" onClick={close} aria-label="Close menu">
@@ -162,7 +190,7 @@ export function PortalShell() {
               if (visible.length === 0) return null;
               const holdsPage = visible.some(l => pathname === l.to || pathname.startsWith(l.to + "/"));
               // Folded only on a phone. Starts folded except the group holding the current page; a tap overrides.
-              const folded = narrow && (collapsed[g.heading] ?? !holdsPage);
+              const folded = narrow && !tourInDrawer && (collapsed[g.heading] ?? !holdsPage);
               const listId = "pnav-" + g.heading.toLowerCase();
               return (
                 <section key={g.heading} aria-label={g.heading}>
@@ -181,7 +209,7 @@ export function PortalShell() {
                   </h2>
                   <div id={listId} hidden={folded}>
                   {visible.map(l => (
-                    <NavLink key={l.to} to={l.to} end={l.end} className="pshell-link" onClick={close}>
+                    <NavLink key={l.to} to={l.to} end={l.end} className="pshell-link" onClick={close} data-tour={navTourTarget(l.to)}>
                       <Icon name={l.icon} />
                       <span>{l.label}</span>
                     </NavLink>
@@ -191,6 +219,14 @@ export function PortalShell() {
               );
             })}
           </nav>
+        )}
+
+        {claims && (
+          <div style={{ padding: "8px 16px 0" }}>
+            <button type="button" className="pshell-signout" style={{ width: "100%" }} onClick={replayTour}>
+              Take the tour
+            </button>
+          </div>
         )}
 
         {claims && (

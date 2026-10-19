@@ -140,6 +140,17 @@ describe("the read-only record block", () => {
   });
 });
 
+describe("the welcome tour", () => {
+  it("can be replayed from a plain button, 44px tall", async () => {
+    stubFetch({ profileQueue: [BASE_PROFILE], bloodTypes: BLOOD_TYPES, skills: SKILLS });
+    await renderProfile();
+
+    const btn = Array.from(container.querySelectorAll("button")).find(b => b.textContent?.includes("Take the tour again"));
+    expect(btn).toBeTruthy();
+    expect(btn!.style.minHeight).toBe("var(--tap)");
+  });
+});
+
 describe("blood type confirmation", () => {
   it("is never described as verified, and is not shown as confirmed until the explicit confirm action is taken", async () => {
     const confirmedProfile = { ...BASE_PROFILE, bloodTypeConfirmedDateUtc: "2026-09-10T00:00:00Z" };

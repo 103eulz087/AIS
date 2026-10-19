@@ -10,6 +10,7 @@ import { useAuth } from "@/shared/auth";
 import { canManageChapterLogo } from "@/shared/roles";
 import type { BloodTypeOption, SkillOption } from "@/shared/types";
 import { NotificationSettings } from "@/ais/screens/NotificationSettings";
+import { useReplayAisTour } from "@/ais/aisTour";
 
 /**
  * GET /api/members/me — the member's own record, a THIRD shape alongside the same-chapter
@@ -136,6 +137,7 @@ const MAX_LOGO_SIZE_BYTES = 3 * 1024 * 1024;
  */
 export function Profile() {
   const { claims } = useAuth();
+  const replayTour = useReplayAisTour();
   const canManageLogo = canManageChapterLogo(claims?.roles ?? []);
 
   const profileQuery = useQuery({
@@ -396,6 +398,11 @@ export function Profile() {
       <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em" }}>
         Your profile
       </h1>
+
+      <button type="button" onClick={replayTour} style={tourButtonStyle}>
+        <span aria-hidden="true" style={{ color: "var(--brass)" }}>?</span>
+        <span>Take the tour again</span>
+      </button>
 
       {conflictNotice && (
         <div role="alert" style={conflictBannerStyle}>
@@ -771,6 +778,12 @@ const readRowStyle: CSSProperties = {
 
 const readLabelStyle: CSSProperties = { color: "var(--mute)" };
 const readValueStyle: CSSProperties = { color: "var(--ink)", textAlign: "right" };
+
+const tourButtonStyle: CSSProperties = {
+  display: "inline-flex", alignItems: "center", gap: 8, minHeight: "var(--tap)", marginTop: 8, padding: "0 14px",
+  background: "var(--paper)", border: "1px solid var(--line)", borderRadius: "var(--r)",
+  fontSize: 14, fontWeight: 600, color: "var(--ink)",
+};
 
 const noteStyle: CSSProperties = { fontSize: 12, color: "var(--mute)", marginTop: 8, lineHeight: 1.6 };
 

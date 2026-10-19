@@ -6,6 +6,8 @@ import { useAuth } from "@/shared/auth";
 import { canApproveApplications, canFileOfficerRoster } from "@/shared/roles";
 import { useMemberAccess, useTrialEndedSync } from "@/shared/memberAccess";
 import type { MembershipApplicationQueueItem } from "@/shared/types";
+import { TourProvider } from "@/shared/tour/TourProvider";
+import { useAisTourAutoStart } from "@/ais/aisTour";
 
 /**
  * "Notices" covers both /announcements and /memos — announcements and memos are
@@ -33,7 +35,14 @@ const BASE_TABS = [
 ];
 
 export function AppShell() {
+  const { claims } = useAuth();
+  // The welcome tour lives here so every member screen (Home, Profile's replay button) can reach it.
+  return <TourProvider memberId={claims?.memberId}><AppShellInner /></TourProvider>;
+}
+
+function AppShellInner() {
   const { claims, signOut } = useAuth();
+  useAisTourAutoStart();
   const location = useLocation();
   const { isFeatureOpen } = useMemberAccess();
   useTrialEndedSync();
@@ -93,6 +102,7 @@ export function AppShell() {
                 is otherwise idle space on every screen. */}
             <Link
               to="/profile"
+              data-tour="profile-link"
               style={{
                 display: "block", minHeight: 26, padding: "2px 2px 0", fontSize: 12.5,
                 fontWeight: 600, color: "var(--brass-soft)", textDecoration: "none",
@@ -126,7 +136,7 @@ export function AppShell() {
           const isLocked = t.featureKey ? !isFeatureOpen(t.featureKey) : false;
           const showBadge = t.to === "/applications" && (pendingCount.data?.total ?? 0) > 0;
           return (
-            <NavLink key={t.to} to={t.to} end={t.to === "/"} style={({ isActive }) => ({
+            <NavLink key={t.to} to={t.to} end={t.to === "/"} data-tour={`tab-${t.label.toLowerCase()}`} style={({ isActive }) => ({
               display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
               textDecoration: "none", minHeight: "var(--tap)", justifyContent: "center",
               color: isActive || alsoActive ? "var(--ink)" : "var(--mute)", position: "relative",

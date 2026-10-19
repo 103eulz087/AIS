@@ -12,6 +12,7 @@ using Akrho.Api.Features.Conversations;
 using Akrho.Api.Features.CouncilStatistics;
 using Akrho.Api.Features.Councils;
 using Akrho.Api.Features.AppSettings;
+using Akrho.Api.Features.Tutorials;
 using Akrho.Api.Features.CouncilPermissions;
 using Akrho.Api.Features.Credential;
 using Akrho.Api.Features.Dashboard;
@@ -112,6 +113,7 @@ builder.Services.AddScoped<IMemberPaymentTagRepository, MemberPaymentTagReposito
 builder.Services.AddScoped<IChapterLogoRepository, ChapterLogoRepository>();
 builder.Services.AddScoped<ICouncilPermissionRepository, CouncilPermissionRepository>();
 builder.Services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
+builder.Services.AddScoped<IMemberTutorialRepository, MemberTutorialRepository>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IMemberAccessService, MemberAccessService>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
@@ -503,6 +505,7 @@ app.MapVerification();
 app.MapMemberPaymentTags();
 app.MapCouncilPermissions();
 app.MapAppSettings();
+app.MapTutorials();
 
 // /?access_token= is honoured ONLY here (see the JwtBearerEvents.OnMessageReceived path
 // check above) — every other endpoint in this app still requires a real Authorization header.
