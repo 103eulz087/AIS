@@ -421,7 +421,7 @@ MERGE dbo.Municipality AS t USING (
      (678,'Hagonoy','3002',16),
      (1037,'Malolos','3000',16),
      (1092,'Marilao','3019',16),
-     (1122,'Maycauayan','3020',16),
+     (1122,'Meycauayan','3020',16),
      (1207,'Norzagaray','3013',16),
      (1216,'Obando','3021',16),
      (1272,'Pandi','3014',16),
