@@ -59,4 +59,18 @@ public class TutorialTests
             .And.Contain("CHECK (Outcome IN (N'Completed', N'Skipped'))")
             .And.Contain("(N'ais-welcome',").And.Contain("(N'portal-welcome',");
     }
+
+    [Theory]
+    [InlineData("guide-members")] [InlineData("guide-funds")] [InlineData("guide-announcements")]
+    [InlineData("guide-digital-id")] [InlineData("guide-profile")] [InlineData("guide-meetings")]
+    [InlineData("guide-money")] [InlineData("guide-post-announcement")] [InlineData("guide-approvals")]
+    [InlineData("guide-portal-registrations")] [InlineData("guide-portal-seating")]
+    [InlineData("guide-portal-permissions")] [InlineData("guide-portal-payments")]
+    [InlineData("guide-portal-members")] [InlineData("guide-portal-settings")]
+    public void Every_how_to_guide_is_in_the_catalogue(string key)
+    {
+        // usp_MemberTutorial_Finish rejects any key missing from dbo.Tutorial (51960), so a
+        // guide shipped in the web app without its row here could never be marked done.
+        Read("db", "schema", "33_how_to_guides.sql").Should().Contain($"(N'{key}',");
+    }
 }

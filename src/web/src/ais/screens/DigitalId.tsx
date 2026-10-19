@@ -212,6 +212,7 @@ export function DigitalId() {
             four-tab-limit reasoning). */}
         <Link
           to="/scan"
+          data-tour="digital-id-scan-link"
           style={{
             flex: "none", minHeight: "var(--tap)", padding: "0 14px", display: "flex",
             alignItems: "center", borderRadius: 8, border: "1px solid var(--line)",
@@ -225,6 +226,7 @@ export function DigitalId() {
       <div style={idStageStyle}>
         <button
           type="button"
+          data-tour="digital-id-card"
           onClick={() => setFlipped(f => !f)}
           aria-pressed={flipped}
           aria-label={flipped ? "Showing the back of your ID. Tap to see the front." : "Showing the front of your ID. Tap to see the back."}
@@ -375,10 +377,10 @@ export function DigitalId() {
           </div>
         </button>
 
-        <p style={flipHintStyle}>Tap the card to turn it over</p>
+        <p data-tour="digital-id-flip-hint" style={flipHintStyle}>Tap the card to turn it over</p>
       </div>
 
-      <p style={{ fontSize: 12, color: "var(--mute)", marginTop: 16, lineHeight: 1.6, textAlign: "center" }}>
+      <p data-tour="digital-id-status-note" style={{ fontSize: 12, color: "var(--mute)", marginTop: 16, lineHeight: 1.6, textAlign: "center" }}>
         Your ID updates on its own if your status changes — a suspended card can never be
         shown as active.
       </p>

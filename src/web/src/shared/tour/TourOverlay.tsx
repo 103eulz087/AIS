@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { findTarget, NARROW_MAX, prefersReducedMotion } from "./dom";
+import { ILLUS_CSS } from "./illustrations";
 import type { TourStep } from "./types";
 
 interface Box { left: number; top: number; width: number; height: number; id?: string }
@@ -60,6 +61,9 @@ function placeBeside(t: Box, vw: number, vh: number, cw: number, ch: number): Pl
 
 const FOCUSABLE = "button:not([disabled])";
 
+/** "Hide the picture" is remembered for the rest of the visit (memory only), so it stays hidden step to step. */
+let hideArtChoice = false;
+
 /**
  * The dimmed page, the spotlight and the card.
  *
@@ -76,6 +80,8 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
   const [viewport, setViewport] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }));
   const [rawBox, setBox] = useState<Box | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
+  const [hideArt, setHideArt] = useState(hideArtChoice);
+  hideArtChoice = hideArt;
   const cardRef = useRef<HTMLDivElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const reduced = prefersReducedMotion();
@@ -109,6 +115,10 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
       if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); h.onSkip(); return; }
       if (e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); h.onNext(); return; }
       if (e.key === "ArrowLeft") { e.preventDefault(); e.stopPropagation(); if (!h.isFirst) h.onBack(); return; }
+      // Enter or Space anywhere outside the card must never reach the page underneath (a form, a button).
+      if ((e.key === "Enter" || e.key === " ") && !cardRef.current?.contains(e.target as Node | null)) {
+        e.preventDefault(); e.stopPropagation(); return;
+      }
       if (e.key === "Tab") {
         const card = cardRef.current;
         if (!card) { e.preventDefault(); return; }
@@ -179,12 +189,17 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
     setPlacement(placeBeside({ left: box.left - PAD, top: box.top - PAD, width: box.width + PAD * 2, height: box.height + PAD * 2 }, viewport.w, viewport.h, cw, ch));
   }, [ready, narrow, hasTarget, rawBox, viewport.w, viewport.h, step.id]);
 
-  // Focus goes into the card whenever it appears (and after each step swap).
+  // Focus goes into the card whenever it appears (and after each step swap). On a phone the
+  // card is a capped-height sheet that scrolls when a step is long: each step starts at its
+  // top (picture and title first), and focusing Next must not scroll it down to the buttons.
   useEffect(() => {
     if (!ready || (!!step.target && !box)) return;
     const card = cardRef.current;
-    if (card && !card.contains(document.activeElement)) nextRef.current?.focus();
+    if (card && !card.contains(document.activeElement)) nextRef.current?.focus({ preventScroll: true });
   }, [ready, step.id, step.target, box]);
+  useEffect(() => {
+    if (cardRef.current) cardRef.current.scrollTop = 0;
+  }, [step.id]);
 
   const cardStyle: CSSProperties = (() => {
     const base: CSSProperties = {
@@ -213,7 +228,7 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
 
   return createPortal(
     <div data-testid="tour-overlay">
-      <style>{TOUR_CSS}</style>
+      <style>{TOUR_CSS + ILLUS_CSS}</style>
 
       {/* Swallows every tap so the highlighted thing can't be used mid-tour. */}
       <div
@@ -250,14 +265,39 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
           style={cardStyle}
         >
           {arrow && <span aria-hidden="true" style={arrowStyle(arrow)} />}
+          {step.illustration && !(narrow && hideArt) && (
+            <div
+              aria-hidden="true" className="tour-illus" data-testid="tour-illustration"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+                maxHeight: narrow ? 120 : 170, marginBottom: 10, padding: 6, borderRadius: 8,
+                background: "var(--bond)", border: "1px solid var(--line)",
+              }}
+            >
+              {step.illustration}
+            </div>
+          )}
           <h2 id={titleId} style={{ margin: 0, fontFamily: "var(--f-disp)", fontSize: 22, letterSpacing: ".03em", lineHeight: 1.15 }}>
             {step.title}
           </h2>
           <div id={bodyId} style={{ marginTop: 8, fontSize: 14.5, lineHeight: 1.5, color: "var(--slate)" }}>
             {step.body}
           </div>
+          {step.tip && (
+            <p data-testid="tour-tip" style={{ margin: "8px 0 0", fontSize: 13, lineHeight: 1.45, color: "var(--slate)" }}>
+              <strong style={{ color: "var(--brass-dk)" }}>Tip:</strong> {step.tip}
+            </p>
+          )}
+          {step.illustration && narrow && (
+            <button type="button" onClick={() => setHideArt(h => !h)} style={{ ...ghostBtn, paddingLeft: 0, marginTop: 4, fontSize: 13 }}>
+              {hideArt ? "Show the picture" : "Hide the picture"}
+            </button>
+          )}
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14 }}>
+          {/* Progress + buttons stay pinned to the bottom of the card, so Back/Next are always
+              in reach even when a long step makes the phone sheet scroll. */}
+          <div style={{ position: "sticky", bottom: -12, marginBottom: -12, paddingBottom: 12, background: "inherit" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 14 }}>
             <div aria-hidden="true" style={{ display: "flex", gap: 5, flexWrap: "wrap", flex: 1, minWidth: 0 }}>
               {Array.from({ length: total }, (_, i) => (
                 <span key={i} style={{
@@ -281,6 +321,7 @@ export function TourOverlay({ step, index, total, ready, onNext, onBack, onSkip 
             <button type="button" ref={nextRef} onClick={onNext} style={primaryBtn}>
               {isLast ? "Finish" : "Next"}
             </button>
+          </div>
           </div>
         </div>
       )}
@@ -315,6 +356,7 @@ const srOnly: CSSProperties = {
 const TOUR_CSS = `
 .tour-spot { transition: left .22s ease, top .22s ease, width .22s ease, height .22s ease; }
 .tour-card { animation: tour-in .18s ease-out; }
+@media (max-height: 520px) { .tour-illus { display: none !important; } }
 @keyframes tour-in { from { opacity: 0; } to { opacity: 1; } }
 [data-testid="tour-overlay"] button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {

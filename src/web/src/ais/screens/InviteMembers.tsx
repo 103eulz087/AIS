@@ -131,7 +131,7 @@ export function InviteMembers() {
       {error && <p role="alert" style={errorStyle}>{error}</p>}
 
       <button
-        type="button" disabled={generating} onClick={() => { void handleGenerate(); }}
+        type="button" data-tour="invite-generate" disabled={generating} onClick={() => { void handleGenerate(); }}
         style={{ ...buttonStyle, opacity: generating ? 0.7 : 1 }}
       >
         {generating ? "Generating…" : hasLink || issued ? "Generate a new link" : "Generate join link"}

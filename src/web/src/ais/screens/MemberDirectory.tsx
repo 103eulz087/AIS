@@ -338,7 +338,7 @@ export function MemberDirectory() {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 6, overflowX: "auto", padding: "10px 16px" }}>
+      <div data-tour="members-blood-filter" style={{ display: "flex", gap: 6, overflowX: "auto", padding: "10px 16px" }}>
         {BLOOD.map(b => (
           <button key={b} onClick={() => setBlood(b)} style={{
             flex: "none", padding: "6px 12px", borderRadius: 16, fontSize: 12,
@@ -349,8 +349,8 @@ export function MemberDirectory() {
         ))}
       </div>
 
-      {data.items.map(row => (
-        <div key={row.memberId} style={{ background: "var(--paper)", borderBottom: "1px solid var(--line)" }}>
+      {data.items.map((row, i) => (
+        <div key={row.memberId} data-tour={i === 0 ? "members-first-row" : undefined} style={{ background: "var(--paper)", borderBottom: "1px solid var(--line)" }}>
           <div style={{
             display: "flex", gap: 12, alignItems: "center", padding: 12,
             minHeight: "var(--tap)", flexWrap: "wrap",
@@ -391,6 +391,7 @@ export function MemberDirectory() {
             {isSameChapter(row) && (
               <button
                 type="button"
+                data-tour={i === 0 ? "members-message" : undefined}
                 onClick={() => { void handleMessage(row.memberId); }}
                 disabled={startingId === row.memberId}
                 style={messageButtonStyle}
@@ -526,6 +527,7 @@ function CorrectiveActionsLink() {
   return (
     <Link
       to="/corrective-actions"
+      data-tour="members-corrective-link"
       style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         minHeight: "var(--tap)", padding: "0 14px", borderRadius: 8,
@@ -544,6 +546,7 @@ function InviteMembersLink() {
   return (
     <Link
       to="/invite"
+      data-tour="members-invite-link"
       style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         minHeight: "var(--tap)", padding: "0 14px", borderRadius: 8,

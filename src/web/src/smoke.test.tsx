@@ -68,6 +68,8 @@ import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
 import { Profile } from "@/ais/screens/Profile";
+import { Help } from "@/ais/screens/Help";
+import { PortalHelp } from "@/portal/screens/Help";
 import { DigitalId } from "@/ais/screens/DigitalId";
 import { ChatRoom } from "@/ais/screens/ChatRoom";
 import { ChatModeration } from "@/ais/screens/ChatModeration";
@@ -110,6 +112,8 @@ const ROUTES: Array<[path: string, element: React.ReactNode]> = [
   ["/dashboard", <Dashboard key="dash" chapterId={1} />],
   ["/members", <MemberDirectory key="m" />],
   ["/profile", <Profile key="pr" />],
+  ["/help", <Help key="help" />],
+  ["/portal/help", <PortalHelp key="phelp" />],
   ["/digital-id", <DigitalId key="did" />],
   ["/ledger", <Ledger key="l" chapterId={1} />],
   ["/meetings", <MeetingList key="ml" chapterId={1} />],

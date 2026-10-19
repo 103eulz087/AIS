@@ -127,7 +127,7 @@ export function AppSettings() {
           after he is approved. When the free trial is on and his days are over, only the features ticked below stay open.
         </p>
 
-        <label style={rowStyle}>
+        <label style={rowStyle} data-tour="settings-trial-toggle">
           <input type="checkbox" role="switch" checked={form.isTrialEnabled} style={checkStyle}
             onChange={e => change({ isTrialEnabled: e.target.checked })} />
           <span style={{ fontWeight: 600 }}>
@@ -149,7 +149,7 @@ export function AppSettings() {
         )}
 
         <label htmlFor="trial-days" style={{ ...labelStyle, marginTop: 16 }}>Number of days</label>
-        <input id="trial-days" type="number" inputMode="numeric" min={MIN_DAYS} max={MAX_DAYS} step={1}
+        <input id="trial-days" data-tour="settings-days" type="number" inputMode="numeric" min={MIN_DAYS} max={MAX_DAYS} step={1}
           className="num" value={form.trialDays} onChange={e => change({ trialDays: e.target.value })}
           aria-invalid={!daysValid} style={daysInputStyle} />
         <p style={{ ...helpStyle, color: daysValid ? "var(--mute)" : "var(--out)" }}>
@@ -158,7 +158,7 @@ export function AppSettings() {
             : `Please enter a whole number of days from ${MIN_DAYS} to ${MAX_DAYS}.`}
         </p>
 
-        <fieldset style={{ border: 0, padding: 0, margin: "18px 0 0" }}>
+        <fieldset data-tour="settings-open-features" style={{ border: 0, padding: 0, margin: "18px 0 0" }}>
           <legend style={labelStyle}>Still open after the free trial ends</legend>
           {features.length === 0 && <p style={helpStyle}>No features are listed yet.</p>}
           {features.map(f => {
@@ -179,7 +179,7 @@ export function AppSettings() {
           })}
         </fieldset>
 
-        <div style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div data-tour="settings-save" style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <button type="button" onClick={() => { void onSave(); }}
             disabled={!dirty || !daysValid || save.isPending} style={saveButtonStyle(!dirty || !daysValid || save.isPending)}>
             {save.isPending ? "Saving…" : "Save settings"}
@@ -199,7 +199,7 @@ export function AppSettings() {
         </p>
       </section>
 
-      <section style={cardStyle} aria-label="Who this touches">
+      <section style={cardStyle} aria-label="Who this touches" data-tour="settings-preview">
         <h2 style={h2Style}>Who this touches</h2>
         <p style={{ fontSize: 13.5, color: "var(--ink)", lineHeight: 1.6 }}>
           Of <span className="num">{preview.totalMembers}</span> members:{" "}

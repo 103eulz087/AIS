@@ -8,13 +8,15 @@ import { findTarget, isNarrowNow, isStandalone } from "./dom";
 import { addPending, readPending, removePending, type PendingFinish } from "./pending";
 import { TourOverlay } from "./TourOverlay";
 import {
-  TUTORIALS_QUERY_KEY, type TourDefinition, type TourOutcome, type TourStep, type TutorialRow,
+  TUTORIALS_QUERY_KEY, type GuideContext, type TourDefinition, type TourOutcome, type TourStep, type TutorialRow,
 } from "./types";
 
 /** How long a step's target gets to show up (after we are on the right page) before the step is quietly dropped. */
 const TARGET_WAIT_MS = 1500;
 /** How long we wait for a navigation to land before giving up on a step. */
 const ROUTE_WAIT_MS = 3000;
+/** What a step's route function sees when the tour was started without a context. */
+const NO_CTX: GuideContext = { claims: null, roles: [], seats: [], isFeatureOpen: () => true };
 
 interface Run {
   tourKey: string;
@@ -23,6 +25,11 @@ interface Run {
   index: number;
   /** 1 moving forward, -1 moving back — decides where to land when a step is dropped. */
   dir: 1 | -1;
+  /** Passed to step route functions. */
+  ctx: GuideContext;
+  /** Where the tour began, and whether to go back there when it ends (how-to guides do). */
+  startPath: string;
+  returnToStart: boolean;
 }
 
 export interface TourApi {
@@ -78,12 +85,20 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
   pathRef.current = pathname;
   const qc = useQueryClient();
 
+  // A guide that walked through other screens leaves the person where he started it (the Help page).
+  const leave = useCallback((r: Run) => {
+    try {
+      if (r.returnToStart && pathRef.current !== r.startPath) navigate(r.startPath);
+    } catch { /* never throw out of the tour */ }
+  }, [navigate]);
+
   const finish = useCallback((outcome: TourOutcome) => {
     const r = runRef.current;
     if (!r) return;
     runRef.current = null;
     setRun(null);
     setReady(false);
+    leave(r);
     const entry: PendingFinish = { memberId: memberId ?? 0, tourKey: r.tourKey, tourVersion: r.tourVersion, outcome };
     addPending(entry);
     // Treat it as seen straight away, so nothing re-starts it while the report is on its way.
@@ -93,7 +108,7 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
       return [...old.filter((o: Partial<TutorialRow>) => o?.tourKey !== r.tourKey), row];
     });
     void sendFinish(entry);
-  }, [memberId, qc]);
+  }, [memberId, qc, leave]);
 
   // Send any report an earlier visit could not deliver.
   useEffect(() => {
@@ -111,7 +126,10 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
         try { return s.when ? s.when(env) : true; } catch { return false; }
       });
       if (steps.length === 0) return;
-      const next: Run = { tourKey: def.tourKey, tourVersion: def.tourVersion, steps, index: 0, dir: 1 };
+      const next: Run = {
+        tourKey: def.tourKey, tourVersion: def.tourVersion, steps, index: 0, dir: 1,
+        ctx: def.ctx ?? NO_CTX, startPath: pathRef.current, returnToStart: def.returnToStart === true,
+      };
       runRef.current = next;
       setReady(false);
       setRun(next);
@@ -140,7 +158,7 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
     const r = runRef.current;
     if (!r) return;
     const steps = r.steps.filter((_, i) => i !== r.index);
-    if (steps.length === 0) { runRef.current = null; setRun(null); setReady(false); return; }
+    if (steps.length === 0) { runRef.current = null; setRun(null); setReady(false); leave(r); return; }
     const index = r.dir === 1 ? r.index : Math.max(0, r.index - 1);
     if (index >= steps.length) {
       // Nothing left after the dropped one: the tour has been seen to its end.
@@ -153,7 +171,17 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
     runRef.current = nextRun;
     setReady(false);
     setRun(nextRun);
-  }, [finish]);
+  }, [finish, leave]);
+
+  // While a tour runs nothing may be saved: the overlay swallows taps, and this stops any form
+  // submit (Enter in a field, a stray key press) before the page's own handlers see it.
+  const running = run !== null;
+  useEffect(() => {
+    if (!running) return;
+    const block = (e: Event) => { e.preventDefault(); e.stopImmediatePropagation(); };
+    document.addEventListener("submit", block, true);
+    return () => document.removeEventListener("submit", block, true);
+  }, [running]);
 
   // Get each step ready: go to its page, wait for its target, or drop it.
   const stepId = run ? run.steps[run.index]?.id : undefined;
@@ -163,29 +191,48 @@ export function TourProvider({ memberId, children }: { memberId: number | undefi
     if (!r) return;
     const step = r.steps[r.index];
     if (!step) return;
-    const startedAt = Date.now();
-    let routeSince: number | null = null;
-    let navigated = false;
+    const targetWait = step.waitMs ?? TARGET_WAIT_MS;
     let done = false;
-    const tick = () => {
-      if (done) return;
-      try {
-        if (step.route && pathRef.current !== step.route) {
-          if (!navigated) { navigated = true; navigate(step.route); }
-          if (Date.now() - startedAt > ROUTE_WAIT_MS) { done = true; dropCurrent(); }
-          return;
+    let timerId: number | undefined;
+    const samePage = (path: string) => pathRef.current === path.split("?")[0];
+    // Once we know which page the step belongs to: go there, then wait for its target.
+    const begin = (path: string | undefined) => {
+      const startedAt = Date.now();
+      let routeSince: number | null = null;
+      let navigated = false;
+      const tick = () => {
+        if (done) return;
+        try {
+          if (path !== undefined && !samePage(path)) {
+            if (!navigated) { navigated = true; navigate(path); }
+            if (Date.now() - startedAt > ROUTE_WAIT_MS) { done = true; dropCurrent(); }
+            return;
+          }
+          if (routeSince === null) routeSince = Date.now();
+          if (!step.target) { done = true; setReady(true); return; }
+          if (findTarget(step.target)) { done = true; setReady(true); return; }
+          if (Date.now() - routeSince > targetWait) { done = true; dropCurrent(); }
+        } catch {
+          done = true; dropCurrent();
         }
-        if (routeSince === null) routeSince = Date.now();
-        if (!step.target) { done = true; setReady(true); return; }
-        if (findTarget(step.target)) { done = true; setReady(true); return; }
-        if (Date.now() - routeSince > TARGET_WAIT_MS) { done = true; dropCurrent(); }
-      } catch {
-        done = true; dropCurrent();
-      }
+      };
+      tick();
+      if (!done) timerId = window.setInterval(tick, 50);
     };
-    tick();
-    const id = window.setInterval(tick, 50);
-    return () => { done = true; window.clearInterval(id); };
+    if (typeof step.route === "function") {
+      // The page depends on data (an id, say). null or a failure means: leave this step out.
+      const resolve = step.route;
+      void (async () => {
+        let path: string | null = null;
+        try { path = await resolve(r.ctx); } catch { path = null; }
+        if (done) return;
+        if (!path) { done = true; dropCurrent(); return; }
+        begin(path);
+      })();
+    } else {
+      begin(step.route);
+    }
+    return () => { done = true; if (timerId !== undefined) window.clearInterval(timerId); };
     // Re-run only when the step itself changes.
   }, [stepId, runKey, run?.index]);
 

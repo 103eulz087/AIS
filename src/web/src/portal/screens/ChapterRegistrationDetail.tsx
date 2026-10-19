@@ -229,7 +229,7 @@ export function ChapterRegistrationDetail() {
   return (
     <div style={{ paddingBottom: 24 }}>
       <div>
-        <div style={{ fontFamily: "var(--f-disp)", fontSize: 24, lineHeight: 1.15, letterSpacing: ".02em", overflowWrap: "anywhere" }}>
+        <div data-tour="reg-header" style={{ fontFamily: "var(--f-disp)", fontSize: 24, lineHeight: 1.15, letterSpacing: ".02em", overflowWrap: "anywhere" }}>
           {data.chapterName ?? data.proposedChapterName ?? "Chapter registration"}
         </div>
         <div style={{ fontSize: 13, color: "var(--slate)", marginTop: 4 }}>{typeLabel(data.registrationType)}</div>
@@ -274,8 +274,8 @@ export function ChapterRegistrationDetail() {
 
       <div style={sectionStyle}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", columnGap: 12 }}>
-          <div style={sectionLabelStyle}>Officers</div>
-          <div style={{ fontSize: 12.5, color: allVerified ? "var(--in)" : "var(--mute)" }}>
+          <div data-tour="reg-officers" style={sectionLabelStyle}>Officers</div>
+          <div data-tour="reg-verified-count" style={{ fontSize: 12.5, color: allVerified ? "var(--in)" : "var(--mute)" }}>
             {verifiedCount} of {data.officers.length} verified
           </div>
         </div>
@@ -283,7 +283,7 @@ export function ChapterRegistrationDetail() {
         {verifyError && <p role="alert" style={errorTextStyle}>{verifyError}</p>}
         {reissueError && <p role="alert" style={errorTextStyle}>{reissueError}</p>}
 
-        {data.officers.map(o => {
+        {data.officers.map((o, oi) => {
           // The real member id an approved officer resolves to: MemberId for a Turnover
           // seat (an already-existing member, linked from filing), CreatedMemberId for a
           // Charter seat (typed-in at filing, a Member row only comes to exist at
@@ -295,7 +295,7 @@ export function ChapterRegistrationDetail() {
           const targetMemberId = o.memberId ?? o.createdMemberId;
           return (
             <OfficerRow
-              key={o.registrationOfficerId} officer={o}
+              key={o.registrationOfficerId} officer={o} first={oi === 0}
               noteDraft={noteDrafts[o.registrationOfficerId] ?? o.verifyNote ?? ""}
               onNoteChange={v => setNoteDrafts(prev => ({ ...prev, [o.registrationOfficerId]: v }))}
               busy={verifyingId === o.registrationOfficerId}
@@ -335,7 +335,7 @@ export function ChapterRegistrationDetail() {
 
           {canApproveNow && (!confirmingApprove ? (
             <button
-              type="button" disabled={!allVerified}
+              type="button" data-tour="reg-approve" disabled={!allVerified}
               title={allVerified ? undefined : `${verifiedCount} of ${data.officers.length} verified — every officer must be verified first.`}
               onClick={() => setConfirmingApprove(true)}
               style={{ ...primaryButtonStyle, opacity: allVerified ? 1 : 0.5, cursor: allVerified ? "pointer" : "not-allowed" }}
@@ -369,7 +369,7 @@ export function ChapterRegistrationDetail() {
           {canReturnNow && (
             <div style={{ marginTop: 12 }}>
               {!returnOpen ? (
-                <button type="button" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
+                <button type="button" data-tour="reg-return" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
                   Return with a remark
                 </button>
               ) : (
@@ -429,10 +429,11 @@ export function ChapterRegistrationDetail() {
 }
 
 function OfficerRow({
-  officer: o, noteDraft, onNoteChange, busy, canAct, onVerify,
+  officer: o, first, noteDraft, onNoteChange, busy, canAct, onVerify,
   canReissue, targetMemberId, reissuing, reissueResult, reissueCopied, onReissue, onCopyReissued,
 }: {
   officer: ChapterRegistrationOfficer;
+  first: boolean;
   noteDraft: string;
   onNoteChange: (value: string) => void;
   busy: boolean;
@@ -450,7 +451,7 @@ function OfficerRow({
   const fullName = [o.firstName, o.middleName, o.lastName].filter(Boolean).join(" ");
 
   return (
-    <div style={cardStyle}>
+    <div data-tour={first ? "reg-officer-first" : undefined} style={cardStyle}>
       <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
         <div style={{ minWidth: 0, flex: "1 1 200px" }}>
           <div style={{ fontSize: 11, color: "var(--mute)" }}>{o.officeName}</div>
@@ -483,7 +484,7 @@ function OfficerRow({
           />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
             <button
-              type="button" disabled={busy || isVerified} onClick={() => onVerify(true)}
+              type="button" data-tour={first ? "reg-verify-first" : undefined} disabled={busy || isVerified} onClick={() => onVerify(true)}
               style={{ ...smallPrimaryButtonStyle, opacity: busy ? 0.7 : 1 }}
             >
               {busy ? "…" : "Verify"}

@@ -111,7 +111,7 @@ describe("AIS welcome tour auto-start", () => {
   });
 
   it("does not start when he has already seen the current version", async () => {
-    tutorials = [{ tourKey: "ais-welcome", tourVersion: 1, outcome: "Skipped", finishedDate: "2026-01-01T00:00:00Z" }];
+    tutorials = [{ tourKey: "ais-welcome", tourVersion: 2, outcome: "Skipped", finishedDate: "2026-01-01T00:00:00Z" }];
     await mountAis();
     expect(dialogText()).toBeNull();
   });
@@ -131,7 +131,7 @@ describe("AIS welcome tour auto-start", () => {
   it("does not start while a finish report is still waiting to be sent from this browser", async () => {
     tutorials = [];
     window.localStorage.setItem("akrho.tour.pending",
-      JSON.stringify([{ memberId: 5, tourKey: "ais-welcome", tourVersion: 1, outcome: "Skipped" }]));
+      JSON.stringify([{ memberId: 5, tourKey: "ais-welcome", tourVersion: 2, outcome: "Skipped" }]));
     await mountAis();
     expect(dialogText()).toBeNull();
   });
@@ -139,14 +139,14 @@ describe("AIS welcome tour auto-start", () => {
 
 describe("Portal welcome tour auto-start", () => {
   it("starts when there is no row for it", async () => {
-    tutorials = [{ tourKey: "ais-welcome", tourVersion: 1, outcome: "Completed", finishedDate: "2026-01-01T00:00:00Z" }];
+    tutorials = [{ tourKey: "ais-welcome", tourVersion: 2, outcome: "Completed", finishedDate: "2026-01-01T00:00:00Z" }];
     await mountPortal();
     expect(dialogText()).toContain("Welcome, TANGLAW!");
     expect(dialogText()).toContain("Council Portal");
   });
 
   it("does not start once seen", async () => {
-    tutorials = [{ tourKey: "portal-welcome", tourVersion: 1, outcome: "Completed", finishedDate: "2026-01-01T00:00:00Z" }];
+    tutorials = [{ tourKey: "portal-welcome", tourVersion: 2, outcome: "Completed", finishedDate: "2026-01-01T00:00:00Z" }];
     await mountPortal();
     expect(dialogText()).toBeNull();
   });

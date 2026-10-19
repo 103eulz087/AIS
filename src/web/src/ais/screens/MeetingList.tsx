@@ -37,7 +37,7 @@ export function MeetingList({ chapterId }: { chapterId: number }) {
       <EmptyState
         title="No meetings recorded yet"
         body="Once your chapter holds a meeting, it appears here with who attended and what was collected."
-        action={canCreate ? <Link to="/meetings/new" style={newButtonStyle}>+ New meeting</Link> : undefined}
+        action={canCreate ? <Link to="/meetings/new" data-tour="meetings-new-button" style={newButtonStyle}>+ New meeting</Link> : undefined}
       />
     );
   }
@@ -46,12 +46,12 @@ export function MeetingList({ chapterId }: { chapterId: number }) {
     <div>
       {canCreate && (
         <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 16px 0" }}>
-          <Link to="/meetings/new" style={newButtonStyle}>+ New meeting</Link>
+          <Link to="/meetings/new" data-tour="meetings-new-button" style={newButtonStyle}>+ New meeting</Link>
         </div>
       )}
 
-      {items.map(m => (
-        <Link key={m.meetingId} to={`/meetings/${m.meetingId}`} style={rowStyle}>
+      {items.map((m, i) => (
+        <Link key={m.meetingId} to={`/meetings/${m.meetingId}`} data-tour={i === 0 ? "meetings-first-row" : undefined} style={rowStyle}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 600 }}>{m.subject}</div>
             <div style={{ fontSize: 12, color: "var(--mute)", marginTop: 2 }}>

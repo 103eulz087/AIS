@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildAisTourSteps } from "@/ais/aisTour";
 import { buildPortalTourSteps } from "@/portal/portalTour";
+import { AIS_TOUR_VERSION, PORTAL_TOUR_VERSION } from "./types";
 
 const ids = (steps: { id: string }[]) => steps.map(s => s.id);
 
@@ -68,5 +69,22 @@ describe("Portal tour content", () => {
     expect(phone.when?.({ narrow: false, standalone: false })).toBe(false);
     expect(desk.when?.({ narrow: false, standalone: false })).toBe(true);
     expect(desk.when?.({ narrow: true, standalone: false })).toBe(false);
+  });
+});
+
+describe("welcome tours v2", () => {
+  it("are version 2, so members who saw the first one see the new one", () => {
+    expect(AIS_TOUR_VERSION).toBe(2);
+    expect(PORTAL_TOUR_VERSION).toBe(2);
+  });
+
+  it("both point at Help & guides before they finish", () => {
+    const ais = buildAisTourSteps({ giftName: "X", isFeatureOpen: () => true, canApprove: false, canFileRoster: false });
+    expect(ids(ais)).toContain("help");
+    expect(ais.find(s => s.id === "help")!.target).toBe("help-link");
+    const portal = buildPortalTourSteps({ giftName: "X", canSettings: false, visibleLinks: new Set() });
+    const help = portal.find(s => s.id === "link-nav-help")!;
+    expect(help.target).toBe("nav-help");
+    expect(ids(portal).indexOf("link-nav-help")).toBeLessThan(ids(portal).indexOf("done"));
   });
 });

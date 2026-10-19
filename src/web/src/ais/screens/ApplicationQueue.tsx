@@ -69,7 +69,7 @@ export function ApplicationQueue() {
         </h1>
       </div>
 
-      <div style={filterRowStyle}>
+      <div data-tour="applications-filter" style={filterRowStyle}>
         <select
           aria-label="Filter by status" value={statusId}
           onChange={e => updateStatusFilter(e.target.value)} style={filterFieldStyle}
@@ -88,7 +88,7 @@ export function ApplicationQueue() {
         />
       ) : (
         <div>
-          {items.map(a => <QueueRow key={a.applicationId} item={a} />)}
+          {items.map((a, i) => <QueueRow key={a.applicationId} item={a} first={i === 0} />)}
 
           {data && data.total > skip + items.length && (
             <div style={{ padding: 16, textAlign: "center" }}>
@@ -113,9 +113,9 @@ function statusLabel(name: string): string {
   }
 }
 
-function QueueRow({ item: a }: { item: MembershipApplicationQueueItem }) {
+function QueueRow({ item: a, first }: { item: MembershipApplicationQueueItem; first?: boolean }) {
   return (
-    <Link to={`/applications/${a.applicationId}`} style={rowStyle}>
+    <Link to={`/applications/${a.applicationId}`} data-tour={first ? "applications-first-row" : undefined} style={rowStyle}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 600 }}>{a.giftName}</div>
         <div style={{ fontSize: 12.5, color: "var(--slate)", marginTop: 2 }}>

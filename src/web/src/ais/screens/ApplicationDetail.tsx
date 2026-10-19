@@ -149,7 +149,7 @@ export function ApplicationDetail() {
   return (
     <div style={{ paddingBottom: 24 }}>
       <div style={{ padding: 16 }}>
-        <div style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.15, letterSpacing: ".02em" }}>
+        <div data-tour="application-name" style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.15, letterSpacing: ".02em" }}>
           {data.giftName}
         </div>
         <div style={{ fontSize: 13, color: "var(--slate)", marginTop: 4 }}>{fullName}</div>
@@ -191,7 +191,7 @@ export function ApplicationDetail() {
         </div>
       )}
 
-      <div style={{ padding: "0 16px" }}>
+      <div data-tour="application-applicant" style={{ padding: "0 16px" }}>
         <div style={sectionLabelStyle}>Applicant</div>
         <div style={cardStyle}>
           <Field label="Birthdate" value={shortDate(data.birthDate)} />
@@ -203,7 +203,7 @@ export function ApplicationDetail() {
         </div>
       </div>
 
-      <div style={{ padding: "0 16px" }}>
+      <div data-tour="application-seconder" style={{ padding: "0 16px" }}>
         <div style={sectionLabelStyle}>Seconder</div>
         <div style={cardStyle}>
           <Field label="Named by applicant" value={data.seconderNameGiven} />
@@ -259,7 +259,7 @@ export function ApplicationDetail() {
           {approveError && <p role="alert" style={errorTextStyle}>{approveError}</p>}
 
           {!confirmingApprove ? (
-            <button type="button" onClick={() => setConfirmingApprove(true)} style={primaryButtonStyle}>
+            <button type="button" data-tour="application-approve" onClick={() => setConfirmingApprove(true)} style={primaryButtonStyle}>
               Approve
             </button>
           ) : (
@@ -286,7 +286,7 @@ export function ApplicationDetail() {
 
           <div style={{ marginTop: 12 }}>
             {!returnOpen ? (
-              <button type="button" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
+              <button type="button" data-tour="application-return" onClick={() => setReturnOpen(true)} style={ghostButtonStyle}>
                 Return for correction
               </button>
             ) : (
@@ -321,7 +321,7 @@ export function ApplicationDetail() {
 
           <div style={{ marginTop: 12 }}>
             {!rejectOpen ? (
-              <button type="button" onClick={() => setRejectOpen(true)} style={ghostButtonStyle}>
+              <button type="button" data-tour="application-reject" onClick={() => setRejectOpen(true)} style={ghostButtonStyle}>
                 Reject
               </button>
             ) : (

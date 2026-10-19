@@ -32,7 +32,7 @@ export function Ledger({ chapterId }: { chapterId: number }) {
     <div>
       <FundsTabs active="ledger" />
 
-      <div style={{ margin: 16, padding: 14, borderRadius: "var(--r)", background: "var(--deep)",
+      <div data-tour="funds-balance" style={{ margin: 16, padding: 14, borderRadius: "var(--r)", background: "var(--deep)",
                     color: "var(--brass-soft)" }}>
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 12, letterSpacing: ".14em",
                       color: "var(--brass)" }}>CURRENT BALANCE</div>
@@ -43,15 +43,15 @@ export function Ledger({ chapterId }: { chapterId: number }) {
 
       {/* docs/AIS-Project-Documentation.md §3/§10 Decision #7, amended 2026-09-20 — see
           Dashboard.tsx's identical notice for why this exists. */}
-      <p style={{ margin: "0 16px 16px", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
+      <p data-tour="funds-council-note" style={{ margin: "0 16px 16px", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
         Your council can see this chapter's overall balance and totals for a period.
         They cannot see individual entries.
       </p>
 
-      {data.items.map(e => (
+      {data.items.map((e, i) => (
         // Every posting links to the record behind it. A figure nobody can open
         // is not transparency.
-        <div key={e.ledgerEntryId} style={{
+        <div key={e.ledgerEntryId} data-tour={i === 0 ? "funds-first-entry" : undefined} style={{
           display: "flex", gap: 12, alignItems: "center", padding: "12px 16px",
           background: "var(--paper)", borderBottom: "1px solid var(--line)",
         }}>
@@ -74,7 +74,7 @@ export function Ledger({ chapterId }: { chapterId: number }) {
         </div>
       ))}
 
-      <p style={{ padding: "14px 16px", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
+      <p data-tour="funds-append-note" style={{ padding: "14px 16px", fontSize: 11.5, color: "var(--mute)", lineHeight: 1.6 }}>
         This ledger is append-only. Nothing here can be edited or deleted — a mistake is
         corrected by a reversing entry, which stays visible beside the original.
       </p>

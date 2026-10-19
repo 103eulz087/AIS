@@ -5,7 +5,7 @@ import { useIsNarrow } from "./responsive";
 import { TourProvider, useTour } from "@/shared/tour/TourProvider";
 import { useTourAutoStart } from "@/shared/tour/useTourAutoStart";
 import { PORTAL_TOUR_KEY, PORTAL_TOUR_VERSION } from "@/shared/tour/types";
-import { buildPortalTourSteps, navTourTarget, PORTAL_LINK_STEP_PREFIX } from "./portalTour";
+import { buildPortalTourSteps, navTourTarget, PortalWelcomeContext, PORTAL_LINK_STEP_PREFIX } from "./portalTour";
 import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentReport, canViewPaymentTags } from "@/shared/roles";
 
 /**
@@ -224,7 +224,10 @@ function PortalShellInner() {
 
         {claims && (
           <div style={{ padding: "8px 16px 0" }}>
-            <button type="button" className="pshell-signout" style={{ width: "100%" }} onClick={replayTour}>
+            <Link to="/portal/help" className="pshell-signout" onClick={close} data-tour="nav-help" style={helpLinkStyle}>
+              Help &amp; guides
+            </Link>
+            <button type="button" className="pshell-signout" style={{ width: "100%", marginTop: 8 }} onClick={replayTour}>
               Take the tour
             </button>
             {/* Council officers are chapter members too; without this the member app (and its
@@ -246,7 +249,9 @@ function PortalShellInner() {
       </aside>
 
       <main className="pshell-main">
-        <div className="pshell-content" style={contentStyle}><Outlet /></div>
+        <div className="pshell-content" style={contentStyle}>
+          <PortalWelcomeContext.Provider value={replayTour}><Outlet /></PortalWelcomeContext.Provider>
+        </div>
       </main>
     </div>
   );
@@ -284,6 +289,10 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 const wordmarkStyle: CSSProperties = {
   fontFamily: "var(--f-disp)", fontSize: 19, letterSpacing: ".05em",
   color: "inherit", textDecoration: "none",
+};
+
+const helpLinkStyle: CSSProperties = {
+  width: "100%", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none",
 };
 
 const memberAppLinkStyle: CSSProperties = {

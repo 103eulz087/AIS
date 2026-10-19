@@ -95,7 +95,7 @@ export function NotificationSettings() {
   return (
     <div>
       <div style={sectionLabelStyle}>Message alerts</div>
-      <div style={cardStyle}>
+      <div data-tour="profile-notifications" style={cardStyle}>
         <PlatformSection
           state={platformState}
           subscribed={subscribed}

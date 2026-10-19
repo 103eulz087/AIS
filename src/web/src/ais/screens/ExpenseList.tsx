@@ -99,7 +99,7 @@ export function ExpenseList({ chapterId }: { chapterId: number }) {
 
       {canCreate && (
         <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 16px 0" }}>
-          <Link to="/expenses/new" style={newButtonStyle}>+ New expense</Link>
+          <Link to="/expenses/new" data-tour="expenses-new-button" style={newButtonStyle}>+ New expense</Link>
         </div>
       )}
 
@@ -110,7 +110,7 @@ export function ExpenseList({ chapterId }: { chapterId: number }) {
         />
       ) : (
         <div>
-          {items.map(x => <ExpenseRow key={x.expenseId} expense={x} />)}
+          {items.map((x, i) => <ExpenseRow key={x.expenseId} expense={x} first={i === 0} />)}
 
           {data && data.total > skip + items.length && (
             <div style={{ padding: 16, textAlign: "center" }}>
@@ -125,9 +125,9 @@ export function ExpenseList({ chapterId }: { chapterId: number }) {
   );
 }
 
-function ExpenseRow({ expense: x }: { expense: ExpenseListItem }) {
+function ExpenseRow({ expense: x, first }: { expense: ExpenseListItem; first?: boolean }) {
   return (
-    <Link to={`/expenses/${x.expenseId}`} style={rowStyle}>
+    <Link to={`/expenses/${x.expenseId}`} data-tour={first ? "expenses-first-row" : undefined} style={rowStyle}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 600 }}>{x.payee}</div>
         <div style={{ fontSize: 12, color: "var(--mute)", marginTop: 2 }}>

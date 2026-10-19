@@ -168,13 +168,13 @@ export function ExpenseNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="payee" style={labelStyle}>Paid to</label>
         <input
-          id="payee" value={payee} onChange={e => setPayee(e.target.value)}
+          id="payee" data-tour="expense-field-payee" value={payee} onChange={e => setPayee(e.target.value)}
           placeholder="ABC Hardware" style={fieldStyle}
         />
 
         <label htmlFor="amount" style={labelStyle}>Amount</label>
         <input
-          id="amount" className="num" inputMode="decimal" value={amount}
+          id="amount" data-tour="expense-field-amount" className="num" inputMode="decimal" value={amount}
           onChange={e => setAmount(e.target.value)} placeholder="0.00" style={fieldStyle}
         />
 
@@ -205,7 +205,7 @@ export function ExpenseNew({ chapterId }: { chapterId: number }) {
         />
 
         <label style={labelStyle}>Receipt (at least one required)</label>
-        <button type="button" onClick={() => fileInputRef.current?.click()} style={pickButtonStyle}>
+        <button type="button" data-tour="expense-receipt" onClick={() => fileInputRef.current?.click()} style={pickButtonStyle}>
           + Add a photo or PDF
         </button>
         <input

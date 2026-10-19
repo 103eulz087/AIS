@@ -101,7 +101,7 @@ export function DonationNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="donorName" style={labelStyle}>Donor's name</label>
         <input
-          id="donorName" value={donorName} onChange={e => setDonorName(e.target.value)}
+          id="donorName" data-tour="donation-field-donor" value={donorName} onChange={e => setDonorName(e.target.value)}
           placeholder="Mayor Juan Dela Cruz" style={fieldStyle}
         />
 
@@ -111,7 +111,7 @@ export function DonationNew({ chapterId }: { chapterId: number }) {
           {DONOR_TYPES.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
 
-        <div style={panelStyle}>
+        <div data-tour="donation-gift" style={panelStyle}>
           <p style={{ fontSize: 12.5, color: "var(--slate)", lineHeight: 1.6, marginBottom: 12 }}>
             A donation can be cash, in-kind (goods), or both. Fill in at least one.
           </p>

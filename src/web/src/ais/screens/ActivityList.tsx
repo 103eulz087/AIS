@@ -49,13 +49,13 @@ export function ActivityList({ chapterId }: { chapterId: number }) {
         <EmptyState
           title="No activities recorded yet"
           body="Once your chapter starts a project — a clean-up drive, a relief effort, a fiesta — it appears here with what came in and what went out."
-          action={canCreate ? <Link to="/activities/new" style={newButtonStyle}>+ New activity</Link> : undefined}
+          action={canCreate ? <Link to="/activities/new" data-tour="activities-new-button" style={newButtonStyle}>+ New activity</Link> : undefined}
         />
       ) : (
         <div>
           {canCreate && (
             <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 16px 0" }}>
-              <Link to="/activities/new" style={newButtonStyle}>+ New activity</Link>
+              <Link to="/activities/new" data-tour="activities-new-button" style={newButtonStyle}>+ New activity</Link>
             </div>
           )}
 

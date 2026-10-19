@@ -108,13 +108,13 @@ export function ChapterRegistrationQueue() {
 
       <div style={filterRowStyle}>
         <input
-          type="search" aria-label="Search chapter or member"
+          type="search" data-tour="reg-search" aria-label="Search chapter or member"
           placeholder="Search chapter, member or reference no."
           value={searchInput} onChange={e => setSearchInput(e.target.value)}
           maxLength={100} style={searchFieldStyle}
         />
         <select
-          aria-label="Filter by status" value={statusId}
+          data-tour="reg-status-filter" aria-label="Filter by status" value={statusId}
           onChange={e => updateStatusFilter(e.target.value)} style={filterFieldStyle}
         >
           <option value="">All statuses</option>
@@ -149,7 +149,7 @@ export function ChapterRegistrationQueue() {
               {
                 key: "ref", header: "Reference", primary: true,
                 render: r => (
-                  <Link to={`/portal/chapter-registrations/${r.registrationId}`} style={linkStyle} className="num">
+                  <Link to={`/portal/chapter-registrations/${r.registrationId}`} data-tour={r.registrationId === items[0]?.registrationId ? "reg-first-link" : undefined} style={linkStyle} className="num">
                     {r.referenceNo}
                   </Link>
                 ),

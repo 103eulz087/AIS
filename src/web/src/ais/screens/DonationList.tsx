@@ -89,7 +89,7 @@ export function DonationList({ chapterId }: { chapterId: number }) {
 
       {canCreate && (
         <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 16px 0" }}>
-          <Link to="/donations/new" style={newButtonStyle}>+ New donation</Link>
+          <Link to="/donations/new" data-tour="donations-new-button" style={newButtonStyle}>+ New donation</Link>
         </div>
       )}
 
@@ -100,7 +100,7 @@ export function DonationList({ chapterId }: { chapterId: number }) {
         />
       ) : (
         <div>
-          {items.map(d => <DonationRow key={d.donationId} donation={d} />)}
+          {items.map((d, i) => <DonationRow key={d.donationId} donation={d} first={i === 0} />)}
 
           {data && data.total > skip + items.length && (
             <div style={{ padding: 16, textAlign: "center" }}>
@@ -115,9 +115,9 @@ export function DonationList({ chapterId }: { chapterId: number }) {
   );
 }
 
-function DonationRow({ donation: d }: { donation: DonationListItem }) {
+function DonationRow({ donation: d, first }: { donation: DonationListItem; first?: boolean }) {
   return (
-    <Link to={`/donations/${d.donationId}`} style={rowStyle}>
+    <Link to={`/donations/${d.donationId}`} data-tour={first ? "donations-first-row" : undefined} style={rowStyle}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 600 }}>{d.donorName}</div>
         <div style={{ fontSize: 12, color: "var(--mute)", marginTop: 2 }}>

@@ -173,7 +173,7 @@ export function ExpenseDetail({ chapterId }: { chapterId: number }) {
       {canVoid && !data.isVoided && (
         <div style={{ padding: 16 }}>
           {!voidOpen ? (
-            <button type="button" onClick={() => setVoidOpen(true)} style={ghostButtonStyle}>
+            <button type="button" data-tour="expense-void" onClick={() => setVoidOpen(true)} style={ghostButtonStyle}>
               Void this expense
             </button>
           ) : (

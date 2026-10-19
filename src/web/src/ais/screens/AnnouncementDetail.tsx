@@ -112,8 +112,8 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
           </span>
         )}
 
-        <div style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.2, marginTop: isLiveUrgent ? 10 : 0 }}>
-          {announcement.isNational && <span style={nationalPillStyle}>National</span>}
+        <div data-tour="announcement-title" style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.2, marginTop: isLiveUrgent ? 10 : 0 }}>
+          {announcement.isNational && <span data-tour="announcement-national-pill" style={nationalPillStyle}>National</span>}
           {announcement.title}
         </div>
         <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 8 }}>
@@ -129,7 +129,7 @@ export function AnnouncementDetail({ chapterId }: { chapterId: number }) {
           </div>
         )}
 
-        <div style={{ fontSize: 14, lineHeight: 1.7, color: "var(--slate)", marginTop: 14, whiteSpace: "pre-wrap" }}>
+        <div data-tour="announcement-body" style={{ fontSize: 14, lineHeight: 1.7, color: "var(--slate)", marginTop: 14, whiteSpace: "pre-wrap" }}>
           {announcement.body}
         </div>
 

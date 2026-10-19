@@ -214,7 +214,7 @@ export function MemberSearch() {
       </p>
 
       {canManageAccounts && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+        <div data-tour="members-tabs" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
           <button
             type="button"
             onClick={() => setShowBlockedOnly(false)}
@@ -264,6 +264,7 @@ export function MemberSearch() {
             onChange={e => setInput(e.target.value)}
             placeholder="Name, member number, or mobile number…"
             autoFocus
+            data-tour="members-search"
             style={searchInputStyle}
           />
 

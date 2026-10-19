@@ -128,7 +128,7 @@ export function MemoNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="subject" style={labelStyle}>Subject</label>
         <input
-          id="subject" value={subject} onChange={e => setSubject(e.target.value)}
+          id="subject" data-tour="memo-field-subject" value={subject} onChange={e => setSubject(e.target.value)}
           placeholder="Guidelines on chapter fund handling" style={fieldStyle}
         />
 
@@ -138,7 +138,7 @@ export function MemoNew({ chapterId }: { chapterId: number }) {
           placeholder="Write the memo" style={{ ...fieldStyle, height: "auto", padding: 12, resize: "vertical" }}
         />
 
-        <p style={{ fontSize: 12, color: "var(--info)", marginTop: 14, lineHeight: 1.6 }}>
+        <p data-tour="memo-permanent-note" style={{ fontSize: 12, color: "var(--info)", marginTop: 14, lineHeight: 1.6 }}>
           A memo is numbered and permanent once published — it can never be edited or
           removed. To correct it later, publish a new memo that supersedes this one.
         </p>

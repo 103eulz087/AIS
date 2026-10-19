@@ -49,13 +49,13 @@ export function AnnouncementList({ chapterId }: { chapterId: number }) {
   const ordered = [...items].sort((a, b) => Number(b.isUrgent && !b.isWithdrawn) - Number(a.isUrgent && !a.isWithdrawn));
 
   const newButton = isOfficer
-    ? <Link to="/announcements/new" style={newButtonStyle}>+ New announcement</Link>
+    ? <Link to="/announcements/new" data-tour="announcements-new-button" style={newButtonStyle}>+ New announcement</Link>
     : undefined;
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "12px 16px 0" }}>
-        <div style={{ display: "flex", gap: 6 }}>
+        <div data-tour="notices-switcher" style={{ display: "flex", gap: 6 }}>
           <span style={chipOnStyle}>Announcements</span>
           <Link to="/memos" style={chipStyle}>Memos</Link>
         </div>
@@ -79,7 +79,7 @@ export function AnnouncementList({ chapterId }: { chapterId: number }) {
         />
       ) : (
         <div>
-          {ordered.map(a => <AnnouncementRow key={a.announcementId} announcement={a} />)}
+          {ordered.map((a, i) => <AnnouncementRow key={a.announcementId} announcement={a} first={i === 0} />)}
 
           {data && data.total > skip + items.length && (
             <div style={{ padding: 16, textAlign: "center" }}>
@@ -94,11 +94,11 @@ export function AnnouncementList({ chapterId }: { chapterId: number }) {
   );
 }
 
-function AnnouncementRow({ announcement: a }: { announcement: Announcement }) {
+function AnnouncementRow({ announcement: a, first }: { announcement: Announcement; first?: boolean }) {
   const isLiveUrgent = a.isUrgent && !a.isWithdrawn;
 
   return (
-    <Link to={`/announcements/${a.announcementId}`} style={rowStyle}>
+    <Link to={`/announcements/${a.announcementId}`} data-tour={first ? "announcements-first-row" : undefined} style={rowStyle}>
       <div style={{
         width: 38, height: 38, borderRadius: 8, flex: "none",
         display: "grid", placeItems: "center", fontFamily: "var(--f-disp)", fontSize: 16,

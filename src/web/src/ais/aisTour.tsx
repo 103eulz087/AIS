@@ -6,6 +6,7 @@ import { canApproveApplications, canFileOfficerRoster } from "@/shared/roles";
 import { useTour } from "@/shared/tour/TourProvider";
 import { useTourAutoStart } from "@/shared/tour/useTourAutoStart";
 import { AIS_TOUR_KEY, AIS_TOUR_VERSION, type TourStep } from "@/shared/tour/types";
+import { BadgeSketch, IconBadge, Pic, PhoneFrame, SketchLine, SketchRow, StepStrip } from "@/shared/tour/illustrations";
 
 interface AisTourInput {
   giftName: string | undefined;
@@ -26,6 +27,7 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
       id: "welcome", route: "/",
       title: giftName ? `Welcome, ${giftName}!` : "Welcome!",
       body: "This app is your chapter's shared books: meetings, funds, notices and your digital ID. Let's take a quick look around. It only takes a minute.",
+      illustration: <Pic><IconBadge kind="book" /><StepStrip steps={["Look around", "Learn", "Use it"]} active={0} /></Pic>,
     },
     {
       id: "home", route: "/", target: "home-greeting",
@@ -36,6 +38,7 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
       id: "notices", target: "tab-notices",
       title: "Notices",
       body: "Announcements and memos from your chapter and from the National Council show up here.",
+      illustration: <Pic><IconBadge kind="bell" tone="ink" /></Pic>,
     },
   ];
 
@@ -51,6 +54,13 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
       id: "meetings", target: "tab-meetings",
       title: "Meetings",
       body: "Meetings and who attended. Contributions are always voluntary. Give what you can, when you can.",
+      illustration: (
+        <Pic>
+          <PhoneFrame>
+            <SketchRow pill={<BadgeSketch tone="neutral">Draft</BadgeSketch>} /><SketchRow pill={<BadgeSketch tone="brass">Finalized</BadgeSketch>} /><SketchLine w="40%" />
+          </PhoneFrame>
+        </Pic>
+      ),
     });
   }
   if (isFeatureOpen("Funds")) {
@@ -71,7 +81,7 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
   steps.push({
     id: "profile", target: "profile-link",
     title: "Your profile",
-    body: "Tap your gift name up here to change your photo, password and notifications. You can also replay this tour from there.",
+    body: "Tap your gift name up here to change your photo, password and notifications. You will also find Help & guides there.",
   });
 
   if (canApprove && isFeatureOpen("ChapterAdmin")) {
@@ -91,6 +101,12 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
 
   steps.push(
     {
+      id: "help", route: "/profile", target: "help-link", waitMs: 6000,
+      title: "Help & guides",
+      body: "Want to learn how to do things? Tap Help & guides here for step-by-step walk-throughs on the real screens.",
+      illustration: <Pic><BadgeSketch tone="ok">{"\u2713"} Done</BadgeSketch><StepStrip steps={["Pick a guide", "Follow along"]} active={0} /></Pic>,
+    },
+    {
       id: "install", when: env => !env.standalone,
       title: "Keep it on your phone",
       body: (
@@ -104,7 +120,8 @@ export function buildAisTourSteps({ giftName, isFeatureOpen, canApprove, canFile
     {
       id: "done",
       title: "You're all set!",
-      body: "You can take this tour again anytime from your Profile.",
+      body: "You can take this tour again anytime from your Profile, and Help & guides is always there when you want to learn how to do something.",
+      illustration: <Pic><IconBadge kind="check" /></Pic>,
     },
   );
   return steps;

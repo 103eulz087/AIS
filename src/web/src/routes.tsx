@@ -48,6 +48,8 @@ import { CaseList } from "@/ais/screens/CaseList";
 import { CaseNew } from "@/ais/screens/CaseNew";
 import { CaseDetail } from "@/ais/screens/CaseDetail";
 import { Profile } from "@/ais/screens/Profile";
+import { Help } from "@/ais/screens/Help";
+import { PortalHelp } from "@/portal/screens/Help";
 import { DigitalId } from "@/ais/screens/DigitalId";
 import { ChatRoom } from "@/ais/screens/ChatRoom";
 import { ChatModeration } from "@/ais/screens/ChatModeration";
@@ -267,6 +269,7 @@ export const router = createBrowserRouter([
       // Self-scoped: no chapterId anywhere, the caller's own identity comes from the
       // JWT alone (ICurrentUser), so no "ForCurrentChapter" wrapper is needed here.
       { path: "profile", element: <Profile /> },
+      { path: "help", element: <Help /> },
       { path: "digital-id", element: <FeatureGate featureKey="DigitalId"><DigitalId /></FeatureGate> },
       // ChapterAdmin-only; the screens themselves gate on canApproveApplications and
       // render a plain "you don't have access" state for anyone else, same pattern
@@ -343,6 +346,8 @@ export const router = createBrowserRouter([
     path: "/portal",
     element: <RequireAuth><PortalShell /></RequireAuth>,
     children: [
+      // Help & guides: every signed-in Portal user; the page itself lists only the guides for his office.
+      { path: "help", element: <PortalHelp /> },
       { path: "chapter-registrations", element: <ChapterRegistrationQueue /> },
       { path: "chapter-registrations/:registrationId", element: <ChapterRegistrationDetail /> },
       // CouncilAdmin-only (canExportIdCards); the National ID card export. No chapterId

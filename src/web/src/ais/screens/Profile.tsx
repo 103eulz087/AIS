@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type FormEvent,
 } from "react";
@@ -399,10 +400,16 @@ export function Profile() {
         Your profile
       </h1>
 
-      <button type="button" onClick={replayTour} style={tourButtonStyle}>
-        <span aria-hidden="true" style={{ color: "var(--brass)" }}>?</span>
-        <span>Take the tour again</span>
-      </button>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+        <button type="button" data-tour="profile-tour-button" onClick={replayTour} style={{ ...tourButtonStyle, marginTop: 0 }}>
+          <span aria-hidden="true" style={{ color: "var(--brass)" }}>?</span>
+          <span>Take the tour again</span>
+        </button>
+        <Link to="/help" data-tour="help-link" style={{ ...tourButtonStyle, marginTop: 0, textDecoration: "none" }}>
+          <span aria-hidden="true" style={{ color: "var(--brass)" }}>?</span>
+          <span>Help &amp; guides</span>
+        </Link>
+      </div>
 
       {conflictNotice && (
         <div role="alert" style={conflictBannerStyle}>
@@ -418,7 +425,7 @@ export function Profile() {
           invariant #4) — never a member self-edit, no <input> here for any of them.
           Gift name, birthdate and survive-history moved into the editable form below;
           those are the member's own personal identity/history, not org state. */}
-      <div data-testid="profile-readonly">
+      <div data-testid="profile-readonly" data-tour="profile-record">
         <div style={sectionLabelStyle}>Your record</div>
         <div style={cardStyle}>
           <ReadRow label="Member number" value={data.memberNumber} mono />
@@ -433,7 +440,7 @@ export function Profile() {
       </div>
 
       <form onSubmit={e => { void handleSave(e); }}>
-        <div style={sectionLabelStyle}>Identity &amp; history</div>
+        <div data-tour="profile-details" style={sectionLabelStyle}>Identity &amp; history</div>
 
         <label htmlFor="giftName" style={labelStyle}>Gift name</label>
         <input
@@ -588,7 +595,7 @@ export function Profile() {
       </form>
 
       <div style={sectionLabelStyle}>Photo</div>
-      <div style={{ textAlign: "center", padding: "8px 0 20px" }}>
+      <div data-tour="profile-photo" style={{ textAlign: "center", padding: "8px 0 20px" }}>
         {photoLoading ? (
           <div style={avatarStyle} aria-busy="true" />
         ) : photoObjectUrl ? (
@@ -715,7 +722,7 @@ function ChangePasswordSection() {
 
   return (
     <div>
-      <div style={sectionLabelStyle}>Password</div>
+      <div data-tour="profile-password" style={sectionLabelStyle}>Password</div>
       <form onSubmit={e => { void handleSubmit(e); }}>
         <label htmlFor="currentPassword2" style={labelStyle}>Current password</label>
         <PasswordInput

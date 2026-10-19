@@ -232,7 +232,7 @@ export function MemberPaymentTagStats() {
       </p>
 
       <div style={filterGridStyle}>
-        <label style={{ ...fieldStyle, gridColumn: "1 / -1" }}>
+        <label style={{ ...fieldStyle, gridColumn: "1 / -1" }} data-tour="pay-report-search">
           <span style={labelStyle}>Search</span>
           <input
             type="search"
@@ -247,13 +247,14 @@ export function MemberPaymentTagStats() {
             first screen; the button says how many of them are in use. */}
         {narrow && (
           <button type="button" aria-expanded={filtersOpen} aria-controls="report-filters"
-            onClick={() => setFiltersOpen(o => !o)} style={{ ...filtersToggleStyle, gridColumn: "1 / -1" }}>
+            onClick={() => setFiltersOpen(o => !o)} style={{ ...filtersToggleStyle, gridColumn: "1 / -1" }}
+            data-tour="pay-report-filters-toggle">
             {filtersOpen ? "Hide filters" : "Filters & sort"}
             {activeControls > 0 && ` (${activeControls} in use)`}
           </button>
         )}
         {(!narrow || filtersOpen) && <>
-        <label style={fieldStyle}>
+        <label style={fieldStyle} data-tour="pay-report-place">
           <span style={labelStyle}>Region</span>
           <select aria-label="Region" style={controlStyle} value={filters.region}
             onChange={e => update({ region: e.target.value, province: "", city: "" })}>
@@ -277,14 +278,14 @@ export function MemberPaymentTagStats() {
             {cities.map(v => <option key={v} value={v}>{v}</option>)}
           </select>
         </label>
-        <label style={fieldStyle}>
+        <label style={fieldStyle} data-tour="pay-report-year">
           <span style={labelStyle}>Membership year</span>
           <select aria-label="Membership year" style={controlStyle} value={year}
             onChange={e => update({ year: e.target.value })}>
             {years.map(y => <option key={y} value={y}>{membershipYearLabel(y)}</option>)}
           </select>
         </label>
-        <label style={fieldStyle}>
+        <label style={fieldStyle} data-tour="pay-report-sort">
           <span style={labelStyle}>Sort by</span>
           <select aria-label="Sort by" style={controlStyle} value={filters.sort}
             onChange={e => update({ sort: e.target.value })}>
@@ -294,7 +295,7 @@ export function MemberPaymentTagStats() {
         </>}
       </div>
 
-      <div style={chipRowStyle} role="group" aria-label="Show chapters">
+      <div style={chipRowStyle} role="group" aria-label="Show chapters" data-tour="pay-report-chips">
         {SHOW_OPTIONS.map(o => (
           <button key={o.value} type="button" aria-pressed={filters.show === o.value}
             onClick={() => update({ show: o.value })} style={chipStyle(filters.show === o.value)}>
@@ -303,7 +304,7 @@ export function MemberPaymentTagStats() {
         ))}
       </div>
 
-      <div style={summaryRowStyle}>
+      <div style={summaryRowStyle} data-tour="pay-report-tiles">
         <SummaryTile label="Total members" value={String(totals.totalMembers)} color="var(--ink)" onOpen={() => openTile(null)} />
         <SummaryTile label="Paid" value={String(totals.paidCount)} color="var(--in)" onOpen={() => openTile("Paid")} />
         <SummaryTile label="Free" value={String(totals.freeCount)} color="var(--info)" onOpen={() => openTile("Free")} />
@@ -317,7 +318,7 @@ export function MemberPaymentTagStats() {
         </span>
         <span style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {anyFilter && <button type="button" onClick={clear} style={buttonStyle}>Clear filters</button>}
-          <button type="button" disabled={rows.length === 0} style={buttonStyle}
+          <button type="button" disabled={rows.length === 0} style={buttonStyle} data-tour="pay-report-csv"
             onClick={() => downloadCsv(buildReportCsv(rows), `payment-report-${year}.csv`)}>
             Download CSV
           </button>
@@ -333,7 +334,7 @@ export function MemberPaymentTagStats() {
           action={<button type="button" onClick={clear} style={buttonStyle}>Clear filters</button>}
         />
       ) : (
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 12 }} data-tour="pay-report-table">
           <ResponsiveTable
             rows={rows}
             rowKey={r => r.chapterId}

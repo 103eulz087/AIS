@@ -37,13 +37,13 @@ export function MemoList({ chapterId }: { chapterId: number }) {
   const items = data?.items ?? [];
 
   const newButton = isOfficer
-    ? <Link to="/memos/new" style={newButtonStyle}>+ New memo</Link>
+    ? <Link to="/memos/new" data-tour="memos-new-button" style={newButtonStyle}>+ New memo</Link>
     : undefined;
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "12px 16px 0" }}>
-        <div style={{ display: "flex", gap: 6 }}>
+        <div data-tour="notices-switcher" style={{ display: "flex", gap: 6 }}>
           <Link to="/announcements" style={chipStyle}>Announcements</Link>
           <span style={chipOnStyle}>Memos</span>
         </div>
@@ -57,8 +57,8 @@ export function MemoList({ chapterId }: { chapterId: number }) {
         />
       ) : (
         <div>
-          {items.map(m => (
-            <Link key={m.memoId} to={`/memos/${m.memoId}`} style={rowStyle}>
+          {items.map((m, i) => (
+            <Link key={m.memoId} to={`/memos/${m.memoId}`} data-tour={i === 0 ? "memos-first-row" : undefined} style={rowStyle}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div className="num" style={{ fontSize: 11, color: "var(--brass-dk)", letterSpacing: ".04em" }}>
                   {m.memoNumber}

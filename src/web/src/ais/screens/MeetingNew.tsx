@@ -70,37 +70,37 @@ export function MeetingNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="subject" style={labelStyle}>Subject / agenda title</label>
         <input
-          id="subject" value={subject} onChange={e => setSubject(e.target.value)}
+          id="subject" data-tour="meeting-field-subject" value={subject} onChange={e => setSubject(e.target.value)}
           placeholder="Regular Chapter Meeting — September" style={fieldStyle}
         />
 
         <label htmlFor="meetingDate" style={labelStyle}>Meeting date</label>
         <input
-          id="meetingDate" type="date" value={meetingDate}
+          id="meetingDate" data-tour="meeting-field-date" type="date" value={meetingDate}
           onChange={e => setMeetingDate(e.target.value)} style={fieldStyle}
         />
 
         <label htmlFor="location" style={labelStyle}>Venue</label>
         <input
-          id="location" value={location} onChange={e => setLocation(e.target.value)}
+          id="location" data-tour="meeting-field-venue" value={location} onChange={e => setLocation(e.target.value)}
           placeholder="Barangay Hall, San Isidro" style={fieldStyle}
         />
 
         <label htmlFor="body" style={labelStyle}>Agenda / notes</label>
         <textarea
-          id="body" value={body} onChange={e => setBody(e.target.value)} rows={6}
+          id="body" data-tour="meeting-field-notes" value={body} onChange={e => setBody(e.target.value)} rows={6}
           placeholder="1. Reading of previous minutes&#10;2. Treasurer's report&#10;3. ..."
           style={{ ...fieldStyle, height: "auto", padding: 12, resize: "vertical" }}
         />
 
-        <p style={{ fontSize: 12, color: "var(--info)", marginTop: 14, lineHeight: 1.6 }}>
+        <p data-tour="meeting-draft-note" style={{ fontSize: 12, color: "var(--info)", marginTop: 14, lineHeight: 1.6 }}>
           Attendance and contributions are recorded separately, after the meeting. Saving here
           creates a draft the whole chapter can already see.
         </p>
 
         {error && <p role="alert" style={errorStyle}>{error}</p>}
 
-        <button type="submit" disabled={submitting} style={{ ...buttonStyle, opacity: submitting ? 0.7 : 1 }}>
+        <button type="submit" data-tour="meeting-save" disabled={submitting} style={{ ...buttonStyle, opacity: submitting ? 0.7 : 1 }}>
           {submitting ? "Saving…" : "Save meeting"}
         </button>
       </form>

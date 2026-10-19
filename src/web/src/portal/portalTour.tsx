@@ -1,4 +1,9 @@
+import { createContext } from "react";
 import type { TourStep } from "@/shared/tour/types";
+import { BadgeSketch, IconBadge, Pic, PhoneFrame, SketchButton, SketchLine, SketchRow, StepStrip } from "@/shared/tour/illustrations";
+
+/** Lets the Help page (a child of the shell) replay the welcome tour, which only the shell can build. */
+export const PortalWelcomeContext = createContext<(() => void) | null>(null);
 
 /** Tour target for a Portal nav link, from its path: "/portal/council-permissions" -> "nav-council-permissions". */
 export function navTourTarget(to: string): string {
@@ -54,11 +59,19 @@ export function buildPortalTourSteps({ giftName, visibleLinks, canSettings }: Po
       id: "welcome",
       title: giftName ? `Welcome, ${giftName}!` : "Welcome!",
       body: "The Council Portal is where councils approve chapters, manage officers and see their jurisdiction. Here is a short tour of the menu.",
+      illustration: <Pic><IconBadge kind="book" /><StepStrip steps={["Menu", "Pick a page", "Do the work"]} active={0} /></Pic>,
     },
     {
       id: "menu-phone", target: "portal-menu-button", when: env => env.narrow,
       title: "The menu",
       body: "Tap this button to open the menu. Everything in the Portal is reached from there. Next, a look at what is inside.",
+      illustration: (
+        <Pic>
+          <PhoneFrame highlight={{ left: 2, top: 2, width: 22, height: 16 }}>
+            <SketchLine w="60%" strong /><SketchRow /><SketchRow />
+          </PhoneFrame>
+        </Pic>
+      ),
     },
     {
       id: "menu-desktop", target: "portal-sidebar", when: env => !env.narrow,
@@ -73,10 +86,20 @@ export function buildPortalTourSteps({ giftName, visibleLinks, canSettings }: Po
     steps.push({ id: PORTAL_LINK_STEP_PREFIX + navTourTarget(l.to), target: navTourTarget(l.to), title: l.title, body: l.body });
   }
 
+  // Everyone with a menu has Help & guides, so this step is never filtered. It sits in the
+  // menu's footer (the "link-" prefix keeps the phone drawer open for it).
+  steps.push({
+    id: PORTAL_LINK_STEP_PREFIX + "nav-help", target: "nav-help",
+    title: "Want to learn how to do things?",
+    body: "Help & guides has step-by-step walk-throughs on the real screens. Pick one and we will show you where to tap.",
+    illustration: <Pic><SketchButton>HELP &amp; GUIDES</SketchButton><BadgeSketch tone="ok">{"\u2713"} Done</BadgeSketch></Pic>,
+  });
+
   steps.push({
     id: "done",
     title: "You're all set!",
     body: "You can take this tour again anytime. Look for “Take the tour” at the bottom of the menu.",
+    illustration: <Pic><IconBadge kind="check" /></Pic>,
   });
   return steps;
 }

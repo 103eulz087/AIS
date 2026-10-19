@@ -167,17 +167,17 @@ export function AnnouncementNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="title" style={labelStyle}>Title</label>
         <input
-          id="title" value={title} onChange={e => setTitle(e.target.value)}
+          id="title" data-tour="announcement-field-title" value={title} onChange={e => setTitle(e.target.value)}
           placeholder="General assembly next Sunday" style={fieldStyle}
         />
 
         <label htmlFor="body" style={labelStyle}>Body</label>
         <textarea
-          id="body" value={body} onChange={e => setBody(e.target.value)} rows={6}
+          id="body" data-tour="announcement-field-body" value={body} onChange={e => setBody(e.target.value)} rows={6}
           placeholder="Write the announcement" style={{ ...fieldStyle, height: "auto", padding: 12, resize: "vertical" }}
         />
 
-        <label style={toggleRowStyle}>
+        <label data-tour="announcement-urgent" style={toggleRowStyle}>
           <input type="checkbox" checked={isUrgent} onChange={e => setIsUrgent(e.target.checked)} />
           <span>This is urgent</span>
         </label>
@@ -219,13 +219,13 @@ export function AnnouncementNew({ chapterId }: { chapterId: number }) {
 
         <label htmlFor="expiryDate" style={labelStyle}>Expires (optional)</label>
         <input
-          id="expiryDate" type="date" value={expiryDate}
+          id="expiryDate" data-tour="announcement-field-expiry" type="date" value={expiryDate}
           onChange={e => setExpiryDate(e.target.value)} style={fieldStyle}
         />
 
         {error && <p role="alert" style={errorStyle}>{error}</p>}
 
-        <button type="submit" disabled={submitting} style={{ ...buttonStyle, opacity: submitting ? 0.7 : 1 }}>
+        <button type="submit" data-tour="announcement-post" disabled={submitting} style={{ ...buttonStyle, opacity: submitting ? 0.7 : 1 }}>
           {submitting ? "Saving…" : isEdit ? "Save changes" : "Post announcement"}
         </button>
       </form>

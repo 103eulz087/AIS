@@ -183,7 +183,7 @@ export function CouncilPermissions() {
       </p>
 
       {seats.length > 1 && (
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginTop: 16 }} data-tour="perm-council-picker">
           <label htmlFor="councilPicker" style={labelStyle}>Council</label>
           <select
             id="councilPicker" value={activeCouncilId}
@@ -244,10 +244,11 @@ function GridView({
 }) {
   const { header, offices, permissions, history } = grid;
   const permissionsByKey = new Map(permissions.map(p => [p.permissionKey, p]));
+  const firstEditableOfficeId = offices.find(o => !o.isPresiding)?.id;
 
   return (
     <div style={{ marginTop: 20 }}>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+      <div data-tour="perm-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 18, letterSpacing: ".02em" }}>
           {header.councilName}{header.isNational && <span style={pillStyle}>National</span>}
         </div>
@@ -267,6 +268,7 @@ function GridView({
             permissions={permissions}
             grid={grid}
             canEdit={header.canEdit}
+            firstEditable={office.id === firstEditableOfficeId}
             effectiveGranted={effectiveGranted}
             onToggle={onToggle}
           />
@@ -274,7 +276,7 @@ function GridView({
       </div>
 
       {header.canEdit && (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20 }} data-tour="perm-save">
           {!confirming ? (
             <button
               type="button" disabled={pendingChanges.length === 0}
@@ -334,7 +336,7 @@ function GridView({
         </div>
       )}
 
-      <div style={{ marginTop: 28 }}>
+      <div style={{ marginTop: 28 }} data-tour="perm-history">
         <div style={sectionLabelStyle}>Recent changes</div>
         {history.length === 0 ? (
           <p style={{ fontSize: 12.5, color: "var(--mute)", lineHeight: 1.6 }}>
@@ -365,16 +367,20 @@ function GridView({
   );
 }
 
-function OfficeCard({ office, permissions, grid, canEdit, effectiveGranted, onToggle }: {
+function OfficeCard({ office, permissions, grid, canEdit, firstEditable, effectiveGranted, onToggle }: {
   office: CouncilPermissionOffice;
   permissions: CouncilPermissionKey[];
   grid: CouncilPermissionGrid;
   canEdit: boolean;
+  firstEditable: boolean;
   effectiveGranted: (officeId: number, permissionKey: string) => boolean;
   onToggle: (officeId: number, permissionKey: string) => void;
 }) {
+  const firstRequiresKey = permissions.find(p => p.requiresKey)?.permissionKey;
+  const firstNationalKey = permissions.find(p => p.isNationalOnly)?.permissionKey;
   return (
-    <div style={cardStyle}>
+    <div style={cardStyle}
+      data-tour={office.isPresiding ? "perm-president" : firstEditable ? "perm-office-first" : undefined}>
       <div style={{ fontFamily: "var(--f-disp)", fontSize: 15, letterSpacing: ".02em" }}>
         {office.name}
       </div>
@@ -400,7 +406,9 @@ function OfficeCard({ office, permissions, grid, canEdit, effectiveGranted, onTo
                 : null;
 
               return (
-                <div key={permission.permissionKey} style={permissionRowStyle}>
+                <div key={permission.permissionKey} style={permissionRowStyle}
+                  data-tour={firstEditable && permission.permissionKey === firstRequiresKey ? "perm-requires-first"
+                    : firstEditable && permission.permissionKey === firstNationalKey ? "perm-national-first" : undefined}>
                   <label style={permissionLabelStyle}>
                     <input
                       type="checkbox"

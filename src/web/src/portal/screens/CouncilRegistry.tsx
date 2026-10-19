@@ -80,7 +80,7 @@ export function CouncilRegistry() {
     <div>
       <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".03em" }}>Council registry</h1>
 
-      <div style={{ padding: "6px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 2, fontSize: 12.5 }}>
+      <div data-tour="council-crumbs" style={{ padding: "6px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 2, fontSize: 12.5 }}>
         <button type="button" onClick={goHome} style={crumbButtonStyle}>Your council</button>
         {trail.map((c, i) => (
           <span key={c.councilId} style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -95,7 +95,7 @@ export function CouncilRegistry() {
       <CouncilStateCard row={focus} />
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "16px 0" }}>
-        <Link to={`/portal/councils/${focus.councilId}`} style={primaryLinkStyle}>View / manage officers</Link>
+        <Link to={`/portal/councils/${focus.councilId}`} style={primaryLinkStyle} data-tour="council-manage-link">View / manage officers</Link>
         {canSeat && (
           <button type="button" onClick={() => setShowCreate(s => !s)} style={ghostButtonStyle}>
             {showCreate ? "Cancel" : "Create a council beneath this one"}
@@ -120,7 +120,8 @@ export function CouncilRegistry() {
             rowKey={r => r.councilId}
             columns={[
               { key: "council", header: "Council", primary: true,
-                render: r => <button type="button" onClick={() => drillInto(r)} style={linkButtonStyle}>{r.councilName}</button> },
+                render: r => <button type="button" onClick={() => drillInto(r)} style={linkButtonStyle}
+                  data-tour={r.councilId === children[0]?.councilId ? "council-child-first" : undefined}>{r.councilName}</button> },
               { key: "level", header: "Level", render: r => r.levelName },
               { key: "state", header: "State", render: r => <StateLabel row={r} /> },
               { key: "chapters", header: "Chapters", numeric: true, render: r => r.directChapterCount },
@@ -135,7 +136,7 @@ export function CouncilRegistry() {
 
 function CouncilStateCard({ row }: { row: CouncilRegistry }) {
   return (
-    <div style={cardStyle}>
+    <div data-tour="council-state" style={cardStyle}>
       <div style={{ fontFamily: "var(--f-disp)", fontSize: 16, letterSpacing: ".02em", overflowWrap: "anywhere" }}>{row.councilName}</div>
       <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 2 }}>{row.levelName}</div>
       <div style={{ marginTop: 10 }}><StateLabel row={row} detailed /></div>

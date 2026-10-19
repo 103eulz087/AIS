@@ -170,7 +170,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
         <div role="alert" style={conflictBannerStyle}>{conflictNotice}</div>
       )}
 
-      <div style={{ padding: 16 }}>
+      <div data-tour="meeting-header" style={{ padding: 16 }}>
         <div style={{ fontFamily: "var(--f-disp)", fontSize: 22, lineHeight: 1.15, letterSpacing: ".02em" }}>
           {data.subject}
         </div>
@@ -216,7 +216,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
         />
       ) : (
         <div>
-          {attendance.map(a => {
+          {attendance.map((a, idx) => {
             const edit = rows[a.memberId];
             const effectiveStatusId = canEdit ? (edit?.attendanceStatusId ?? null) : a.attendanceStatusId;
             const effectiveAmount = canEdit
@@ -227,7 +227,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
               : "Not recorded";
 
             return (
-              <div key={a.memberId} style={attendanceRowStyle}>
+              <div key={a.memberId} data-tour={idx === 0 ? "meeting-first-row" : undefined} style={attendanceRowStyle}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13.5, fontWeight: 600 }}>{a.giftName}</div>
                   <div className="num" style={{ fontSize: 11, color: "var(--mute)", marginTop: 2 }}>
@@ -236,7 +236,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
                 </div>
 
                 {canEdit ? (
-                  <div style={{ display: "flex", gap: 4, flex: "none" }}>
+                  <div data-tour={idx === 0 ? "meeting-status-buttons" : undefined} style={{ display: "flex", gap: 4, flex: "none" }}>
                     {ATTENDANCE_STATUSES.map(s => (
                       <button
                         key={s.id}
@@ -261,6 +261,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
 
                 <AmountCell
                   memberId={a.memberId}
+                  tourTarget={idx === 0 ? "meeting-amount-first" : undefined}
                   editable={canEdit}
                   value={effectiveAmount}
                   onChange={v => setRows(r => ({
@@ -278,7 +279,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
             );
           })}
 
-          <p style={noteStyle}>
+          <p data-tour="meeting-voluntary-note" style={noteStyle}>
             A dash means nobody has recorded him yet for this meeting. Contributions are
             voluntary — an amount of ₱0.00 is a normal, complete record, not a missing one.
           </p>
@@ -287,7 +288,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
 
       {!isFinalized && isOfficer && (
         <div style={{ padding: 16 }}>
-          <div style={totalCardStyle}>
+          <div data-tour="meeting-total" style={totalCardStyle}>
             <div style={{ fontSize: 11, color: "var(--mute)" }}>Total to post</div>
             <div className="num in" style={{ fontSize: 18, fontWeight: 600 }}>{peso(totalToPost)}</div>
           </div>
@@ -295,7 +296,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
           {saveError && <p role="alert" style={errorTextStyle}>{saveError}</p>}
 
           <button
-            type="button" disabled={saving}
+            type="button" disabled={saving} data-tour="meeting-save-draft"
             onClick={() => { void persist(false); }}
             style={{ ...secondaryButtonStyle, opacity: saving ? 0.7 : 1 }}
           >
@@ -305,6 +306,7 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
           {isAdmin && !confirmingFinalize && (
             <button
               type="button"
+              data-tour="meeting-finalize"
               onClick={() => setConfirmingFinalize(true)}
               style={primaryButtonStyle}
             >
@@ -399,8 +401,8 @@ export function MeetingDetail({ chapterId }: { chapterId: number }) {
   );
 }
 
-function AmountCell({ memberId, value, editable, onChange }: {
-  memberId: number; value: string; editable: boolean; onChange?: (value: string) => void;
+function AmountCell({ memberId, value, editable, onChange, tourTarget }: {
+  memberId: number; value: string; editable: boolean; onChange?: (value: string) => void; tourTarget?: string;
 }) {
   // One render path for every amount, regardless of value: a ₱0 row and a ₱300 row
   // must be structurally identical. Never branch this component on the amount itself.
@@ -408,6 +410,7 @@ function AmountCell({ memberId, value, editable, onChange }: {
     return (
       <input
         data-testid={`amount-${memberId}`}
+        data-tour={tourTarget}
         className="num"
         inputMode="decimal"
         placeholder="0.00"

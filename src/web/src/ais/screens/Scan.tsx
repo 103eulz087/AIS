@@ -172,7 +172,7 @@ export function Scan() {
     return (
       <div style={pageStyle}>
         <h1 style={titleStyle}>Scan an ID</h1>
-        <div style={stageStyle}>
+        <div data-tour="scan-viewfinder" style={stageStyle}>
           {checking ? (
             <div style={checkingBoxStyle}>Checking…</div>
           ) : (

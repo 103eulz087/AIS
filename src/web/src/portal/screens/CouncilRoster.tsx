@@ -88,6 +88,9 @@ export function CouncilRoster() {
 
   const currentSeats = roster.seats.filter(s => s.isCurrent);
   const endedSeats = roster.seats.filter(s => !s.isCurrent);
+  // Only the first of each gets a guide marker (data-tour).
+  const firstSeatedRoleId = COUNCIL_OFFICES.map(o => currentSeats.find(s => s.councilOfficeId === o.councilOfficeId)).find(Boolean)?.memberRoleId;
+  const firstVacantOfficeId = COUNCIL_OFFICES.find(o => !currentSeats.some(s => s.councilOfficeId === o.councilOfficeId))?.councilOfficeId;
 
   return (
     <div>
@@ -95,7 +98,7 @@ export function CouncilRoster() {
       <p style={{ fontSize: 13, color: "var(--mute)", marginTop: 4 }}>{focus.levelName}</p>
 
       {!focus.hasSeatedOfficers && (
-        <div style={{ ...cardStyle, borderColor: "var(--warn)" }}>
+        <div data-tour="roster-dormant" style={{ ...cardStyle, borderColor: "var(--warn)" }}>
           <p style={{ fontSize: 13, color: "var(--slate)", lineHeight: 1.6, margin: 0 }}>
             {focus.neverConstituted
               ? "No officers seated yet — this council was created automatically so that a chapter had somewhere to belong."
@@ -146,7 +149,7 @@ export function CouncilRoster() {
         </div>
       )}
 
-      <div style={sectionLabelStyle}>Officers</div>
+      <div style={sectionLabelStyle} data-tour="roster-officers">Officers</div>
       {COUNCIL_OFFICES.map(office => {
         const seat = currentSeats.find(s => s.councilOfficeId === office.councilOfficeId);
         const override = seat ? roster.overrides.find(o => o.memberRoleId === seat.memberRoleId) : undefined;
@@ -177,11 +180,13 @@ export function CouncilRoster() {
               </div>
               {canSeat && (
                 seat ? (
-                  <button type="button" onClick={() => { setUnseatingRoleId(seat.memberRoleId); setUnseatReason(""); setUnseatError(null); }} style={ghostButtonStyle}>
+                  <button type="button" onClick={() => { setUnseatingRoleId(seat.memberRoleId); setUnseatReason(""); setUnseatError(null); }} style={ghostButtonStyle}
+                    data-tour={seat.memberRoleId === firstSeatedRoleId ? "roster-unseat-first" : undefined}>
                     Unseat
                   </button>
                 ) : (
-                  <button type="button" onClick={() => setSeatingOfficeId(office.councilOfficeId)} style={ghostButtonStyle}>
+                  <button type="button" onClick={() => setSeatingOfficeId(office.councilOfficeId)} style={ghostButtonStyle}
+                    data-tour={office.councilOfficeId === firstVacantOfficeId ? "roster-seat-first" : undefined}>
                     Seat someone
                   </button>
                 )
@@ -238,7 +243,7 @@ export function CouncilRoster() {
 
       {roster.overrides.length > 0 && (
         <>
-          <div style={sectionLabelStyle}>Outside-jurisdiction seatings on record</div>
+          <div style={sectionLabelStyle} data-tour="roster-overrides">Outside-jurisdiction seatings on record</div>
           <p style={{ fontSize: 12, color: "var(--mute)", marginBottom: 8, lineHeight: 1.6 }}>
             A permanent record — never a waiver, never removed, regardless of whether the seat itself has
             since ended.

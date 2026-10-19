@@ -15,7 +15,7 @@ export function FundsTabs({ active }: { active: "ledger" | "activities" | "expen
     { key: "donations", to: "/donations", label: "Donations" },
   ];
   return (
-    <div style={{ display: "flex", gap: 6, padding: "12px 16px 0", flexWrap: "wrap" }}>
+    <div data-tour="funds-tabs" style={{ display: "flex", gap: 6, padding: "12px 16px 0", flexWrap: "wrap" }}>
       {tabs.map(t => t.key === active
         ? <span key={t.key} style={chipOnStyle}>{t.label}</span>
         : <Link key={t.key} to={t.to} style={chipStyle}>{t.label}</Link>)}

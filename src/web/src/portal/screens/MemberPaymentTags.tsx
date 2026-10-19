@@ -191,7 +191,7 @@ export function MemberPaymentTags() {
         </p>
       )}
 
-      <div style={tabRowStyle}>
+      <div style={tabRowStyle} data-tour="pay-tabs">
         <button type="button" onClick={() => switchMode("chapter")} style={tabStyle(mode === "chapter")}>
           By chapter
         </button>
@@ -210,6 +210,7 @@ export function MemberPaymentTags() {
           onChange={e => setInput(e.target.value)}
           placeholder={mode === "chapter" ? "Chapter name…" : "Member name or number…"}
           autoFocus
+          data-tour="pay-search"
           style={searchInputStyle}
         />
       )}
@@ -220,7 +221,7 @@ export function MemberPaymentTags() {
         </h2>
       )}
 
-      <div style={statusFilterRowStyle}>
+      <div style={statusFilterRowStyle} data-tour="pay-status-filter">
         {(["All", "Paid", "Free", "Unpaid"] as const).map(option => (
           <button
             key={option}

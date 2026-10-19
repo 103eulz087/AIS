@@ -69,7 +69,7 @@ export function ActivityNew({ chapterId }: { chapterId: number }) {
       <form onSubmit={handleSubmit}>
         <label htmlFor="name" style={labelStyle}>Activity name</label>
         <input
-          id="name" value={name} onChange={e => setName(e.target.value)}
+          id="name" data-tour="activity-field-name" value={name} onChange={e => setName(e.target.value)}
           placeholder="Barangay Coastal Clean-Up Drive" style={fieldStyle}
         />
 
