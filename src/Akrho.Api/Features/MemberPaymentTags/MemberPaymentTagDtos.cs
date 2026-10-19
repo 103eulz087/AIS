@@ -27,3 +27,13 @@ public sealed record MemberPaymentTagResultDto(int MemberId, string Status, int 
 public sealed record MemberPaymentTagStatsDto(
     int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
     int TotalMembers, int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);
+
+/// <summary>One member behind a Payment report number (GET /api/member-payment-tags/report-members).
+/// TaggedDateUtc is when he was marked Paid or Free — null when Unpaid. No contact details.</summary>
+public sealed record MemberPaymentReportMemberDto(
+    int MemberId, string MemberNumber, string GiftName, string FullName,
+    int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
+    string PaymentStatus, DateTime? TaggedDateUtc, string? TaggedByGiftName, int MembershipYear);
+
+/// <summary>A page of <see cref="MemberPaymentReportMemberDto"/> plus how many match in all.</summary>
+public sealed record MemberPaymentReportPageDto(IReadOnlyList<MemberPaymentReportMemberDto> Items, int Total);

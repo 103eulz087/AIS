@@ -31,6 +31,20 @@ export function shortDate(iso: string | null | undefined): string {
   });
 }
 
+/** "Oct 19, 2026" in Manila time — for "Paid on …" lines. */
+export function mediumDate(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: MANILA, day: "numeric", month: "short", year: "numeric",
+  });
+}
+
+/** "2026-10-19" in Manila time — for CSV files. */
+export function isoDateManila(iso: string | null | undefined): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("en-CA", { timeZone: MANILA });
+}
+
 export function shortTime(iso: string | null | undefined): string {
   if (!iso) return "—";
   return new Date(iso).toLocaleTimeString("en-PH", {

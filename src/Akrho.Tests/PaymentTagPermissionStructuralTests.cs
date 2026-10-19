@@ -67,4 +67,18 @@ public class PaymentTagPermissionStructuralTests
         Read("db", "procs", "usp_MemberPaymentTag_GetReport.sql").Should().Contain(
             "SELECT  ch.ChapterId, ch.ChapterName,\n            pl.RegionName, pl.ProvinceName, pl.CityName,\n            k.TotalMembers, k.PaidCount, k.FreeCount, k.UnpaidCount,");
     }
+
+    [Fact]
+    public void Report_drill_down_needs_View_payment_tags_and_never_returns_contact_details()
+    {
+        var proc = Read("db", "procs", "usp_MemberPaymentTag_ListForReport.sql");
+        proc.Should().Contain("sp.CouncilId = @NationalCouncilId AND sp.PermissionKey = N'MemberPaymentTag.Read'");
+        var select = proc[proc.LastIndexOf("SELECT  MemberId, MemberNumber", StringComparison.Ordinal)..];
+        select.Should().NotContain("MobileNo").And.NotContain("Email").And.NotContain("Address");
+        // Same counting rule as the report, so the list adds up to the number clicked.
+        proc.Should().Contain("CASE la.ActionType WHEN 'Tagged' THEN N'Paid' WHEN 'Free' THEN N'Free' ELSE N'Unpaid' END");
+        var repo = Read("src", "Akrho.Infrastructure", "Repositories", "MemberPaymentTagRepository.cs");
+        repo.Should().Contain("\"dbo.usp_MemberPaymentTag_ListForReport\"");
+        select.Should().Contain("SELECT  MemberId, MemberNumber, GiftName, FullName,\n            ChapterId, ChapterName, RegionName, ProvinceName, CityName,\n            PaymentStatus, TaggedDate, TaggedByGiftName,");
+    }
 }

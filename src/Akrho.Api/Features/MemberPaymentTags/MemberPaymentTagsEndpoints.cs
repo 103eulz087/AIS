@@ -28,6 +28,7 @@ public static class MemberPaymentTagsEndpoints
         g.MapGet("/members", ListMembers).WithName("ListMemberPaymentTags");
         g.MapPost("/members/{memberId:int}", SetMemberPaymentTag).WithName("SetMemberPaymentTag");
         g.MapGet("/stats", GetStats).WithName("GetMemberPaymentTagStats");
+        g.MapGet("/report-members", ListReportMembers).WithName("ListMemberPaymentReportMembers");
 
         return app;
     }
@@ -88,6 +89,45 @@ public static class MemberPaymentTagsEndpoints
                     TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden),
                 _ => TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status400BadRequest)
             };
+        }
+    }
+
+    /// <summary>
+    /// The members behind a Payment report number: ?status=Paid|Free|Unpaid (none = all),
+    /// ?chapterIds=1,2,3 (the chapters the report is showing; none = all), ?search=, year and
+    /// paging. Names need "View payment tags" — the procedure checks it (51911 → 403).
+    /// </summary>
+    private static async Task<Results<Ok<MemberPaymentReportPageDto>, ProblemHttpResult>> ListReportMembers(
+        IMemberPaymentTagRepository repo, ICurrentUser caller, CancellationToken ct,
+        int? membershipYear, string? status, string? chapterIds, string? search,
+        int skip = 0, int take = 50)
+    {
+        // A comma-separated list of chapter ids and nothing else — the procedure parses it.
+        if (chapterIds is { Length: > 4000 } || (chapterIds is not null && chapterIds.Any(c => c != ',' && !char.IsAsciiDigit(c))))
+            return TypedResults.Problem(detail: "The chapter list is not valid.", statusCode: StatusCodes.Status400BadRequest);
+
+        try
+        {
+            var rows = await repo.ListForReportAsync(
+                caller.MemberId, membershipYear, string.IsNullOrEmpty(chapterIds) ? null : chapterIds,
+                string.IsNullOrWhiteSpace(status) ? null : status, search, skip, take, ct);
+            var items = rows.Select(r => new MemberPaymentReportMemberDto(
+                    r.MemberId, r.MemberNumber, r.GiftName, r.FullName,
+                    r.ChapterId, r.ChapterName, r.RegionName, r.ProvinceName, r.CityName,
+                    r.PaymentStatus,
+                    r.TaggedDate is { } d ? DateTime.SpecifyKind(d, DateTimeKind.Utc) : null,
+                    r.TaggedByGiftName, r.MembershipYear))
+                .ToList();
+            return TypedResults.Ok(new MemberPaymentReportPageDto(items, rows.Count > 0 ? rows[0].TotalCount : 0));
+        }
+        catch (MemberPaymentTagException ex)
+        {
+            return TypedResults.Problem(detail: ex.Message, statusCode: ex.Category switch
+            {
+                MemberPaymentTagErrorCategory.Forbidden => StatusCodes.Status403Forbidden,
+                MemberPaymentTagErrorCategory.NotFound => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status400BadRequest,
+            });
         }
     }
 

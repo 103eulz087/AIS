@@ -60,8 +60,23 @@ public sealed record MemberPaymentTagStatsRow(
     int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
     int TotalMembers, int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);
 
+/// <summary>One row of usp_MemberPaymentTag_ListForReport — a member behind a Payment report
+/// number. TaggedDate is when he was marked Paid or Free (null when Unpaid). Column order
+/// matches the procedure exactly.</summary>
+public sealed record MemberPaymentReportMemberRow(
+    int MemberId, string MemberNumber, string GiftName, string FullName,
+    int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
+    string PaymentStatus, DateTime? TaggedDate, string? TaggedByGiftName,
+    int MembershipYear, int TotalCount);
+
 public interface IMemberPaymentTagRepository
 {
+    /// <summary>The members behind a Payment report number (usp_MemberPaymentTag_ListForReport).
+    /// Needs "View payment tags" on a National seat; throws <see cref="MemberPaymentTagException"/>.</summary>
+    Task<IReadOnlyList<MemberPaymentReportMemberRow>> ListForReportAsync(
+        int requestingMemberId, int? membershipYear, string? chapterIds, string? statusFilter,
+        string? search, int skip, int take, CancellationToken ct);
+
     /// <summary>National Council only. Either <paramref name="chapterId"/> (that
     /// chapter's full roster) or <paramref name="search"/> (a direct, national-wide
     /// member search by gift name/legal name/member number) must be given — both may be
@@ -147,6 +162,30 @@ public sealed class MemberPaymentTagRepository(ISqlConnectionFactory factory) : 
             var rows = await conn.QueryAsync<MemberPaymentTagStatsRow>(new CommandDefinition(
                 "dbo.usp_MemberPaymentTag_GetReport",
                 new { RequestingMemberId = requestingMemberId, MembershipYear = membershipYear },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+            return rows.AsList();
+        }
+        catch (SqlException ex) when (MemberPaymentTagErrors.IsKnown(ex.Number))
+        {
+            throw new MemberPaymentTagException(ex.Number, ex.Message);
+        }
+    }
+
+    public async Task<IReadOnlyList<MemberPaymentReportMemberRow>> ListForReportAsync(
+        int requestingMemberId, int? membershipYear, string? chapterIds, string? statusFilter,
+        string? search, int skip, int take, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            var rows = await conn.QueryAsync<MemberPaymentReportMemberRow>(new CommandDefinition(
+                "dbo.usp_MemberPaymentTag_ListForReport",
+                new
+                {
+                    RequestingMemberId = requestingMemberId, MembershipYear = membershipYear,
+                    ChapterIds = chapterIds, StatusFilter = statusFilter, Search = search,
+                    Skip = skip, Take = take
+                },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
             return rows.AsList();
         }

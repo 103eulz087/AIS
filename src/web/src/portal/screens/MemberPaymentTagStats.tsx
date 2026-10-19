@@ -4,10 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { api } from "@/shared/api";
 import { useAuth } from "@/shared/auth";
-import { canViewPaymentReport } from "@/shared/roles";
+import { canViewPaymentReport, canViewPaymentTags } from "@/shared/roles";
 import { membershipYearLabel } from "@/shared/format";
 import { ResponsiveTable, useIsNarrow } from "../responsive";
 import type { MemberPaymentTagStats } from "@/shared/types";
+import { csvField, downloadCsv, placeLabel } from "./paymentReportUtils";
+import { PaymentMemberList, type PaymentStatus } from "./PaymentMemberList";
 
 /**
  * The Paid/Unpaid/Free report — one row per chapter, counting its active members by
@@ -39,12 +41,7 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "members", label: "Most members" },
 ];
 
-/** "Iligan City Council" -> "Iligan City". */
-export function placeLabel(n: string | null): string | null {
-  if (!n) return null;
-  const t = n.replace(/\s+Council$/i, "").trim();
-  return t.length > 0 ? t : null;
-}
+export { placeLabel };
 
 export function percentSettled(r: { totalMembers: number; paidCount: number; freeCount: number }): number {
   return r.totalMembers > 0 ? Math.round(((r.paidCount + r.freeCount) / r.totalMembers) * 100) : 0;
@@ -93,10 +90,6 @@ export function filterAndSort(rows: readonly MemberPaymentTagStats[], f: ReportF
   return out;
 }
 
-function csvField(v: string): string {
-  return /[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
-}
-
 /** The report as CSV text: UTF-8 BOM first so Excel shows Ñ/ñ correctly, CRLF line ends. */
 export function buildReportCsv(rows: readonly MemberPaymentTagStats[]): string {
   const lines: string[][] = [
@@ -112,17 +105,6 @@ export function buildReportCsv(rows: readonly MemberPaymentTagStats[]): string {
   return "﻿" + lines.map(l => l.map(csvField).join(",")).join("\r\n") + "\r\n";
 }
 
-function downloadCsv(text: string, filename: string) {
-  const url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 function uniqueSorted(values: (string | null)[]): string[] {
   return [...new Set(values.filter((v): v is string => !!v))].sort((a, b) => a.localeCompare(b));
 }
@@ -130,6 +112,8 @@ function uniqueSorted(values: (string | null)[]): string[] {
 export function MemberPaymentTagStats() {
   const { claims } = useAuth();
   const canView = canViewPaymentReport(claims?.councilSeats ?? []);
+  const canSeeMembers = canViewPaymentTags(claims?.councilSeats ?? []);
+  const [panel, setPanel] = useState<{ status: PaymentStatus | null; chapterIds: number[] | null; title: string } | null>(null);
   const [params, setParams] = useSearchParams();
 
   const thisYear = currentMembershipYear();
@@ -234,6 +218,10 @@ export function MemberPaymentTagStats() {
   const years: number[] = [];
   for (let y = thisYear; y >= FIRST_MEMBERSHIP_YEAR; y--) years.push(y);
 
+  const scopeTitle = filters.city || filters.province || filters.region || (anyFilter ? "Chapters shown" : "All chapters");
+  const openTile = (st: PaymentStatus | null) =>
+    setPanel({ status: st, chapterIds: anyFilter ? rows.map(r => r.chapterId) : null, title: scopeTitle });
+
   return (
     <div>
       <h1 style={{ fontFamily: "var(--f-disp)", fontSize: 24, letterSpacing: ".03em" }}>
@@ -316,10 +304,10 @@ export function MemberPaymentTagStats() {
       </div>
 
       <div style={summaryRowStyle}>
-        <SummaryTile label="Total members" value={String(totals.totalMembers)} color="var(--ink)" />
-        <SummaryTile label="Paid" value={String(totals.paidCount)} color="var(--in)" />
-        <SummaryTile label="Free" value={String(totals.freeCount)} color="var(--info)" />
-        <SummaryTile label="Unpaid" value={String(totals.unpaidCount)} color="var(--out)" />
+        <SummaryTile label="Total members" value={String(totals.totalMembers)} color="var(--ink)" onOpen={() => openTile(null)} />
+        <SummaryTile label="Paid" value={String(totals.paidCount)} color="var(--in)" onOpen={() => openTile("Paid")} />
+        <SummaryTile label="Free" value={String(totals.freeCount)} color="var(--info)" onOpen={() => openTile("Free")} />
+        <SummaryTile label="Unpaid" value={String(totals.unpaidCount)} color="var(--out)" onOpen={() => openTile("Unpaid")} />
         <SummaryTile label="% paid or free" value={`${percentSettled(totals)}%`} color="var(--ink)" />
       </div>
 
@@ -349,6 +337,7 @@ export function MemberPaymentTagStats() {
           <ResponsiveTable
             rows={rows}
             rowKey={r => r.chapterId}
+            onRowClick={r => setPanel({ status: null, chapterIds: [r.chapterId], title: r.chapterName })}
             columns={[
               { key: "chapter", header: "Chapter", primary: true, render: r => {
                 const place = [placeLabel(r.cityName), placeLabel(r.provinceName), placeLabel(r.regionName)].filter(Boolean).join(" · ");
@@ -368,16 +357,31 @@ export function MemberPaymentTagStats() {
           />
         </div>
       )}
+      {panel && (
+        <PaymentMemberList
+          key={`${panel.title}|${panel.status}|${panel.chapterIds?.join(",") ?? "*"}`}
+          title={panel.title} year={year} initialStatus={panel.status} chapterIds={panel.chapterIds}
+          canRead={canSeeMembers} onClose={() => setPanel(null)}
+        />
+      )}
     </div>
   );
 }
 
-function SummaryTile({ label, value, color }: { label: string; value: string; color: string }) {
-  return (
-    <div style={tileStyle}>
+function SummaryTile({ label, value, color, onOpen }: { label: string; value: string; color: string; onOpen?: () => void }) {
+  const body = (
+    <>
       <div style={tileLabelStyle}>{label}</div>
       <div className="num" style={{ ...tileValueStyle, color }}>{value}</div>
-    </div>
+      {onOpen && <div style={{ fontSize: 12, color: "var(--info)", marginTop: 2 }}>See members ›</div>}
+    </>
+  );
+  if (!onOpen) return <div style={tileStyle}>{body}</div>;
+  return (
+    <button type="button" onClick={onOpen} aria-label={`${label}: ${value}. See members`}
+      style={{ ...tileStyle, textAlign: "left", cursor: "pointer", minHeight: "var(--tap)", font: "inherit", color: "inherit" }}>
+      {body}
+    </button>
   );
 }
 
