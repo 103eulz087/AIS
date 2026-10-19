@@ -25,5 +25,5 @@ public sealed record MemberPaymentTagResultDto(int MemberId, string Status, int 
 /// ?chapterId=, just that one), for the Paid/Unpaid/Free report. Mirrors
 /// MemberPaymentTagStatsRow.</summary>
 public sealed record MemberPaymentTagStatsDto(
-    int ChapterId, string ChapterName, int TotalMembers,
-    int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);
+    int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
+    int TotalMembers, int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);

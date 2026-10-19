@@ -717,12 +717,16 @@ export interface MemberPaymentTag {
 
 /**
  * GET /api/member-payment-tags/stats — National Council only. Mirrors
- * MemberPaymentTagStatsDto. One row per chapter (or, with ?chapterId=, just that one),
- * for the Paid/Unpaid/Free report.
+ * MemberPaymentTagStatsDto. One row per chapter for the given ?membershipYear=
+ * (default: current), for the Paid/Unpaid/Free report. Needs MemberPaymentTag.Report.
  */
 export interface MemberPaymentTagStats {
   chapterId: number;
   chapterName: string;
+  /** Council names ("Region 10 Council"); null when the chapter sits directly under National. */
+  regionName: string | null;
+  provinceName: string | null;
+  cityName: string | null;
   totalMembers: number;
   paidCount: number;
   freeCount: number;

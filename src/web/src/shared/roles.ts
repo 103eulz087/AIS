@@ -25,7 +25,7 @@
 import type { CouncilSeatPermissions } from "@/shared/types";
 
 /** The council permission keys, exactly as seeded in dbo.CouncilPermission
- * (db/schema/28_council_permissions.sql — the first six are phase 1; the two
+ * (db/schema/28_council_permissions.sql — the first six are phase 1; the
  * MemberPaymentTag keys are National-only and held by National's President by default). Use these constants, never a hand-typed
  * string, so a typo fails at compile time instead of silently never matching. */
 export const COUNCIL_PERMISSION = {
@@ -37,6 +37,7 @@ export const COUNCIL_PERMISSION = {
   CouncilMemberSearchRead: "CouncilMemberSearch.Read",
   MemberPaymentTagRead: "MemberPaymentTag.Read",
   MemberPaymentTagSet: "MemberPaymentTag.Set",
+  MemberPaymentTagReport: "MemberPaymentTag.Report",
   AppSettingsManage: "AppSettings.Manage",
 } as const;
 
@@ -312,13 +313,22 @@ export function canPostNationalAnnouncements(roles: readonly string[]): boolean 
 }
 
 /**
- * View the member payment tag list and the Paid/Unpaid/Free report. Gates on
+ * View the member-by-member payment tag list. Gates on
  * MemberPaymentTag.Read (any seat). National-only: the key is only ever granted on
  * National Council seats, and by default only National's President holds it. The real
  * restriction is re-derived server-side by the payment tag procedures.
  */
 export function canViewPaymentTags(seats: readonly CouncilSeatPermissions[]): boolean {
   return hasCouncilPermission(seats, COUNCIL_PERMISSION.MemberPaymentTagRead);
+}
+
+/**
+ * View the Paid/Unpaid/Free payment report (per chapter, searchable and filterable). Gates on
+ * MemberPaymentTag.Report (any seat). National-only, President by default; separate from
+ * "View payment tags" so an office can be given one without the other.
+ */
+export function canViewPaymentReport(seats: readonly CouncilSeatPermissions[]): boolean {
+  return hasCouncilPermission(seats, COUNCIL_PERMISSION.MemberPaymentTagReport);
 }
 
 /**

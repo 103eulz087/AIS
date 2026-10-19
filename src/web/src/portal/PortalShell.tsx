@@ -6,7 +6,7 @@ import { TourProvider, useTour } from "@/shared/tour/TourProvider";
 import { useTourAutoStart } from "@/shared/tour/useTourAutoStart";
 import { PORTAL_TOUR_KEY, PORTAL_TOUR_VERSION } from "@/shared/tour/types";
 import { buildPortalTourSteps, navTourTarget, PORTAL_LINK_STEP_PREFIX } from "./portalTour";
-import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentTags } from "@/shared/roles";
+import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistrations, canSearchMembersByJurisdiction, canViewCouncilStatistics, canViewPaymentReport, canViewPaymentTags } from "@/shared/roles";
 
 /**
  * Council Portal chrome. Desktop-first, but usable on a phone browser per CLAUDE.md's own
@@ -41,8 +41,9 @@ import { canManageAppSettings, canManageMemberAccounts, canReviewChapterRegistra
  * canManageMemberAccounts, still role-based, since a National CouncilAdmin needs this
  * link even on a council seat with no search permission granted).
  * "Payment tags" and "Payment report" moved out of the secretaryOnly list into the
- * permission grid too (canViewPaymentTags, MemberPaymentTag.Read — National-only, held by
- * National's President by default); they are no longer decided by role name at all.
+ * permission grid too ("Payment tags" = canViewPaymentTags, MemberPaymentTag.Read; "Payment report" =
+ * canViewPaymentReport, MemberPaymentTag.Report — both National-only, held by National's
+ * President by default); they are no longer decided by role name at all.
  * "Office permissions" is shown to ANY signed-in member who holds at least one council
  * seat at all, whatever permissions that seat carries — everyone seated gets to see what
  * their own office can and cannot do, even an Auditor with nothing granted.
@@ -115,7 +116,7 @@ function PortalShellInner() {
         { to: "/portal/members", label: "Members", show: showMembers, icon: "people" },
         { to: "/portal/id-card-export", label: "ID card export", show: !secretaryOnly, icon: "card" },
         { to: "/portal/member-payment-tags", label: "Payment tags", show: canViewPaymentTags(seats), icon: "tag", end: true },
-        { to: "/portal/member-payment-tags/stats", label: "Payment report", show: canViewPaymentTags(seats), icon: "chart" },
+        { to: "/portal/member-payment-tags/stats", label: "Payment report", show: canViewPaymentReport(seats), icon: "chart" },
       ],
     },
     {

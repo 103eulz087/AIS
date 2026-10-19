@@ -147,13 +147,29 @@ describe("PortalShell — nav visibility", () => {
 
   it("shows Payment tags and Payment report to a National President seat holding the payment tag keys", async () => {
     stubAuthFetch(["CouncilAdmin"], [
-      nationalSeat("President", [...ALL_SIX, "MemberPaymentTag.Read", "MemberPaymentTag.Set"], true),
+      nationalSeat("President", [...ALL_SIX, "MemberPaymentTag.Read", "MemberPaymentTag.Set", "MemberPaymentTag.Report"], true),
     ]);
     await renderShell();
 
     const links = navLinkTexts();
     expect(links).toContain("Payment tags");
     expect(links).toContain("Payment report");
+  });
+
+  it("shows Payment report only with the Report key, and Payment tags only with the Read key", async () => {
+    stubAuthFetch(["CouncilAdmin"], [nationalSeat("President", [...ALL_SIX, "MemberPaymentTag.Report"], true)]);
+    await renderShell();
+    const links = navLinkTexts();
+    expect(links).toContain("Payment report");
+    expect(links).not.toContain("Payment tags");
+  });
+
+  it("hides Payment report when the seat has only the Read key", async () => {
+    stubAuthFetch(["CouncilAdmin"], [nationalSeat("President", [...ALL_SIX, "MemberPaymentTag.Read"], true)]);
+    await renderShell();
+    const links = navLinkTexts();
+    expect(links).toContain("Payment tags");
+    expect(links).not.toContain("Payment report");
   });
 
   it("hides Payment tags and Payment report from a National Secretary-only seat without the keys", async () => {

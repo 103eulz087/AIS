@@ -54,9 +54,11 @@ public sealed record MemberPaymentTagRow(
 
 /// <summary>One row of usp_MemberPaymentTag_GetStats — one chapter's member counts by
 /// payment status, for the Paid/Unpaid/Free report.</summary>
+/// <summary>One row of usp_MemberPaymentTag_GetReport — a chapter, where it is, and its
+/// members counted by payment-tag status. Column order matches the procedure exactly.</summary>
 public sealed record MemberPaymentTagStatsRow(
-    int ChapterId, string ChapterName, int TotalMembers,
-    int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);
+    int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,
+    int TotalMembers, int PaidCount, int FreeCount, int UnpaidCount, int MembershipYear);
 
 public interface IMemberPaymentTagRepository
 {
@@ -84,7 +86,7 @@ public interface IMemberPaymentTagRepository
     /// chapter; omitted, every chapter nationally (one row each). Throws
     /// <see cref="MemberPaymentTagException"/> (Forbidden / NotFound).</summary>
     Task<IReadOnlyList<MemberPaymentTagStatsRow>> GetStatsAsync(
-        int requestingMemberId, int? chapterId, int? membershipYear, CancellationToken ct);
+        int requestingMemberId, int? membershipYear, CancellationToken ct);
 }
 
 public sealed class MemberPaymentTagRepository(ISqlConnectionFactory factory) : IMemberPaymentTagRepository
@@ -135,14 +137,16 @@ public sealed class MemberPaymentTagRepository(ISqlConnectionFactory factory) : 
     }
 
     public async Task<IReadOnlyList<MemberPaymentTagStatsRow>> GetStatsAsync(
-        int requestingMemberId, int? chapterId, int? membershipYear, CancellationToken ct)
+        int requestingMemberId, int? membershipYear, CancellationToken ct)
     {
         using var conn = await factory.OpenAsync(ct);
         try
         {
+            // usp_MemberPaymentTag_GetReport (2026-10-19): adds place names and checks the
+            // separate "View payment report" grid key. GetStats stays only for the older build.
             var rows = await conn.QueryAsync<MemberPaymentTagStatsRow>(new CommandDefinition(
-                "dbo.usp_MemberPaymentTag_GetStats",
-                new { RequestingMemberId = requestingMemberId, ChapterId = chapterId, MembershipYear = membershipYear },
+                "dbo.usp_MemberPaymentTag_GetReport",
+                new { RequestingMemberId = requestingMemberId, MembershipYear = membershipYear },
                 commandType: CommandType.StoredProcedure, cancellationToken: ct));
             return rows.AsList();
         }

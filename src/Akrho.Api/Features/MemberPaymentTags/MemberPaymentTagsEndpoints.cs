@@ -92,15 +92,15 @@ public static class MemberPaymentTagsEndpoints
     }
 
     private static async Task<Results<Ok<IReadOnlyList<MemberPaymentTagStatsDto>>, ProblemHttpResult>> GetStats(
-        int? chapterId, int? membershipYear,
+        int? membershipYear,
         IMemberPaymentTagRepository repo, ICurrentUser caller, CancellationToken ct)
     {
         try
         {
-            var rows = await repo.GetStatsAsync(caller.MemberId, chapterId, membershipYear, ct);
+            var rows = await repo.GetStatsAsync(caller.MemberId, membershipYear, ct);
             IReadOnlyList<MemberPaymentTagStatsDto> items = rows
                 .Select(r => new MemberPaymentTagStatsDto(
-                    r.ChapterId, r.ChapterName, r.TotalMembers,
+                    r.ChapterId, r.ChapterName, r.RegionName, r.ProvinceName, r.CityName, r.TotalMembers,
                     r.PaidCount, r.FreeCount, r.UnpaidCount, r.MembershipYear))
                 .ToList();
             return TypedResults.Ok(items);

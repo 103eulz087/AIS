@@ -41,4 +41,30 @@ public class PaymentTagPermissionStructuralTests
             .And.Contain("(N'President', N'MemberPaymentTag.Set')");
         src.Should().NotContain("(N'Treasurer'").And.NotContain("(N'Secretary'");
     }
+
+    [Fact]
+    public void Report_has_its_own_National_only_key_President_by_default_and_the_report_proc_checks_it()
+    {
+        var schema = Read("db", "schema", "32_payment_report_permission.sql");
+        schema.Should().Contain("N'MemberPaymentTag.Report', N'View payment report'")
+            .And.Contain("0, 1, 1, NULL, 85, 1)")
+            .And.Contain("SELECT co.CouncilOfficeId, N'MemberPaymentTag.Report'")
+            .And.Contain("WHERE  co.OfficeName = N'President'");
+
+        var proc = Read("db", "procs", "usp_MemberPaymentTag_GetReport.sql");
+        proc.Should().Contain("sp.CouncilId = @NationalCouncilId AND sp.PermissionKey = N'MemberPaymentTag.Report'");
+        proc.Should().NotContain("r.RoleName = 'CouncilAdmin'");
+        // Counts only: no names, mobile numbers or contact details leave this procedure.
+        proc.Should().NotContain("GiftName").And.NotContain("MobileNo").And.NotContain("FirstName");
+    }
+
+    [Fact]
+    public void The_report_endpoint_reads_the_new_procedure_with_the_columns_in_its_order()
+    {
+        var repo = Read("src", "Akrho.Infrastructure", "Repositories", "MemberPaymentTagRepository.cs");
+        repo.Should().Contain("\"dbo.usp_MemberPaymentTag_GetReport\"");
+        repo.Should().Contain("int ChapterId, string ChapterName, string? RegionName, string? ProvinceName, string? CityName,");
+        Read("db", "procs", "usp_MemberPaymentTag_GetReport.sql").Should().Contain(
+            "SELECT  ch.ChapterId, ch.ChapterName,\n            pl.RegionName, pl.ProvinceName, pl.CityName,\n            k.TotalMembers, k.PaidCount, k.FreeCount, k.UnpaidCount,");
+    }
 }
