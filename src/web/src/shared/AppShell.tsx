@@ -110,12 +110,24 @@ function AppShellInner() {
             >
               {claims.giftName}
             </Link>
-            <button
-              onClick={() => { void signOut(); }}
-              style={{ minHeight: 26, padding: "0 2px", fontSize: 10.5, color: "var(--mute)" }}
-            >
-              Sign out
-            </button>
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 10 }}>
+              {/* Council officers only: their council work lives in the Portal, which had no
+                  way in from here except typing the address. */}
+              {(claims.councilSeats?.length ?? 0) > 0 && (
+                <Link to="/portal" data-tour="portal-link" style={{
+                  minHeight: 26, display: "flex", alignItems: "center", padding: "0 2px",
+                  fontSize: 10.5, color: "var(--brass-soft)", textDecoration: "none",
+                }}>
+                  Council Portal
+                </Link>
+              )}
+              <button
+                onClick={() => { void signOut(); }}
+                style={{ minHeight: 26, padding: "0 2px", fontSize: 10.5, color: "var(--mute)" }}
+              >
+                Sign out
+              </button>
+            </div>
           </div>
         )}
       </header>

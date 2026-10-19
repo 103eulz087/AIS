@@ -226,6 +226,13 @@ function PortalShellInner() {
             <button type="button" className="pshell-signout" style={{ width: "100%" }} onClick={replayTour}>
               Take the tour
             </button>
+            {/* Council officers are chapter members too; without this the member app (and its
+                own first-login tour, which starts on its Home) is only reachable by typing "/". */}
+            {claims.chapterId > 0 && (
+              <Link to="/" className="pshell-signout" onClick={close} style={memberAppLinkStyle}>
+                Open the member app
+              </Link>
+            )}
           </div>
         )}
 
@@ -276,6 +283,10 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 const wordmarkStyle: CSSProperties = {
   fontFamily: "var(--f-disp)", fontSize: 19, letterSpacing: ".05em",
   color: "inherit", textDecoration: "none",
+};
+
+const memberAppLinkStyle: CSSProperties = {
+  width: "100%", marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none",
 };
 
 const contentStyle: CSSProperties = { maxWidth: 1100, margin: "0 auto", padding: "24px 20px 60px", minWidth: 0 };
