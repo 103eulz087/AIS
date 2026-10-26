@@ -58,3 +58,12 @@ public sealed record CouncilStatisticsResponse(
     IReadOnlyList<ChapterStatisticsDto> Chapters,
     IReadOnlyList<CorrectiveActionStatusCountDto> CorrectiveActionTotals,
     int TotalChapterCount);
+
+/// <summary>GET /api/councils/statistics/map (and /{councilId}/statistics/map) — what each
+/// place holds within the focus council's jurisdiction. Counts only, never names.</summary>
+public sealed record CouncilMapDto(int FocusCouncilId, string FocusCouncilName, IReadOnlyList<CouncilMapPlaceDto> Places);
+
+/// <summary>One place: a province (ProvinceCode), a region with no province on record
+/// (RegionCode only), or chapters with no place at all (both null).</summary>
+public sealed record CouncilMapPlaceDto(
+    string? RegionCode, int? ProvinceCode, int Chapters, int ActiveChapters, int Members, int AppUsers);

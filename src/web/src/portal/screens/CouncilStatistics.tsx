@@ -6,6 +6,7 @@ import { peso, shortDate } from "@/shared/format";
 import { EmptyState, ErrorState, ScreenSkeleton } from "@/shared/states";
 import { useAuth } from "@/shared/auth";
 import { ResponsiveTable } from "../responsive";
+import { CouncilMap } from "./CouncilMap";
 import { canViewCouncilStatistics } from "@/shared/roles";
 import { MEMBER_STATUSES, type ChapterStatisticsDto, type CouncilRollupDto, type CouncilStatisticsResponse } from "@/shared/types";
 
@@ -25,6 +26,8 @@ const CHAPTERS_TAKE = 25;
  *
  * Endpoints:
  *   GET /api/councils/statistics?from=&to=&skip=&take=            — the caller's own seat
+ *   GET /api/councils/statistics/map and /api/councils/{councilId}/statistics/map — the
+ *     "Where your members are" map (CouncilMap.tsx), counts only, same focus as below.
  *   GET /api/councils/{councilId}/statistics?from=&to=&skip=&take= — an explicit focus,
  *     used only when drilling into a child council. The server validates the requested
  *     council against the caller's real scope (dbo.fn_MemberCouncilScope) regardless of
@@ -144,6 +147,8 @@ export function CouncilStatistics() {
           <Tile label="Active chapters" value={f.activeChapterCount} valueColor="var(--in)" />
         </div>
       </div>
+
+      <CouncilMap key={focusCouncilId ?? "own"} focusCouncilId={focusCouncilId} />
 
       <GroupLabel>Membership</GroupLabel>
       <MembershipGroup rollup={f} />

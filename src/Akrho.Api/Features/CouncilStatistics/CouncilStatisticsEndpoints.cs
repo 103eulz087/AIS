@@ -24,6 +24,15 @@ public static class CouncilStatisticsEndpoints
         g.MapGet("/{councilId:int}/statistics", GetForCouncil).WithName("GetCouncilStatistics")
             .RequireAuthorization(AuthorizationPolicies.CouncilStatisticsRead);
 
+        // The Statistics map: chapters, members and app users per province. Same two shapes
+        // (own seat / explicit focus) and the same procedure-side scope check as above.
+        g.MapGet("/statistics/map", (ICouncilStatisticsRepository repo, ICurrentUser caller, CancellationToken ct)
+                => GetMap(null, repo, caller, ct))
+            .WithName("GetOwnCouncilStatisticsMap").RequireAuthorization(AuthorizationPolicies.CouncilStatisticsRead);
+        g.MapGet("/{councilId:int}/statistics/map", (int councilId, ICouncilStatisticsRepository repo, ICurrentUser caller, CancellationToken ct)
+                => GetMap(councilId, repo, caller, ct))
+            .WithName("GetCouncilStatisticsMap").RequireAuthorization(AuthorizationPolicies.CouncilStatisticsRead);
+
         return app;
     }
 
@@ -108,4 +117,20 @@ public static class CouncilStatisticsEndpoints
         r.MeetingsHeld, r.TotalPresent, r.TotalOnSheets, r.AveragePresentPerMeeting,
         r.OpeningBalance, r.PeriodIn, r.PeriodOut, r.ClosingBalance,
         r.CaseCountPending, r.CaseCountUnderReview, r.CaseCountReconciled, r.CaseCountDismissed);
+
+    private static async Task<Results<Ok<CouncilMapDto>, ProblemHttpResult>> GetMap(
+        int? focusCouncilId, ICouncilStatisticsRepository repo, ICurrentUser caller, CancellationToken ct)
+    {
+        try
+        {
+            var (focus, places) = await repo.GetMapAsync(caller.MemberId, focusCouncilId, ct);
+            return TypedResults.Ok(new CouncilMapDto(focus.FocusCouncilId, focus.FocusCouncilName,
+                places.Select(p => new CouncilMapPlaceDto(
+                    p.RegionCode?.Trim(), p.ProvinceCode, p.Chapters, p.ActiveChapters, p.Members, p.AppUsers)).ToList()));
+        }
+        catch (CouncilStatisticsException ex)
+        {
+            return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+    }
 }

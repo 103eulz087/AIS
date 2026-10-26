@@ -69,8 +69,23 @@ public sealed record CouncilStatisticsRows(
     IReadOnlyList<ChapterStatisticsRow> Chapters,
     IReadOnlyList<CorrectiveActionStatusCountRow> CorrectiveActionTotals);
 
+/// <summary>Result set 1 of usp_CouncilStatistics_GetMap.</summary>
+public sealed record CouncilMapFocusRow(int FocusCouncilId, string FocusCouncilName);
+
+/// <summary>Result set 2 of usp_CouncilStatistics_GetMap — one place (a province, or a region
+/// with no province on record, or neither) and what it holds. Codes are dbo.Region.RegionCode
+/// and dbo.Province.ProvinceCode, matched to the map shapes in src/web/public/maps.</summary>
+public sealed record CouncilMapPlaceRow(
+    string? RegionCode, short? ProvinceCode, int Chapters, int ActiveChapters, int Members, int AppUsers);
+
 public interface ICouncilStatisticsRepository
 {
+    /// <summary>Chapters, members and app users per province for the Statistics map
+    /// (usp_CouncilStatistics_GetMap). Same focus-council rules and exceptions as
+    /// <see cref="GetAsync"/>.</summary>
+    Task<(CouncilMapFocusRow Focus, IReadOnlyList<CouncilMapPlaceRow> Places)> GetMapAsync(
+        int requestingMemberId, int? focusCouncilId, CancellationToken ct);
+
     /// <summary>
     /// <paramref name="focusCouncilId"/> NULL means "the caller's own seat" — resolved
     /// entirely inside the procedure from <paramref name="requestingMemberId"/>, never
@@ -111,6 +126,26 @@ public sealed class CouncilStatisticsRepository(ISqlConnectionFactory factory) :
             var correctiveActionTotals = (await multi.ReadAsync<CorrectiveActionStatusCountRow>()).ToList();
 
             return new CouncilStatisticsRows(focus, childCouncils, chapters, correctiveActionTotals);
+        }
+        catch (SqlException ex) when (CouncilStatisticsErrors.IsKnown(ex.Number))
+        {
+            throw new CouncilStatisticsException(ex.Message);
+        }
+    }
+
+    public async Task<(CouncilMapFocusRow Focus, IReadOnlyList<CouncilMapPlaceRow> Places)> GetMapAsync(
+        int requestingMemberId, int? focusCouncilId, CancellationToken ct)
+    {
+        using var conn = await factory.OpenAsync(ct);
+        try
+        {
+            using var multi = await conn.QueryMultipleAsync(new CommandDefinition(
+                "dbo.usp_CouncilStatistics_GetMap",
+                new { RequestingMemberId = requestingMemberId, FocusCouncilId = focusCouncilId },
+                commandType: CommandType.StoredProcedure, cancellationToken: ct));
+            var focus = await multi.ReadSingleAsync<CouncilMapFocusRow>();
+            var places = (await multi.ReadAsync<CouncilMapPlaceRow>()).ToList();
+            return (focus, places);
         }
         catch (SqlException ex) when (CouncilStatisticsErrors.IsKnown(ex.Number))
         {
