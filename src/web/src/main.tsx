@@ -23,6 +23,19 @@ const queryClient = new QueryClient({
   },
 });
 
+// After a deploy the new service worker takes control straight away (sw.ts: skipWaiting +
+// clientsClaim); reload once so this page runs the new release instead of the old bundle it
+// was started with. Only when a worker was ALREADY in control at load — the very first
+// install also fires controllerchange, and needs no reload.
+if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

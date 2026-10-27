@@ -85,7 +85,7 @@ describe("step lists", () => {
 
   it("digital id", () => {
     expect(ids(digitalIdGuide.buildSteps(member))).toEqual([
-      "intro", "home-link", "card", "flip", "qr-private", "current", "showing",
+      "intro", "home-link", "card", "flip", "qr-private", "current", "refresh", "showing",
       "scan-link", "camera", "viewfinder", "results", "done",
     ]);
   });

@@ -62,6 +62,13 @@ export function buildDigitalIdGuideSteps(): TourStep[] {
       illustration: <Pic><BadgeSketch tone="ok">Active</BadgeSketch></Pic>,
     },
     {
+      id: "refresh", route: "/digital-id", target: "digital-id-refresh", waitMs: wait,
+      title: "Just paid? Tap Refresh",
+      body: "Your card checks for changes every time you open it. If you were just marked Paid, tap Refresh to check again right away. \"Updated\" shows when it last checked.",
+      tip: "No signal? You still see your last saved card.",
+      illustration: <Pic><SketchButton>Refresh</SketchButton></Pic>,
+    },
+    {
       id: "showing",
       title: "Showing your ID",
       body: "Open this screen, turn the card to the QR side, and let the other brother scan it. Turn your screen brightness up, and keep your thumb off the code.",

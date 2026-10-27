@@ -14,7 +14,12 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode,
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { QueryClientContext } from "@tanstack/react-query";
 import { api, setAccessToken, setRefreshHandler } from "@/shared/api";
+
+/** Saved copies the service worker keeps (sw.ts). Wiped on sign-out so a phone shared by two
+ * brothers never shows the next one the last one's ID card or directory. */
+const PERSONAL_CACHES = ["my-id", "members"];
 import { ScreenSkeleton } from "@/shared/states";
 import type { CouncilSeatPermissions } from "@/shared/types";
 
@@ -141,6 +146,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession("signed-in");
   }, [loadClaims]);
 
+  // Optional on purpose: some tests render AuthProvider without a QueryClientProvider.
+  const queryClient = useContext(QueryClientContext);
+
   const signOut = useCallback(async () => {
     try {
       await api.post("/api/auth/sign-out");
@@ -148,8 +156,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Revocation is best-effort from the client's point of view — the session is
       // cleared locally regardless, so the user is never stuck "signed in" on a hiccup.
     }
+    // Nothing of this member's may outlive his session on this phone: the app's in-memory
+    // data (his ID card, profile, lists) and the service worker's saved copies.
+    queryClient?.clear();
+    try {
+      if (typeof caches !== "undefined") await Promise.all(PERSONAL_CACHES.map(n => caches.delete(n)));
+    } catch { /* best-effort; never block signing out */ }
     settleSignedOut();
-  }, [settleSignedOut]);
+  }, [settleSignedOut, queryClient]);
 
   const value = useMemo<AuthContextValue>(
     () => ({ session, claims, signIn, completeEnrolment, signOut, reloadClaims: loadClaims }),

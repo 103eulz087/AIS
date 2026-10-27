@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toDataURL } from "qrcode";
 import { api, type DownloadedFile } from "@/shared/api";
-import { shortDate } from "@/shared/format";
+import { shortDate, shortTime } from "@/shared/format";
 import { ErrorState, ScreenSkeleton } from "@/shared/states";
 import { ID_CARD, NotPaidWatermark } from "@/shared/idCardTheme";
 import { ChapterMonogram } from "@/ais/screens/ChapterMonogram";
@@ -73,6 +73,11 @@ export function DigitalId() {
     queryKey: ["my-credential"],
     queryFn: () => api.get<MyCredential>("/api/members/me/credential"),
     retry: false,
+    // Always ask the server when the screen opens or the app comes back to the front: a
+    // status change (tagged Paid, renewed, suspended) must show the next time he looks.
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   // Best-effort only. A photo that fails to load falls back to initials, same as
@@ -384,6 +389,26 @@ export function DigitalId() {
         Your ID updates on its own if your status changes — a suspended card can never be
         shown as active.
       </p>
+
+      {/* Swipe-down-to-refresh does not exist inside the installed app on Android, so the
+          way to re-check (e.g. right after being tagged Paid) is a button that always works. */}
+      <div data-tour="digital-id-refresh" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+        <span role="status" style={{ fontSize: 12, color: "var(--mute)" }}>
+          {credentialQuery.isFetching
+            ? "Checking for updates…"
+            : credentialQuery.isError
+              ? "Could not check just now — showing your last saved card."
+              : `Updated ${shortTime(new Date(credentialQuery.dataUpdatedAt).toISOString())}`}
+        </span>
+        <button
+          type="button"
+          onClick={() => { void credentialQuery.refetch(); }}
+          disabled={credentialQuery.isFetching}
+          style={refreshButtonStyle}
+        >
+          Refresh
+        </button>
+      </div>
     </div>
   );
 }
@@ -459,6 +484,11 @@ const positionStyle: CSSProperties = {
 };
 
 const idFaceBackStyle: CSSProperties = { transform: "rotateY(180deg)" };
+
+const refreshButtonStyle: CSSProperties = {
+  minHeight: "var(--tap)", padding: "0 16px", borderRadius: 8, fontSize: 13,
+  border: "1px solid var(--line)", background: "var(--paper)", color: "var(--info)",
+};
 
 const flipHintStyle: CSSProperties = {
   textAlign: "center", fontSize: 11.5, color: "var(--mute)", marginTop: 11, letterSpacing: ".03em",
